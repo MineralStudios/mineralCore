@@ -1,5 +1,6 @@
 package de.jeezycore.main;
 
+import de.jeezycore.commands.JeezyCoreGuide;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -7,6 +8,7 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         System.out.println("Successfully started JeezyCore coded by JeezyDevelopment!");
+        this.getCommand("jeezycore-guide").setExecutor(new JeezyCoreGuide());
     }
 
     @Override
