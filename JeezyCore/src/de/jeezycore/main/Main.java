@@ -6,7 +6,12 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        System.out.println("Success!");
+        System.out.println("Successfully started JeezyCore coded by JeezyDevelopment!");
+    }
+
+    @Override
+    public void onDisable() {
+        System.out.println("Stopped JeezyCore!");
     }
 
 
