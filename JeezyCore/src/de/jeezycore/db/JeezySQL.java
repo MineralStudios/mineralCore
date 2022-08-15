@@ -11,6 +11,8 @@ public String password;
 public String rank;
 public String format;
 
+public String player;
+
     private void createConnection() {
         url = "jdbc:mysql://localhost:3306/jeezydevelopment";
         user = "root";
@@ -71,6 +73,7 @@ public String format;
             while(rs.next()){
                 rank = rs.getString(1);
                 format = rs.getString(2);
+                player = rs.getString(3);
             }
         } catch (SQLException e) {
             System.out.println(e);
