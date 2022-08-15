@@ -4,6 +4,6 @@ author: JeezyDevelopment
 version: 1.0.0
 commands:
   jeezycore-guide:
-    description: First command!
+    description: Helps you to navigate through the plugin.
   create-rank:
     description: Creates rank.
