@@ -12,24 +12,18 @@ public String rank;
 public String format;
 
     private void createConnection() {
-
         url = "jdbc:mysql://localhost:3306/jeezydevelopment";
         user = "root";
         password = "";
-        try {
-            Connection con = DriverManager.getConnection(url, user, password);
-            System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" connected to database."+Color.RESET);
-            System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" created"+Color.YELLOW_BOLD+" jeezyCore"+Color.CYAN+" table."+Color.RESET);
-        } catch (SQLException e) {
-            System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.RED_BOLD+" Something went wrong when tried to connect to your database."+Color.RESET);
-            System.out.println(e.getMessage());
-        }
-
     }
 
     public void createTable() {
         try {
             this.createConnection();
+
+            System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" connected to database."+Color.RESET);
+            System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" created"+Color.YELLOW_BOLD+" jeezyCore"+Color.CYAN+" table."+Color.RESET);
+
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS JeezyCore " +
@@ -38,7 +32,9 @@ public String format;
                     " playerName VARCHAR(255), " +
                     " PRIMARY KEY ( rankName ))";
             stm.executeUpdate(sql);
-        } catch (SQLException e){
+        } catch (SQLException e) {
+            System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.RED_BOLD+" Something went wrong when tried to connect to your database."+Color.RESET);
+            System.out.println(e.getMessage());
             System.out.println(e);
         }
     }
