@@ -1,5 +1,6 @@
 package de.jeezycore.commands;
 
+import de.jeezycore.db.JeezySQL;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,6 +16,12 @@ public class CreateRank implements CommandExecutor {
            if (cmd.getName().equalsIgnoreCase("create-rank") && args.length == 0 || args.length == 1) {
               p.sendMessage("Usage: /create-rank (name) (color)");
            } else {
+               JeezySQL mySQL = new JeezySQL();
+               String input = "INSERT INTO jeezycore " +
+                       "(rankName, rankColor, playerName) " +
+                       "VALUES " +
+                       "(?, ?, ?)";
+               mySQL.pushData(input, args[0], "§"+args[1], p.getDisplayName());
                p.sendMessage("Rank name: " + args[0] + " Color: " + args[1]);
            }
         }
