@@ -8,7 +8,7 @@ public class ChatEvent implements Listener {
 
     @EventHandler
     public void onPlayerChat1(AsyncPlayerChatEvent e){
-        e.setFormat("§8§l[§cOwner§8§l]§f "+e.getPlayer().getDisplayName()+": "+e.getMessage());
+        e.setFormat("§7§l[§cOwner§7§l]§f "+e.getPlayer().getDisplayName()+": "+e.getMessage());
 
     }
 
