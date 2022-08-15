@@ -1,5 +1,6 @@
 package de.jeezycore.events;
 
+import de.jeezycore.db.JeezySQL;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -7,8 +8,11 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class ChatEvent implements Listener {
 
     @EventHandler
-    public void onPlayerChat1(AsyncPlayerChatEvent e){
-        e.setFormat("§7§l[§cOwner§7§l]§f "+e.getPlayer().getDisplayName()+": "+e.getMessage());
+    public void onPlayerChat1(AsyncPlayerChatEvent e) {
+        JeezySQL display = new JeezySQL();
+        display.displayData();
+        e.setFormat("§7§l["+display.format+""+display.rank+"§7§l]§f "+e.getPlayer().getDisplayName()+": "+e.getMessage());
+
 
     }
 

@@ -8,6 +8,9 @@ public String url;
 public String user;
 public String password;
 
+public String rank;
+public String format;
+
     private void createConnection() {
 
         url = "jdbc:mysql://localhost:3306/jeezydevelopment";
@@ -51,7 +54,7 @@ public String password;
             pstmt.setString(2, rankColor);
             pstmt.setString(3, playerName);
 
-            pstmt.executeUpdate();
+             pstmt.executeUpdate();
 
 
         } catch (SQLException e) {
@@ -59,5 +62,25 @@ public String password;
         }
 
     }
+
+
+    public void displayData() {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String sql = "SELECT * FROM jeezycore";
+            ResultSet rs = stm.executeQuery(sql);
+
+            while(rs.next()){
+                rank = rs.getString(1);
+                format = rs.getString(2);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+
 
 }
