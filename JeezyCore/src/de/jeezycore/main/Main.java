@@ -1,6 +1,7 @@
 package de.jeezycore.main;
 
 import de.jeezycore.colors.Color;
+import de.jeezycore.commands.CreateRank;
 import de.jeezycore.commands.JeezyCoreGuide;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.events.ChatEvent;
@@ -13,6 +14,7 @@ public class Main extends JavaPlugin {
         System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.GREEN_BOLD+" Successfully"+Color.CYAN_BOLD+" started JeezyCore coded by JeezyDevelopment!"+Color.RESET);
         // Register Commands
         this.getCommand("jeezycore-guide").setExecutor(new JeezyCoreGuide());
+        this.getCommand("create-rank").setExecutor(new CreateRank());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         // Creating Connection
