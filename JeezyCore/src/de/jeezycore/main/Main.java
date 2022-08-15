@@ -17,14 +17,14 @@ public class Main extends JavaPlugin {
         this.getCommand("create-rank").setExecutor(new CreateRank());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
-        // Creating Connection
+        // Creating Connection / Creating Table
         JeezySQL con = new JeezySQL();
-        con.createConnection();
+        con.createTable();
     }
 
     @Override
     public void onDisable() {
-        System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.RED_BOLD+" shutting down...");
+        System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.RED_BOLD+" shutting down..."+Color.RESET);
     }
 
 
