@@ -12,10 +12,10 @@ public class JeezySQL  {
         String password = "";
         try {
             Connection con = DriverManager.getConnection(url, user, password);
-            System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN+"Successfully"+Color.CYAN+" connected to database."+Color.RESET);
+            System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" connected to database."+Color.RESET);
 
         } catch (SQLException e) {
-            System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.RED_BOLD+" Something went wrong when tried to connect to your database.");
+            System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.RED_BOLD+" Something went wrong when tried to connect to your database."+Color.RESET);
             //System.out.println(e.getMessage());
         }
     }
