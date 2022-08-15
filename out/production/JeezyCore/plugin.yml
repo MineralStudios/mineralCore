@@ -1,9 +1,0 @@
-name: JeezyCore
-main: de.jeezycore.main.Main
-author: JeezyDevelopment
-version: 1.0.0
-commands:
-  jeezycore-guide:
-    description: First command!
-  create-rank:
-    description: Creates rank.
