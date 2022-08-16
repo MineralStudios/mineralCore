@@ -41,7 +41,7 @@ public String player;
         }
     }
 
-    public void pushData(String sql, String rankName, String rankColor, String playerName)  {
+    public void pushData(String sql, String rankName, String rankColor)  {
     this.createConnection();
         try {
             System.out.println(sql);
@@ -50,7 +50,6 @@ public String player;
             PreparedStatement pstmt = con.prepareStatement(sql);
             pstmt.setString(1, rankName);
             pstmt.setString(2, rankColor);
-            pstmt.setString(3, playerName);
 
              pstmt.executeUpdate();
 
@@ -73,7 +72,6 @@ public String player;
             while(rs.next()){
                 rank = rs.getString(1);
                 format = rs.getString(2);
-                player = rs.getString(3);
             }
         } catch (SQLException e) {
             System.out.println(e);
