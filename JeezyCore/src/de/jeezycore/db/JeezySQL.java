@@ -72,6 +72,7 @@ public String player;
             while(rs.next()){
                 rank = rs.getString(1);
                 format = rs.getString(2);
+                player = rs.getString(3);
             }
         } catch (SQLException e) {
             System.out.println(e);
