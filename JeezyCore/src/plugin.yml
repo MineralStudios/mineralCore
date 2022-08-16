@@ -7,3 +7,5 @@ commands:
     description: Helps you to navigate through the plugin.
   create-rank:
     description: Creates rank.
+  grant-rank:
+    description: Grants selected player a rank.

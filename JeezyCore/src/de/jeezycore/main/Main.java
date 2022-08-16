@@ -2,6 +2,7 @@ package de.jeezycore.main;
 
 import de.jeezycore.colors.Color;
 import de.jeezycore.commands.CreateRank;
+import de.jeezycore.commands.GrantRank;
 import de.jeezycore.commands.JeezyCoreGuide;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.events.ChatEvent;
@@ -15,6 +16,7 @@ public class Main extends JavaPlugin {
         // Register Commands
         this.getCommand("jeezycore-guide").setExecutor(new JeezyCoreGuide());
         this.getCommand("create-rank").setExecutor(new CreateRank());
+        this.getCommand("grant-rank").setExecutor(new GrantRank());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         // Creating Connection / Creating Table
