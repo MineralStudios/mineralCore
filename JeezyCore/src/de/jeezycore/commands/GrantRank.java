@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.Wool;
 
 public class GrantRank implements CommandExecutor {
@@ -24,11 +25,16 @@ public class GrantRank implements CommandExecutor {
                 p.sendMessage("Usage /grant-rank (player)");
             } else {
                 p.sendMessage("You want to grant a rank to the player: "+args[0]);
-                Inventory inv = Bukkit.createInventory(null, 18, ChatColor.GRAY + "Grant " +ChatColor.WHITE+ args[0]);
+                Inventory inv = Bukkit.createInventory(null, 18, ChatColor.BLACK + "Grant " +ChatColor.WHITE+ args[0]);
                 Wool wool = new Wool(DyeColor.RED);
-                ItemStack rank = new ItemStack(wool.toItemStack());
+                ItemStack rank = new ItemStack(wool.toItemStack(1));
                 ItemMeta rankMeta = rank.getItemMeta();
-                inv.setItem(0, rank);
+                ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+                SkullMeta meta = (SkullMeta) skull.getItemMeta();
+                meta.setOwner(args[0]);
+                skull.setItemMeta(meta);
+                inv.setItem(4, skull);
+                inv.setItem(9, rank);
                 p.openInventory(inv);
             }
 
