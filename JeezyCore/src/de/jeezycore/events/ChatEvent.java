@@ -11,13 +11,10 @@ public class ChatEvent implements Listener {
     public void onPlayerChat1(AsyncPlayerChatEvent e) {
         JeezySQL display = new JeezySQL();
         display.displayData();
+        if (display.player == null) return;
         if (display.player.equalsIgnoreCase(e.getPlayer().getName())) {
             e.setFormat("§7§l["+display.format+""+display.rank+"§7§l]§f "+e.getPlayer().getDisplayName()+": "+e.getMessage());
-        } else {
-          return;
         }
-
-
 
     }
 
