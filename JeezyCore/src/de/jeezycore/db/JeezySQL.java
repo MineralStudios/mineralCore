@@ -2,6 +2,7 @@ package de.jeezycore.db;
 import de.jeezycore.colors.Color;
 // SQL imports
 import java.sql.*;
+import java.util.ArrayList;
 
 public class JeezySQL  {
 public String url;
@@ -12,6 +13,8 @@ public String rank;
 public String format;
 
 public String player;
+
+public ArrayList<String> rankData = new ArrayList<String>();
 
     private void createConnection() {
         url = "jdbc:mysql://localhost:3306/jeezydevelopment";
@@ -68,12 +71,13 @@ public String player;
             Statement stm = con.createStatement();
             String sql = "SELECT * FROM jeezycore";
             ResultSet rs = stm.executeQuery(sql);
-
             while(rs.next()){
                 rank = rs.getString(1);
                 format = rs.getString(2);
                 player = rs.getString(3);
+                rankData.add(rank);
             }
+
         } catch (SQLException e) {
             System.out.println(e);
         }
