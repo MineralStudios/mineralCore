@@ -26,6 +26,8 @@ public class GrantRank implements CommandExecutor {
             } else {
                 p.sendMessage("You want to grant a rank to the player: "+args[0]);
                 Inventory inv = Bukkit.createInventory(null, 27, ChatColor.AQUA + "Grant " +ChatColor.WHITE+ " §8§l[ "+ChatColor.WHITE+args[0]+" §8§l]");
+                JeezySQL display = new JeezySQL();
+                display.displayData();
 
                 ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
                 SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
@@ -34,23 +36,21 @@ public class GrantRank implements CommandExecutor {
 
                 skull.setItemMeta(skullMeta);
                 inv.setItem(4, skull);
-                JeezySQL display = new JeezySQL();
-                display.displayData();
+
 
                 System.out.println(display.rankData);
                 if (display.rankData.size() == 0) {
                     p.openInventory(inv);
                     return true;
                 } else {
-                    for (String i : display.rankData) {
-                        for (int f = 0; f < display.rankData.size(); f++) {
-                            Wool wool = new Wool(DyeColor.RED);
-                            ItemStack rank = new ItemStack(wool.toItemStack(1));
+
+                        for (int i = 0; i < display.rankData.size(); i++) {
+                            ItemStack rank = new ItemStack(new ItemStack(Material.WOOL, 1, (short)i));
                             ItemMeta rankMeta = rank.getItemMeta();
-                            rankMeta.setDisplayName(i);
+                            String displayName = display.rankData.get(i);
+                            rankMeta.setDisplayName(displayName);
                             rank.setItemMeta(rankMeta);
-                            inv.setItem(f, rank);
-                        }
+                            inv.setItem(9+i, rank);
                     }
                     p.openInventory(inv);
                 }
