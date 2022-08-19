@@ -21,7 +21,7 @@ public class CreateRank implements CommandExecutor {
                        "(rankName, rankColor) " +
                        "VALUES " +
                        "(?, ?)";
-               mySQL.pushData(input, args[0], "§"+args[1]);
+               mySQL.pushData(input, args[0], args[1]);
                p.sendMessage("Rank name: " + args[0] + " Color: " + args[1]);
            }
         }
