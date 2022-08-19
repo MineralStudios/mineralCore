@@ -45,13 +45,17 @@ public class GrantRank implements CommandExecutor {
                 } else {
 
                         for (int i = 0; i < display.rankData.size(); i++) {
-                            ItemStack rank = new ItemStack(new ItemStack(Material.WOOL, 1, (short)i));
-                            ItemMeta rankMeta = rank.getItemMeta();
+                            for (int f = 0; f < display.colorData.size(); f++) {
+                            ItemStack rank = new ItemStack(new ItemStack(Material.WOOL, 1, (short)f));
+
                             String displayName = display.rankData.get(i);
+                            ItemMeta rankMeta = rank.getItemMeta();
                             rankMeta.setDisplayName(displayName);
                             rank.setItemMeta(rankMeta);
                             inv.setItem(9+i, rank);
+                            }
                     }
+                    System.out.println(display.colorData);
                     p.openInventory(inv);
                 }
 

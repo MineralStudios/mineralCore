@@ -10,11 +10,13 @@ public String user;
 public String password;
 
 public String rank;
-public String format;
+public int rankColor;
 
 public String player;
 
 public ArrayList<String> rankData = new ArrayList<String>();
+
+public ArrayList<Integer> colorData = new ArrayList<Integer>();
 
     private void createConnection() {
         url = "jdbc:mysql://localhost:3306/jeezydevelopment";
@@ -33,7 +35,7 @@ public ArrayList<String> rankData = new ArrayList<String>();
             Statement stm = con.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS JeezyCore " +
                     " (rankName VARCHAR(255), " +
-                    " rankColor VARCHAR(255), " +
+                    " rankColor INT(2), " +
                     " playerName VARCHAR(255), " +
                     " PRIMARY KEY ( rankName ))";
             stm.executeUpdate(sql);
@@ -73,9 +75,10 @@ public ArrayList<String> rankData = new ArrayList<String>();
             ResultSet rs = stm.executeQuery(sql);
             while(rs.next()){
                 rank = rs.getString(1);
-                format = rs.getString(2);
+                rankColor = rs.getInt(2);
                 player = rs.getString(3);
                 rankData.add(rank);
+                colorData.add(rankColor);
             }
 
         } catch (SQLException e) {

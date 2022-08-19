@@ -13,7 +13,7 @@ public class ChatEvent implements Listener {
         display.displayData();
         if (display.player == null) return;
         if (display.player.equalsIgnoreCase(e.getPlayer().getName())) {
-            e.setFormat("§7§l["+display.format+""+display.rank+"§7§l]§f "+e.getPlayer().getDisplayName()+": "+e.getMessage());
+            e.setFormat("§7§l["+display.rankColor+""+display.rank+"§7§l]§f "+e.getPlayer().getDisplayName()+": "+e.getMessage());
         }
 
     }
