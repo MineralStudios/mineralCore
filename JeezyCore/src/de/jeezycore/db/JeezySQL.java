@@ -3,6 +3,7 @@ import de.jeezycore.colors.Color;
 // SQL imports
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class JeezySQL  {
 public String url;
@@ -14,9 +15,8 @@ public int rankColor;
 
 public String player;
 
-public ArrayList<String> rankData = new ArrayList<String>();
+public HashMap<String, Integer> rankData = new HashMap<String, Integer>();
 
-public ArrayList<Integer> colorData = new ArrayList<Integer>();
 
     private void createConnection() {
         url = "jdbc:mysql://localhost:3306/jeezydevelopment";
@@ -77,9 +77,9 @@ public ArrayList<Integer> colorData = new ArrayList<Integer>();
                 rank = rs.getString(1);
                 rankColor = rs.getInt(2);
                 player = rs.getString(3);
-                rankData.add(rank);
-                colorData.add(rankColor);
+                rankData.put(rank, rankColor);
             }
+
 
         } catch (SQLException e) {
             System.out.println(e);

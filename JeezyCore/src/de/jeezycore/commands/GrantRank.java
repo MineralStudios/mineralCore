@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.Wool;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class GrantRank implements CommandExecutor {
     @Override
@@ -38,23 +39,29 @@ public class GrantRank implements CommandExecutor {
                 inv.setItem(4, skull);
 
 
-                System.out.println(display.rankData);
                 if (display.rankData.size() == 0) {
                     p.openInventory(inv);
                     return true;
                 } else {
 
-                    for (int i = 0; i < Math.min(display.rankData.size(), display.colorData.size()); i++) {
-                        ItemStack rank = new ItemStack(Material.WOOL, 1, (short) ((int) display.colorData.get(i)));
-                        String displayName = display.rankData.get(i);
+                    int i = 0;
+                    for (Map.Entry<String, Integer> entry : display.rankData.entrySet()) {
+                        ItemStack rank = new ItemStack(Material.WOOL, 1, (short) ((int) entry.getValue()));
+                        String displayName = entry.getKey();
                         ItemMeta rankMeta = rank.getItemMeta();
                         rankMeta.setDisplayName(displayName);
                         rank.setItemMeta(rankMeta);
                         inv.setItem(9+i, rank);
+                        ++i;
                     }
-                    System.out.println(display.colorData);
-                    p.openInventory(inv);
+
+
                 }
+                    // System.out.println(display.rankData);
+                    for (String i : display.rankData.keySet()) {
+                        System.out.println("key: " + i + " value: " + display.rankData.get(i));
+                    }
+                    p.openInventory(inv);
 
             }
 
