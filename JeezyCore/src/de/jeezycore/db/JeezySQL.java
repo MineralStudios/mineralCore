@@ -2,8 +2,7 @@ package de.jeezycore.db;
 import de.jeezycore.colors.Color;
 // SQL imports
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public class JeezySQL  {
 public String url;
@@ -15,7 +14,7 @@ public int rankColor;
 
 public String player;
 
-public HashMap<String, Integer> rankData = new HashMap<String, Integer>();
+public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integer>();
 
 
     private void createConnection() {
@@ -36,9 +35,11 @@ public HashMap<String, Integer> rankData = new HashMap<String, Integer>();
             String sql = "CREATE TABLE IF NOT EXISTS JeezyCore " +
                     " (rankName VARCHAR(255), " +
                     " rankColor INT(2), " +
+                    " rankPriority INT(3), " +
                     " playerName VARCHAR(255), " +
                     " PRIMARY KEY ( rankName ))";
             stm.executeUpdate(sql);
+            con.close();
         } catch (SQLException e) {
             System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.RED_BOLD+" Something went wrong when tried to connect to your database."+Color.RESET);
             System.out.println(e.getMessage());
@@ -46,7 +47,7 @@ public HashMap<String, Integer> rankData = new HashMap<String, Integer>();
         }
     }
 
-    public void pushData(String sql, String rankName, String rankColor)  {
+    public void pushData(String sql, String rankName, String rankColor, String rankPriority)  {
     this.createConnection();
         try {
             System.out.println(sql);
@@ -55,10 +56,11 @@ public HashMap<String, Integer> rankData = new HashMap<String, Integer>();
             PreparedStatement pstmt = con.prepareStatement(sql);
             pstmt.setString(1, rankName);
             pstmt.setString(2, rankColor);
+            pstmt.setString(3, rankPriority);
 
              pstmt.executeUpdate();
 
-
+        con.close();
         } catch (SQLException e) {
             System.out.println(e);
         }
@@ -71,16 +73,16 @@ public HashMap<String, Integer> rankData = new HashMap<String, Integer>();
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String sql = "SELECT * FROM jeezycore";
+            String sql = "SELECT * FROM jeezycore ORDER BY rankPriority DESC";
             ResultSet rs = stm.executeQuery(sql);
             while(rs.next()){
                 rank = rs.getString(1);
                 rankColor = rs.getInt(2);
-                player = rs.getString(3);
+                player = rs.getString(4);
                 rankData.put(rank, rankColor);
             }
 
-
+            con.close();
         } catch (SQLException e) {
             System.out.println(e);
         }

@@ -18,11 +18,11 @@ public class CreateRank implements CommandExecutor {
            } else {
                JeezySQL mySQL = new JeezySQL();
                String input = "INSERT INTO jeezycore " +
-                       "(rankName, rankColor) " +
+                       "(rankName, rankColor, rankPriority) " +
                        "VALUES " +
-                       "(?, ?)";
-               mySQL.pushData(input, args[0], args[1]);
-               p.sendMessage("Rank name: " + args[0] + " Color: " + args[1]);
+                       "(?, ?, ?)";
+               mySQL.pushData(input, args[0], args[1], args[2]);
+               p.sendMessage("§bSuccessfully§f created "+args[0]+" rank.");
            }
         }
         return false;

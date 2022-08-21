@@ -16,7 +16,7 @@ public class JeezyCoreGuide implements CommandExecutor {
 
             player.sendMessage("§8§l§m-----------------------------------\n");
             player.sendMessage("§b§lJeezy§9§lCore Help\n");
-            player.sendMessage("\n§f§lcreate-rank: §9§l<name> <color>\n" +
+            player.sendMessage("\n§f§lcreate-rank: §9§l<name> <color> <priority>\n" +
                     "§9Creates rank.\n" +
                     "§f§lgrant-rank: §9§l<player>\n" +
                     "§9Grants player a rank.\n");
