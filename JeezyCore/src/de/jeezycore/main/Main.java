@@ -6,7 +6,7 @@ import de.jeezycore.commands.GrantRank;
 import de.jeezycore.commands.JeezyCoreGuide;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.events.ChatEvent;
-import de.jeezycore.events.ClickEvent;
+import de.jeezycore.events.InventoryClickEvent;
 import de.jeezycore.events.JoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,7 +22,7 @@ public class Main extends JavaPlugin {
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
-        getServer().getPluginManager().registerEvents(new ClickEvent(), this);
+        getServer().getPluginManager().registerEvents(new InventoryClickEvent(), this);
         // Creating Connection / Creating Table
         JeezySQL con = new JeezySQL();
         con.createTable();
