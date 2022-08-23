@@ -13,9 +13,11 @@ public String password;
 public String rank;
 public int rankColor;
 
-public String player;
+public static String player;
 
 public String createRankMsg;
+
+public static ArrayList<String> player_name_array = new ArrayList<String>();
 
 public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integer>();
 
@@ -39,7 +41,7 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
                     " (rankName VARCHAR(255), " +
                     " rankColor INT(2), " +
                     " rankPriority INT(3), " +
-                    " playerName VARCHAR(255), " +
+                    " playerName longtext, " +
                     " PRIMARY KEY ( rankName ))";
             stm.executeUpdate(sql);
             con.close();
@@ -68,7 +70,25 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
             createRankMsg = "Rank §l{colorID}{rank}§4 already exist.";
             System.out.println(e);
         }
+    }
 
+    public void grantPlayer(String sql, String rankName) {
+        this.createConnection();
+        try {
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, String.valueOf(player_name_array));
+            pst.setString(2, rankName);
+
+            pst.executeUpdate();
+
+            System.out.println(pst);
+
+            con.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
     }
 
 
@@ -82,7 +102,6 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
             while(rs.next()){
                 rank = rs.getString(1);
                 rankColor = rs.getInt(2);
-                player = rs.getString(4);
                 rankData.put(rank, rankColor);
             }
             con.close();
@@ -90,7 +109,5 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
             System.out.println(e);
         }
     }
-
-
 
 }
