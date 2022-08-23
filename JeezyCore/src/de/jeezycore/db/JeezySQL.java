@@ -110,4 +110,21 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
         }
     }
 
+    public void displayChatRank(String sql) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+
+            ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                rank = rs.getString(1);
+                rankColor = rs.getInt(2);
+            }
+
+        }catch (SQLException e) {
+            System.out.println(e);
+    }
+    }
+
 }
