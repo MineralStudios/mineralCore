@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 
+import static de.jeezycore.db.JeezySQL.player;
 import static de.jeezycore.db.JeezySQL.player_name_array;
 
 public class InventoryClickEvent implements Listener {
@@ -30,7 +31,9 @@ public class InventoryClickEvent implements Listener {
         mysql.grantPlayer(input, get_rank);
         player_name_array.remove(JeezySQL.player);
 
-
+        e.setCancelled(true);
+        e.getWhoClicked().closeInventory();
+        e.getWhoClicked().sendMessage("You §b§lsuccessfully§f granted §l§7"+player+"§f the §l"+e.getCurrentItem().getItemMeta().getDisplayName()+" §frank.");
     }
 
 
