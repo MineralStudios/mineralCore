@@ -1,5 +1,6 @@
 package de.jeezycore.commands;
 
+import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.db.JeezySQL;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.Wool;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class GrantRank implements CommandExecutor {
@@ -42,13 +44,18 @@ public class GrantRank implements CommandExecutor {
                     p.openInventory(inv);
                     return true;
                 } else {
-
                     int i = 0;
                     for (Map.Entry<String, Integer> entry : display.rankData.entrySet()) {
                         ItemStack rank = new ItemStack(Material.WOOL, 1, (short) ((int) entry.getValue()));
+                        String show_color = ColorTranslator.colorTranslator.get(entry.getValue());
                         String displayName = entry.getKey();
                         ItemMeta rankMeta = rank.getItemMeta();
-                        rankMeta.setDisplayName(displayName);
+                        List<String> desc = new ArrayList<String>();
+                        desc.add(0, "§8§m-----------------------------------");
+                        desc.add(1, "§7Click to grant §l"+show_color+displayName+"§7 to " + "§b"+args[0]);
+                        desc.add(2, "§8§m-----------------------------------");
+                        rankMeta.setDisplayName(show_color+displayName);
+                        rankMeta.setLore(desc);
                         rank.setItemMeta(rankMeta);
                         inv.setItem(9+i, rank);
                         ++i;
