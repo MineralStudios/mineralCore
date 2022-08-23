@@ -1,5 +1,6 @@
 package de.jeezycore.db;
 import de.jeezycore.colors.Color;
+import de.jeezycore.colors.ColorTranslator;
 // SQL imports
 import java.sql.*;
 import java.util.*;
@@ -13,6 +14,8 @@ public String rank;
 public int rankColor;
 
 public String player;
+
+public String createRankMsg;
 
 public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integer>();
 
@@ -59,9 +62,10 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
             pstmt.setString(3, rankPriority);
 
              pstmt.executeUpdate();
-
+            createRankMsg = "§bSuccessfully§f created §l{colorID}{rank}§f rank.";
         con.close();
         } catch (SQLException e) {
+            createRankMsg = "Rank §l{colorID}{rank}§4 already exist.";
             System.out.println(e);
         }
 
@@ -81,7 +85,6 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
                 player = rs.getString(4);
                 rankData.put(rank, rankColor);
             }
-
             con.close();
         } catch (SQLException e) {
             System.out.println(e);

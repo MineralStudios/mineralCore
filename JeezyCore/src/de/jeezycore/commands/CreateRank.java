@@ -1,5 +1,6 @@
 package de.jeezycore.commands;
 
+import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.db.JeezySQL;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,7 +23,8 @@ public class CreateRank implements CommandExecutor {
                        "VALUES " +
                        "(?, ?, ?)";
                mySQL.pushData(input, args[0], args[1], args[2]);
-               p.sendMessage("§bSuccessfully§f created "+args[0]+" rank.");
+               String show_color = ColorTranslator.colorTranslator.get(Integer.parseInt(args[1]));
+               p.sendMessage(mySQL.createRankMsg.replace("{rank}", args[0]).replace("{colorID}", show_color));
            }
         }
         return false;
