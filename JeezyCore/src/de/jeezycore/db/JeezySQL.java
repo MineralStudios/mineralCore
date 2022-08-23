@@ -73,8 +73,8 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
     }
 
     public void grantPlayer(String sql, String rankName) {
-        this.createConnection();
         try {
+            this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
 
             PreparedStatement pst = con.prepareStatement(sql);
