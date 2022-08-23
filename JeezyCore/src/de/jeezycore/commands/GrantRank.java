@@ -30,7 +30,7 @@ public class GrantRank implements CommandExecutor {
                 Inventory inv = Bukkit.createInventory(null, 27, ChatColor.AQUA + "Grant " +ChatColor.WHITE+ " §8§l[ "+ChatColor.WHITE+args[0]+" §8§l]");
                 JeezySQL display = new JeezySQL();
                 display.displayData();
-
+                JeezySQL.player = args[0];
                 ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
                 SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
                 skullMeta.setDisplayName("§b"+args[0]);
