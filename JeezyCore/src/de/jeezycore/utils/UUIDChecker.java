@@ -9,13 +9,15 @@ import org.json.simple.JSONValue;
 import java.net.URL;
 
 public class UUIDChecker {
-        public String uuid;
+        public static String uuid;
+        public static String uuidName;
 
         public void check(String userName)  {
 
                 for (Player ps : Bukkit.getOnlinePlayers()) {
                         if (ps.getName().equalsIgnoreCase(userName)) {
                                  uuid = String.valueOf(ps.getUniqueId());
+                                 uuidName = ps.getPlayer().getDisplayName();
                                  System.out.println(uuid);
                         } else {
                                 try {
@@ -24,7 +26,9 @@ public class UUIDChecker {
                                         String UUIDJson = IOUtils.toString(new URL(url));
                                         JSONObject UUIDObject = (JSONObject) JSONValue.parseWithException(UUIDJson);
                                         uuid = UUIDObject.get("id").toString();
+                                        uuidName = UUIDObject.get("name").toString();
                                         System.out.println(uuid);
+                                        System.out.println(uuidName);
                                 } catch (Exception e) {
                                    System.out.println(e);
                                 }
