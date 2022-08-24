@@ -1,6 +1,8 @@
 package de.jeezycore.events;
 
 import de.jeezycore.db.JeezySQL;
+import de.jeezycore.utils.UUIDChecker;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -18,7 +20,6 @@ public class InventoryClickEvent implements Listener {
         }
 
         System.out.println(JeezySQL.player);
-
         JeezySQL mysql = new JeezySQL();
         player_name_array.add(JeezySQL.player);
 
@@ -33,7 +34,8 @@ public class InventoryClickEvent implements Listener {
 
         e.setCancelled(true);
         e.getWhoClicked().closeInventory();
-        e.getWhoClicked().sendMessage("You §b§lsuccessfully§f granted §l§7"+player+"§f the §l"+e.getCurrentItem().getItemMeta().getDisplayName()+" §frank.");
+        System.out.println();
+        e.getWhoClicked().sendMessage("You §b§lsuccessfully§f granted §l§7"+ UUIDChecker.uuidName +"§f the §l"+e.getCurrentItem().getItemMeta().getDisplayName()+" §frank.");
     }
 
 
