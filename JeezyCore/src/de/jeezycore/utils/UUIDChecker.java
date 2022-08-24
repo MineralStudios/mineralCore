@@ -16,7 +16,7 @@ public class UUIDChecker {
 
                 for (Player ps : Bukkit.getOnlinePlayers()) {
                         if (ps.getName().equalsIgnoreCase(userName)) {
-                                 uuid = String.valueOf(ps.getUniqueId());
+                                 uuid = ps.getUniqueId().toString().replace("-", "");
                                  uuidName = ps.getPlayer().getDisplayName();
                                  System.out.println(uuid);
                         } else {
