@@ -2,6 +2,7 @@ package de.jeezycore.commands;
 
 import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.db.JeezySQL;
+import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,7 +13,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.Wool;
+import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +33,10 @@ public class GrantRank implements CommandExecutor {
                 Inventory inv = Bukkit.createInventory(null, 27, ChatColor.AQUA + "Grant " +ChatColor.WHITE+ " §8§l[ "+ChatColor.WHITE+args[0]+" §8§l]");
                 JeezySQL display = new JeezySQL();
                 display.displayData();
-                JeezySQL.player = args[0];
+
+                UUIDChecker c = new UUIDChecker();
+                c.check(args[0]);
+                JeezySQL.player = c.uuid;
                 ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
                 SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
                 skullMeta.setDisplayName("§b"+args[0]);
@@ -38,6 +44,7 @@ public class GrantRank implements CommandExecutor {
 
                 skull.setItemMeta(skullMeta);
                 inv.setItem(4, skull);
+
 
 
                 if (display.rankData.size() == 0) {
