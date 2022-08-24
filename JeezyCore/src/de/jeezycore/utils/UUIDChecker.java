@@ -23,7 +23,7 @@ public class UUIDChecker {
                                         String url = "https://api.mojang.com/users/profiles/minecraft/"+user;
                                         String UUIDJson = IOUtils.toString(new URL(url));
                                         JSONObject UUIDObject = (JSONObject) JSONValue.parseWithException(UUIDJson);
-                                        String uuid = UUIDObject.get("id").toString();
+                                        uuid = UUIDObject.get("id").toString();
                                         System.out.println(uuid);
                                 } catch (Exception e) {
                                    System.out.println(e);
