@@ -2,20 +2,15 @@ package de.jeezycore.events;
 
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.utils.UUIDChecker;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.util.ArrayList;
-
-import static de.jeezycore.db.JeezySQL.player;
-import static de.jeezycore.db.JeezySQL.player_name_array;
 
 public class InventoryClickEvent implements Listener {
 
     @EventHandler
     public void onCLickEvent(org.bukkit.event.inventory.InventoryClickEvent e) {
-        if (!e.getCurrentItem().getType().getData().getSimpleName().equals("Wool")) {
+        if (e.getCurrentItem() == null || !e.getCurrentItem().getType().getData().getSimpleName().equals("Wool") || !e.getClickedInventory().getName().contains("§bGrant")) {
             return;
         }
         JeezySQL mysql = new JeezySQL();
