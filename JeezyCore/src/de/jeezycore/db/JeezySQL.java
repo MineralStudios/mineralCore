@@ -15,6 +15,10 @@ public int rankColor;
 
 public static String player;
 
+public String grantPlayer;
+
+public static String grant_new_player;
+
 public String createRankMsg;
 
 public static ArrayList<String> player_name_array = new ArrayList<String>();
@@ -72,25 +76,38 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
         }
     }
 
-    public void grantPlayer(String sql, String rankName) {
+    public void grantPlayer(String rankName) {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
 
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, String.valueOf(player_name_array));
-            pst.setString(2, rankName);
+            Statement stm = con.createStatement();
+            String sql2 = "SELECT playerName FROM jeezycore WHERE rankName = '"+rankName+"'";
+            ResultSet rs = stm.executeQuery(sql2);
+            while (rs.next()) {
+                grantPlayer = rs.getString(1);
+            }
 
-            pst.executeUpdate();
+            if (grantPlayer != null) {
+                grant_new_player = grantPlayer.replace("]", "").replace("[", "");
 
-            System.out.println(pst);
+                player_name_array.add(grant_new_player);
+            }
+            player_name_array.add(player);
+
+            String sql = "UPDATE jeezycore " +
+                    "SET playerName = '"+player_name_array +
+                    "' WHERE rankName = '"+rankName+"'";
+            System.out.println(sql);
+            stm.executeUpdate(sql);
+
+            player_name_array.clear();
 
             con.close();
         } catch (SQLException e) {
             System.out.println(e);
         }
     }
-
 
     public void displayData() {
         try {
