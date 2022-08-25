@@ -18,23 +18,14 @@ public class InventoryClickEvent implements Listener {
         if (!e.getCurrentItem().getType().getData().getSimpleName().equals("Wool")) {
             return;
         }
-
-        System.out.println(JeezySQL.player);
         JeezySQL mysql = new JeezySQL();
-        player_name_array.add(JeezySQL.player);
-
-        System.out.println(player_name_array);
-        String input = "UPDATE jeezycore " +
-                "SET playerName = ? " +
-                "WHERE rankName = ?";
 
         String get_rank = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
-        mysql.grantPlayer(input, get_rank);
-        player_name_array.remove(JeezySQL.player);
+        mysql.grantPlayer(get_rank);
+
 
         e.setCancelled(true);
         e.getWhoClicked().closeInventory();
-        System.out.println();
         e.getWhoClicked().sendMessage("You §b§lsuccessfully§f granted §l§7"+ UUIDChecker.uuidName +"§f the §l"+e.getCurrentItem().getItemMeta().getDisplayName()+" §frank.");
     }
 
