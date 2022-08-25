@@ -23,7 +23,7 @@ public class ChatEvent implements Listener {
 
             String show_color = ColorTranslator.colorTranslator.get(display.rankColor);
             System.out.println(show_color);
-            e.setFormat("§7§l["+show_color+""+display.rank+"§7§l]§f "+e.getPlayer().getDisplayName()+": "+e.getMessage());
+            e.setFormat("§7§l["+show_color+""+display.rank+"§7§l]§f "+e.getPlayer().getDisplayName()+": "+e.getMessage().replace("%", "%%"));
 
 
     }
