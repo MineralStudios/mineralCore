@@ -1,6 +1,7 @@
 package de.jeezycore.db;
 import de.jeezycore.colors.Color;
 import de.jeezycore.colors.ColorTranslator;
+import de.jeezycore.utils.UUIDChecker;
 // SQL imports
 import java.sql.*;
 import java.util.*;
@@ -16,6 +17,8 @@ public int rankColor;
 public static String player;
 
 public String grantPlayer;
+
+public String alreadyGranted;
 
 public static String grant_new_player;
 
@@ -76,10 +79,56 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
         }
     }
 
+    private void alreadyGranted() {
+        try {
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            Statement stm = con.createStatement();
+            String sql_already_g = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ UUIDChecker.uuid +"%'";
+            ResultSet rs = stm.executeQuery(sql_already_g);
+            while (rs.next()) {
+                alreadyGranted = rs.getString(4);
+            }
+            if (alreadyGranted != null) {
+                if (alreadyGranted.contains(UUIDChecker.uuid)) {
+                    System.out.println("getting executed");
+                    grant_new_player = alreadyGranted.replace("]", "").replace("[", "");
+                    player_name_array.add(grant_new_player);
+
+                    System.out.println(player_name_array);
+
+                    player_name_array.remove(UUIDChecker.uuid);
+
+                    String sql_already_g2;
+                    if (player_name_array.size() == 0) {
+                        sql_already_g2 = "UPDATE jeezycore " +
+                                "SET playerName = NULL" +
+                                " WHERE playerName LIKE '%" + UUIDChecker.uuid + "%'";
+                    } else {
+                        sql_already_g2 = "UPDATE jeezycore " +
+                                "SET playerName = '" + player_name_array +
+                                "' WHERE playerName LIKE '%" + UUIDChecker.uuid + "%'";
+                    }
+                    System.out.println(sql_already_g);
+                    System.out.println(sql_already_g2);
+                    stm.executeUpdate(sql_already_g2);
+
+                    player_name_array.clear();
+                }
+            }
+
+        }catch (SQLException e) {
+        System.out.println(e);
+        }
+
+    }
+
     public void grantPlayer(String rankName) {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
+
+            this.alreadyGranted();
 
             Statement stm = con.createStatement();
             String sql2 = "SELECT playerName FROM jeezycore WHERE rankName = '"+rankName+"'";
@@ -89,6 +138,7 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
             }
 
             if (grantPlayer != null) {
+                if (grantPlayer.contains(UUIDChecker.uuid)) return;
                 grant_new_player = grantPlayer.replace("]", "").replace("[", "");
 
                 player_name_array.add(grant_new_player);
@@ -100,9 +150,7 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
                     "' WHERE rankName = '"+rankName+"'";
             System.out.println(sql);
             stm.executeUpdate(sql);
-
             player_name_array.clear();
-
             con.close();
         } catch (SQLException e) {
             System.out.println(e);
