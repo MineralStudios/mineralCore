@@ -7,26 +7,26 @@ import java.sql.*;
 import java.util.*;
 
 public class JeezySQL  {
-public String url;
-public String user;
-public String password;
+    public String url;
+    public String user;
+    public String password;
 
-public String rank;
-public int rankColor;
+    public String rank;
+    public int rankColor;
 
-public static String player;
+    public static String player;
 
-public String grantPlayer;
+    public String grantPlayer;
 
-public String alreadyGranted;
+    public String alreadyGranted;
 
-public static String grant_new_player;
+    public static String [] grant_new_player;
 
-public String createRankMsg;
+    public String createRankMsg;
 
-public static ArrayList<String> player_name_array = new ArrayList<String>();
+    public static ArrayList<String> player_name_array = new ArrayList<String>();
 
-public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integer>();
+    public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integer>();
 
 
     private void createConnection() {
@@ -60,7 +60,7 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
     }
 
     public void pushData(String sql, String rankName, String rankColor, String rankPriority)  {
-    this.createConnection();
+        this.createConnection();
         try {
             System.out.println(sql);
             Connection con = DriverManager.getConnection(url, user, password);
@@ -70,9 +70,9 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
             pstmt.setString(2, rankColor);
             pstmt.setString(3, rankPriority);
 
-             pstmt.executeUpdate();
+            pstmt.executeUpdate();
             createRankMsg = "§bSuccessfully§f created §l{colorID}{rank}§f rank.";
-        con.close();
+            con.close();
         } catch (SQLException e) {
             createRankMsg = "Rank §l{colorID}{rank}§4 already exist.";
             System.out.println(e);
@@ -92,12 +92,16 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
             if (alreadyGranted != null) {
                 if (alreadyGranted.contains(UUIDChecker.uuid)) {
                     System.out.println("getting executed");
-                    grant_new_player = alreadyGranted.replace("]", "").replace("[", "");
-                    player_name_array.add(grant_new_player);
+                    grant_new_player = alreadyGranted.replace("]", "").replace("[", "").split(", ");
+
+                    player_name_array.addAll(Arrays.asList(grant_new_player));
+
+                    player_name_array.remove(UUIDChecker.uuid);
+
 
                     System.out.println(player_name_array);
 
-                    player_name_array.remove(UUIDChecker.uuid);
+
 
                     String sql_already_g2;
                     if (player_name_array.size() == 0) {
@@ -118,7 +122,7 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
             }
 
         }catch (SQLException e) {
-        System.out.println(e);
+            System.out.println(e);
         }
 
     }
@@ -139,9 +143,10 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
 
             if (grantPlayer != null) {
                 if (grantPlayer.contains(UUIDChecker.uuid)) return;
-                grant_new_player = grantPlayer.replace("]", "").replace("[", "");
+                grant_new_player = grantPlayer.replace("]", "").replace("[", "").split(", ");
 
-                player_name_array.add(grant_new_player);
+                player_name_array.addAll(Arrays.asList(grant_new_player));
+
             }
             player_name_array.add(player);
 
@@ -189,7 +194,7 @@ public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integ
 
         }catch (SQLException e) {
             System.out.println(e);
-    }
+        }
     }
 
 }
