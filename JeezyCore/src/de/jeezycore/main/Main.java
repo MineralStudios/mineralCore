@@ -1,6 +1,7 @@
 package de.jeezycore.main;
 
 import de.jeezycore.colors.Color;
+import de.jeezycore.commands.ChatDisabler;
 import de.jeezycore.commands.CreateRank;
 import de.jeezycore.commands.GrantRank;
 import de.jeezycore.commands.JeezyCoreGuide;
@@ -19,6 +20,8 @@ public class Main extends JavaPlugin {
         this.getCommand("jeezycore-guide").setExecutor(new JeezyCoreGuide());
         this.getCommand("create-rank").setExecutor(new CreateRank());
         this.getCommand("grant-rank").setExecutor(new GrantRank());
+        this.getCommand("chat-disable").setExecutor(new ChatDisabler());
+        this.getCommand("chat-enable").setExecutor(new ChatDisabler());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
