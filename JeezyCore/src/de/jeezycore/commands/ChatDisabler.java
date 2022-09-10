@@ -1,13 +1,21 @@
 package de.jeezycore.commands;
 
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 
 public class ChatDisabler implements CommandExecutor {
@@ -21,31 +29,46 @@ public class ChatDisabler implements CommandExecutor {
                 p.sendMessage("Usage: /chat-disable or enable");
             } else if (cmd.getName().equalsIgnoreCase("chat-disable") && args.length == 0) {
                 p.sendMessage("§2You successfully disabled the chat §b§l"+p.getDisplayName());
-                JSONObject jsobj_enable = new JSONObject();
-                jsobj_enable.put("chat_muted", true);
-                //Write JSON file
-                try (FileWriter file = new FileWriter("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.json")) {
-                    //We can write any JSONArray or JSONObject instance to the file
-                    file.write(jsobj_enable.toJSONString());
-                    file.flush();
+
+                try {
+                    File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
+                    FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+                    HashMap<String, Boolean> chat = new HashMap<String, Boolean>();
+                    chat.put("enabled", true);
+                    config.set("chat", chat);
+
+
+                    if (!file.exists()) {
+                        file.createNewFile(); //This needs a try catch
+                    }
+
+                    config.save(file);
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
 
+            }
             if (cmd.getName().equalsIgnoreCase("chat-enable") && args.length > 0) {
                 p.sendMessage("Usage: /chat-enable or disable");
             } else if (cmd.getName().equalsIgnoreCase("chat-enable") && args.length == 0) {
                 p.sendMessage("§2You successfully enabled the chat §b§l"+p.getDisplayName());
-                JSONObject jsobj_disable = new JSONObject();
-                jsobj_disable.put("chat_muted", false);
-                //Write JSON file
-                try (FileWriter file = new FileWriter("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.json")) {
-                    //We can write any JSONArray or JSONObject instance to the file
-                    file.write(jsobj_disable.toJSONString());
-                    file.flush();
+                try {
+                    File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
+                    FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
+                    HashMap<String, Boolean> chat = new HashMap<String, Boolean>();
+                    chat.put("enabled", false);
+                    config.set("chat", chat);
+
+
+
+                    if (!file.exists()) {
+                        file.createNewFile(); //This needs a try catch
+                    }
+
+                    config.save(file);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
