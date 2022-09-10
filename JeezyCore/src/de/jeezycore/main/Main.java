@@ -20,6 +20,7 @@ public class Main extends JavaPlugin {
         this.getCommand("chat-disable").setExecutor(new ChatDisabler());
         this.getCommand("chat-enable").setExecutor(new ChatDisabler());
         this.getCommand("jeezy-spawn-set").setExecutor(new SetSpawn());
+        this.getCommand("ping").setExecutor(new Ping());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
