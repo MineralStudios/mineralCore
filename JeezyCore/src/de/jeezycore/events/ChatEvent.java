@@ -2,13 +2,14 @@ package de.jeezycore.events;
 
 import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.db.JeezySQL;
+import org.bukkit.configuration.MemorySection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
-import java.io.FileReader;
+import java.io.File;
 
 public class ChatEvent implements Listener {
 
@@ -23,18 +24,20 @@ public class ChatEvent implements Listener {
 
             if (display.rank == null) return;
 
-        JSONParser parser = new JSONParser();
-        try {
-            Object obj = parser.parse(new FileReader("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.json"));
-            // A JSON object. Key value pairs are unordered. JSONObject supports java.util.Map interface.
-            JSONObject jsonObject = (JSONObject) obj;
-            // A JSON array. JSONObject supports java.util.List interface.
-            Boolean chat_muted = (Boolean) jsonObject.get("chat_muted");
 
-            if (!chat_muted) {
+        try {
+            File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
+            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+            MemorySection mc = (MemorySection) config.get("chat");
+            boolean chat_muted = mc.getBoolean("enabled");
+
+
+
+             if (!chat_muted) {
                 System.out.println("Chat is enabled");
             } else {
-                System.out.println("Chat is disabled!");
+               System.out.println("Chat is disabled!");
                 e.getPlayer().sendMessage("§4§lChat has been disabled.");
                 e.setCancelled(true);
                 return;
