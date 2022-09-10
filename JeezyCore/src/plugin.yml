@@ -17,3 +17,5 @@ commands:
     description: Sets entry point when joining.
   ping:
     description: Shows player ping.
+  msg:
+    description: Message other people.
