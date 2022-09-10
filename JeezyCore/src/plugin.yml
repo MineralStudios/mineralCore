@@ -13,3 +13,5 @@ commands:
     description: Disables chat.
   chat-enable:
     description: Enables chat.
+  jeezy-spawn-set:
+    description: Sets entry point when joining.
