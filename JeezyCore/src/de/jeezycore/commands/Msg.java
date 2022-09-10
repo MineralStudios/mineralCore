@@ -18,12 +18,11 @@ public class Msg implements CommandExecutor {
         if (sender instanceof Player) {
             Player p = (Player) sender;
 
-            if (Bukkit.getServer().getPlayerExact(args[0]) == null) {
-                p.sendMessage("§4This player is not online anymore.");
-                return true;
-            }
-
-            if (cmd.getName().equalsIgnoreCase("msg") && args.length > 1) {
+            if (cmd.getName().equalsIgnoreCase("msg") && args.length >= 2) {
+                if (Bukkit.getServer().getPlayerExact(args[0]) == null) {
+                    p.sendMessage("§4This player is not online anymore.");
+                    return true;
+                }
                 List<String> ls = new ArrayList<String>(Arrays.asList(args));
 
                 String input = Joiner.on(" ")
