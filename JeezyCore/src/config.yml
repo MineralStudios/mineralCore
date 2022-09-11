@@ -6,5 +6,8 @@ entry-spawn-point:
   z: 1448.4635743092806
   pitch: 3.6155806
   yaw: 0.3611338
+spawn-settings:
+  respawn-at-spawn: true
+  respawn-after-death-at-spawn: false
 chat:
   enabled: false
