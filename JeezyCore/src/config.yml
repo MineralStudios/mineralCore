@@ -7,6 +7,7 @@ entry-spawn-point:
   pitch: 3.6155806
   yaw: 0.3611338
 spawn-settings:
+  spawn-at-spawnpoint-on-join: true
   respawn-at-spawn: true
   respawn-after-death-at-spawn: false
 chat:
