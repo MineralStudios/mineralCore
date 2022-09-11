@@ -6,6 +6,7 @@ import de.jeezycore.db.JeezySQL;
 import de.jeezycore.events.ChatEvent;
 import de.jeezycore.events.InventoryClickEvent;
 import de.jeezycore.events.JoinEvent;
+import de.jeezycore.events.LeaveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -22,10 +23,12 @@ public class Main extends JavaPlugin {
         this.getCommand("jeezy-spawn-set").setExecutor(new SetSpawn());
         this.getCommand("ping").setExecutor(new Ping());
         this.getCommand("msg").setExecutor(new Msg());
+        this.getCommand("r").setExecutor(new Msg());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
         getServer().getPluginManager().registerEvents(new InventoryClickEvent(), this);
+        getServer().getPluginManager().registerEvents(new LeaveEvent(), this);
         // Creating Connection / Creating Table
         JeezySQL con = new JeezySQL();
         con.createTable();
