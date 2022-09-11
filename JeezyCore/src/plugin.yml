@@ -19,3 +19,5 @@ commands:
     description: Shows player ping.
   msg:
     description: Message other people.
+  r:
+    description: Replies to messages.
