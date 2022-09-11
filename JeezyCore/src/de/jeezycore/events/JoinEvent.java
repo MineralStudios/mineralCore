@@ -3,6 +3,7 @@ package de.jeezycore.events;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
@@ -25,7 +26,8 @@ public class JoinEvent implements Listener {
         FileConfiguration spawn = YamlConfiguration.loadConfiguration(file);
 
         List<Location> ls = (List<Location>) spawn.get("entry-spawn-point");
-
+        MemorySection mc = (MemorySection) spawn.get("spawn-settings");
+        boolean spawnOnSpownpointOnJoin = mc.getBoolean("spawn-at-spawnpoint-on-join");
 
         World w = ls.get(0).getWorld();
         double x = ls.get(0).getBlockX();
@@ -33,6 +35,8 @@ public class JoinEvent implements Listener {
         double z = ls.get(0).getBlockZ();
         float pitch = ls.get(0).getPitch();
         float yaw = ls.get(0).getYaw();
+
+        if (!spawnOnSpownpointOnJoin) return;
         e.getPlayer().teleport(new Location(w, x, y, z, pitch, yaw));
 
     } catch (Exception f) {
