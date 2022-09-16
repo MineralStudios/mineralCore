@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -34,9 +35,9 @@ public class ChatDisabler implements CommandExecutor {
                     File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
                     FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-                    HashMap<String, Boolean> chat = new HashMap<String, Boolean>();
-                    chat.put("enabled", true);
-                    config.set("chat", chat);
+
+                    MemorySection mc = (MemorySection) config.get("chat");
+                    mc.set("muted", true);
 
 
                     if (!file.exists()) {
@@ -58,9 +59,8 @@ public class ChatDisabler implements CommandExecutor {
                     File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
                     FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-                    HashMap<String, Boolean> chat = new HashMap<String, Boolean>();
-                    chat.put("enabled", false);
-                    config.set("chat", chat);
+                    MemorySection mc = (MemorySection) config.get("chat");
+                    mc.set("muted", false);
 
 
 
