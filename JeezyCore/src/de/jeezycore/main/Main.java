@@ -21,6 +21,8 @@ public class Main extends JavaPlugin {
         this.getCommand("ping").setExecutor(new Ping());
         this.getCommand("msg").setExecutor(new Msg());
         this.getCommand("r").setExecutor(new Msg());
+        this.getCommand("day").setExecutor(new TimeChanger());
+        this.getCommand("night").setExecutor(new TimeChanger());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
