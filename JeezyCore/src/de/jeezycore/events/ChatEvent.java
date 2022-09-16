@@ -10,6 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChatEvent implements Listener {
 
@@ -30,11 +32,15 @@ public class ChatEvent implements Listener {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
             MemorySection mc = (MemorySection) config.get("chat");
-            boolean chat_muted = mc.getBoolean("enabled");
+            boolean chat_muted = mc.getBoolean("muted");
+            List<String> ignored_roles = (List<String>) mc.getList("ignored_roles_on_chat-mute");
 
 
 
-             if (!chat_muted) {
+            System.out.println(ignored_roles);
+
+
+             if (!chat_muted || ignored_roles.contains(display.rank)) {
                 System.out.println("Chat is enabled");
             } else {
                System.out.println("Chat is disabled!");
