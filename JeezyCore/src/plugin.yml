@@ -21,3 +21,7 @@ commands:
     description: Message other people.
   r:
     description: Replies to messages.
+  day:
+    description: Changes player time to day.
+  night:
+    description: Changes player time to night.
