@@ -17,14 +17,25 @@ public class DeathEvent implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         try {
+
             File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
             FileConfiguration spawn = YamlConfiguration.loadConfiguration(file);
 
+            File file2 = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\messages.yml");
+            FileConfiguration msg = YamlConfiguration.loadConfiguration(file2);
+
             List<Location> ls = (List<Location>) spawn.get("entry-spawn-point");
             MemorySection mc = (MemorySection) spawn.get("spawn-settings");
-            boolean spawn_settings = mc.getBoolean("  respawn-after-death-at-spawn");
 
+            MemorySection mc2 = (MemorySection) msg.get("messages");
 
+            boolean spawn_settings = mc.getBoolean("respawn-after-death-at-spawn");
+
+            boolean get_death_msg_b = mc2.getBoolean("disable-death-msg");
+
+            if (get_death_msg_b) {
+                e.setDeathMessage("");
+            }
 
             World w = ls.get(0).getWorld();
             double x = ls.get(0).getBlockX();
