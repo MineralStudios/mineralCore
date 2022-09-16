@@ -1,0 +1,4 @@
+MYSQL:
+  user: root
+  password: ''
+  database: jeezydevelopment
