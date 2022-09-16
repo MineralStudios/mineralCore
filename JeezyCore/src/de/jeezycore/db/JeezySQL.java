@@ -2,7 +2,11 @@ package de.jeezycore.db;
 import de.jeezycore.colors.Color;
 import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.utils.UUIDChecker;
+import org.bukkit.configuration.MemorySection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 // SQL imports
+import java.io.File;
 import java.sql.*;
 import java.util.*;
 
@@ -30,9 +34,14 @@ public class JeezySQL  {
 
 
     private void createConnection() {
-        url = "jdbc:mysql://localhost:3306/jeezydevelopment";
-        user = "root";
-        password = "";
+
+        File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\database.yml");
+        FileConfiguration db = YamlConfiguration.loadConfiguration(file);
+        MemorySection mc = (MemorySection) db.get("MYSQL");
+
+        url = "jdbc:mysql://localhost:3306/"+mc.get("database");
+        user = (String) mc.get("user");
+        password = (String) mc.get("password");
     }
 
     public void createTable() {
