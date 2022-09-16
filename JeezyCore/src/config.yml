@@ -11,4 +11,6 @@ spawn-settings:
   respawn-at-spawn: true
   respawn-after-death-at-spawn: false
 chat:
-  enabled: false
+  muted: true
+  ignored_roles_on_chat-mute:
+  - Owner
