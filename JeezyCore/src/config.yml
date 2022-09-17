@@ -12,6 +12,7 @@ spawn-settings:
   respawn-after-death-at-spawn: false
 settings:
   disable_raining: true
+  disable-death-msg: true
 chat:
   muted: true
   ignored_roles_on_chat-mute:
