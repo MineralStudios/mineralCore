@@ -30,6 +30,7 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LeaveEvent(), this);
         getServer().getPluginManager().registerEvents(new RespawnEvent(), this);
         getServer().getPluginManager().registerEvents(new DeathEvent(), this);
+        getServer().getPluginManager().registerEvents(new WeatherEvent(), this);
         // Creating Connection / Creating Table
         JeezySQL con = new JeezySQL();
         con.createTable();
