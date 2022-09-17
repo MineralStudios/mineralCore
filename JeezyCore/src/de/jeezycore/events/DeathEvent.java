@@ -21,13 +21,11 @@ public class DeathEvent implements Listener {
             File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
             FileConfiguration spawn = YamlConfiguration.loadConfiguration(file);
 
-            File file2 = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\messages.yml");
-            FileConfiguration msg = YamlConfiguration.loadConfiguration(file2);
 
             List<Location> ls = (List<Location>) spawn.get("entry-spawn-point");
             MemorySection mc = (MemorySection) spawn.get("spawn-settings");
 
-            MemorySection mc2 = (MemorySection) msg.get("messages");
+            MemorySection mc2 = (MemorySection) spawn.get("settings");
 
             boolean spawn_settings = mc.getBoolean("respawn-after-death-at-spawn");
 
