@@ -10,6 +10,8 @@ spawn-settings:
   spawn-at-spawnpoint-on-join: true
   respawn-at-spawn: true
   respawn-after-death-at-spawn: false
+settings:
+  disable_raining: true
 chat:
   muted: true
   ignored_roles_on_chat-mute:
