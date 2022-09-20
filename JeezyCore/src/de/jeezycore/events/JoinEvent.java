@@ -1,6 +1,7 @@
 package de.jeezycore.events;
 
 
+import de.jeezycore.utils.PermissionHandler;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
@@ -22,6 +23,9 @@ public class JoinEvent implements Listener {
         e.setJoinMessage("");
 
     try {
+        PermissionHandler ph = new PermissionHandler();
+        ph.perms(e.getPlayer());
+
         File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
         FileConfiguration spawn = YamlConfiguration.loadConfiguration(file);
 
