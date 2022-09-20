@@ -25,3 +25,5 @@ commands:
     description: Changes player time to day.
   night:
     description: Changes player time to night.
+  fly:
+    description: Makes you fly.
