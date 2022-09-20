@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static de.jeezycore.utils.MsgArray.reply_array;
+import static de.jeezycore.utils.ArrayStorage.reply_array;
 
 public class Msg implements CommandExecutor {
 
