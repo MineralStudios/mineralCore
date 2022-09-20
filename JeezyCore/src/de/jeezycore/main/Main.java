@@ -23,6 +23,7 @@ public class Main extends JavaPlugin {
         this.getCommand("r").setExecutor(new Msg());
         this.getCommand("day").setExecutor(new TimeChanger());
         this.getCommand("night").setExecutor(new TimeChanger());
+        this.getCommand("fly").setExecutor(new Fly());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
