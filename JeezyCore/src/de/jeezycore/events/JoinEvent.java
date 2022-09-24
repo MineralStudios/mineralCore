@@ -23,9 +23,6 @@ public class JoinEvent implements Listener {
         e.setJoinMessage("");
 
     try {
-        PermissionHandler ph = new PermissionHandler();
-        ph.perms(e.getPlayer());
-
         File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
         FileConfiguration spawn = YamlConfiguration.loadConfiguration(file);
 
