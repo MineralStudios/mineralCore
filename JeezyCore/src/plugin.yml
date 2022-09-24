@@ -7,6 +7,8 @@ commands:
     description: Helps you to navigate through the plugin.
   create-rank:
     description: Creates rank.
+  permissionAdd:
+    description: Gives a certain rank permission.
   grant-rank:
     description: Grants selected player a rank.
   chat-disable:
@@ -27,3 +29,4 @@ commands:
     description: Changes player time to night.
   fly:
     description: Makes you fly.
+
