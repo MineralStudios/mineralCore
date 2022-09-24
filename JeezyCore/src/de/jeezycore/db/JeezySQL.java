@@ -5,6 +5,7 @@ import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 // SQL imports
 import java.io.File;
 import java.sql.*;
@@ -26,12 +27,25 @@ public class JeezySQL  {
 
     public static String [] grant_new_player;
 
+    public static String [] new_perms;
+
     public String createRankMsg;
 
     public static ArrayList<String> player_name_array = new ArrayList<String>();
 
+    public static ArrayList<String> rankPerms = new ArrayList<String>();
+
     public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integer>();
 
+    public String getRankPerms;
+
+    public String rankColorPerms;
+
+    public String show_color;
+
+    public static String permPlayerName;
+
+    public static String permRankPerms;
 
     private void createConnection() {
 
@@ -58,6 +72,7 @@ public class JeezySQL  {
                     " rankColor INT(2), " +
                     " rankPriority INT(3), " +
                     " playerName longtext, " +
+                    " rankPerms longtext, " +
                     " PRIMARY KEY ( rankName ))";
             stm.executeUpdate(sql);
             con.close();
@@ -90,6 +105,7 @@ public class JeezySQL  {
 
     private void alreadyGranted() {
         try {
+            this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
 
             Statement stm = con.createStatement();
@@ -129,7 +145,7 @@ public class JeezySQL  {
                     player_name_array.clear();
                 }
             }
-
+        con.close();
         }catch (SQLException e) {
             System.out.println(e);
         }
@@ -200,10 +216,82 @@ public class JeezySQL  {
                 rank = rs.getString(1);
                 rankColor = rs.getInt(2);
             }
-
+        con.close();
         }catch (SQLException e) {
             System.out.println(e);
         }
+    }
+
+    public void colorPerms(String rank) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String select_color = "SELECT rankColor FROM jeezycore WHERE rankName = '" +rank+"'";
+            ResultSet rs = stm.executeQuery(select_color);
+            while (rs.next()) {
+                rankColorPerms = rs.getString(1);
+            }
+            System.out.println(select_color);
+            System.out.println(rankColorPerms);
+            show_color = ColorTranslator.colorTranslator.get(Integer.parseInt(rankColorPerms));
+            con.close();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void addPerms(String perm, String rank, Player p) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            this.colorPerms(rank);
+            String select_sql = "SELECT rankPerms FROM jeezycore WHERE rankName = '" +rank+"'";
+            ResultSet rs = stm.executeQuery(select_sql);
+            while (rs.next()) {
+                getRankPerms = rs.getString(1);
+            }
+            if (getRankPerms != null) {
+                if (getRankPerms.contains(perm)) {
+                    p.sendMessage("§fThis Perm §4already exist §ffor the §l"+show_color+rank+" §frank.");
+                    return;
+                }
+                new_perms = getRankPerms.replace("[", "").replace("]", "").split(",");
+                rankPerms.addAll(Arrays.asList(new_perms));
+            }
+            System.out.println(getRankPerms);
+           rankPerms.add(perm);
+           String sql = "UPDATE jeezycore " +
+                   "SET rankPerms = '"+rankPerms +
+                   "' WHERE rankName = '"+rank+"'";
+            p.sendMessage("§fSuccessfully added the perm: §l§b"+perm+" §ffor the rank: §l"+show_color+rank+".");
+           System.out.println(sql);
+           stm.executeUpdate(sql);
+           rankPerms.clear();
+       con.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public void setPerms(String rank, Player p) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String select_sql = "SELECT * FROM jeezycore WHERE rankName = '" +rank+"'";
+            ResultSet rs = stm.executeQuery(select_sql);
+            while (rs.next()) {
+                permPlayerName = rs.getString(4);
+                permRankPerms = rs.getString(5);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
