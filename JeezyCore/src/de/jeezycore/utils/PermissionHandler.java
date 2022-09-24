@@ -1,27 +1,36 @@
 package de.jeezycore.utils;
 
+
+import de.jeezycore.db.JeezySQL;
 import de.jeezycore.main.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 public class PermissionHandler {
 
     public static HashMap<UUID,PermissionAttachment> perms = new HashMap<UUID, PermissionAttachment>();
 
     public void perms(Player p) {
-        PermissionAttachment attachment = p.addAttachment(Main.getPlugin(Main.class));
 
-        perms.put(UUID.fromString("e150b93f-a86b-488c-8414-4065f2717c5c"), attachment);
+        String[] uuidStrings = JeezySQL.permPlayerName.replace("[", "").replace("]", "").
+                replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
 
-        PermissionAttachment set_perms = perms.get(p.getUniqueId());
-        System.out.println(set_perms);
-        System.out.println(perms);
-        if (set_perms == null) {
-            return;
+        for (int i = 0; i < uuidStrings.length; i++) {
+            System.out.println(uuidStrings[i]);
+            PermissionAttachment attachment = Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])).addAttachment(Main.getPlugin(Main.class));
+
+            perms.put(UUID.fromString(uuidStrings[i]), attachment);
+
+            PermissionAttachment set_perms = perms.get(UUID.fromString(uuidStrings[i]));
+            System.out.println(set_perms);
+            if (set_perms == null) {
+                return;
+            }
+            set_perms.setPermission("ajparkour.setup", true);
         }
-        set_perms.setPermission("ajparkour.setup", true);
+
     }
 }
