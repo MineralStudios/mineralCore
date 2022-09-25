@@ -13,13 +13,16 @@ public class PermissionHandler {
 
     public static HashMap<UUID,PermissionAttachment> perms = new HashMap<UUID, PermissionAttachment>();
 
-    public void perms(Player p) {
+    public void perms(Player p, String perm) {
 
         String[] uuidStrings = JeezySQL.permPlayerName.replace("[", "").replace("]", "").
                 replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
 
         for (int i = 0; i < uuidStrings.length; i++) {
-            System.out.println(uuidStrings[i]);
+            System.out.println(Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])));
+            if (Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])) == null) {
+                continue;
+            }
             PermissionAttachment attachment = Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])).addAttachment(Main.getPlugin(Main.class));
 
             perms.put(UUID.fromString(uuidStrings[i]), attachment);
@@ -29,7 +32,8 @@ public class PermissionHandler {
             if (set_perms == null) {
                 return;
             }
-            set_perms.setPermission("ajparkour.setup", true);
+            set_perms.setPermission(perm, true);
+
         }
 
     }
