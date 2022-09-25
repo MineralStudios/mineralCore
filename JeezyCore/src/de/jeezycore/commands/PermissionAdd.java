@@ -14,8 +14,8 @@ public class PermissionAdd implements CommandExecutor {
         if (sender instanceof Player) {
             Player p = (Player) sender;
 
-            if (cmd.getName().equalsIgnoreCase("permissionAdd") && args.length > 0 || args.length == 1) {
-
+            if (cmd.getName().equalsIgnoreCase("permissionAdd") && args.length == 2) {
+                System.out.println(args.length);
                 JeezySQL perms = new JeezySQL();
                 JeezySQL setPerms = new JeezySQL();
 
