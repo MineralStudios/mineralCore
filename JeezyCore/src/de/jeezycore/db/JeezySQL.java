@@ -1,6 +1,7 @@
 package de.jeezycore.db;
 import de.jeezycore.colors.Color;
 import de.jeezycore.colors.ColorTranslator;
+import de.jeezycore.utils.PermissionHandler;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -268,13 +269,13 @@ public class JeezySQL  {
                 new_perms = getRankPerms.replace("[", "").replace("]", "").split(",");
                 rankPerms.addAll(Arrays.asList(new_perms));
             }
-            System.out.println(getRankPerms);
            rankPerms.add(perm);
            String sql = "UPDATE jeezycore " +
                    "SET rankPerms = '"+rankPerms +
                    "' WHERE rankName = '"+rank+"'";
             p.sendMessage("§fSuccessfully added the perm: §l§b"+perm+" §ffor the rank: §l"+show_color+rank+"§f.");
-           System.out.println(sql);
+            PermissionHandler ph = new PermissionHandler();
+            ph.perms(p, perm);
            stm.executeUpdate(sql);
            rankPerms.clear();
        con.close();
