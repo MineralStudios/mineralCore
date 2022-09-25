@@ -234,7 +234,10 @@ public class JeezySQL  {
             }
             System.out.println(select_color);
             System.out.println(rankColorPerms);
-            show_color = ColorTranslator.colorTranslator.get(Integer.parseInt(rankColorPerms));
+            if (rankColorPerms != null) {
+                show_color = ColorTranslator.colorTranslator.get(Integer.parseInt(rankColorPerms));
+            }
+
             con.close();
         }catch (SQLException e) {
             e.printStackTrace();
@@ -253,6 +256,10 @@ public class JeezySQL  {
             while (rs.next()) {
                 getRankPerms = rs.getString(1);
             }
+            if (rankColorPerms == null) {
+                p.sendMessage("§fThe rank: §b§l" + rank + " §fdoesn't exist.");
+                return;
+            }
             if (getRankPerms != null) {
                 if (getRankPerms.contains(perm)) {
                     p.sendMessage("§fThis Perm §4already exist §ffor the §l"+show_color+rank+" §frank.");
@@ -266,13 +273,13 @@ public class JeezySQL  {
            String sql = "UPDATE jeezycore " +
                    "SET rankPerms = '"+rankPerms +
                    "' WHERE rankName = '"+rank+"'";
-            p.sendMessage("§fSuccessfully added the perm: §l§b"+perm+" §ffor the rank: §l"+show_color+rank+".");
+            p.sendMessage("§fSuccessfully added the perm: §l§b"+perm+" §ffor the rank: §l"+show_color+rank+"§f.");
            System.out.println(sql);
            stm.executeUpdate(sql);
            rankPerms.clear();
        con.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
