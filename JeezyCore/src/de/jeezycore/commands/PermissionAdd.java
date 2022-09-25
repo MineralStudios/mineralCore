@@ -23,7 +23,7 @@ public class PermissionAdd implements CommandExecutor {
                 setPerms.setPerms(args[1], p);
 
                 PermissionHandler ph = new PermissionHandler();
-                ph.perms(p);
+                ph.perms(p, args[0]);
 
             } else {
             p.sendMessage("Usage /permissionAdd <perm> <rankName>");
