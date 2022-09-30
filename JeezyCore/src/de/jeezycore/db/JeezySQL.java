@@ -295,7 +295,7 @@ public class JeezySQL  {
                 permPlayerName = rs.getString(4);
                 permRankPerms = rs.getString(5);
             }
-
+        con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
