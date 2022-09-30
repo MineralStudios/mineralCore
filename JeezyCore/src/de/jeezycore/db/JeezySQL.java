@@ -275,7 +275,7 @@ public class JeezySQL  {
                    "' WHERE rankName = '"+rank+"'";
             p.sendMessage("§fSuccessfully added the perm: §l§b"+perm+" §ffor the rank: §l"+show_color+rank+"§f.");
             PermissionHandler ph = new PermissionHandler();
-            ph.perms(p, perm);
+            ph.onAddPerms(p, perm);
            stm.executeUpdate(sql);
            rankPerms.clear();
        con.close();

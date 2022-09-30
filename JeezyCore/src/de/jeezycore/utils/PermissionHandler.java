@@ -13,7 +13,7 @@ public class PermissionHandler {
 
     public static HashMap<UUID,PermissionAttachment> perms = new HashMap<UUID, PermissionAttachment>();
 
-    public void perms(Player p, String perm) {
+    public void onAddPerms(Player p, String perm) {
         if (JeezySQL.permPlayerName == null) return;
         String[] uuidStrings = JeezySQL.permPlayerName.replace("[", "").replace("]", "").
                 replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
