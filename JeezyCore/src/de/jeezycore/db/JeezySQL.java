@@ -246,6 +246,24 @@ public class JeezySQL  {
 
     }
 
+    private void setPerms(String rank, Player p) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String select_sql = "SELECT * FROM jeezycore WHERE rankName = '" +rank+"'";
+            ResultSet rs = stm.executeQuery(select_sql);
+            while (rs.next()) {
+                permPlayerName = rs.getString(4);
+                permRankPerms = rs.getString(5);
+            }
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void addPerms(String perm, String rank, Player p) {
         try {
             this.createConnection();
@@ -279,27 +297,12 @@ public class JeezySQL  {
            stm.executeUpdate(sql);
            rankPerms.clear();
        con.close();
+       this.setPerms(rank, p);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void setPerms(String rank, Player p) {
-        try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
-            String select_sql = "SELECT * FROM jeezycore WHERE rankName = '" +rank+"'";
-            ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                permPlayerName = rs.getString(4);
-                permRankPerms = rs.getString(5);
-            }
-        con.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-    }
 
 }
