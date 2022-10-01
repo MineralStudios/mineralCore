@@ -246,7 +246,7 @@ public class JeezySQL  {
 
     }
 
-    private void setPerms(String rank, Player p) {
+    private void getRankData(String rank, Player p) {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
@@ -297,7 +297,7 @@ public class JeezySQL  {
            stm.executeUpdate(sql);
            rankPerms.clear();
        con.close();
-       this.setPerms(rank, p);
+       this.getRankData(rank, p);
         } catch (SQLException e) {
             e.printStackTrace();
         }
