@@ -17,10 +17,8 @@ public class PermissionAdd implements CommandExecutor {
             if (cmd.getName().equalsIgnoreCase("permissionAdd") && args.length == 2) {
                 System.out.println(args.length);
                 JeezySQL perms = new JeezySQL();
-                JeezySQL setPerms = new JeezySQL();
 
                 perms.addPerms(args[0], args[1], p);
-                setPerms.setPerms(args[1], p);
 
             } else {
             p.sendMessage("Usage /permissionAdd <perm> <rankName>");
