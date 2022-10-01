@@ -27,7 +27,7 @@ public class JoinEvent implements Listener {
         JeezySQL givePermsOnJoin = new JeezySQL();
         givePermsOnJoin.onJoinPerms(e.getPlayer().getUniqueId());
 
-        File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
+        File file = new File("/Users/jeffreyejeanye/Desktop/JeezyCore/JeezyCore/src/config.yml");
         FileConfiguration spawn = YamlConfiguration.loadConfiguration(file);
 
         List<Location> ls = (List<Location>) spawn.get("entry-spawn-point");

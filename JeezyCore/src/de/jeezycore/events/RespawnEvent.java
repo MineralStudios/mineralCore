@@ -18,7 +18,7 @@ public class RespawnEvent implements Listener {
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
         try {
-            File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
+            File file = new File("/Users/jeffreyejeanye/Desktop/JeezyCore/JeezyCore/src/config.yml");
             FileConfiguration spawn = YamlConfiguration.loadConfiguration(file);
 
             List<Location> ls = (List<Location>) spawn.get("entry-spawn-point");
