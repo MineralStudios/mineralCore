@@ -9,6 +9,7 @@ import org.bukkit.permissions.PermissionAttachment;
 
 import java.util.*;
 
+
 public class PermissionHandler {
 
     public static HashMap<UUID,PermissionAttachment> perms = new HashMap<UUID, PermissionAttachment>();
@@ -37,4 +38,22 @@ public class PermissionHandler {
         }
 
     }
+
+    public void onJoin(UUID u) {
+        if (JeezySQL.joinPermRanks == null) return;
+        String[] uuidStrings = JeezySQL.joinPermRanks.replace("[", "").replace("]", "").
+                replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
+
+
+            PermissionAttachment attachment = Bukkit.getServer().getPlayer(UUID.fromString(String.valueOf(u))).addAttachment(Main.getPlugin(Main.class));
+
+            perms.put(UUID.fromString(String.valueOf(u)), attachment);
+
+
+        for (int i = 0; i < uuidStrings.length; i++) {
+            attachment.setPermission(uuidStrings[i], true);
+
+        }
+    }
+
 }
