@@ -1,6 +1,7 @@
 package de.jeezycore.events;
 
 
+import de.jeezycore.db.JeezySQL;
 import de.jeezycore.utils.PermissionHandler;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -23,6 +24,9 @@ public class JoinEvent implements Listener {
         e.setJoinMessage("");
 
     try {
+        JeezySQL givePermsOnJoin = new JeezySQL();
+        givePermsOnJoin.onJoinPerms(e.getPlayer().getUniqueId());
+
         File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
         FileConfiguration spawn = YamlConfiguration.loadConfiguration(file);
 
