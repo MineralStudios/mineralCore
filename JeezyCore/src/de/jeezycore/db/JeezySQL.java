@@ -53,7 +53,7 @@ public class JeezySQL  {
 
     private void createConnection() {
 
-        File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\database.yml");
+        File file = new File("/Users/jeffreyejeanye/Desktop/JeezyCore/JeezyCore/src/database.yml");
         FileConfiguration db = YamlConfiguration.loadConfiguration(file);
         MemorySection mc = (MemorySection) db.get("MYSQL");
 
@@ -311,15 +311,20 @@ public class JeezySQL  {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String select_sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ u.toString().replace("-", "") +"%'";
+            String select_sql = "SELECT rankPerms FROM jeezycore WHERE playerName LIKE '%"+ u.toString().replace("-", "") +"%'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
-                joinPermRanks = rs.getString(5);
+                joinPermRanks = rs.getString(1);
             }
+            System.out.println(select_sql);
+            System.out.println(u);
             System.out.println(joinPermRanks);
-            con.close();
+
             PermissionHandler join = new PermissionHandler();
             join.onJoin(u);
+            rs.close();
+            con.close();
+            joinPermRanks = null;
         } catch (SQLException e) {
             e.printStackTrace();
         }
