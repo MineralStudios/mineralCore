@@ -10,7 +10,9 @@ public class InventoryClickEvent implements Listener {
 
     @EventHandler
     public void onCLickEvent(org.bukkit.event.inventory.InventoryClickEvent e) {
-        if (e.getCurrentItem() == null || !e.getCurrentItem().getType().getData().getSimpleName().equals("Wool") || !e.getClickedInventory().getName().contains("§bGrant")) {
+
+        if (e.getCurrentItem() == null || !e.getCurrentItem().getType().getData().getSimpleName().equals("Wool") || e.getClickedInventory() == null
+        || !e.getClickedInventory().getName().contains("Grant")) {
             return;
         }
         JeezySQL mysql = new JeezySQL();
