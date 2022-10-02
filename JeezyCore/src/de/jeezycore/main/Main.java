@@ -25,6 +25,7 @@ public class Main extends JavaPlugin {
         this.getCommand("night").setExecutor(new TimeChanger());
         this.getCommand("fly").setExecutor(new Fly());
         this.getCommand("permissionAdd").setExecutor(new PermissionAdd());
+        this.getCommand("permissionRemove").setExecutor(new PermissionRemove());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
