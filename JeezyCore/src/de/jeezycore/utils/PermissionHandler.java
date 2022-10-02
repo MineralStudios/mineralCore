@@ -39,6 +39,33 @@ public class PermissionHandler {
 
     }
 
+    public void onRemovePerms(Player p, String perm) {
+        if (JeezySQL.permPlayerName == null) return;
+        String[] uuidStrings = JeezySQL.permPlayerName.replace("[", "").replace("]", "").
+                replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
+
+        for (int i = 0; i < uuidStrings.length; i++) {
+            System.out.println(Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])));
+            if (Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])) == null) {
+                continue;
+            }
+            PermissionAttachment attachment = Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])).addAttachment(Main.getPlugin(Main.class));
+
+            perms.put(UUID.fromString(uuidStrings[i]), attachment);
+
+            PermissionAttachment set_perms = perms.get(UUID.fromString(uuidStrings[i]));
+            System.out.println(set_perms);
+            if (set_perms == null) {
+                return;
+            }
+            set_perms.setPermission(perm, false);
+
+
+
+        }
+
+    }
+
     public void onJoin(UUID u) {
         if (JeezySQL.joinPermRanks == null) return;
         String[] uuidStrings = JeezySQL.joinPermRanks.replace("[", "").replace("]", "").
