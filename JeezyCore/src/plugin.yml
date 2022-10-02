@@ -9,6 +9,8 @@ commands:
     description: Creates rank.
   permissionAdd:
     description: Gives a certain rank permission.
+  permissionRemove:
+      description: Removes a certain rank permission.
   grant-rank:
     description: Grants selected player a rank.
   chat-disable:
