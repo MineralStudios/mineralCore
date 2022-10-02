@@ -39,12 +39,16 @@ public class GrantRank implements CommandExecutor {
                 JeezySQL.player = UUIDChecker.uuid;
                 ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
                 SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-                skullMeta.setDisplayName("§b"+args[0]);
                 skullMeta.setOwner(args[0]);
 
+                List<String> player_desc = new ArrayList<String>();
+                player_desc.add(0, "§8§m-----------------------------------");
+                player_desc.add(1, "§7§lClick§7 to configurate player");
+                player_desc.add(2, "§8§m-----------------------------------");
+                skullMeta.setDisplayName("§b"+args[0]);
+                skullMeta.setLore(player_desc);
                 skull.setItemMeta(skullMeta);
                 inv.setItem(4, skull);
-
 
 
                 if (display.rankData.size() == 0) {
