@@ -34,7 +34,7 @@ public class JeezySQL  {
 
     public static ArrayList<String> player_name_array = new ArrayList<String>();
 
-    public static ArrayList<String> rankPerms = new ArrayList<String>();
+    public static HashSet<String> rankPerms = new HashSet<String>();
 
     public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integer>();
 
@@ -278,6 +278,7 @@ public class JeezySQL  {
             while (rs.next()) {
                 getRankPerms = rs.getString(1);
             }
+
             if (rankColorPerms == null) {
                 p.sendMessage("§fThe rank: §b§l" + rank + " §fdoesn't exist.");
                 return;
@@ -287,9 +288,11 @@ public class JeezySQL  {
                     p.sendMessage("§fThis Perm §4already exist §ffor the §l"+show_color+rank+" §frank.");
                     return;
                 }
-                new_perms = getRankPerms.replace("[", "").replace("]", "").split(",");
+                new_perms = getRankPerms.replace("[", "").replace("]", "").split(", ");
                 rankPerms.addAll(Arrays.asList(new_perms));
+
             }
+
            rankPerms.add(perm);
            String sql = "UPDATE jeezycore " +
                    "SET rankPerms = '"+rankPerms +
@@ -301,6 +304,55 @@ public class JeezySQL  {
            rankPerms.clear();
        con.close();
        this.getRankData(rank, p);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void removePerms(String perm, String rank, Player p) {
+        String sql;
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            this.colorPerms(rank);
+            String select_sql = "SELECT rankPerms FROM jeezycore WHERE rankName = '" +rank+"'";
+            ResultSet rs = stm.executeQuery(select_sql);
+            while (rs.next()) {
+                getRankPerms = rs.getString(1);
+            }
+            if (rankColorPerms == null) {
+                p.sendMessage("§fThe rank: §b§l" + rank + " §fdoesn't exist.");
+                return;
+            }
+            if (getRankPerms != null) {
+                new_perms = getRankPerms.replace("[", "").replace("]", "").split(", ");
+                rankPerms.addAll(Arrays.asList(new_perms));
+                if (!rankPerms.contains(perm)) {
+                    p.sendMessage("§fThis Perm §4doesn't exist §ffor the §l"+show_color+rank+" §frank.");
+                    return;
+                }
+            }
+            System.out.println(rankPerms);
+            rankPerms.remove(perm);
+            System.out.println(rankPerms);
+            if (new_perms.length == 1) {
+                sql = "UPDATE jeezycore " +
+                        "SET rankPerms = "+null +
+                        " WHERE rankName = '"+rank+"'";
+            } else {
+                sql = "UPDATE jeezycore " +
+                        "SET rankPerms = '"+rankPerms+
+                        "' WHERE rankName = '"+rank+"'";
+            }
+            p.sendMessage("§fSuccessfully removed the perm: §l§b"+perm+" §ffor the rank: §l"+show_color+rank+"§f.");
+            PermissionHandler ph = new PermissionHandler();
+            ph.onRemovePerms(p, perm);
+            stm.executeUpdate(sql);
+            rankPerms.clear();
+            con.close();
+            this.getRankData(rank, p);
         } catch (SQLException e) {
             e.printStackTrace();
         }
