@@ -21,8 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 public class GrantRank implements CommandExecutor {
+    public static Inventory grant_inv;
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+
+
 
         if(sender instanceof Player) {
             Player p = (Player) sender;
@@ -30,7 +33,7 @@ public class GrantRank implements CommandExecutor {
             if (cmd.getName().equalsIgnoreCase("grant-rank") && args.length == 0) {
                 p.sendMessage("Usage /grant-rank (player)");
             } else {
-                Inventory inv = Bukkit.createInventory(null, 27, ChatColor.AQUA + "Grant " +ChatColor.WHITE+ " §8§l[ "+ChatColor.WHITE+args[0]+" §8§l]");
+                grant_inv = Bukkit.createInventory(null, 27, ChatColor.AQUA + "Grant " +ChatColor.WHITE+ " §8§l[ "+ChatColor.WHITE+args[0]+" §8§l]");
                 JeezySQL display = new JeezySQL();
                 display.displayData();
 
@@ -43,16 +46,16 @@ public class GrantRank implements CommandExecutor {
 
                 List<String> player_desc = new ArrayList<String>();
                 player_desc.add(0, "§8§m-----------------------------------");
-                player_desc.add(1, "§7§lClick§7 to configurate player");
+                player_desc.add(1, "§7§lClick§7 to configurate §7§lranks §7and §7§lmore");
                 player_desc.add(2, "§8§m-----------------------------------");
                 skullMeta.setDisplayName("§b"+args[0]);
                 skullMeta.setLore(player_desc);
                 skull.setItemMeta(skullMeta);
-                inv.setItem(4, skull);
+                grant_inv.setItem(4, skull);
 
 
                 if (display.rankData.size() == 0) {
-                    p.openInventory(inv);
+                    p.openInventory(grant_inv);
                     return true;
                 } else {
                     int i = 0;
@@ -68,13 +71,13 @@ public class GrantRank implements CommandExecutor {
                         rankMeta.setDisplayName(show_color+displayName);
                         rankMeta.setLore(desc);
                         rank.setItemMeta(rankMeta);
-                        inv.setItem(9+i, rank);
+                        grant_inv.setItem(9+i, rank);
                         ++i;
                     }
 
 
                 }
-                    p.openInventory(inv);
+                    p.openInventory(grant_inv);
             }
 
         }
