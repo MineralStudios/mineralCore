@@ -33,7 +33,7 @@ public class GrantRank implements CommandExecutor {
             if (cmd.getName().equalsIgnoreCase("grant-rank") && args.length == 0) {
                 p.sendMessage("Usage /grant-rank (player)");
             } else {
-                grant_inv = Bukkit.createInventory(null, 27, ChatColor.AQUA + "Grant " +ChatColor.WHITE+ " §8§l[ "+ChatColor.WHITE+args[0]+" §8§l]");
+                grant_inv = Bukkit.createInventory(null, 27,"§8Grant Menu");
                 JeezySQL display = new JeezySQL();
                 display.displayData();
 
