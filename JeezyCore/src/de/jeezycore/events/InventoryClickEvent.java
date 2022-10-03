@@ -33,7 +33,7 @@ public class InventoryClickEvent implements Listener {
             e.getWhoClicked().sendMessage("You §b§lsuccessfully§f granted §l§7"+ UUIDChecker.uuidName +"§f the §l"+e.getCurrentItem().getItemMeta().getDisplayName()+" §frank.");
 
         } else if(e.getClickedInventory().getName().contains("Grant") && e.getCurrentItem().getItemMeta().getDisplayName().contains(UUIDChecker.uuidName)) {
-            Inventory inv = Bukkit.createInventory(null, 27, ChatColor.AQUA + "Profile: " +ChatColor.WHITE+ " §8§l[ "+ChatColor.WHITE+UUIDChecker.uuidName+" §8§l]");
+            Inventory inv = Bukkit.createInventory(null, 27,"§8Profile: " +"§f§l"+UUIDChecker.uuidName);
             ItemStack back = new ItemStack(Material.REDSTONE);
             ItemStack manage_rank = new ItemStack(Material.REDSTONE_BLOCK);
             ItemStack punishments = new ItemStack(Material.WATCH);
