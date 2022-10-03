@@ -50,6 +50,12 @@ public class JeezySQL  {
 
     public static String joinPermRanks;
 
+    String removeRankGui_result;
+
+    public static String [] removeRankGui_arr;
+
+    public static ArrayList<String> removeRankGui_list = new ArrayList<String>();
+
 
     private void createConnection() {
 
@@ -377,6 +383,44 @@ public class JeezySQL  {
             rs.close();
             con.close();
             joinPermRanks = null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeRankGui(Player p) {
+        String sql;
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String select_sql = "SELECT playerName FROM jeezycore WHERE playerName LIKE '%"+ UUIDChecker.uuid.replace("-", "") +"%'";
+            ResultSet rs = stm.executeQuery(select_sql);
+            while (rs.next()) {
+                removeRankGui_result = rs.getString(1);
+            }
+
+            if (removeRankGui_result != null) {
+                removeRankGui_arr = removeRankGui_result.replace("[", "").replace("]", "").split(", ");
+                removeRankGui_list.addAll(Arrays.asList(removeRankGui_arr));
+
+
+            removeRankGui_list.remove(UUIDChecker.uuid);
+            if (removeRankGui_arr.length == 1) {
+                sql = "UPDATE jeezycore " +
+                        "SET playerName = "+null +
+                        " WHERE playerName LIKE '%"+ UUIDChecker.uuid.replace("-", "") +"%'";
+            } else {
+                sql = "UPDATE jeezycore " +
+                        "SET playerName = '"+removeRankGui_list+
+                        "' WHERE playerName LIKE '%"+ UUIDChecker.uuid.replace("-", "") +"%'";
+            }
+                stm.executeUpdate(sql);
+            p.sendMessage("§aSuccessfully§f removed the rank from player §b§l" + UUIDChecker.uuidName);
+            } else {
+                p.sendMessage("§4§lThis player doesn't have a rank!");
+            }
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
