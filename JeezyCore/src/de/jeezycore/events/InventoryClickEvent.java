@@ -2,6 +2,7 @@ package de.jeezycore.events;
 
 import de.jeezycore.commands.GrantRank;
 import de.jeezycore.db.JeezySQL;
+import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.UUIDChecker;
 import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.Bukkit;
@@ -26,18 +27,18 @@ public class InventoryClickEvent implements Listener {
             return;
         }
 
-        if (e.getClickedInventory().getName().contains("Grant") && !e.getCurrentItem().getItemMeta().getDisplayName().contains(UUIDChecker.uuidName)) {
+        if (e.getClickedInventory().getName().contains("Grant") && !e.getCurrentItem().getItemMeta().getDisplayName().contains(ArrayStorage.grant_array.get(e.getWhoClicked().getName()))) {
             e.setCancelled(true);
             JeezySQL mysql = new JeezySQL();
 
             String get_rank = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
-            mysql.grantPlayer(get_rank);
+            mysql.grantPlayer(get_rank, e.getWhoClicked().getName());
 
             e.getWhoClicked().closeInventory();
-            e.getWhoClicked().sendMessage("You §b§lsuccessfully§f granted §l§7"+ UUIDChecker.uuidName +"§f the §l"+e.getCurrentItem().getItemMeta().getDisplayName()+" §frank.");
+            e.getWhoClicked().sendMessage("You §b§lsuccessfully§f granted §l§7"+ ArrayStorage.grant_array.get(e.getWhoClicked().getName()) +"§f the §l"+e.getCurrentItem().getItemMeta().getDisplayName()+" §frank.");
 
-        } else if(e.getClickedInventory().getName().contains("Grant") && e.getCurrentItem().getItemMeta().getDisplayName().contains(UUIDChecker.uuidName)) {
-            profile_inv = Bukkit.createInventory(null, 27,"§8Profile: " +"§f§l"+UUIDChecker.uuidName);
+        } else if(e.getClickedInventory().getName().contains("Grant") && e.getCurrentItem().getItemMeta().getDisplayName().contains(ArrayStorage.grant_array.get(e.getWhoClicked().getName()))) {
+            profile_inv = Bukkit.createInventory(null, 27,"§8Profile: " +"§f§l"+ArrayStorage.grant_array.get(e.getWhoClicked().getName()));
             ItemStack back = new ItemStack(Material.REDSTONE);
             ItemStack manage_rank = new ItemStack(Material.REDSTONE_BLOCK);
             ItemStack punishments = new ItemStack(Material.WATCH);
@@ -59,7 +60,7 @@ public class InventoryClickEvent implements Listener {
 
         if(e.getClickedInventory().getName().contains("Profile") && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§cBack")) {
             e.setCancelled(true);
-            e.getWhoClicked().openInventory(GrantRank.grant_inv);
+            e.getWhoClicked().openInventory(ArrayStorage.grant_inv_array.get(e.getWhoClicked().getName()));
         } else if (e.getClickedInventory().getName().contains("Profile") && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§3Manage")) {
             manage_menu = Bukkit.createInventory(null, 27,"§8Manage Menu");
             ItemStack remove_rank = new ItemStack(Material.EMERALD);
@@ -84,7 +85,7 @@ public class InventoryClickEvent implements Listener {
             e.setCancelled(true);
             e.getWhoClicked().openInventory(profile_inv);
         } else if(e.getClickedInventory().getName().contains("Manage Menu") && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§4Rank remove")) {
-            Inventory inv = Bukkit.createInventory(null, 27,"§8Remove Rank: §f§l"+UUIDChecker.uuidName);
+            Inventory inv = Bukkit.createInventory(null, 27,"§8Remove Rank: §f§l"+ArrayStorage.grant_array.get(e.getWhoClicked().getName()));
             ItemStack go_back = new ItemStack(Material.REDSTONE);
             ItemMeta go_backm = go_back.getItemMeta();
             go_backm.setDisplayName("§cBack");
@@ -107,17 +108,17 @@ public class InventoryClickEvent implements Listener {
             inv.setItem(14, remove_no);
             e.getWhoClicked().openInventory(inv);
             e.setCancelled(true);
-        } else if(e.getClickedInventory().getName().contains("§8Remove Rank: §f§l"+UUIDChecker.uuidName) && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§cBack")) {
+        } else if(e.getClickedInventory().getName().contains("§8Remove Rank: §f§l"+ArrayStorage.grant_array.get(e.getWhoClicked().getName())) && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§cBack")) {
             e.setCancelled(true);
             e.getWhoClicked().openInventory(manage_menu);
         }
 
-        if (e.getClickedInventory().getName().contains("§8Remove Rank: §f§l"+UUIDChecker.uuidName) && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§aYes")) {
+        if (e.getClickedInventory().getName().contains("§8Remove Rank: §f§l"+ArrayStorage.grant_array.get(e.getWhoClicked().getName())) && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§aYes")) {
             e.setCancelled(true);
             JeezySQL removeRank = new JeezySQL();
             removeRank.removeRankGui((Player) e.getWhoClicked());
             e.getWhoClicked().closeInventory();
-        } else if (e.getClickedInventory().getName().contains("§8Remove Rank: §f§l"+UUIDChecker.uuidName) && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§4No")) {
+        } else if (e.getClickedInventory().getName().contains("§8Remove Rank: §f§l"+ArrayStorage.grant_array.get(e.getWhoClicked().getName())) && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§4No")) {
             e.setCancelled(true);
             e.getWhoClicked().closeInventory();
         }
