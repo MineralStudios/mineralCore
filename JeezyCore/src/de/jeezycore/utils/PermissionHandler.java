@@ -103,4 +103,21 @@ public class PermissionHandler {
         }
     }
 
+    public void onUnGranting(HumanEntity p) {
+        if (JeezySQL.unGrantingPermRanks == null) return;
+        String[] uuidStrings = JeezySQL.unGrantingPermRanks.replace("[", "").replace("]", "").
+                replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
+
+
+        attachment = Bukkit.getServer().getPlayer(UUID.fromString(String.valueOf(Bukkit.getPlayer(ArrayStorage.grant_array.get(p.getName())).getUniqueId()))).addAttachment(Main.getPlugin(Main.class));
+
+        perms.put(UUID.fromString(String.valueOf(Bukkit.getPlayer(ArrayStorage.grant_array.get(p.getName())).getUniqueId())), attachment);
+
+
+        for (int i = 0; i < uuidStrings.length; i++) {
+            attachment.setPermission(uuidStrings[i], false);
+
+        }
+    }
+
 }
