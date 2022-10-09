@@ -334,17 +334,22 @@ public class JeezySQL  {
                 p.sendMessage("§fThe rank: §b§l" + rank + " §fdoesn't exist.");
                 return;
             }
-            if (getRankPerms != null) {
+            if (getRankPerms == null) {
+                p.sendMessage("§fThere are §cno perms§f to remove §ffor the §l"+show_color+rank+" §frank.");
+                return;
+            }
                 new_perms = getRankPerms.replace("[", "").replace("]", "").split(", ");
                 rankPerms.addAll(Arrays.asList(new_perms));
-                if (!rankPerms.contains(perm)) {
-                    p.sendMessage("§fThis Perm §4doesn't exist §ffor the §l"+show_color+rank+" §frank.");
+
+                if (rankPerms.contains(perm)) {
+                    p.sendMessage("§fSuccessfully removed the perm: §l§b"+perm+" §ffor the rank: §l"+show_color+rank+"§f.");
+                    rankPerms.remove(perm);
+                } else {
+                    p.sendMessage("§fCouldn't find the perm: §l§c"+perm+" §ffor the rank: §l"+show_color+rank+"§f.");
                     return;
                 }
-            }
-            System.out.println(rankPerms);
-            rankPerms.remove(perm);
-            System.out.println(rankPerms);
+
+
             if (new_perms.length == 1) {
                 sql = "UPDATE jeezycore " +
                         "SET rankPerms = "+null +
@@ -354,13 +359,14 @@ public class JeezySQL  {
                         "SET rankPerms = '"+rankPerms+
                         "' WHERE rankName = '"+rank+"'";
             }
-            p.sendMessage("§fSuccessfully removed the perm: §l§b"+perm+" §ffor the rank: §l"+show_color+rank+"§f.");
-            PermissionHandler ph = new PermissionHandler();
-            ph.onRemovePerms(p, perm);
+
             stm.executeUpdate(sql);
-            rankPerms.clear();
             con.close();
             this.getRankData(rank, p);
+            PermissionHandler ph = new PermissionHandler();
+            ph.onRemovePerms(p, perm);
+            rankPerms.clear();
+            getRankPerms = null;
         } catch (SQLException e) {
             e.printStackTrace();
         }
