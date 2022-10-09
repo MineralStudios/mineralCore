@@ -306,12 +306,12 @@ public class JeezySQL  {
                    "SET rankPerms = '"+rankPerms +
                    "' WHERE rankName = '"+rank+"'";
             p.sendMessage("§fSuccessfully added the perm: §l§b"+perm+" §ffor the rank: §l"+show_color+rank+"§f.");
-            PermissionHandler ph = new PermissionHandler();
-            ph.onAddPerms(p, perm);
            stm.executeUpdate(sql);
            rankPerms.clear();
        con.close();
        this.getRankData(rank, p);
+            PermissionHandler ph = new PermissionHandler();
+            ph.onAddPerms(p, perm);
         } catch (SQLException e) {
             e.printStackTrace();
         }
