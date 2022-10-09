@@ -13,6 +13,8 @@ import java.util.*;
 public class PermissionHandler {
 
     public static HashMap<UUID,PermissionAttachment> perms = new HashMap<UUID, PermissionAttachment>();
+    public static PermissionAttachment attachment;
+
 
     public void onAddPerms(Player p, String perm) {
         if (JeezySQL.permPlayerName == null) return;
@@ -24,16 +26,16 @@ public class PermissionHandler {
             if (Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])) == null) {
                 continue;
             }
-            PermissionAttachment attachment = Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])).addAttachment(Main.getPlugin(Main.class));
+             attachment = Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])).addAttachment(Main.getPlugin(Main.class));
 
             perms.put(UUID.fromString(uuidStrings[i]), attachment);
 
-            PermissionAttachment set_perms = perms.get(UUID.fromString(uuidStrings[i]));
-            System.out.println(set_perms);
-            if (set_perms == null) {
+            attachment = perms.get(UUID.fromString(uuidStrings[i]));
+            System.out.println(attachment);
+            if (attachment == null) {
                 return;
             }
-            set_perms.setPermission(perm, true);
+            attachment.setPermission(perm, true);
 
         }
 
@@ -49,16 +51,16 @@ public class PermissionHandler {
             if (Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])) == null) {
                 continue;
             }
-            PermissionAttachment attachment = Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])).addAttachment(Main.getPlugin(Main.class));
+            attachment = Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])).addAttachment(Main.getPlugin(Main.class));
 
             perms.put(UUID.fromString(uuidStrings[i]), attachment);
 
-            PermissionAttachment set_perms = perms.get(UUID.fromString(uuidStrings[i]));
-            System.out.println(set_perms);
-            if (set_perms == null) {
+            attachment = perms.get(UUID.fromString(uuidStrings[i]));
+            System.out.println(attachment);
+            if (attachment == null) {
                 return;
             }
-            set_perms.setPermission(perm, false);
+            attachment.setPermission(perm, false);
 
 
 
