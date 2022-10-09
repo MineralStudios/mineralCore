@@ -39,6 +39,7 @@ public class InventoryClickEvent implements Listener {
 
         } else if(e.getClickedInventory().getName().contains("Grant") && e.getCurrentItem().getItemMeta().getDisplayName().contains(ArrayStorage.grant_array.get(e.getWhoClicked().getName()))) {
             profile_inv = Bukkit.createInventory(null, 27,"§8Profile: " +"§f§l"+ArrayStorage.grant_array.get(e.getWhoClicked().getName()));
+            ArrayStorage.profile_inv_array.put(e.getWhoClicked().getName(), profile_inv);
             ItemStack back = new ItemStack(Material.REDSTONE);
             ItemStack manage_rank = new ItemStack(Material.REDSTONE_BLOCK);
             ItemStack punishments = new ItemStack(Material.WATCH);
@@ -54,7 +55,7 @@ public class InventoryClickEvent implements Listener {
             profile_inv.setItem(9, back);
             profile_inv.setItem(13, manage_rank);
             profile_inv.setItem(17, punishments);
-            e.getWhoClicked().openInventory(profile_inv);
+            e.getWhoClicked().openInventory(ArrayStorage.profile_inv_array.get(e.getWhoClicked().getName()));
             e.setCancelled(true);
         }
 
@@ -63,6 +64,7 @@ public class InventoryClickEvent implements Listener {
             e.getWhoClicked().openInventory(ArrayStorage.grant_inv_array.get(e.getWhoClicked().getName()));
         } else if (e.getClickedInventory().getName().contains("Profile") && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§3Manage")) {
             manage_menu = Bukkit.createInventory(null, 27,"§8Manage Menu");
+            ArrayStorage.manage_menu_inv_array.put(e.getWhoClicked().getName(), manage_menu);
             ItemStack remove_rank = new ItemStack(Material.EMERALD);
             ItemMeta remove_rankm = remove_rank.getItemMeta();
             remove_rankm.setDisplayName("§4Rank remove");
@@ -75,7 +77,7 @@ public class InventoryClickEvent implements Listener {
 
             manage_menu.setItem(9, go_back);
             manage_menu.setItem(13, remove_rank);
-            e.getWhoClicked().openInventory(manage_menu);
+            e.getWhoClicked().openInventory(ArrayStorage.manage_menu_inv_array.get(e.getWhoClicked().getName()));
             e.setCancelled(true);
         } else if(e.getClickedInventory().getName().contains("Profile") && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§4Punishments")) {
             e.setCancelled(true);
@@ -83,7 +85,7 @@ public class InventoryClickEvent implements Listener {
 
         if (e.getClickedInventory().getName().contains("Manage Menu") && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§cBack")) {
             e.setCancelled(true);
-            e.getWhoClicked().openInventory(profile_inv);
+            e.getWhoClicked().openInventory(ArrayStorage.profile_inv_array.get(e.getWhoClicked().getName()));
         } else if(e.getClickedInventory().getName().contains("Manage Menu") && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§4Rank remove")) {
             Inventory inv = Bukkit.createInventory(null, 27,"§8Remove Rank: §f§l"+ArrayStorage.grant_array.get(e.getWhoClicked().getName()));
             ItemStack go_back = new ItemStack(Material.REDSTONE);
@@ -110,7 +112,7 @@ public class InventoryClickEvent implements Listener {
             e.setCancelled(true);
         } else if(e.getClickedInventory().getName().contains("§8Remove Rank: §f§l"+ArrayStorage.grant_array.get(e.getWhoClicked().getName())) && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§cBack")) {
             e.setCancelled(true);
-            e.getWhoClicked().openInventory(manage_menu);
+            e.getWhoClicked().openInventory(ArrayStorage.manage_menu_inv_array.get(e.getWhoClicked().getName()));
         }
 
         if (e.getClickedInventory().getName().contains("§8Remove Rank: §f§l"+ArrayStorage.grant_array.get(e.getWhoClicked().getName())) && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§aYes")) {
