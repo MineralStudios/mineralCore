@@ -4,6 +4,7 @@ package de.jeezycore.utils;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.main.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 
@@ -74,9 +75,26 @@ public class PermissionHandler {
                 replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
 
 
-            PermissionAttachment attachment = Bukkit.getServer().getPlayer(UUID.fromString(String.valueOf(u))).addAttachment(Main.getPlugin(Main.class));
+            attachment = Bukkit.getServer().getPlayer(UUID.fromString(String.valueOf(u))).addAttachment(Main.getPlugin(Main.class));
 
             perms.put(UUID.fromString(String.valueOf(u)), attachment);
+
+
+        for (int i = 0; i < uuidStrings.length; i++) {
+            attachment.setPermission(uuidStrings[i], true);
+
+        }
+    }
+
+    public void onGranting(HumanEntity p) {
+        if (JeezySQL.grantingPermRanks == null) return;
+        String[] uuidStrings = JeezySQL.grantingPermRanks.replace("[", "").replace("]", "").
+                replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
+
+
+        attachment = Bukkit.getServer().getPlayer(UUID.fromString(String.valueOf(Bukkit.getPlayer(ArrayStorage.grant_array.get(p.getName())).getUniqueId()))).addAttachment(Main.getPlugin(Main.class));
+
+        perms.put(UUID.fromString(String.valueOf(Bukkit.getPlayer(ArrayStorage.grant_array.get(p.getName())).getUniqueId())), attachment);
 
 
         for (int i = 0; i < uuidStrings.length; i++) {

@@ -3,6 +3,7 @@ package de.jeezycore.events;
 import de.jeezycore.commands.GrantRank;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.utils.ArrayStorage;
+import de.jeezycore.utils.PermissionHandler;
 import de.jeezycore.utils.UUIDChecker;
 import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.Bukkit;
@@ -30,9 +31,14 @@ public class InventoryClickEvent implements Listener {
         if (e.getClickedInventory().getName().contains("Grant") && !e.getCurrentItem().getItemMeta().getDisplayName().contains(ArrayStorage.grant_array.get(e.getWhoClicked().getName()))) {
             e.setCancelled(true);
             JeezySQL mysql = new JeezySQL();
+            PermissionHandler ph = new PermissionHandler();
 
             String get_rank = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
+
             mysql.grantPlayer(get_rank, e.getWhoClicked().getName());
+            mysql.onGrantingPerms(e.getWhoClicked());
+            ph.onGranting(e.getWhoClicked());
+
 
             e.getWhoClicked().closeInventory();
             e.getWhoClicked().sendMessage("You §b§lsuccessfully§f granted §l§7"+ ArrayStorage.grant_array.get(e.getWhoClicked().getName()) +"§f the §l"+e.getCurrentItem().getItemMeta().getDisplayName()+" §frank.");

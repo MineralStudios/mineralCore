@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 // SQL imports
 import java.io.File;
@@ -51,6 +52,8 @@ public class JeezySQL  {
     public static String permRankPerms;
 
     public static String joinPermRanks;
+
+    public static String grantingPermRanks;
 
     String removeRankGui_result;
 
@@ -395,6 +398,28 @@ public class JeezySQL  {
             e.printStackTrace();
         }
     }
+
+    public void onGrantingPerms(HumanEntity p) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String select_sql = "SELECT rankPerms FROM jeezycore WHERE playerName LIKE '%"+ Bukkit.getServer().getPlayer(ArrayStorage.grant_array.get(p.getName())).getUniqueId().toString() +"%'";
+            ResultSet rs = stm.executeQuery(select_sql);
+            while (rs.next()) {
+                grantingPermRanks = rs.getString(1);
+            }
+
+            PermissionHandler onGrant = new PermissionHandler();
+            onGrant.onGranting(p);
+            rs.close();
+            con.close();
+            grantingPermRanks = null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void removeRankGui(Player p) {
         String sql;
