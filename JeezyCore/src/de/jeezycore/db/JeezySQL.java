@@ -1,8 +1,10 @@
 package de.jeezycore.db;
 import de.jeezycore.colors.Color;
 import de.jeezycore.colors.ColorTranslator;
+import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.PermissionHandler;
 import de.jeezycore.utils.UUIDChecker;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -113,13 +115,13 @@ public class JeezySQL  {
         }
     }
 
-    private void alreadyGranted() {
+    private void alreadyGranted(String getWhoExecuted) {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
 
             Statement stm = con.createStatement();
-            String sql_already_g = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ UUIDChecker.uuid +"%'";
+            String sql_already_g = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ Bukkit.getPlayer(ArrayStorage.grant_array.get(getWhoExecuted)).getUniqueId() +"%'";
             ResultSet rs = stm.executeQuery(sql_already_g);
             while (rs.next()) {
                 alreadyGranted = rs.getString(4);
@@ -131,7 +133,7 @@ public class JeezySQL  {
 
                     player_name_array.addAll(Arrays.asList(grant_new_player));
 
-                    player_name_array.remove(UUIDChecker.uuid);
+                    player_name_array.remove(Bukkit.getPlayer(ArrayStorage.grant_array.get(getWhoExecuted)).getUniqueId());
 
 
                     System.out.println(player_name_array);
@@ -142,11 +144,11 @@ public class JeezySQL  {
                     if (player_name_array.size() == 0) {
                         sql_already_g2 = "UPDATE jeezycore " +
                                 "SET playerName = NULL" +
-                                " WHERE playerName LIKE '%" + UUIDChecker.uuid + "%'";
+                                " WHERE playerName LIKE '%" + Bukkit.getPlayer(ArrayStorage.grant_array.get(getWhoExecuted)).getUniqueId() + "%'";
                     } else {
                         sql_already_g2 = "UPDATE jeezycore " +
                                 "SET playerName = '" + player_name_array +
-                                "' WHERE playerName LIKE '%" + UUIDChecker.uuid + "%'";
+                                "' WHERE playerName LIKE '%" + Bukkit.getPlayer(ArrayStorage.grant_array.get(getWhoExecuted)).getUniqueId() + "%'";
                     }
                     System.out.println(sql_already_g);
                     System.out.println(sql_already_g2);
@@ -162,12 +164,12 @@ public class JeezySQL  {
 
     }
 
-    public void grantPlayer(String rankName) {
+    public void grantPlayer(String rankName, String getWhoExecuted) {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
 
-            this.alreadyGranted();
+            this.alreadyGranted(getWhoExecuted);
 
             Statement stm = con.createStatement();
             String sql2 = "SELECT playerName FROM jeezycore WHERE rankName = '"+rankName+"'";
@@ -183,7 +185,7 @@ public class JeezySQL  {
                 player_name_array.addAll(Arrays.asList(grant_new_player));
 
             }
-            player_name_array.add(player);
+            player_name_array.add(String.valueOf(Bukkit.getPlayer(ArrayStorage.grant_array.get(getWhoExecuted)).getUniqueId()));
 
             String sql = "UPDATE jeezycore " +
                     "SET playerName = '"+player_name_array +
@@ -394,7 +396,7 @@ public class JeezySQL  {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String select_sql = "SELECT playerName FROM jeezycore WHERE playerName LIKE '%"+ UUIDChecker.uuid.replace("-", "") +"%'";
+            String select_sql = "SELECT playerName FROM jeezycore WHERE playerName LIKE '%"+ Bukkit.getPlayer(ArrayStorage.grant_array.get(p.getDisplayName())).getUniqueId() +"%'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
                 removeRankGui_result = rs.getString(1);
@@ -405,18 +407,18 @@ public class JeezySQL  {
                 removeRankGui_list.addAll(Arrays.asList(removeRankGui_arr));
 
 
-            removeRankGui_list.remove(UUIDChecker.uuid);
+            removeRankGui_list.remove(Bukkit.getPlayer(ArrayStorage.grant_array.get(p.getDisplayName())).getUniqueId());
             if (removeRankGui_arr.length == 1) {
                 sql = "UPDATE jeezycore " +
                         "SET playerName = "+null +
-                        " WHERE playerName LIKE '%"+ UUIDChecker.uuid.replace("-", "") +"%'";
+                        " WHERE playerName LIKE '%"+ Bukkit.getPlayer(ArrayStorage.grant_array.get(p.getDisplayName())).getUniqueId() +"%'";
             } else {
                 sql = "UPDATE jeezycore " +
                         "SET playerName = '"+removeRankGui_list+
-                        "' WHERE playerName LIKE '%"+ UUIDChecker.uuid.replace("-", "") +"%'";
+                        "' WHERE playerName LIKE '%"+ Bukkit.getPlayer(ArrayStorage.grant_array.get(p.getDisplayName())).getUniqueId() +"%'";
             }
                 stm.executeUpdate(sql);
-            p.sendMessage("§aSuccessfully§f removed the rank from player §b§l" + UUIDChecker.uuidName);
+            p.sendMessage("§aSuccessfully§f removed the rank from player §b§l" + ArrayStorage.grant_array.get(p.getDisplayName()));
             } else {
                 p.sendMessage("§4§lThis player doesn't have a rank!");
             }
