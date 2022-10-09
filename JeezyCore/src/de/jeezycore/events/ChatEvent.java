@@ -18,7 +18,7 @@ public class ChatEvent implements Listener {
     @EventHandler
     public void onPlayerChat1(AsyncPlayerChatEvent e) {
         JeezySQL display = new JeezySQL();
-        String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ e.getPlayer().getUniqueId().toString().replace("-", "") +"%'";
+        String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ e.getPlayer().getUniqueId().toString() +"%'";
         display.displayChatRank(sql);
         System.out.println(display.rank);
         System.out.println(display.rankColor);
