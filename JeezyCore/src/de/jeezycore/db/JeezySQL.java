@@ -371,7 +371,7 @@ public class JeezySQL  {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String select_sql = "SELECT rankPerms FROM jeezycore WHERE playerName LIKE '%"+ u.toString().replace("-", "") +"%'";
+            String select_sql = "SELECT rankPerms FROM jeezycore WHERE playerName LIKE '%"+ u.toString() +"%'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
                 joinPermRanks = rs.getString(1);
