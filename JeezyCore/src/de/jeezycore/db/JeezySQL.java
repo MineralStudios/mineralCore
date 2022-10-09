@@ -55,6 +55,8 @@ public class JeezySQL  {
 
     public static String grantingPermRanks;
 
+    public static String unGrantingPermRanks;
+
     String removeRankGui_result;
 
     public static String [] removeRankGui_arr;
@@ -415,6 +417,29 @@ public class JeezySQL  {
             rs.close();
             con.close();
             grantingPermRanks = null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onUnGrantingPerms(HumanEntity p) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String select_sql = "SELECT rankPerms FROM jeezycore WHERE playerName LIKE '%"+ Bukkit.getServer().getPlayer(ArrayStorage.grant_array.get(p.getName())).getUniqueId().toString() +"%'";
+
+            ResultSet rs = stm.executeQuery(select_sql);
+            while (rs.next()) {
+                unGrantingPermRanks = rs.getString(1);
+            }
+
+            System.out.println(unGrantingPermRanks);
+            PermissionHandler onUnGrant = new PermissionHandler();
+            onUnGrant.onUnGranting(p);
+            rs.close();
+            con.close();
+            unGrantingPermRanks = null;
         } catch (SQLException e) {
             e.printStackTrace();
         }
