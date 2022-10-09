@@ -122,9 +122,13 @@ public class InventoryClickEvent implements Listener {
         }
 
         if (e.getClickedInventory().getName().contains("§8Remove Rank: §f§l"+ArrayStorage.grant_array.get(e.getWhoClicked().getName())) && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§aYes")) {
-            e.setCancelled(true);
             JeezySQL removeRank = new JeezySQL();
+            PermissionHandler ph = new PermissionHandler();
+            removeRank.onUnGrantingPerms(e.getWhoClicked());
+            ph.onUnGranting(e.getWhoClicked());
             removeRank.removeRankGui((Player) e.getWhoClicked());
+
+            e.setCancelled(true);
             e.getWhoClicked().closeInventory();
         } else if (e.getClickedInventory().getName().contains("§8Remove Rank: §f§l"+ArrayStorage.grant_array.get(e.getWhoClicked().getName())) && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§4No")) {
             e.setCancelled(true);
