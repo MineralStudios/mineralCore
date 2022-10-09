@@ -12,9 +12,16 @@ public class ArrayStorage {
     // fly command array
     public  static ArrayList<String> fly_array = new ArrayList<String>();
 
-    // grant array
+    // >> Giving player rank / or remove
+    // grant arrays
     public static HashMap<String, String> grant_array = new HashMap<>();
 
     public static HashMap<String, Inventory> grant_inv_array = new HashMap<>();
+
+    // profile array
+    public static HashMap<String, Inventory> profile_inv_array = new HashMap<>();
+
+    // manage_menu array
+    public static HashMap<String, Inventory> manage_menu_inv_array = new HashMap<>();
 
 }
