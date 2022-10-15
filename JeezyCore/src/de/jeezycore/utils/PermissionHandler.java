@@ -91,16 +91,20 @@ public class PermissionHandler {
         String[] uuidStrings = JeezySQL.grantingPermRanks.replace("[", "").replace("]", "").
                 replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
 
+        try {
+            attachment = Bukkit.getServer().getPlayer(ArrayStorage.grant_array.get(p.getUniqueId())).addAttachment(Main.getPlugin(Main.class));
 
-        attachment = Bukkit.getServer().getPlayer(UUID.fromString(String.valueOf(Bukkit.getPlayer(ArrayStorage.grant_array.get(p.getName())).getUniqueId()))).addAttachment(Main.getPlugin(Main.class));
-
-        perms.put(UUID.fromString(String.valueOf(Bukkit.getPlayer(ArrayStorage.grant_array.get(p.getName())).getUniqueId())), attachment);
+            perms.put(ArrayStorage.grant_array.get(p.getUniqueId()), attachment);
 
 
-        for (int i = 0; i < uuidStrings.length; i++) {
-            attachment.setPermission(uuidStrings[i], true);
+            for (int i = 0; i < uuidStrings.length; i++) {
+                attachment.setPermission(uuidStrings[i], true);
+
+            }
+        }catch (Exception e) {
 
         }
+
     }
 
     public void onUnGranting(HumanEntity p) {
@@ -108,16 +112,20 @@ public class PermissionHandler {
         String[] uuidStrings = JeezySQL.unGrantingPermRanks.replace("[", "").replace("]", "").
                 replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
 
+    try {
+        attachment = Bukkit.getServer().getPlayer(ArrayStorage.grant_array.get(p.getUniqueId())).addAttachment(Main.getPlugin(Main.class));
 
-        attachment = Bukkit.getServer().getPlayer(UUID.fromString(String.valueOf(Bukkit.getPlayer(ArrayStorage.grant_array.get(p.getName())).getUniqueId()))).addAttachment(Main.getPlugin(Main.class));
-
-        perms.put(UUID.fromString(String.valueOf(Bukkit.getPlayer(ArrayStorage.grant_array.get(p.getName())).getUniqueId())), attachment);
+        perms.put(ArrayStorage.grant_array.get(p.getUniqueId()), attachment);
 
 
         for (int i = 0; i < uuidStrings.length; i++) {
             attachment.setPermission(uuidStrings[i], false);
 
         }
+    } catch (Exception e) {
+
+    }
+
     }
 
 }
