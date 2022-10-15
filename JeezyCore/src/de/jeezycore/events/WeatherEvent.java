@@ -16,7 +16,7 @@ public class WeatherEvent implements Listener {
     @EventHandler
     public void onWeather(WeatherChangeEvent e) {
 
-        File file = new File("/Users/jeffreyejeanye/Desktop/JeezyCore/JeezyCore/src/config.yml");
+        File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
         FileConfiguration spawn = YamlConfiguration.loadConfiguration(file);
         MemorySection mc = (MemorySection) spawn.get("settings");
         boolean rain_b = mc.getBoolean("disable_raining");

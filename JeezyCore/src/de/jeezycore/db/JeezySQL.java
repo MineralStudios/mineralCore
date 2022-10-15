@@ -66,7 +66,7 @@ public class JeezySQL  {
 
     private void createConnection() {
 
-        File file = new File("/Users/jeffreyejeanye/Desktop/JeezyCore/JeezyCore/src/database.yml");
+        File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\database.yml");
         FileConfiguration db = YamlConfiguration.loadConfiguration(file);
         MemorySection mc = (MemorySection) db.get("MYSQL");
 

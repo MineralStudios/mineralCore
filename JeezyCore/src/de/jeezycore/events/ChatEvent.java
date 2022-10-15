@@ -28,7 +28,7 @@ public class ChatEvent implements Listener {
 
 
         try {
-            File file = new File("/Users/jeffreyejeanye/Desktop/JeezyCore/JeezyCore/src/config.yml");
+            File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
             MemorySection mc = (MemorySection) config.get("chat");

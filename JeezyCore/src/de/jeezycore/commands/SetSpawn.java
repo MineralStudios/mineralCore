@@ -37,12 +37,12 @@ public class SetSpawn implements CommandExecutor {
             List<Location> locations = new ArrayList<>(Arrays.asList(worldObject));
             config.set("entry-spawn-point", locations);
 
-            //config.set("world", p.getPlayer().getLocation().getWorld().getName());
-            //config.set("x", p.getPlayer().getLocation().getBlockX());
-            //config.set("y", p.getPlayer().getLocation().getBlockY());
-            //config.set("z", p.getPlayer().getLocation().getBlockZ());
-            //config.set("pitch", p.getPlayer().getLocation().getPitch());
-            //config.set("yaw", p.getPlayer().getLocation().getYaw());
+            config.set("world", p.getPlayer().getLocation().getWorld().getName());
+            config.set("x", p.getPlayer().getLocation().getBlockX());
+            config.set("y", p.getPlayer().getLocation().getBlockY());
+            config.set("z", p.getPlayer().getLocation().getBlockZ());
+            config.set("pitch", p.getPlayer().getLocation().getPitch());
+            config.set("yaw", p.getPlayer().getLocation().getYaw());
 
             //To remove something do 'config.set("Whatever.Path-Here", null)'
             config.save(file); //This needs a try catch

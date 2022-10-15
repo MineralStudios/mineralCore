@@ -18,7 +18,7 @@ public class DeathEvent implements Listener {
     public void onDeath(PlayerDeathEvent e) {
         try {
 
-            File file = new File("/Users/jeffreyejeanye/Desktop/JeezyCore/JeezyCore/src/config.yml");
+            File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
             FileConfiguration spawn = YamlConfiguration.loadConfiguration(file);
 
 
