@@ -42,7 +42,7 @@ public class JoinEvent implements Listener {
         float yaw = ls.get(0).getYaw();
 
         if (!spawnOnSpownpointOnJoin) return;
-        e.getPlayer().teleport(new Location(w, x, y, z, pitch, yaw));
+        e.getPlayer().teleport(new Location(w, x, y, z, yaw, pitch));
 
     } catch (Exception f) {
     f.printStackTrace();
