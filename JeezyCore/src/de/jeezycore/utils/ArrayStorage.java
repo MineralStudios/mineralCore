@@ -4,6 +4,7 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class ArrayStorage {
     // Msg command array
@@ -14,7 +15,9 @@ public class ArrayStorage {
 
     // >> Giving player rank / or remove
     // grant arrays
-    public static HashMap<String, String> grant_array = new HashMap<>();
+    public static HashMap<UUID, UUID> grant_array = new HashMap<>();
+
+    public static HashMap<UUID, String> grant_array_names = new HashMap<UUID, String>();
 
     public static HashMap<String, Inventory> grant_inv_array = new HashMap<>();
 
