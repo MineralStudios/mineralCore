@@ -2,6 +2,7 @@ package de.jeezycore.events;
 
 import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.db.JeezySQL;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -24,21 +25,23 @@ public class ChatEvent implements Listener {
         System.out.println(display.rankColor);
         System.out.println(e.getPlayer().getUniqueId());
 
-            if (display.rank == null) return;
+        File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+            if (display.rank == null) {
+                MemorySection cf = (MemorySection) config.get("chat");
+                String chat_format_rep = cf.getString("chat_format").replace("&", "§").replace("[player]", e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage());
+                e.setFormat(chat_format_rep.replace("%", "%%"));
+                return;
+            }
 
 
         try {
-            File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-
             MemorySection mc = (MemorySection) config.get("chat");
             boolean chat_muted = mc.getBoolean("muted");
             List<String> ignored_roles = (List<String>) mc.getList("ignored_roles_on_chat-mute");
 
-
-
             System.out.println(ignored_roles);
-
 
              if (!chat_muted || ignored_roles.contains(display.rank)) {
                 System.out.println("Chat is enabled");
