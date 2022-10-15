@@ -11,12 +11,11 @@ import java.net.URL;
 public class UUIDChecker {
         public static String uuid;
         public static String uuidName;
-
         public void check(String userName)  {
 
                 for (Player ps : Bukkit.getOnlinePlayers()) {
                         if (ps.getName().equalsIgnoreCase(userName)) {
-                                 uuid = ps.getUniqueId().toString().replace("-", "");
+                                 uuid = ps.getUniqueId().toString().replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5");
                                  uuidName = ps.getPlayer().getDisplayName();
                                  System.out.println(uuid);
                         } else {
@@ -25,7 +24,7 @@ public class UUIDChecker {
                                         String url = "https://api.mojang.com/users/profiles/minecraft/"+user;
                                         String UUIDJson = IOUtils.toString(new URL(url));
                                         JSONObject UUIDObject = (JSONObject) JSONValue.parseWithException(UUIDJson);
-                                        uuid = UUIDObject.get("id").toString();
+                                        uuid = UUIDObject.get("id").toString().replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5");
                                         uuidName = UUIDObject.get("name").toString();
                                         System.out.println(uuid);
                                         System.out.println(uuidName);
