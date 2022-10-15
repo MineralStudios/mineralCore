@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class GrantRank implements CommandExecutor {
     public static Inventory grant_inv;
@@ -38,23 +39,25 @@ public class GrantRank implements CommandExecutor {
                 JeezySQL display = new JeezySQL();
                 display.displayData();
 
-                ArrayStorage.grant_array.put(p.getPlayer().getDisplayName(), args[0]);
-                System.out.println(ArrayStorage.grant_array);
-
                 ArrayStorage.grant_inv_array.put(p.getPlayer().getDisplayName(), grant_inv);
+
 
                 UUIDChecker c = new UUIDChecker();
                 c.check(args[0]);
-                JeezySQL.player = UUIDChecker.uuid;
+
+                ArrayStorage.grant_array_names.put(p.getUniqueId(), args[0]);
+                ArrayStorage.grant_array.put(p.getUniqueId(), UUID.fromString(UUIDChecker.uuid));
+                System.out.println(ArrayStorage.grant_array);
+
                 ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
                 SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-                skullMeta.setOwner(ArrayStorage.grant_array.get(p.getPlayer().getDisplayName()));
+                skullMeta.setOwner(ArrayStorage.grant_array_names.get(p.getUniqueId()));
 
                 List<String> player_desc = new ArrayList<String>();
                 player_desc.add(0, "§8§m-----------------------------------");
                 player_desc.add(1, "§7§lClick§7 to configurate §7§lranks §7and §7§lmore");
                 player_desc.add(2, "§8§m-----------------------------------");
-                skullMeta.setDisplayName("§b"+ArrayStorage.grant_array.get(p.getPlayer().getDisplayName()));
+                skullMeta.setDisplayName("§b"+ArrayStorage.grant_array_names.get(p.getUniqueId()));
                 skullMeta.setLore(player_desc);
                 skull.setItemMeta(skullMeta);
                 grant_inv.setItem(4, skull);
