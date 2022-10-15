@@ -8,6 +8,7 @@ entry-spawn-point:
   yaw: 0.3611338
 spawn-settings:
   spawn-at-spawnpoint-on-join: true
+  spawn-command: true
   respawn-at-spawn: true
   respawn-after-death-at-spawn: false
 settings:
