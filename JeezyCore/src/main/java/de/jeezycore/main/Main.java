@@ -3,6 +3,7 @@ package de.jeezycore.main;
 import de.jeezycore.colors.Color;
 import de.jeezycore.commands.*;
 import de.jeezycore.db.JeezySQL;
+import de.jeezycore.discord.JeezyBot;
 import de.jeezycore.events.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,6 +39,10 @@ public class Main extends JavaPlugin {
         // Creating Connection / Creating Table
         JeezySQL con = new JeezySQL();
         con.createTable();
+
+       JeezyBot bot = new JeezyBot();
+       bot.start();
+
     }
 
     @Override
