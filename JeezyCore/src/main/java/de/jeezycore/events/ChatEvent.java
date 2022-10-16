@@ -2,7 +2,7 @@ package de.jeezycore.events;
 
 import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.db.JeezySQL;
-import org.bukkit.ChatColor;
+import de.jeezycore.discord.chat.RealtimeChat;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,7 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ChatEvent implements Listener {
@@ -29,6 +28,9 @@ public class ChatEvent implements Listener {
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
             if (display.rank == null) {
+                RealtimeChat rmc = new RealtimeChat();
+                rmc.realtimeMcChat( "["+e.getPlayer().getDisplayName()+"]: "+e.getMessage());
+
                 MemorySection cf = (MemorySection) config.get("chat");
                 String chat_format_rep = cf.getString("chat_format").replace("&", "§").replace("[player]", e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage());
                 e.setFormat(chat_format_rep.replace("%", "%%"));
@@ -59,6 +61,8 @@ public class ChatEvent implements Listener {
 
             String show_color = ColorTranslator.colorTranslator.get(display.rankColor);
             System.out.println(show_color);
+            RealtimeChat rmc = new RealtimeChat();
+            rmc.realtimeMcChat("["+display.rank+"]"+" "+e.getPlayer().getDisplayName()+": "+e.getMessage());
             e.setFormat("§7§l["+show_color+""+display.rank+"§7§l]§f "+e.getPlayer().getDisplayName()+": "+e.getMessage().replace("%", "%%"));
 
 
