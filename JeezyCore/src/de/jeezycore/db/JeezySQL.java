@@ -76,9 +76,6 @@ public class JeezySQL  {
         try {
             this.createConnection();
 
-            System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" connected to database."+Color.RESET);
-            System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" created"+Color.YELLOW_BOLD+" jeezyCore"+Color.CYAN+" table."+Color.RESET);
-
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS JeezyCore " +
@@ -89,11 +86,13 @@ public class JeezySQL  {
                     " rankPerms longtext, " +
                     " PRIMARY KEY ( rankName ))";
             stm.executeUpdate(sql);
+            if (con.isValid(20)) {
+                System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" connected to database."+Color.RESET);
+                System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" created"+Color.YELLOW_BOLD+" jeezyCore"+Color.CYAN+" table."+Color.RESET);
+            }
             con.close();
         } catch (SQLException e) {
             System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.RED_BOLD+" Something went wrong when tried to connect to your database."+Color.RESET);
-            System.out.println(e.getMessage());
-            System.out.println(e);
         }
     }
 
