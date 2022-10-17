@@ -1,6 +1,7 @@
 package de.jeezycore.discord.chat;
 
 import de.jeezycore.discord.JeezyBot;
+import org.bukkit.Bukkit;
 import org.javacord.api.entity.channel.TextChannel;
 
 public class RealtimeChat {
@@ -9,4 +10,9 @@ public class RealtimeChat {
         TextChannel channel = (TextChannel) JeezyBot.api.getChannelById("1003984701993779210").get();
         channel.sendMessage(msg);
     }
+
+    public void realtimeChatViaDiscord(String msg) {
+        Bukkit.getServer().broadcastMessage(msg);
+    }
+
 }
