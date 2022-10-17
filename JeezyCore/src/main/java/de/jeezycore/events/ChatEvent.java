@@ -3,6 +3,7 @@ package de.jeezycore.events;
 import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.discord.chat.RealtimeChat;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -29,7 +30,7 @@ public class ChatEvent implements Listener {
 
             if (display.rank == null) {
                 RealtimeChat rmc = new RealtimeChat();
-                rmc.realtimeMcChat( "["+e.getPlayer().getDisplayName()+"]: "+e.getMessage());
+                rmc.realtimeMcChat( e.getPlayer().getDisplayName()+": "+e.getMessage());
 
                 MemorySection cf = (MemorySection) config.get("chat");
                 String chat_format_rep = cf.getString("chat_format").replace("&", "§").replace("[player]", e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage());
