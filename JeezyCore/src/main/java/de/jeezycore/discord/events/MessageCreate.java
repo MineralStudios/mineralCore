@@ -13,7 +13,7 @@ public class MessageCreate implements MessageCreateListener {
         if (event.getMessage().getUserAuthor().get().isBot()) {
             return;
         }
-        discord_realtime.realtimeChatViaDiscord("§7[§9Discord§7]§f "+event.getMessage().getUserAuthor().get().getName()+": "+event.getMessageContent());
+        discord_realtime.realtimeChatViaDiscord("§7[§9Discord§7]§f "+event.getMessage().getUserAuthor().get().getName()+"#"+event.getMessage().getUserAuthor().get().getDiscriminator()+": "+event.getMessageContent());
 
     }
 }
