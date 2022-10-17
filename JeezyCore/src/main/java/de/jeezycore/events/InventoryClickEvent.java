@@ -2,6 +2,7 @@ package de.jeezycore.events;
 
 import de.jeezycore.commands.GrantRank;
 import de.jeezycore.db.JeezySQL;
+import de.jeezycore.discord.chat.RealtimeChat;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.PermissionHandler;
 import de.jeezycore.utils.UUIDChecker;
@@ -32,6 +33,7 @@ public class InventoryClickEvent implements Listener {
             e.setCancelled(true);
             JeezySQL mysql = new JeezySQL();
             PermissionHandler ph = new PermissionHandler();
+            RealtimeChat grant_discord = new RealtimeChat();
 
             String get_rank = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
 
@@ -43,6 +45,7 @@ public class InventoryClickEvent implements Listener {
             e.getWhoClicked().closeInventory();
             e.getWhoClicked().sendMessage("You §b§lsuccessfully§f granted §l§7"+ ArrayStorage.grant_array_names.get(e.getWhoClicked().getUniqueId()) +"§f the §l"+e.getCurrentItem().getItemMeta().getDisplayName()+" §frank.");
 
+            grant_discord.realtimeChatOnGranting(ArrayStorage.grant_array.get(e.getWhoClicked().getUniqueId()), ArrayStorage.grant_array_names.get(e.getWhoClicked().getUniqueId()), e.getWhoClicked().getName(), e.getCurrentItem().getItemMeta().getDisplayName().substring(2));
         } else if(e.getClickedInventory().getName().contains("Grant") && e.getCurrentItem().getItemMeta().getDisplayName().contains(ArrayStorage.grant_array_names.get(e.getWhoClicked().getUniqueId()))) {
             profile_inv = Bukkit.createInventory(null, 27,"§8Profile: " +"§f§l"+ArrayStorage.grant_array_names.get(e.getWhoClicked().getUniqueId()));
             ArrayStorage.profile_inv_array.put(e.getWhoClicked().getName(), profile_inv);
