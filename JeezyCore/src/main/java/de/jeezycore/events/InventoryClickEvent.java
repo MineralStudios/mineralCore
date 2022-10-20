@@ -130,7 +130,6 @@ public class InventoryClickEvent implements Listener {
             removeRank.onUnGrantingPerms(e.getWhoClicked());
             ph.onUnGranting(e.getWhoClicked());
             removeRank.removeRankGui((Player) e.getWhoClicked());
-
             e.setCancelled(true);
             e.getWhoClicked().closeInventory();
         } else if (e.getClickedInventory().getName().contains("§8Remove Rank: §f§l"+ArrayStorage.grant_array_names.get(e.getWhoClicked().getUniqueId())) && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§4No")) {
