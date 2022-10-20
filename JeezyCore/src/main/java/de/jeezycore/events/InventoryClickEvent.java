@@ -1,14 +1,10 @@
 package de.jeezycore.events;
 
-import de.jeezycore.commands.GrantRank;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.discord.chat.RealtimeChat;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.PermissionHandler;
-import de.jeezycore.utils.UUIDChecker;
-import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

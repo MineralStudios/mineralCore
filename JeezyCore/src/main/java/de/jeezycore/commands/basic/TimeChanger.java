@@ -1,4 +1,4 @@
-package de.jeezycore.commands;
+package de.jeezycore.commands.basic;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

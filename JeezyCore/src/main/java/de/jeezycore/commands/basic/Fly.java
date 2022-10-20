@@ -1,4 +1,4 @@
-package de.jeezycore.commands;
+package de.jeezycore.commands.basic;
 
 import de.jeezycore.utils.PermissionHandler;
 import org.bukkit.command.Command;

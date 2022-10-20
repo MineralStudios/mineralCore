@@ -1,4 +1,4 @@
-package de.jeezycore.commands;
+package de.jeezycore.commands.permissions;
 
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.utils.PermissionHandler;

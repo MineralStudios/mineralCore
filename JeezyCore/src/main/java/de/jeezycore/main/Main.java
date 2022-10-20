@@ -1,9 +1,16 @@
 package de.jeezycore.main;
 
 import de.jeezycore.colors.Color;
-import de.jeezycore.commands.*;
+import de.jeezycore.commands.basic.*;
+import de.jeezycore.commands.chat.ChatDisabler;
+import de.jeezycore.commands.permissions.PermissionAdd;
 import de.jeezycore.commands.punishments.Ban;
+import de.jeezycore.commands.permissions.PermissionRemove;
 import de.jeezycore.commands.punishments.UnBan;
+import de.jeezycore.commands.ranks.CreateRank;
+import de.jeezycore.commands.ranks.GrantRank;
+import de.jeezycore.commands.spawn.SetSpawn;
+import de.jeezycore.commands.spawn.Spawn;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.discord.JeezyBot;
 import de.jeezycore.events.*;

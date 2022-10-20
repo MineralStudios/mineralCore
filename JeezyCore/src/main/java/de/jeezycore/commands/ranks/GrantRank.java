@@ -1,4 +1,4 @@
-package de.jeezycore.commands;
+package de.jeezycore.commands.ranks;
 
 import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.db.JeezySQL;

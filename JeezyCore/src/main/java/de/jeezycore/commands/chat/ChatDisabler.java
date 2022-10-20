@@ -1,4 +1,4 @@
-package de.jeezycore.commands;
+package de.jeezycore.commands.chat;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;

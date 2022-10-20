@@ -1,4 +1,4 @@
-package de.jeezycore.commands;
+package de.jeezycore.commands.basic;
 
 import com.google.common.base.Joiner;
 import org.bukkit.command.Command;

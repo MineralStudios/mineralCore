@@ -1,4 +1,4 @@
-package de.jeezycore.commands;
+package de.jeezycore.commands.spawn;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;
