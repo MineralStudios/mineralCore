@@ -33,4 +33,8 @@ commands:
     description: Changes player time to night.
   fly:
     description: Makes you fly.
+  ban:
+    description: Bans a player.
+  unban:
+      description: Unbans a player.
 
