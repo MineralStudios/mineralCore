@@ -10,7 +10,8 @@ public class MessageCreate implements MessageCreateListener {
     @Override
     public void onMessageCreate(MessageCreateEvent event) {
         RealtimeChat discord_realtime = new RealtimeChat();
-        if (event.getMessage().getUserAuthor().get().isBot()) {
+        long discord_channel = 1003984701993779210L;
+        if (event.getMessage().getUserAuthor().get().isBot() || event.getChannel().getId() != discord_channel) {
             return;
         }
         discord_realtime.realtimeChatViaDiscord("§7[§9Discord§7]§f "+event.getMessage().getUserAuthor().get().getName()+"#"+event.getMessage().getUserAuthor().get().getDiscriminator()+": "+event.getMessageContent());
