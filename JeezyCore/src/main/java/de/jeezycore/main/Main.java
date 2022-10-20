@@ -2,6 +2,8 @@ package de.jeezycore.main;
 
 import de.jeezycore.colors.Color;
 import de.jeezycore.commands.*;
+import de.jeezycore.commands.punishments.Ban;
+import de.jeezycore.commands.punishments.UnBan;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.discord.JeezyBot;
 import de.jeezycore.events.*;
@@ -28,6 +30,8 @@ public class Main extends JavaPlugin {
         this.getCommand("fly").setExecutor(new Fly());
         this.getCommand("permissionAdd").setExecutor(new PermissionAdd());
         this.getCommand("permissionRemove").setExecutor(new PermissionRemove());
+        this.getCommand("ban").setExecutor(new Ban());
+        this.getCommand("unban").setExecutor(new UnBan());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
