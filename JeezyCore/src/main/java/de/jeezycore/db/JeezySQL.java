@@ -79,20 +79,26 @@ public class JeezySQL  {
 
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String sql = "CREATE TABLE IF NOT EXISTS JeezyCore " +
+            String jeezyCore_table = "CREATE TABLE IF NOT EXISTS JeezyCore " +
                     " (rankName VARCHAR(255), " +
                     " rankColor INT(2), " +
                     " rankPriority INT(3), " +
                     " playerName longtext, " +
                     " rankPerms longtext, " +
                     " PRIMARY KEY ( rankName ))";
-            stm.executeUpdate(sql);
+            String punishments_table = "CREATE TABLE IF NOT EXISTS Punishments " +
+                    " (banned_players longtext, " +
+                    " muted_players longtext)";
+            stm.executeUpdate(jeezyCore_table);
+            stm.executeUpdate(punishments_table);
+            stm.close();
             if (con.isValid(20)) {
                 System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" connected to database."+Color.RESET);
                 System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" created"+Color.YELLOW_BOLD+" jeezyCore"+Color.CYAN+" table."+Color.RESET);
             }
             con.close();
         } catch (SQLException e) {
+            e.printStackTrace();
             System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.RED_BOLD+" Something went wrong when tried to connect to your database."+Color.RESET);
         }
     }
