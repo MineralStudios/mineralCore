@@ -1,6 +1,7 @@
 package de.jeezycore.db;
 import de.jeezycore.colors.Color;
 import de.jeezycore.colors.ColorTranslator;
+import de.jeezycore.discord.chat.RealtimeChat;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.PermissionHandler;
 import de.jeezycore.utils.UUIDChecker;
@@ -470,6 +471,8 @@ public class JeezySQL  {
                         "' WHERE playerName LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()) +"%'";
             }
                 stm.executeUpdate(sql);
+                RealtimeChat unGrant_discord = new RealtimeChat();
+                unGrant_discord.realtimeChatOnUnGranting(ArrayStorage.grant_array.get(p.getUniqueId()), ArrayStorage.grant_array_names.get(p.getUniqueId()), p.getDisplayName());
             p.sendMessage("§aSuccessfully§f removed the rank from player §b§l" + ArrayStorage.grant_array_names.get(p.getUniqueId()));
             } else {
                 p.sendMessage("§4§lThis player doesn't have a rank!");
