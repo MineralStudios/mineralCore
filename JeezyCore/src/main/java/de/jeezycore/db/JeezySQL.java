@@ -5,12 +5,12 @@ import de.jeezycore.discord.chat.RealtimeChat;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.PermissionHandler;
 import de.jeezycore.utils.UUIDChecker;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.json.simple.JSONObject;
 // SQL imports
 import java.io.File;
 import java.sql.*;
@@ -61,6 +61,8 @@ public class JeezySQL  {
 
     public static ArrayList<String> removeRankGui_list = new ArrayList<String>();
 
+    public static boolean ban_forever;
+
 
     private void createConnection() {
 
@@ -87,14 +89,18 @@ public class JeezySQL  {
                     " rankPerms longtext, " +
                     " PRIMARY KEY ( rankName ))";
             String punishments_table = "CREATE TABLE IF NOT EXISTS Punishments " +
-                    " (banned_players longtext, " +
-                    " muted_players longtext)";
+                    " (UUID VARCHAR(255), " +
+                    " banned_forever boolean, " +
+                    " ban_time longtext, " +
+                    " mute_time longtext, " +
+                    " punishment_log longtext, "+
+                    " PRIMARY KEY ( UUID ))";
             stm.executeUpdate(jeezyCore_table);
             stm.executeUpdate(punishments_table);
             stm.close();
             if (con.isValid(20)) {
                 System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" connected to database."+Color.RESET);
-                System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" created"+Color.YELLOW_BOLD+" jeezyCore"+Color.CYAN+" table."+Color.RESET);
+                System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" created"+Color.YELLOW_BOLD+" tables"+Color.CYAN+"."+Color.RESET);
             }
             con.close();
         } catch (SQLException e) {
@@ -482,6 +488,39 @@ public class JeezySQL  {
             p.sendMessage("§aSuccessfully§f removed the rank from player §b§l" + ArrayStorage.grant_array_names.get(p.getUniqueId()));
             } else {
                 p.sendMessage("§4§lThis player doesn't have a rank!");
+            }
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void ban(String sql, UUID u_player, Object put) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, String.valueOf(u_player));
+            pstmt.setString(2, (String) put);
+
+            System.out.println(put);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+        e.printStackTrace();
+        }
+    }
+
+    public void banData(UUID get_UUID) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String select_sql = "SELECT * FROM punishments WHERE UUID = '" +get_UUID.toString()+"'";
+            ResultSet rs = stm.executeQuery(select_sql);
+            while (rs.next()) {
+                ban_forever = rs.getBoolean(2);
             }
             con.close();
         } catch (SQLException e) {
