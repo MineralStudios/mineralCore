@@ -24,7 +24,7 @@ public class JoinEvent implements Listener {
         e.setJoinMessage("");
         JeezySQL check_if_banned_forever = new JeezySQL();
         check_if_banned_forever.banData(e.getPlayer().getUniqueId());
-
+        JeezySQL.punishment_UUID = null;
         if (JeezySQL.ban_forever) {
             e.getPlayer().kickPlayer("§4You are permanently banned from JeezyDevelopment.\n" +
                     "§7If you feel this ban has been unjustified, appeal on our discord at\n §bjeezydevelopment.com§7.");
