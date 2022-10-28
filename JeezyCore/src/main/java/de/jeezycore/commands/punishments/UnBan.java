@@ -1,5 +1,6 @@
 package de.jeezycore.commands.punishments;
 
+import de.jeezycore.db.BanSQL;
 import de.jeezycore.db.JeezySQL;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
@@ -17,10 +18,8 @@ public class UnBan implements CommandExecutor {
 
             if (cmd.getName().equalsIgnoreCase("unban") && args.length > 0) {
 
-                JeezySQL execute = new JeezySQL();
+                BanSQL execute = new BanSQL();
                 execute.unban(args[0], p.getPlayer());
-
-
 
             } else {
                 p.sendMessage("Usage: /unban <player>.");
