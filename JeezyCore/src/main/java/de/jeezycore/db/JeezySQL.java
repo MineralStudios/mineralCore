@@ -63,6 +63,8 @@ public class JeezySQL  {
 
     public static boolean ban_forever;
 
+    public static String punishment_UUID;
+
 
     private void createConnection() {
 
@@ -512,6 +514,34 @@ public class JeezySQL  {
         }
     }
 
+    public void unban(String username, Player p) {
+       try {
+           this.createConnection();
+           Connection con = DriverManager.getConnection(url, user, password);
+           Statement stm = con.createStatement();
+
+           UUIDChecker check_UUID = new UUIDChecker();
+           check_UUID.check(username);
+
+           unbanData(UUID.fromString(UUIDChecker.uuid));
+
+           if (punishment_UUID == null || !ban_forever) {
+              p.sendMessage("§7The player §b"+username+" §7isn't §4banned.");
+              return;
+           } else {
+               p.sendMessage("§7You §asuccessfully §7unbanned §b"+username);
+           }
+
+           String sql = "UPDATE punishments " +
+                   "SET banned_forever = false"+
+                   " WHERE UUID = '"+UUIDChecker.uuid+"'";
+           stm.executeUpdate(sql);
+           stm.close();
+
+       } catch (Exception e) {
+       }
+    }
+
     public void banData(UUID get_UUID) {
         try {
             this.createConnection();
@@ -520,6 +550,23 @@ public class JeezySQL  {
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" +get_UUID.toString()+"'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
+                ban_forever = rs.getBoolean(2);
+            }
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void unbanData(UUID get_UUID) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String select_sql = "SELECT * FROM punishments WHERE UUID = '" + get_UUID.toString() + "'";
+            ResultSet rs = stm.executeQuery(select_sql);
+            while (rs.next()) {
+                punishment_UUID = rs.getString(1);
                 ban_forever = rs.getBoolean(2);
             }
             con.close();
