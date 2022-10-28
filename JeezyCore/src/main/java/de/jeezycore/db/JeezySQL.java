@@ -5,6 +5,7 @@ import de.jeezycore.discord.chat.RealtimeChat;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.PermissionHandler;
 import de.jeezycore.utils.UUIDChecker;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -497,20 +498,74 @@ public class JeezySQL  {
         }
     }
 
-    public void ban(String sql, UUID u_player, Object put) {
+    public void ban(String username, String input, Player p) {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
-            PreparedStatement pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, String.valueOf(u_player));
-            pstmt.setString(2, (String) put);
+            Statement stm = con.createStatement();
 
-            System.out.println(put);
+            UUIDChecker uc = new UUIDChecker();
+            uc.check(username);
+            banData(UUID.fromString(UUIDChecker.uuid));
+            JSONObject json_o = new JSONObject();
 
-            pstmt.executeUpdate();
+            json_o.put("banned by", p.getPlayer().getDisplayName());
+            json_o.put("time", "forever");
+            json_o.put("reason", input);
+            ArrayStorage.punishment_log.add(json_o);
 
+            try {
+                Bukkit.getServer().getPlayer(UUID.fromString(UUIDChecker.uuid)).kickPlayer("§4You are permanently banned from JeezyDevelopment.\n\n" +
+                        "§6Reason: §c" +input+"§7.\n\n"+
+                        "§7If you feel this ban has been unjustified, appeal on our discord at\n §bjeezydevelopment.com§7.");
+            } catch (Exception e) {
+
+            }
+
+
+            String sql = "INSERT INTO punishments " +
+                    "(UUID, banned_forever, ban_time, mute_time, punishment_log) " +
+                    "VALUES " +
+                    "('"+UUIDChecker.uuid+"', true, "+"NULL, NULL, '"+ArrayStorage.punishment_log+"')";
+
+            System.out.println(sql);
+            if (punishment_UUID == null) {
+                stm.executeUpdate(sql);
+            } else {
+                banUpdate(username, p);
+            }
+            ArrayStorage.punishment_log.clear();
         } catch (SQLException e) {
         e.printStackTrace();
+        }
+    }
+
+    private void banUpdate(String username, Player p) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+
+            UUIDChecker check_UUID = new UUIDChecker();
+            check_UUID.check(username);
+
+            banData(UUID.fromString(UUIDChecker.uuid));
+
+            if (ban_forever) {
+                p.sendMessage("§b"+username+" §7has been already §4banned.");
+                return;
+            } else {
+                p.sendMessage("§7You §asuccessfully §7banned §b"+username+".");
+            }
+
+            String sql = "UPDATE punishments " +
+                    "SET banned_forever = true, ban_time = NULL, mute_time = NULL"+
+                    " WHERE UUID = '"+UUIDChecker.uuid+"'";
+            stm.executeUpdate(sql);
+            stm.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -550,6 +605,7 @@ public class JeezySQL  {
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" +get_UUID.toString()+"'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
+                punishment_UUID = rs.getString(1);
                 ban_forever = rs.getBoolean(2);
             }
             con.close();
