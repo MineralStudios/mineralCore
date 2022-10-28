@@ -1,6 +1,7 @@
 package de.jeezycore.events;
 
 
+import de.jeezycore.db.BanSQL;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.utils.PermissionHandler;
 import org.bukkit.Location;
@@ -22,13 +23,13 @@ public class JoinEvent implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         e.setJoinMessage("");
-        JeezySQL check_if_banned_forever = new JeezySQL();
+        BanSQL check_if_banned_forever = new BanSQL();
         check_if_banned_forever.banData(e.getPlayer().getUniqueId());
-        JeezySQL.punishment_UUID = null;
-        if (JeezySQL.ban_forever) {
+        BanSQL.punishment_UUID = null;
+        if (BanSQL.ban_forever) {
             e.getPlayer().kickPlayer("§4You are permanently banned from JeezyDevelopment.\n" +
                     "§7If you feel this ban has been unjustified, appeal on our discord at\n §bjeezydevelopment.com§7.");
-            JeezySQL.ban_forever = false;
+            BanSQL.ban_forever = false;
             return;
         }
 
