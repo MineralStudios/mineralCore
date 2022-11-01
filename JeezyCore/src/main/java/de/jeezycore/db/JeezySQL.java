@@ -145,7 +145,7 @@ public class JeezySQL  {
 
                     player_name_array.addAll(Arrays.asList(grant_new_player));
 
-                    player_name_array.remove(ArrayStorage.grant_array.get(getWhoExecuted));
+                    player_name_array.remove(ArrayStorage.grant_array.get(getWhoExecuted).toString());
 
 
                     System.out.println(player_name_array);
