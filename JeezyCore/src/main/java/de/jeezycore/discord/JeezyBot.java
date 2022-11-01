@@ -15,7 +15,7 @@ public class JeezyBot {
     public static DiscordApi api;
 
     public void start() {
-        File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyCore\\JeezyCore\\src\\main\\java\\discord.yml");
+        File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/discord.yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
 

@@ -22,7 +22,7 @@ public class Spawn implements CommandExecutor {
             Player p = (Player) sender;
             if (cmd.getName().equalsIgnoreCase("spawn")) {
 
-                File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
+                File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/config.yml");
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
                 List<Location> ls = (List<Location>) config.get("entry-spawn-point");

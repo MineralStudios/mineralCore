@@ -26,7 +26,7 @@ public class SetSpawn implements CommandExecutor {
                 p.sendMessage("§2§lYou successfully setuped the spawn.");
         try {
 
-            File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
+            File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/config.yml");
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             if (!file.exists()) {
                 file.createNewFile(); //This needs a try catch

@@ -22,7 +22,7 @@ public class BanSQL {
 
     public static String punishment_UUID;
     private void createConnection() {
-        File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\database.yml");
+        File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/database.yml");
         FileConfiguration db = YamlConfiguration.loadConfiguration(file);
         MemorySection mc = (MemorySection) db.get("MYSQL");
 

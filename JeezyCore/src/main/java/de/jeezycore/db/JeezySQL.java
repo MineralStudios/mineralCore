@@ -64,7 +64,7 @@ public class JeezySQL  {
 
     private void createConnection() {
 
-        File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\database.yml");
+        File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/database.yml");
         FileConfiguration db = YamlConfiguration.loadConfiguration(file);
         MemorySection mc = (MemorySection) db.get("MYSQL");
 
@@ -79,14 +79,14 @@ public class JeezySQL  {
 
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String jeezyCore_table = "CREATE TABLE IF NOT EXISTS JeezyCore " +
+            String jeezyCore_table = "CREATE TABLE IF NOT EXISTS jeezycore " +
                     " (rankName VARCHAR(255), " +
                     " rankColor INT(2), " +
                     " rankPriority INT(3), " +
                     " playerName longtext, " +
                     " rankPerms longtext, " +
                     " PRIMARY KEY ( rankName ))";
-            String punishments_table = "CREATE TABLE IF NOT EXISTS Punishments " +
+            String punishments_table = "CREATE TABLE IF NOT EXISTS punishments " +
                     " (UUID VARCHAR(255), " +
                     " banned_forever boolean, " +
                     " ban_time longtext, " +

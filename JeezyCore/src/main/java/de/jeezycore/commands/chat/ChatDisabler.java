@@ -32,7 +32,7 @@ public class ChatDisabler implements CommandExecutor {
                 p.sendMessage("§2You successfully disabled the chat §b§l"+p.getDisplayName());
 
                 try {
-                    File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
+                    File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/config.yml");
                     FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
 
@@ -56,7 +56,7 @@ public class ChatDisabler implements CommandExecutor {
             } else if (cmd.getName().equalsIgnoreCase("chat-enable") && args.length == 0) {
                 p.sendMessage("§2You successfully enabled the chat §b§l"+p.getDisplayName());
                 try {
-                    File file = new File("C:\\Users\\Lassd\\IdeaProjects\\JeezyDevelopment\\JeezyCore\\src\\config.yml");
+                    File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/config.yml");
                     FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
                     MemorySection mc = (MemorySection) config.get("chat");

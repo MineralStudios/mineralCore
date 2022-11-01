@@ -1,11 +1,11 @@
 entry-spawn-point:
 - ==: org.bukkit.Location
-  world: world
-  x: 1603.4288399709185
-  y: 63.0
-  z: 1448.4635743092806
-  pitch: 3.6155806
-  yaw: 0.3611338
+  world: Radlands
+  x: -57.40613848109142
+  y: 61.0
+  z: -33.52230119868431
+  pitch: -2.0974958
+  yaw: 178.69107
 spawn-settings:
   spawn-at-spawnpoint-on-join: true
   spawn-command: true
@@ -15,7 +15,13 @@ settings:
   disable_raining: true
   disable-death-msg: true
 chat:
-  chat_format: "&2[player]&f: [msg]"
+  chat_format: '&2[player]&f: [msg]'
   muted: false
   ignored_roles_on_chat-mute:
   - Owner
+world: Radlands
+x: -58
+y: 61
+z: -34
+pitch: -2.0974958
+yaw: 178.69107
