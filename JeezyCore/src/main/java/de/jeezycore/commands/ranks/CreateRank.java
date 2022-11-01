@@ -14,8 +14,8 @@ public class CreateRank implements CommandExecutor {
         if (sender instanceof Player) {
             Player p = (Player) sender;
 
-           if (cmd.getName().equalsIgnoreCase("create-rank") && args.length == 0 || args.length == 1) {
-              p.sendMessage("Usage: /create-rank (name) (color)");
+           if (cmd.getName().equalsIgnoreCase("create-rank") && args.length < 3) {
+              p.sendMessage("Usage: /create-rank (name) (color) (priority)");
            } else {
                JeezySQL mySQL = new JeezySQL();
                String input = "INSERT INTO jeezycore " +
