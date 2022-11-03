@@ -23,14 +23,15 @@ public class JoinEvent implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         e.setJoinMessage("");
-        BanSQL check_if_banned_forever = new BanSQL();
-        check_if_banned_forever.banData(e.getPlayer().getUniqueId());
+        BanSQL check_if_banned = new BanSQL();
+        check_if_banned.banData(e.getPlayer().getUniqueId());
         BanSQL.punishment_UUID = null;
         if (BanSQL.ban_forever) {
-            e.getPlayer().kickPlayer("§4You are permanently banned from JeezyDevelopment.\n" +
-                    "§7If you feel this ban has been unjustified, appeal on our discord at\n §bjeezydevelopment.com§7.");
+            e.getPlayer().kickPlayer("§4You are permanently banned from §bJeezyDevelopment.\n" +
+                    "§7If you feel this ban is unjustified, appeal on our discord at\n §bjeezydevelopment.com§7.");
             BanSQL.ban_forever = false;
-            return;
+        } else if (check_if_banned.ban_end != null) {
+            check_if_banned.tempBanDurationCalculate(e.getPlayer());
         }
 
     try {
