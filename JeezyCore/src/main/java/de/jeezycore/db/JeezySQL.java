@@ -68,13 +68,30 @@ public class JeezySQL  {
         FileConfiguration db = YamlConfiguration.loadConfiguration(file);
         MemorySection mc = (MemorySection) db.get("MYSQL");
 
-        url = "jdbc:mysql://localhost:3306/"+mc.get("database");
+        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
         user = (String) mc.get("user");
         password = (String) mc.get("password");
     }
 
+    private void createDB() {
+        try {
+            File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/database.yml");
+            FileConfiguration db = YamlConfiguration.loadConfiguration(file);
+            MemorySection mc = (MemorySection) db.get("MYSQL");
+
+            Connection con = DriverManager.getConnection("jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/", (String) mc.get("user"), (String) mc.get("password"));
+            Statement stm = con.createStatement();
+            String jeezyDB = "CREATE DATABASE IF NOT EXISTS jeezydevelopment";
+            stm.executeUpdate(jeezyDB);
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void createTable() {
         try {
+            createDB();
             this.createConnection();
 
             Connection con = DriverManager.getConnection(url, user, password);
@@ -94,12 +111,13 @@ public class JeezySQL  {
                     " mute_time longtext, " +
                     " punishment_log longtext, "+
                     " PRIMARY KEY ( UUID ))";
+
             stm.executeUpdate(jeezyCore_table);
             stm.executeUpdate(punishments_table);
             stm.close();
             if (con.isValid(20)) {
                 System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" connected to database."+Color.RESET);
-                System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" created"+Color.YELLOW_BOLD+" tables"+Color.CYAN+"."+Color.RESET);
+                System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" created"+Color.YELLOW_BOLD+" DB & Tables"+Color.CYAN+"."+Color.RESET);
             }
             con.close();
         } catch (SQLException e) {
