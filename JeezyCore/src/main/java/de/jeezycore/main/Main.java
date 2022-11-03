@@ -6,6 +6,7 @@ import de.jeezycore.commands.chat.ChatDisabler;
 import de.jeezycore.commands.permissions.PermissionAdd;
 import de.jeezycore.commands.punishments.Ban;
 import de.jeezycore.commands.permissions.PermissionRemove;
+import de.jeezycore.commands.punishments.TempBan;
 import de.jeezycore.commands.punishments.UnBan;
 import de.jeezycore.commands.ranks.CreateRank;
 import de.jeezycore.commands.ranks.GrantRank;
@@ -39,6 +40,7 @@ public class Main extends JavaPlugin {
         this.getCommand("permissionRemove").setExecutor(new PermissionRemove());
         this.getCommand("ban").setExecutor(new Ban());
         this.getCommand("unban").setExecutor(new UnBan());
+        this.getCommand("tempban").setExecutor(new TempBan());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
