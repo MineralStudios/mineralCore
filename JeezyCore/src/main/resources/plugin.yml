@@ -37,4 +37,6 @@ commands:
     description: Bans a player.
   unban:
       description: Unbans a player.
+  tempban:
+    description: Bans a player for a certain time.
 
