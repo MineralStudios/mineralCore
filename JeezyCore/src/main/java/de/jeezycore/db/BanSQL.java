@@ -41,10 +41,10 @@ public class BanSQL {
 
     private LocalDateTime updatedTime;
 
-    private DateTimeFormatter formatter;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private String ban_start;
-    private String ban_end;
+    public String ban_start;
+    public String ban_end;
 
     private JSONObject json_o = new JSONObject();
 
@@ -133,11 +133,11 @@ public class BanSQL {
         }
     }
 
-    public void tempBanDurationCalculate() {
+    public void tempBanDurationCalculate(Player p) {
         System.out.println(ban_start);
         System.out.println(ban_end);
 
-        LocalDateTime dateTime_start = LocalDateTime.parse(ban_start, formatter);
+        LocalDateTime dateTime_start = LocalDateTime.parse(LocalDateTime.now().format(formatter), formatter);
         LocalDateTime dateTime_end = LocalDateTime.parse(ban_end, formatter);
 
         LocalDateTime fromTemp = LocalDateTime.from(dateTime_start);
@@ -161,19 +161,38 @@ public class BanSQL {
 
         long millis = fromTemp.until(dateTime_end, ChronoUnit.MILLIS);
 
-        System.out.println("From = " + dateTime_start);
-        System.out.println("To   = " + dateTime_end);
-        System.out.printf("The difference is %s years, %s months, %s days, " +
-                        "%s hours, %s minutes, %s seconds, %s millis",
-                years, months, days, hours, minutes, seconds, millis);
-        // System.out.println("Day(s): ["+diffInDays+"]; "+"Hour(s): ["+diffInHours+"]; "+"Minutes: ["+diffInMinutes+"];");
+        if (seconds < 0) {
+            tempBanAutomaticUnban(p.getPlayer());
+            return;
+        }
 
+        p.kickPlayer("§4You are temporarily banned from §bJeezyDevelopment.\n\n" +
+                "§cBan duration: " + "§cDay(s): §7[§b"+days+"§7] | "+"§cHour(s): §7[§b"+hours+"§7] | "+"§cMinutes: §7[§b"+minutes+"§7] | " +"§cSeconds: §7[§b"+seconds+"§7];\n\n" +
+                "§7If you feel this ban is unjustified, appeal on our discord at\n §bjeezydevelopment.com§7.");
+    }
+
+    private void tempBanAutomaticUnban(Player p) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+
+            UUIDChecker check_UUID = new UUIDChecker();
+            check_UUID.check(p.getPlayer().getDisplayName());
+
+            String sql = "UPDATE punishments " +
+                    "SET banned_forever = false, ban_start = NULL, ban_end = NULL"+
+                    " WHERE UUID = '"+UUIDChecker.uuid+"'";
+
+            stm.executeUpdate(sql);
+            stm.close();
+        } catch (Exception e) {
+        }
     }
 
 
     public void tempBanCalculate(String time) {
         currentTime = LocalDateTime.now();
-        formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         if (time.contains("d")) {
             updatedTime = currentTime.plusDays(Integer.parseInt(time.replace("d", "")));
@@ -276,7 +295,7 @@ public class BanSQL {
             check_UUID.check(username);
             unbanData(UUID.fromString(UUIDChecker.uuid));
 
-            if (punishment_UUID == null || !ban_forever) {
+            if (punishment_UUID == null && !ban_forever || punishment_UUID == null && ban_end == null && ban_start == null) {
                 p.sendMessage("§7The player §b"+username+" §7isn't §4banned.");
                 return;
             } else {
@@ -284,7 +303,7 @@ public class BanSQL {
             }
 
             String sql = "UPDATE punishments " +
-                    "SET banned_forever = false"+
+                    "SET banned_forever = false, ban_start = NULL, ban_end = NULL"+
                     " WHERE UUID = '"+UUIDChecker.uuid+"'";
             stm.executeUpdate(sql);
             stm.close();
