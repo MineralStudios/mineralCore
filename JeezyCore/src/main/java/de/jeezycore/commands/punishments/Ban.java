@@ -19,7 +19,7 @@ public class Ban implements CommandExecutor {
 
             if (cmd.getName().equalsIgnoreCase("ban") && args.length > 1) {
                 List<String> ls = new ArrayList<String>(Arrays.asList(args));
-                String input = Joiner.on(" ")
+                String input = Joiner.on("")
                         .skipNulls()
                         .join(ls).replace(args[0], "");
 
