@@ -46,6 +46,8 @@ public class BanSQL {
     private String ban_start;
     private String ban_end;
 
+    private JSONObject json_o = new JSONObject();
+
     private void createConnection() {
         File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/database.yml");
         FileConfiguration db = YamlConfiguration.loadConfiguration(file);
@@ -65,7 +67,6 @@ public class BanSQL {
             UUIDChecker uc = new UUIDChecker();
             uc.check(username);
             banData(UUID.fromString(UUIDChecker.uuid));
-            JSONObject json_o = new JSONObject();
 
             json_o.put("banned by", p.getPlayer().getDisplayName());
             json_o.put("time", "forever");
@@ -80,9 +81,8 @@ public class BanSQL {
 
             }
 
-
             String sql = "INSERT INTO punishments " +
-                    "(UUID, banned_forever, ban_start, ban_end mute_time, punishment_log) " +
+                    "(UUID, banned_forever, ban_start, ban_end, mute_time, punishment_log) " +
                     "VALUES " +
                     "('" + UUIDChecker.uuid + "', true, " + "NULL, NULL, NULL, '" + ArrayStorage.punishment_log + "')";
 
@@ -106,8 +106,12 @@ public class BanSQL {
 
             UUIDChecker check_UUID = new UUIDChecker();
             check_UUID.check(username);
-
             banData(UUID.fromString(UUIDChecker.uuid));
+
+            json_o.put("banned by", p.getPlayer().getDisplayName());
+            json_o.put("time", "forever");
+            json_o.put("reason", input);
+            ArrayStorage.punishment_log.add(json_o);
 
             if (ban_forever) {
                 p.sendMessage("§b" + username + " §7has been already §4banned.");
@@ -122,7 +126,7 @@ public class BanSQL {
             stm.executeUpdate(sql);
             stm.close();
 
-            punishment_logUpdate(username, input, p);
+            punishment_logUpdate(username);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -192,7 +196,6 @@ public class BanSQL {
             uc.check(username);
             tempBanCalculate(time);
             banData(UUID.fromString(UUIDChecker.uuid));
-            JSONObject json_o = new JSONObject();
 
             json_o.put("banned by", p.getPlayer().getDisplayName());
             json_o.put("ban_start", currentTime.format(formatter));
@@ -214,22 +217,18 @@ public class BanSQL {
                     "VALUES " +
                     "('"+UUIDChecker.uuid+"', false,'"+currentTime.format(formatter)+"', '"+updatedTime.format(formatter)+"', NULL, "+"'"+ArrayStorage.punishment_log+"')";
 
-
-
             if (punishment_logs == null || punishment_UUID == null) {
                 stm.executeUpdate(sql);
             } else {
-                tempBanUpdate(username, reason, p);
+                tempBanUpdate(username, time, reason, p);
             }
-
             ArrayStorage.punishment_log.clear();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void tempBanUpdate(String username, String input, Player p) {
+    private void tempBanUpdate(String username, String time, String reason , Player p) {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
@@ -239,6 +238,12 @@ public class BanSQL {
             check_UUID.check(username);
 
             banData(UUID.fromString(UUIDChecker.uuid));
+
+            json_o.put("banned by", p.getPlayer().getDisplayName());
+            json_o.put("ban_start", currentTime.format(formatter));
+            json_o.put("ban_end", updatedTime.format(formatter));
+            json_o.put("reason", reason);
+            ArrayStorage.punishment_log.add(json_o);
 
             if (ban_forever) {
                 p.sendMessage("§b"+username+" §7has been already §4banned.");
@@ -253,7 +258,7 @@ public class BanSQL {
             stm.executeUpdate(sql);
             stm.close();
 
-            punishment_logUpdate(username, input, p);
+            punishment_logUpdate(username);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -269,7 +274,6 @@ public class BanSQL {
 
             UUIDChecker check_UUID = new UUIDChecker();
             check_UUID.check(username);
-
             unbanData(UUID.fromString(UUIDChecker.uuid));
 
             if (punishment_UUID == null || !ban_forever) {
@@ -326,36 +330,26 @@ public class BanSQL {
         }
     }
 
-    public void punishment_logUpdate(String username, String input, Player p) {
+    public void punishment_logUpdate(String username) {
         try {
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
 
             UUIDChecker check_UUID = new UUIDChecker();
             check_UUID.check(username);
-            JSONObject json_o = new JSONObject();
 
             banData(UUID.fromString(UUIDChecker.uuid));
             String replace_punishment_logs = punishment_logs.replace("[", "").replace("]", "");
 
             punishment_logArray.add(replace_punishment_logs);
-
-            json_o.put("banned by", p.getPlayer().getDisplayName());
-            json_o.put("time", "forever");
-            json_o.put("reason", input);
-
             punishment_logArray.add(json_o.toString());
-
-            System.out.println(json_o);
-            System.out.println(replace_punishment_logs);
-            System.out.println(punishment_logArray);
 
             String sql = "UPDATE punishments " +
                     "SET punishment_log = '"+punishment_logArray+"'"+
                     " WHERE UUID = '"+UUIDChecker.uuid+"'";
             stm.executeUpdate(sql);
             stm.close();
-
+            punishment_logArray.clear();
         } catch (Exception e) {
             e.printStackTrace();
         }
