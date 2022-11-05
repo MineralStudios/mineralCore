@@ -74,11 +74,10 @@ public class MuteSQL {
                     "VALUES " +
                     "('" + UUIDChecker.uuid + "', true, " + "NULL, NULL, true, '"+ArrayStorage.mute_logs + "')";
 
-            p.sendMessage("§7You §asuccessfully §7muted §b" + username + "§7.");
-
             System.out.println(sql);
             if (punishment_UUID == null && mute_logs == null) {
                 stm.executeUpdate(sql);
+                p.sendMessage("§7You §asuccessfully §7muted §b" + username + "§7.");
             } else {
                 muteUpdate(username, input, p);
             }
