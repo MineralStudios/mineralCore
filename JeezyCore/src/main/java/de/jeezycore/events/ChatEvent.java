@@ -1,6 +1,7 @@
 package de.jeezycore.events;
 
 import de.jeezycore.colors.ColorTranslator;
+import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.BanSQL;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.db.MuteSQL;
@@ -27,8 +28,6 @@ public class ChatEvent implements Listener {
         System.out.println(display.rankColor);
         System.out.println(e.getPlayer().getUniqueId());
 
-        File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/config.yml");
-        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
         MuteSQL check_if_banned = new MuteSQL();
         check_if_banned.muteData(e.getPlayer().getUniqueId());
@@ -38,26 +37,29 @@ public class ChatEvent implements Listener {
                     "§bDuration: §4forever.");
             MuteSQL.mute_forever = false;
             e.setCancelled(true);
-            return;
         } else if (check_if_banned.mute_end != null) {
             check_if_banned.tempMuteDurationCalculate(e.getPlayer());
             e.setCancelled(true);
-            return;
         }
 
             if (display.rank == null) {
                 RealtimeChat rmc = new RealtimeChat();
                 rmc.realtimeMcChat( e.getPlayer().getDisplayName()+": "+e.getMessage());
 
-                MemorySection cf = (MemorySection) config.get("chat");
+                MemorySection cf = (MemorySection) JeezyConfig.config_defaults.get("chat");
                 String chat_format_rep = cf.getString("chat_format").replace("&", "§").replace("[player]", e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage());
                 e.setFormat(chat_format_rep.replace("%", "%%"));
-                return;
+            } else {
+                String show_color = ColorTranslator.colorTranslator.get(display.rankColor);
+                System.out.println(show_color);
+                RealtimeChat rmc = new RealtimeChat();
+                rmc.realtimeMcChat("["+display.rank+"]"+" "+e.getPlayer().getDisplayName()+": "+e.getMessage());
+                e.setFormat("§7§l["+show_color+""+display.rank+"§7§l]§f "+e.getPlayer().getDisplayName()+": "+e.getMessage().replace("%", "%%"));
             }
 
 
         try {
-            MemorySection mc = (MemorySection) config.get("chat");
+            MemorySection mc = (MemorySection) JeezyConfig.config_defaults.get("chat");
             boolean chat_muted = mc.getBoolean("muted");
             List<String> ignored_roles = (List<String>) mc.getList("ignored_roles_on_chat-mute");
 
@@ -69,7 +71,6 @@ public class ChatEvent implements Listener {
                System.out.println("Chat is disabled!");
                 e.getPlayer().sendMessage("§4§lChat has been disabled.");
                 e.setCancelled(true);
-                return;
             }
 
 
@@ -77,11 +78,7 @@ public class ChatEvent implements Listener {
             f.printStackTrace();
         }
 
-            String show_color = ColorTranslator.colorTranslator.get(display.rankColor);
-            System.out.println(show_color);
-            RealtimeChat rmc = new RealtimeChat();
-            rmc.realtimeMcChat("["+display.rank+"]"+" "+e.getPlayer().getDisplayName()+": "+e.getMessage());
-            e.setFormat("§7§l["+show_color+""+display.rank+"§7§l]§f "+e.getPlayer().getDisplayName()+": "+e.getMessage().replace("%", "%%"));
+
 
 
     }

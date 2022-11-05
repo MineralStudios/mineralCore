@@ -1,5 +1,6 @@
 package de.jeezycore.events;
 
+import de.jeezycore.config.JeezyConfig;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
@@ -18,14 +19,10 @@ public class DeathEvent implements Listener {
     public void onDeath(PlayerDeathEvent e) {
         try {
 
-            File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/config.yml");
-            FileConfiguration spawn = YamlConfiguration.loadConfiguration(file);
+            List<Location> ls = (List<Location>) JeezyConfig.config_defaults.get("entry-spawn-point");
+            MemorySection mc = (MemorySection) JeezyConfig.config_defaults.get("spawn-settings");
 
-
-            List<Location> ls = (List<Location>) spawn.get("entry-spawn-point");
-            MemorySection mc = (MemorySection) spawn.get("spawn-settings");
-
-            MemorySection mc2 = (MemorySection) spawn.get("settings");
+            MemorySection mc2 = (MemorySection) JeezyConfig.config_defaults.get("settings");
 
             boolean spawn_settings = mc.getBoolean("respawn-after-death-at-spawn");
 

@@ -1,5 +1,6 @@
 package de.jeezycore.events;
 
+import de.jeezycore.config.JeezyConfig;
 import org.bukkit.Location;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,9 +17,7 @@ public class WeatherEvent implements Listener {
     @EventHandler
     public void onWeather(WeatherChangeEvent e) {
 
-        File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/config.yml");
-        FileConfiguration spawn = YamlConfiguration.loadConfiguration(file);
-        MemorySection mc = (MemorySection) spawn.get("settings");
+        MemorySection mc = (MemorySection) JeezyConfig.config_defaults.get("settings");
         boolean rain_b = mc.getBoolean("disable_raining");
 
         if (rain_b) {

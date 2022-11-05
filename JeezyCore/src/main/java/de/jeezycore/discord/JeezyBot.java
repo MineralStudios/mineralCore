@@ -1,5 +1,6 @@
 package de.jeezycore.discord;
 
+import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.discord.activity.BotStatus;
 import de.jeezycore.discord.events.MessageCreate;
 import org.bukkit.configuration.MemorySection;
@@ -15,11 +16,8 @@ public class JeezyBot {
     public static DiscordApi api;
 
     public void start() {
-        File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/discord.yml");
-        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-
-        MemorySection discord = (MemorySection) config.get("discord-settings");
+        MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-settings");
         String token = (String) discord.get("token");
 
          api = new DiscordApiBuilder()

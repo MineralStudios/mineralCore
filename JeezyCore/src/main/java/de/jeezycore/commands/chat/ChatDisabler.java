@@ -1,5 +1,6 @@
 package de.jeezycore.commands.chat;
 
+import de.jeezycore.config.JeezyConfig;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -32,51 +33,29 @@ public class ChatDisabler implements CommandExecutor {
                 p.sendMessage("§2You successfully disabled the chat §b§l"+p.getDisplayName());
 
                 try {
-                    File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/config.yml");
-                    FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-
-
-                    MemorySection mc = (MemorySection) config.get("chat");
+                    MemorySection mc = (MemorySection) JeezyConfig.config_defaults.get("chat");
                     mc.set("muted", true);
 
-
-                    if (!file.exists()) {
-                        file.createNewFile(); //This needs a try catch
-                    }
-
-                    config.save(file);
+                    JeezyConfig.config_defaults.save(JeezyConfig.config);
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
             if (cmd.getName().equalsIgnoreCase("chat-enable") && args.length > 0) {
                 p.sendMessage("Usage: /chat-enable or disable");
             } else if (cmd.getName().equalsIgnoreCase("chat-enable") && args.length == 0) {
                 p.sendMessage("§2You successfully enabled the chat §b§l"+p.getDisplayName());
                 try {
-                    File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/config.yml");
-                    FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-
-                    MemorySection mc = (MemorySection) config.get("chat");
+                    MemorySection mc = (MemorySection) JeezyConfig.config_defaults.get("chat");
                     mc.set("muted", false);
 
-
-
-                    if (!file.exists()) {
-                        file.createNewFile(); //This needs a try catch
-                    }
-
-                    config.save(file);
+                    JeezyConfig.config_defaults.save(JeezyConfig.config);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-
         }
-
-
         return false;
     }
 }

@@ -15,6 +15,7 @@ import de.jeezycore.commands.ranks.CreateRank;
 import de.jeezycore.commands.ranks.GrantRank;
 import de.jeezycore.commands.spawn.SetSpawn;
 import de.jeezycore.commands.spawn.Spawn;
+import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.discord.JeezyBot;
 import de.jeezycore.events.*;
@@ -25,6 +26,8 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.GREEN_BOLD+" Successfully"+Color.CYAN_BOLD+" started JeezyCore coded by JeezyDevelopment!"+Color.RESET);
+        JeezyConfig file_Jeezy_config = new JeezyConfig();
+        file_Jeezy_config.create_folder();
         // Register Commands
         this.getCommand("jeezycore-guide").setExecutor(new JeezyCoreGuide());
         this.getCommand("create-rank").setExecutor(new CreateRank());

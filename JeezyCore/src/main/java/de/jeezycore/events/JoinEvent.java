@@ -1,6 +1,7 @@
 package de.jeezycore.events;
 
 
+import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.BanSQL;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.utils.PermissionHandler;
@@ -38,11 +39,9 @@ public class JoinEvent implements Listener {
         JeezySQL givePermsOnJoin = new JeezySQL();
         givePermsOnJoin.onJoinPerms(e.getPlayer().getUniqueId());
 
-        File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/config.yml");
-        FileConfiguration spawn = YamlConfiguration.loadConfiguration(file);
 
-        List<Location> ls = (List<Location>) spawn.get("entry-spawn-point");
-        MemorySection mc = (MemorySection) spawn.get("spawn-settings");
+        List<Location> ls = (List<Location>) JeezyConfig.config_defaults.get("entry-spawn-point");
+        MemorySection mc = (MemorySection) JeezyConfig.config_defaults.get("spawn-settings");
         boolean spawnOnSpownpointOnJoin = mc.getBoolean("spawn-at-spawnpoint-on-join");
 
         World w = ls.get(0).getWorld();

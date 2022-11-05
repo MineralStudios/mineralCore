@@ -1,5 +1,6 @@
 package de.jeezycore.commands.spawn;
 
+import de.jeezycore.config.JeezyConfig;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,34 +26,23 @@ public class SetSpawn implements CommandExecutor {
             } else {
                 p.sendMessage("§2§lYou successfully setuped the spawn.");
         try {
-
-            File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/config.yml");
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            if (!file.exists()) {
-                file.createNewFile(); //This needs a try catch
-            }
-
             Location worldObject = p.getLocation();
 
             List<Location> locations = new ArrayList<>(Arrays.asList(worldObject));
-            config.set("entry-spawn-point", locations);
+            JeezyConfig.config_defaults.set("entry-spawn-point", locations);
 
-            config.set("world", p.getPlayer().getLocation().getWorld().getName());
-            config.set("x", p.getPlayer().getLocation().getBlockX());
-            config.set("y", p.getPlayer().getLocation().getBlockY());
-            config.set("z", p.getPlayer().getLocation().getBlockZ());
-            config.set("pitch", p.getPlayer().getLocation().getPitch());
-            config.set("yaw", p.getPlayer().getLocation().getYaw());
+            JeezyConfig.config_defaults.set("world", p.getPlayer().getLocation().getWorld().getName());
+            JeezyConfig.config_defaults.set("x", p.getPlayer().getLocation().getBlockX());
+            JeezyConfig.config_defaults.set("y", p.getPlayer().getLocation().getBlockY());
+            JeezyConfig.config_defaults.set("z", p.getPlayer().getLocation().getBlockZ());
+            JeezyConfig.config_defaults.set("pitch", p.getPlayer().getLocation().getPitch());
+            JeezyConfig.config_defaults.set("yaw", p.getPlayer().getLocation().getYaw());
 
-            //To remove something do 'config.set("Whatever.Path-Here", null)'
-            config.save(file); //This needs a try catch
-
+            JeezyConfig.config_defaults.save(JeezyConfig.config);
         } catch (Exception f) {
             f.printStackTrace();
         }
-
             }
-
         }
         return false;
     }

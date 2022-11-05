@@ -1,5 +1,6 @@
 package de.jeezycore.db;
 
+import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.Bukkit;
@@ -45,9 +46,7 @@ public class MuteSQL {
     private JSONObject json_o = new JSONObject();
 
     private void createConnection() {
-        File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/database.yml");
-        FileConfiguration db = YamlConfiguration.loadConfiguration(file);
-        MemorySection mc = (MemorySection) db.get("MYSQL");
+        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
 
         url = "jdbc:mysql://localhost:3306/" + mc.get("database");
         user = (String) mc.get("user");

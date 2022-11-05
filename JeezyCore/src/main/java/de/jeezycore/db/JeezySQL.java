@@ -1,6 +1,7 @@
 package de.jeezycore.db;
 import de.jeezycore.colors.Color;
 import de.jeezycore.colors.ColorTranslator;
+import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.discord.chat.RealtimeChat;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.PermissionHandler;
@@ -64,9 +65,8 @@ public class JeezySQL  {
 
     private void createConnection() {
 
-        File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/database.yml");
-        FileConfiguration db = YamlConfiguration.loadConfiguration(file);
-        MemorySection mc = (MemorySection) db.get("MYSQL");
+
+        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
 
         url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
         user = (String) mc.get("user");
@@ -75,9 +75,8 @@ public class JeezySQL  {
 
     private void createDB() {
         try {
-            File file = new File("/home/jeffrey/IdeaProjects/JeezyCore/JeezyCore/src/main/java/database.yml");
-            FileConfiguration db = YamlConfiguration.loadConfiguration(file);
-            MemorySection mc = (MemorySection) db.get("MYSQL");
+
+            MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
 
             Connection con = DriverManager.getConnection("jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/", (String) mc.get("user"), (String) mc.get("password"));
             Statement stm = con.createStatement();
