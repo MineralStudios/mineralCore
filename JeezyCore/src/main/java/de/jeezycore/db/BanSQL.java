@@ -240,7 +240,7 @@ public class BanSQL {
 
             if (punishment_UUID == null && ban_logs == null) {
                 stm.executeUpdate(sql);
-                p.sendMessage("§7You §asuccessfully §7banned §b"+username+" for §c"+time+"§7.");
+                p.sendMessage("§7You §asuccessfully §7banned §b"+username+" §7for §c"+time+"§7.");
             } else {
                 tempBanUpdate(username, time, reason, p);
             }
@@ -271,7 +271,7 @@ public class BanSQL {
                 p.sendMessage("§b"+username+" §7has been already §4banned.");
                 return;
             } else {
-                p.sendMessage("§7You §asuccessfully §7banned §b"+username+" for §c"+time+"§7.");
+                p.sendMessage("§7You §asuccessfully §7banned §b"+username+" §7for §c"+time+"§7.");
             }
 
             String sql = "UPDATE punishments " +

@@ -218,7 +218,7 @@ public class MuteSQL {
 
             if (punishment_UUID == null && mute_logs == null) {
                 stm.executeUpdate(sql);
-                p.sendMessage("§7You §asuccessfully §7muted §b"+username+" for §c"+time+"§7.");
+                p.sendMessage("§7You §asuccessfully §7muted §b"+username+" §7for §c"+time+"§7.");
             } else {
                 tempMuteUpdate(username, time, reason, p);
             }
@@ -249,7 +249,7 @@ public class MuteSQL {
                 p.sendMessage("§b"+username+" §7has been already §4muted.");
                 return;
             } else {
-                p.sendMessage("§7You §asuccessfully §7muted §b"+username+" for §c"+time+"§7.");
+                p.sendMessage("§7You §asuccessfully §7muted §b"+username+" §7for §c"+time+"§7.");
             }
 
             String sql = "UPDATE punishments " +
