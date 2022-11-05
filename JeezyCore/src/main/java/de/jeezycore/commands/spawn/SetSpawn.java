@@ -5,8 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -30,14 +28,6 @@ public class SetSpawn implements CommandExecutor {
 
             List<Location> locations = new ArrayList<>(Arrays.asList(worldObject));
             JeezyConfig.config_defaults.set("entry-spawn-point", locations);
-
-            JeezyConfig.config_defaults.set("world", p.getPlayer().getLocation().getWorld().getName());
-            JeezyConfig.config_defaults.set("x", p.getPlayer().getLocation().getBlockX());
-            JeezyConfig.config_defaults.set("y", p.getPlayer().getLocation().getBlockY());
-            JeezyConfig.config_defaults.set("z", p.getPlayer().getLocation().getBlockZ());
-            JeezyConfig.config_defaults.set("pitch", p.getPlayer().getLocation().getPitch());
-            JeezyConfig.config_defaults.set("yaw", p.getPlayer().getLocation().getYaw());
-
             JeezyConfig.config_defaults.save(JeezyConfig.config);
         } catch (Exception f) {
             f.printStackTrace();
