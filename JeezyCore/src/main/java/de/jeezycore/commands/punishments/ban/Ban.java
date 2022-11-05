@@ -1,4 +1,4 @@
-package de.jeezycore.commands.punishments;
+package de.jeezycore.commands.punishments.ban;
 
 import com.google.common.base.Joiner;
 import de.jeezycore.db.BanSQL;
@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 public class Ban implements CommandExecutor {
-    int s = 1;
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -31,8 +30,6 @@ public class Ban implements CommandExecutor {
             }
 
         }
-
-
         return false;
     }
 }

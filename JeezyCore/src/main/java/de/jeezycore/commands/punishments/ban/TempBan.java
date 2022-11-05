@@ -1,31 +1,30 @@
-package de.jeezycore.commands.punishments;
+package de.jeezycore.commands.punishments.ban;
 
 import de.jeezycore.db.BanSQL;
 import de.jeezycore.db.JeezySQL;
-import org.bukkit.BanList;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class UnBan implements CommandExecutor {
+
+public class TempBan implements CommandExecutor {
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
         if (sender instanceof Player) {
             Player p = (Player) sender;
 
-            if (cmd.getName().equalsIgnoreCase("unban") && args.length > 0) {
-
+            if (cmd.getName().equalsIgnoreCase("tempban") && args.length >= 3) {
                 BanSQL execute = new BanSQL();
-                execute.unban(args[0], p.getPlayer());
+
+                execute.tempBan(args[0], args[1], args[2], p);
 
             } else {
-                p.sendMessage("Usage: /unban <player>.");
+                p.sendMessage("Usage: /tempban <player><time><reason>");
             }
         }
-
         return false;
     }
 }
