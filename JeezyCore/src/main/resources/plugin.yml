@@ -35,8 +35,14 @@ commands:
     description: Makes you fly.
   ban:
     description: Bans a player.
-  unban:
-      description: Unbans a player.
   tempban:
     description: Bans a player for a certain time.
+  unban:
+    description: Unbans a player.
+  mute:
+    description: Mutes player.
+  tempmute:
+    description: Mutes a player for a certain time.
+  unmute:
+    description: Unmutes a player.
 
