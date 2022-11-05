@@ -116,10 +116,10 @@ public class BanSQL {
             ArrayStorage.ban_logs.add(json_o);
 
             if (ban_forever) {
-                p.sendMessage("§b" + username + " §7has been already §4banned.");
+                p.sendMessage("§b" + username + " §7has been already §4banned§7.");
                 return;
             } else {
-                p.sendMessage("§7You §asuccessfully §7banned §b" + username + ".");
+                p.sendMessage("§7You §asuccessfully §7banned §b" + username + "§7.");
             }
 
             String sql = "UPDATE punishments " +
@@ -240,6 +240,7 @@ public class BanSQL {
 
             if (punishment_UUID == null && ban_logs == null) {
                 stm.executeUpdate(sql);
+                p.sendMessage("§7You §asuccessfully §7banned §b"+username+" for §c"+time+"§7.");
             } else {
                 tempBanUpdate(username, time, reason, p);
             }
@@ -270,7 +271,7 @@ public class BanSQL {
                 p.sendMessage("§b"+username+" §7has been already §4banned.");
                 return;
             } else {
-                p.sendMessage("§7You §asuccessfully §7banned §b"+username+".");
+                p.sendMessage("§7You §asuccessfully §7banned §b"+username+" for §c"+time+"§7.");
             }
 
             String sql = "UPDATE punishments " +
@@ -298,10 +299,10 @@ public class BanSQL {
             unbanData(UUID.fromString(UUIDChecker.uuid));
 
             if (punishment_UUID == null || !ban_status) {
-                p.sendMessage("§7The player §b"+username+" §7isn't §4banned.");
+                p.sendMessage("§7The player §b"+username+" §7isn't §4banned§7.");
                 return;
             } else {
-                p.sendMessage("§7You §asuccessfully §7unbanned §b"+username);
+                p.sendMessage("§7You §asuccessfully §7unbanned §b"+username+"§7.");
             }
 
             String sql = "UPDATE punishments " +

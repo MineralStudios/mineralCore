@@ -74,7 +74,7 @@ public class MuteSQL {
                     "VALUES " +
                     "('" + UUIDChecker.uuid + "', true, " + "NULL, NULL, true, '"+ArrayStorage.mute_logs + "')";
 
-            p.sendMessage("§7You §asuccessfully §7muted §b" + username + ".");
+            p.sendMessage("§7You §asuccessfully §7muted §b" + username + "§7.");
 
             System.out.println(sql);
             if (punishment_UUID == null && mute_logs == null) {
@@ -104,10 +104,10 @@ public class MuteSQL {
             ArrayStorage.mute_logs.add(json_o);
 
             if (mute_forever) {
-                p.sendMessage("§b" + username + " §7has been already §4muted.");
+                p.sendMessage("§b" + username + " §7has been already §4muted§7.");
                 return;
             } else {
-                p.sendMessage("§7You §asuccessfully §7muted §b" + username + ".");
+                p.sendMessage("§7You §asuccessfully §7muted §b" + username + "§7.");
             }
 
             String sql = "UPDATE punishments " +
@@ -218,6 +218,7 @@ public class MuteSQL {
 
             if (punishment_UUID == null && mute_logs == null) {
                 stm.executeUpdate(sql);
+                p.sendMessage("§7You §asuccessfully §7muted §b"+username+" for §c"+time+"§7.");
             } else {
                 tempMuteUpdate(username, time, reason, p);
             }
@@ -248,7 +249,7 @@ public class MuteSQL {
                 p.sendMessage("§b"+username+" §7has been already §4muted.");
                 return;
             } else {
-                p.sendMessage("§7You §asuccessfully §7muted §b"+username+" for "+time+".");
+                p.sendMessage("§7You §asuccessfully §7muted §b"+username+" for §c"+time+"§7.");
             }
 
             String sql = "UPDATE punishments " +
@@ -276,7 +277,7 @@ public class MuteSQL {
             unMuteData(UUID.fromString(UUIDChecker.uuid));
 
             if (punishment_UUID == null || !mute_status) {
-                p.sendMessage("§7The player §b"+username+" §7isn't §4muted.");
+                p.sendMessage("§7The player §b"+username+" §7isn't §4muted§7.");
                 return;
             } else {
                 p.sendMessage("§7You §asuccessfully §7unmuted §b"+username+"§7.");
