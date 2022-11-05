@@ -106,10 +106,15 @@ public class JeezySQL  {
             String punishments_table = "CREATE TABLE IF NOT EXISTS punishments " +
                     " (UUID VARCHAR(255), " +
                     " banned_forever boolean, " +
+                    " mute_forever boolean, " +
                     " ban_start longtext, " +
                     " ban_end longtext, " +
-                    " mute_time longtext, " +
-                    " punishment_log longtext, "+
+                    " ban_status boolean, " +
+                    " mute_start longtext, " +
+                    " mute_end longtext, " +
+                    " mute_status boolean, " +
+                    " ban_logs longtext, " +
+                    " mute_logs longtext, "+
                     " PRIMARY KEY ( UUID ))";
 
             stm.executeUpdate(jeezyCore_table);
