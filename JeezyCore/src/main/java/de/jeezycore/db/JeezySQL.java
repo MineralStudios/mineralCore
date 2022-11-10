@@ -2,19 +2,14 @@ package de.jeezycore.db;
 import de.jeezycore.colors.Color;
 import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.config.JeezyConfig;
-import de.jeezycore.discord.chat.RealtimeChat;
+import de.jeezycore.discord.messages.grant.RealtimeGrant;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.PermissionHandler;
 import de.jeezycore.utils.UUIDChecker;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.json.simple.JSONObject;
 // SQL imports
-import java.io.File;
 import java.sql.*;
 import java.util.*;
 
@@ -504,7 +499,7 @@ public class JeezySQL  {
                         "' WHERE playerName LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()) +"%'";
             }
                 stm.executeUpdate(sql);
-                RealtimeChat unGrant_discord = new RealtimeChat();
+                RealtimeGrant unGrant_discord = new RealtimeGrant();
                 unGrant_discord.realtimeChatOnUnGranting(ArrayStorage.grant_array.get(p.getUniqueId()), ArrayStorage.grant_array_names.get(p.getUniqueId()), p.getDisplayName());
             p.sendMessage("§aSuccessfully§f removed the rank from player §b§l" + ArrayStorage.grant_array_names.get(p.getUniqueId()));
             } else {

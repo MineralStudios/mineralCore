@@ -1,7 +1,7 @@
 package de.jeezycore.discord.events;
 
 
-import de.jeezycore.discord.chat.RealtimeChat;
+import de.jeezycore.discord.messages.realtime.RealtimeChat;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 

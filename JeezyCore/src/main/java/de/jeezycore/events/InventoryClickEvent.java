@@ -1,7 +1,8 @@
 package de.jeezycore.events;
 
 import de.jeezycore.db.JeezySQL;
-import de.jeezycore.discord.chat.RealtimeChat;
+import de.jeezycore.discord.messages.grant.RealtimeGrant;
+import de.jeezycore.discord.messages.realtime.RealtimeChat;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.PermissionHandler;
 import org.bukkit.Bukkit;
@@ -29,7 +30,7 @@ public class InventoryClickEvent implements Listener {
             e.setCancelled(true);
             JeezySQL mysql = new JeezySQL();
             PermissionHandler ph = new PermissionHandler();
-            RealtimeChat grant_discord = new RealtimeChat();
+            RealtimeGrant grant_discord = new RealtimeGrant();
 
             String get_rank = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
 

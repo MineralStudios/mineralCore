@@ -1,17 +1,14 @@
 package de.jeezycore.db;
 
 import de.jeezycore.config.JeezyConfig;
-import de.jeezycore.discord.chat.RealtimeChat;
+import de.jeezycore.discord.messages.mute.RealtimeMute;
+import de.jeezycore.discord.messages.realtime.RealtimeChat;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.UUIDChecker;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
-import java.io.File;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -64,7 +61,7 @@ public class MuteSQL {
             uc.check(username);
             muteData(UUID.fromString(UUIDChecker.uuid));
 
-            RealtimeChat discord = new RealtimeChat();
+            RealtimeMute discord = new RealtimeMute();
 
             json_o.put("muted by", p.getPlayer().getDisplayName());
             json_o.put("time", "forever");
@@ -201,7 +198,7 @@ public class MuteSQL {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            RealtimeChat discord = new RealtimeChat();
+            RealtimeMute discord = new RealtimeMute();
             UUIDChecker uc = new UUIDChecker();
             uc.check(username);
             tempMuteCalculate(time);
@@ -275,7 +272,7 @@ public class MuteSQL {
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
 
-            RealtimeChat discord = new RealtimeChat();
+            RealtimeMute discord = new RealtimeMute();
             UUIDChecker check_UUID = new UUIDChecker();
             check_UUID.check(username);
             unMuteData(UUID.fromString(UUIDChecker.uuid));

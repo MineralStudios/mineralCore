@@ -1,0 +1,17 @@
+package de.jeezycore.discord.messages.realtime;
+
+import de.jeezycore.discord.JeezyBot;
+import org.bukkit.Bukkit;
+import org.javacord.api.entity.channel.TextChannel;
+
+public class RealtimeChat {
+
+    public void realtimeMcChat(String msg) {
+        TextChannel channel = (TextChannel) JeezyBot.api.getChannelById("1003984701993779210").get();
+        channel.sendMessage(msg);
+    }
+
+    public void realtimeChatViaDiscord(String msg) {
+        Bukkit.getServer().broadcastMessage(msg);
+    }
+}

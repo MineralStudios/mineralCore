@@ -2,19 +2,14 @@ package de.jeezycore.events;
 
 import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.config.JeezyConfig;
-import de.jeezycore.db.BanSQL;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.db.MuteSQL;
-import de.jeezycore.discord.chat.RealtimeChat;
-import org.bukkit.Bukkit;
+import de.jeezycore.discord.messages.realtime.RealtimeChat;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import java.io.File;
 import java.util.List;
 
 public class ChatEvent implements Listener {
