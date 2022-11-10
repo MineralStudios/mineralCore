@@ -64,5 +64,49 @@ public class RealtimeChat {
         channel.sendMessage(embed);
     }
 
+    public void realtimeChatOnMute(UUID uuid_player, String uuid_name, String granter, String reason) {
+        TextChannel channel = (TextChannel) JeezyBot.api.getChannelById("1003984701993779210").get();
+        Locale locale = new Locale("en", "US");
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+        String date = dateFormat.format(new Date());
+
+        // Create the embed
+        EmbedBuilder embed = new EmbedBuilder()
+                .setTitle("__Permanently Mute notification__")
+                .setDescription("Muted the player **"+uuid_name+"**.")
+                .setImage("https://crafatar.com/avatars/"+uuid_player)
+                .addField("Muted by", granter)
+                .addField("Reason", reason)
+                .addInlineField("Muted player", uuid_name)
+                .addInlineField("Mute_Start", date)
+                .addField("Mute_End", "Never")
+                .setColor(Color.MAGENTA);
+
+        // Send the embed
+        channel.sendMessage(embed);
+    }
+
+    public void realtimeChatOnTempMute(UUID uuid_player, String uuid_name, String granter, String ban_end, String reason) {
+        TextChannel channel = (TextChannel) JeezyBot.api.getChannelById("1003984701993779210").get();
+        Locale locale = new Locale("en", "US");
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+        String date = dateFormat.format(new Date());
+
+        // Create the embed
+        EmbedBuilder embed = new EmbedBuilder()
+                .setTitle("__TempMute notification__")
+                .setDescription("Muted the player **"+uuid_name+"**.")
+                .setImage("https://crafatar.com/avatars/"+uuid_player)
+                .addField("Muted by", granter)
+                .addField("Reason", reason)
+                .addInlineField("Muted player", uuid_name)
+                .addInlineField("Mute_Start", date)
+                .addField("Mute_End", ban_end)
+                .setColor(Color.pink);
+
+        // Send the embed
+        channel.sendMessage(embed);
+    }
+
 
 }

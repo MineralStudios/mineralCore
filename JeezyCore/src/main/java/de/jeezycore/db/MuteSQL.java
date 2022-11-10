@@ -1,6 +1,7 @@
 package de.jeezycore.db;
 
 import de.jeezycore.config.JeezyConfig;
+import de.jeezycore.discord.chat.RealtimeChat;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.Bukkit;
@@ -63,6 +64,8 @@ public class MuteSQL {
             uc.check(username);
             muteData(UUID.fromString(UUIDChecker.uuid));
 
+            RealtimeChat discord = new RealtimeChat();
+
             json_o.put("muted by", p.getPlayer().getDisplayName());
             json_o.put("time", "forever");
             json_o.put("reason", input);
@@ -81,6 +84,7 @@ public class MuteSQL {
                 muteUpdate(username, input, p);
             }
             ArrayStorage.mute_logs.clear();
+            discord.realtimeChatOnMute(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName(), input);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -197,7 +201,7 @@ public class MuteSQL {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-
+            RealtimeChat discord = new RealtimeChat();
             UUIDChecker uc = new UUIDChecker();
             uc.check(username);
             tempMuteCalculate(time);
@@ -221,6 +225,7 @@ public class MuteSQL {
                 tempMuteUpdate(username, time, reason, p);
             }
             ArrayStorage.mute_logs.clear();
+            discord.realtimeChatOnTempMute(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName(), mute_end, reason);
         } catch (Exception e) {
             e.printStackTrace();
         }
