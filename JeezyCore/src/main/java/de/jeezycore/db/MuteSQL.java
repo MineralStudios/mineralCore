@@ -289,7 +289,7 @@ public class MuteSQL {
                     " WHERE UUID = '"+UUIDChecker.uuid+"'";
             stm.executeUpdate(sql);
             stm.close();
-            discord.realtimeChatOnUnban(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName());
+            discord.realtimeChatOnUnMute(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName());
         } catch (Exception e) {
         }
     }
