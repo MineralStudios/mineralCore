@@ -299,6 +299,7 @@ public class BanSQL {
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
 
+            RealtimeBan discord = new RealtimeBan();
             UUIDChecker check_UUID = new UUIDChecker();
             check_UUID.check(username);
             unbanData(UUID.fromString(UUIDChecker.uuid));
@@ -315,7 +316,7 @@ public class BanSQL {
                     " WHERE UUID = '"+UUIDChecker.uuid+"'";
             stm.executeUpdate(sql);
             stm.close();
-
+            discord.realtimeChatOnUnban(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName());
         } catch (Exception e) {
         }
     }
