@@ -21,7 +21,7 @@ public class RealtimeGrant {
         // Create the embed
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle("__Grant notification__")
-                .setDescription("Granted the **"+rankName+"** rank to "+uuid_name+".")
+                .setDescription("Granted the **"+rankName+"** rank to **"+uuid_name+"**.")
                 .setImage("https://crafatar.com/avatars/"+uuid_player)
                 .addField("Granted by", granter)
                 .addInlineField("Granted player", uuid_name)
@@ -41,7 +41,7 @@ public class RealtimeGrant {
         // Create the embed
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle("__Ungrant notification__")
-                .setDescription("Removed the rank from "+uuid_name+".")
+                .setDescription("Removed the rank from **"+uuid_name+"**.")
                 .setImage("https://crafatar.com/avatars/"+uuid_player)
                 .addField("UnGranted by", granter)
                 .addInlineField("UnGranted player", uuid_name)
