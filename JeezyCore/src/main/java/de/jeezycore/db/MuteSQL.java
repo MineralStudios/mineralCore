@@ -275,6 +275,7 @@ public class MuteSQL {
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
 
+            RealtimeChat discord = new RealtimeChat();
             UUIDChecker check_UUID = new UUIDChecker();
             check_UUID.check(username);
             unMuteData(UUID.fromString(UUIDChecker.uuid));
@@ -291,7 +292,7 @@ public class MuteSQL {
                     " WHERE UUID = '"+UUIDChecker.uuid+"'";
             stm.executeUpdate(sql);
             stm.close();
-
+            discord.realtimeChatOnUnban(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName());
         } catch (Exception e) {
         }
     }
