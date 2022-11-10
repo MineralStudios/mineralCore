@@ -1,6 +1,7 @@
 package de.jeezycore.db;
 
 import de.jeezycore.config.JeezyConfig;
+import de.jeezycore.discord.messages.ban.RealtimeBan;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.Bukkit;
@@ -66,6 +67,7 @@ public class BanSQL {
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
 
+            RealtimeBan discord = new RealtimeBan();
             UUIDChecker uc = new UUIDChecker();
             uc.check(username);
             banData(UUID.fromString(UUIDChecker.uuid));
@@ -95,6 +97,7 @@ public class BanSQL {
                 banUpdate(username, input, p);
             }
             ArrayStorage.ban_logs.clear();
+            discord.realtimeChatOnBan(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName(), input);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -213,6 +216,7 @@ public class BanSQL {
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
 
+            RealtimeBan discord = new RealtimeBan();
             UUIDChecker uc = new UUIDChecker();
             uc.check(username);
             tempBanCalculate(time);
@@ -245,6 +249,7 @@ public class BanSQL {
                 tempBanUpdate(username, time, reason, p);
             }
             ArrayStorage.ban_logs.clear();
+            discord.realtimeChatOnTempBan(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName(), ban_end, reason);
         } catch (Exception e) {
             e.printStackTrace();
         }
