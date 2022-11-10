@@ -56,7 +56,7 @@ public class RealtimeMute {
         channel.sendMessage(embed);
     }
 
-    public void realtimeChatOnUnban(UUID uuid_player, String uuid_name, String unBanner) {
+    public void realtimeChatOnUnMute(UUID uuid_player, String uuid_name, String unMuter) {
         TextChannel channel = (TextChannel) JeezyBot.api.getChannelById("1003984701993779210").get();
         Locale locale = new Locale("en", "US");
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
@@ -67,7 +67,7 @@ public class RealtimeMute {
                 .setTitle("__Unban notification__")
                 .setDescription("Unbanned the player **"+uuid_name+"**.")
                 .setImage("https://crafatar.com/avatars/"+uuid_player)
-                .addField("UnBanned by", unBanner)
+                .addField("UnBanned by", unMuter)
                 .addInlineField("UnBanned player", uuid_name)
                 .addInlineField("Unban_Date", date)
                 .setColor(Color.yellow);
