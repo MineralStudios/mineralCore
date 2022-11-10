@@ -79,8 +79,51 @@ public class JeezyConfig {
     public void create_discord_defaults() {
         try {
             discord.createNewFile();
-            String path_discord_1 = "discord-settings.token";
+            String path_discord_1 = "discord-bot-secret.token";
+            String path_discord_2 = "discord-support.activated";
+            String path_discord_3 = "discord-realtime-chat.discordToMc";
+            String path_discord_4 = "discord-realtime-chat.mcToDiscord";
+            String path_discord_5 = "discord-granting-notifications.onGranting";
+            String path_discord_6 = "discord-granting-notifications.onUnGranting";
+            String path_discord_7 = "discord-muting-notifications.onMute";
+            String path_discord_8 = "discord-muting-notifications.onTempMute";
+            String path_discord_9 = "discord-muting-notifications.onUnMute";
+            String path_discord_10 = "discord-banning-notifications.onBan";
+            String path_discord_11 = "discord-banning-notifications.onTempBan";
+            String path_discord_12 = "discord-banning-notifications.onUnBan";
+            String path_discord_13 = "discord-text-channels-realtime-chat.discordToMc";
+            String path_discord_14 = "discord-text-channels-realtime-chat.mcToDiscord";
+            String path_discord_15 = "discord-text-channels-granting.onGranting";
+            String path_discord_16 = "discord-text-channels-granting.onUnGranting";
+            String path_discord_17 = "discord-text-channels-muting.onMute";
+            String path_discord_18 = "discord-text-channels-muting.onTempMute";
+            String path_discord_19 = "discord-text-channels-muting.onUnMute";
+            String path_discord_20 = "discord-text-channels-banning.onBan";
+            String path_discord_21 = "discord-text-channels-banning.onTempBan";
+            String path_discord_22 = "discord-text-channels-banning.onUnBan";
+
             discord_defaults.addDefault(path_discord_1, "");
+            discord_defaults.addDefault(path_discord_2, true);
+            discord_defaults.addDefault(path_discord_3, true);
+            discord_defaults.addDefault(path_discord_4, true);
+            discord_defaults.addDefault(path_discord_5, true);
+            discord_defaults.addDefault(path_discord_6, true);
+            discord_defaults.addDefault(path_discord_7, true);
+            discord_defaults.addDefault(path_discord_8, true);
+            discord_defaults.addDefault(path_discord_9, true);
+            discord_defaults.addDefault(path_discord_10, true);
+            discord_defaults.addDefault(path_discord_11, true);
+            discord_defaults.addDefault(path_discord_12, true);
+            discord_defaults.addDefault(path_discord_13, "");
+            discord_defaults.addDefault(path_discord_14, "");
+            discord_defaults.addDefault(path_discord_15, "");
+            discord_defaults.addDefault(path_discord_16, "");
+            discord_defaults.addDefault(path_discord_17, "");
+            discord_defaults.addDefault(path_discord_18, "");
+            discord_defaults.addDefault(path_discord_19, "");
+            discord_defaults.addDefault(path_discord_20, "");
+            discord_defaults.addDefault(path_discord_21, "");
+            discord_defaults.addDefault(path_discord_22, "");
             discord_defaults.options().copyDefaults(true);
             discord_defaults.save(discord);
         } catch (Exception e) {
