@@ -17,7 +17,7 @@ public class JeezyBot {
 
     public void start() {
 
-        MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-settings");
+        MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-bot-secret");
         String token = (String) discord.get("token");
 
          api = new DiscordApiBuilder()
