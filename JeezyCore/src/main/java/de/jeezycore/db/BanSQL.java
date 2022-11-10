@@ -77,7 +77,7 @@ public class BanSQL {
 
             try {
                 Bukkit.getServer().getPlayer(UUID.fromString(UUIDChecker.uuid)).kickPlayer("§4You are permanently banned from JeezyDevelopment.\n\n" +
-                        "§6Reason: §c" + input + "§7.\n\n" +
+                        "§6Reason: §c" + input + "\n\n" +
                         "§7If you feel this ban has been unjustified, appeal on our discord at\n §bjeezydevelopment.com§7.");
             } catch (Exception e) {
 
@@ -227,7 +227,7 @@ public class BanSQL {
             try {
                 Bukkit.getServer().getPlayer(UUID.fromString(UUIDChecker.uuid)).kickPlayer("§4You are temporarily banned from §bJeezyDevelopment.\n\n" +
                         "§aBan time: §4"+time+"\n\n" +
-                        "§6Reason: §c" +reason+"§7.\n\n"+
+                        "§6Reason: §c" +reason+"\n\n"+
                         "§7If you feel this ban has been unjustified, appeal on our discord at\n §bjeezydevelopment.com§7.");
             } catch (Exception e) {
 
