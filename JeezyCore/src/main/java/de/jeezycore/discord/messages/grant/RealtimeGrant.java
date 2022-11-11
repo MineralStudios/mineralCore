@@ -16,7 +16,14 @@ public class RealtimeGrant {
 
     public void realtimeChatOnGranting(UUID uuid_player, String uuid_name, String granter, String rankName) {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-granting");
+        MemorySection grant_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-granting-notifications");
+
         String id = (String) discord.get("onGranting");
+        boolean on_granting_on = grant_notify.getBoolean("onGranting");
+
+        if (!on_granting_on) {
+            return;
+        }
 
         TextChannel channel = (TextChannel) JeezyBot.api.getChannelById(Long.parseLong(id)).get();
         Locale locale = new Locale("en", "US");
@@ -39,7 +46,14 @@ public class RealtimeGrant {
 
     public void realtimeChatOnUnGranting(UUID uuid_player, String uuid_name, String granter) {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-granting");
+        MemorySection unGrant_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-granting-notifications");
+
         String id = (String) discord.get("onUnGranting");
+        boolean un_granting_on = unGrant_notify.getBoolean("onUnGranting");
+
+        if (!un_granting_on) {
+            return;
+        }
 
         TextChannel channel = (TextChannel) JeezyBot.api.getChannelById(Long.parseLong(id)).get();
         Locale locale = new Locale("en", "US");
