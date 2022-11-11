@@ -1,6 +1,8 @@
 package de.jeezycore.discord.messages.ban;
 
+import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.discord.JeezyBot;
+import org.bukkit.configuration.MemorySection;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 
@@ -13,7 +15,10 @@ import java.util.UUID;
 public class RealtimeBan {
 
     public void realtimeChatOnBan(UUID uuid_player, String uuid_name, String banner, String reason) {
-        TextChannel channel = (TextChannel) JeezyBot.api.getChannelById("1003984701993779210").get();
+        MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-banning");
+        String id = (String) discord.get("onBan");
+
+        TextChannel channel = (TextChannel) JeezyBot.api.getChannelById(Long.parseLong(id)).get();
         Locale locale = new Locale("en", "US");
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
         String date = dateFormat.format(new Date());
@@ -35,7 +40,10 @@ public class RealtimeBan {
     }
 
     public void realtimeChatOnTempBan(UUID uuid_player, String uuid_name, String banner, String ban_end, String reason) {
-        TextChannel channel = (TextChannel) JeezyBot.api.getChannelById("1003984701993779210").get();
+        MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-banning");
+        String id = (String) discord.get("onTempBan");
+
+        TextChannel channel = (TextChannel) JeezyBot.api.getChannelById(Long.parseLong(id)).get();
         Locale locale = new Locale("en", "US");
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
         String date = dateFormat.format(new Date());
@@ -57,7 +65,10 @@ public class RealtimeBan {
     }
 
     public void realtimeChatOnUnban(UUID uuid_player, String uuid_name, String unBanner) {
-        TextChannel channel = (TextChannel) JeezyBot.api.getChannelById("1003984701993779210").get();
+        MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-banning");
+        String id = (String) discord.get("onUnBan");
+
+        TextChannel channel = (TextChannel) JeezyBot.api.getChannelById(Long.parseLong(id)).get();
         Locale locale = new Locale("en", "US");
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
         String date = dateFormat.format(new Date());
