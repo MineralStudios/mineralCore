@@ -16,7 +16,14 @@ public class RealtimeBan {
 
     public void realtimeChatOnBan(UUID uuid_player, String uuid_name, String banner, String reason) {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-banning");
+        MemorySection ban_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-banning-notifications");
+
         String id = (String) discord.get("onBan");
+        boolean ban_notify_on = ban_notify.getBoolean("onBan");
+
+        if (!ban_notify_on) {
+            return;
+        }
 
         TextChannel channel = (TextChannel) JeezyBot.api.getChannelById(Long.parseLong(id)).get();
         Locale locale = new Locale("en", "US");
@@ -41,7 +48,14 @@ public class RealtimeBan {
 
     public void realtimeChatOnTempBan(UUID uuid_player, String uuid_name, String banner, String ban_end, String reason) {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-banning");
+        MemorySection tempBan_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-banning-notifications");
+
         String id = (String) discord.get("onTempBan");
+        boolean tempBan_notify_on = tempBan_notify.getBoolean("onTempBan");
+
+        if (!tempBan_notify_on) {
+            return;
+        }
 
         TextChannel channel = (TextChannel) JeezyBot.api.getChannelById(Long.parseLong(id)).get();
         Locale locale = new Locale("en", "US");
@@ -66,7 +80,14 @@ public class RealtimeBan {
 
     public void realtimeChatOnUnban(UUID uuid_player, String uuid_name, String unBanner) {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-banning");
+        MemorySection UnBan_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-banning-notifications");
+
         String id = (String) discord.get("onUnBan");
+        boolean UnBan_notify_on = UnBan_notify.getBoolean("onUnBan");
+
+        if (!UnBan_notify_on) {
+            return;
+        }
 
         TextChannel channel = (TextChannel) JeezyBot.api.getChannelById(Long.parseLong(id)).get();
         Locale locale = new Locale("en", "US");
