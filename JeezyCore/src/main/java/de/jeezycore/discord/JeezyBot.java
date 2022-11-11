@@ -16,9 +16,15 @@ public class JeezyBot {
     public static DiscordApi api;
 
     public void start() {
+        MemorySection discord_support = (MemorySection) JeezyConfig.discord_defaults.get("discord-support");
+        MemorySection secret = (MemorySection) JeezyConfig.discord_defaults.get("discord-bot-secret");
 
-        MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-bot-secret");
-        String token = (String) discord.get("token");
+        boolean activated = (boolean) discord_support.get("activated");
+        String token = (String) secret.get("token");
+
+        if (!activated) {
+            return;
+        }
 
          api = new DiscordApiBuilder()
                 .setToken(token)

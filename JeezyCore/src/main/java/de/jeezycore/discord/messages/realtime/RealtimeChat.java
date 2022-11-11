@@ -9,14 +9,21 @@ import org.javacord.api.entity.channel.TextChannel;
 public class RealtimeChat {
 
     public void realtimeMcChat(String msg) {
-
+    try {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-realtime-chat");
         String id = (String) discord.get("mcToDiscord");
 
         TextChannel channel = (TextChannel) JeezyBot.api.getChannelById(Long.parseLong(id)).get();
         channel.sendMessage(msg);
+    } catch (Exception e) {
+
+    }
     }
     public void realtimeChatViaDiscord(String msg) {
-        Bukkit.getServer().broadcastMessage(msg);
+        try {
+            Bukkit.getServer().broadcastMessage(msg);
+        } catch (Exception e) {
+
+        }
     }
 }
