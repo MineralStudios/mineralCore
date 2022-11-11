@@ -1,6 +1,8 @@
 package de.jeezycore.discord.messages.grant;
 
+import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.discord.JeezyBot;
+import org.bukkit.configuration.MemorySection;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 
@@ -13,7 +15,10 @@ import java.util.UUID;
 public class RealtimeGrant {
 
     public void realtimeChatOnGranting(UUID uuid_player, String uuid_name, String granter, String rankName) {
-        TextChannel channel = (TextChannel) JeezyBot.api.getChannelById("1003984701993779210").get();
+        MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-granting");
+        String id = (String) discord.get("onGranting");
+
+        TextChannel channel = (TextChannel) JeezyBot.api.getChannelById(Long.parseLong(id)).get();
         Locale locale = new Locale("en", "US");
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
         String date = dateFormat.format(new Date());
@@ -33,7 +38,10 @@ public class RealtimeGrant {
     }
 
     public void realtimeChatOnUnGranting(UUID uuid_player, String uuid_name, String granter) {
-        TextChannel channel = (TextChannel) JeezyBot.api.getChannelById("1003984701993779210").get();
+        MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-granting");
+        String id = (String) discord.get("onUnGranting");
+
+        TextChannel channel = (TextChannel) JeezyBot.api.getChannelById(Long.parseLong(id)).get();
         Locale locale = new Locale("en", "US");
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
         String date = dateFormat.format(new Date());
