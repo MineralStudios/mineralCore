@@ -16,7 +16,7 @@ public class RealtimeMute {
 
     public void realtimeChatOnMute(UUID uuid_player, String uuid_name, String granter, String reason) {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-muting");
-        MemorySection mute_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-granting-notifications");
+        MemorySection mute_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-muting-notifications");
 
         String id = (String) discord.get("onMute");
         boolean mute_notify_on = mute_notify.getBoolean("onMute");
@@ -48,7 +48,7 @@ public class RealtimeMute {
 
     public void realtimeChatOnTempMute(UUID uuid_player, String uuid_name, String granter, String ban_end, String reason) {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-muting");
-        MemorySection tempMute_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-granting-notifications");
+        MemorySection tempMute_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-muting-notifications");
 
         String id = (String) discord.get("onTempMute");
         boolean tempMute_notify_on = tempMute_notify.getBoolean("onTempMute");
@@ -80,7 +80,7 @@ public class RealtimeMute {
 
     public void realtimeChatOnUnMute(UUID uuid_player, String uuid_name, String unMuter) {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-muting");
-        MemorySection UnMute_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-granting-notifications");
+        MemorySection UnMute_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-muting-notifications");
 
         String id = (String) discord.get("onUnMute");
         boolean unMute_notify_on = UnMute_notify.getBoolean("onUnMute");
