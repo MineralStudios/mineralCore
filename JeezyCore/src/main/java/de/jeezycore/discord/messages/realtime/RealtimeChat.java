@@ -10,8 +10,14 @@ public class RealtimeChat {
 
     public void realtimeMcChat(String msg) {
     try {
-        MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-realtime-chat");
-        String id = (String) discord.get("mcToDiscord");
+        MemorySection chat_channel = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-realtime-chat");
+        MemorySection realtime_chat = (MemorySection) JeezyConfig.discord_defaults.get("discord-realtime-chat");
+        String id = (String) chat_channel.get("mcToDiscord");
+        boolean mc_to_discord_on = realtime_chat.getBoolean("mcToDiscord");
+
+        if (!mc_to_discord_on) {
+            return;
+        }
 
         TextChannel channel = (TextChannel) JeezyBot.api.getChannelById(Long.parseLong(id)).get();
         channel.sendMessage(msg);
@@ -21,6 +27,13 @@ public class RealtimeChat {
     }
     public void realtimeChatViaDiscord(String msg) {
         try {
+            MemorySection realtime_chat = (MemorySection) JeezyConfig.discord_defaults.get("discord-realtime-chat");
+            boolean discord_to_mc_on = realtime_chat.getBoolean("discordToMc");
+
+            if (!discord_to_mc_on) {
+                return;
+            }
+
             Bukkit.getServer().broadcastMessage(msg);
         } catch (Exception e) {
 
