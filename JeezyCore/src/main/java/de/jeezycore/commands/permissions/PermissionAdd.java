@@ -15,17 +15,18 @@ public class PermissionAdd implements CommandExecutor {
             Player p = (Player) sender;
 
             if (cmd.getName().equalsIgnoreCase("permissionAdd") && args.length == 2) {
-                System.out.println(args.length);
-                JeezySQL perms = new JeezySQL();
+                if (p.hasPermission("jeezy.core.permission.add")) {
+                    System.out.println(args.length);
+                    JeezySQL perms = new JeezySQL();
 
-                perms.addPerms(args[0], args[1], p);
-
+                    perms.addPerms(args[0], args[1], p);
+                } else {
+                    p.sendMessage("No permission.");
+                }
             } else {
             p.sendMessage("Usage /permissionAdd <perm> <rankName>");
             }
-
         }
-
         return false;
     }
 }
