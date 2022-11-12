@@ -17,14 +17,19 @@ public class CreateRank implements CommandExecutor {
            if (cmd.getName().equalsIgnoreCase("create-rank") && args.length < 3) {
               p.sendMessage("Usage: /create-rank (name) (color) (priority)");
            } else {
-               JeezySQL mySQL = new JeezySQL();
-               String input = "INSERT INTO jeezycore " +
-                       "(rankName, rankColor, rankPriority) " +
-                       "VALUES " +
-                       "(?, ?, ?)";
-               mySQL.pushData(input, args[0], args[1], args[2]);
-               String show_color = ColorTranslator.colorTranslator.get(Integer.parseInt(args[1]));
-               p.sendMessage(mySQL.createRankMsg.replace("{rank}", args[0]).replace("{colorID}", show_color));
+               if (p.hasPermission("jeezy.core.rank.create")) {
+                   JeezySQL mySQL = new JeezySQL();
+                   String input = "INSERT INTO jeezycore " +
+                           "(rankName, rankColor, rankPriority) " +
+                           "VALUES " +
+                           "(?, ?, ?)";
+                   mySQL.pushData(input, args[0], args[1], args[2]);
+                   String show_color = ColorTranslator.colorTranslator.get(Integer.parseInt(args[1]));
+                   p.sendMessage(mySQL.createRankMsg.replace("{rank}", args[0]).replace("{colorID}", show_color));
+               } else {
+                   p.sendMessage("No permission.");
+               }
+
            }
         }
         return false;
