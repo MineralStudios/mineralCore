@@ -17,10 +17,13 @@ public class TempBan implements CommandExecutor {
             Player p = (Player) sender;
 
             if (cmd.getName().equalsIgnoreCase("tempban") && args.length >= 3) {
-                BanSQL execute = new BanSQL();
+                if (p.hasPermission("jeezy.core.punishments.tempban")) {
+                    BanSQL execute = new BanSQL();
 
-                execute.tempBan(args[0], args[1], args[2], p);
-
+                    execute.tempBan(args[0], args[1], args[2], p);
+                } else {
+                    p.sendMessage("No permission.");
+                }
             } else {
                 p.sendMessage("Usage: /tempban <player><time><reason>");
             }

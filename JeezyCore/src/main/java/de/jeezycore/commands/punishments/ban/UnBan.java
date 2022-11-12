@@ -17,15 +17,16 @@ public class UnBan implements CommandExecutor {
             Player p = (Player) sender;
 
             if (cmd.getName().equalsIgnoreCase("unban") && args.length > 0) {
-
-                BanSQL execute = new BanSQL();
-                execute.unban(args[0], p.getPlayer());
-
+                if (p.hasPermission("jeezy.core.punishments.unban")) {
+                    BanSQL execute = new BanSQL();
+                    execute.unban(args[0], p.getPlayer());
+                } else {
+                    p.sendMessage("No permission.");
+                }
             } else {
                 p.sendMessage("Usage: /unban <player>.");
             }
         }
-
         return false;
     }
 }
