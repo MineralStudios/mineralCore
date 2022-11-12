@@ -30,8 +30,11 @@ public class ChatDisabler implements CommandExecutor {
             if (cmd.getName().equalsIgnoreCase("chat-disable") && args.length > 0) {
                 p.sendMessage("Usage: /chat-disable or enable");
             } else if (cmd.getName().equalsIgnoreCase("chat-disable") && args.length == 0) {
-                p.sendMessage("§2You successfully disabled the chat §b§l"+p.getDisplayName());
-
+                if (p.hasPermission("jeezy.core.chat.disable")) {
+                    p.sendMessage("§2You successfully disabled the chat §b§l" + p.getDisplayName());
+                } else {
+                    p.sendMessage("No permission.");
+                }
                 try {
                     MemorySection mc = (MemorySection) JeezyConfig.config_defaults.get("chat");
                     mc.set("muted", true);
@@ -45,7 +48,11 @@ public class ChatDisabler implements CommandExecutor {
             if (cmd.getName().equalsIgnoreCase("chat-enable") && args.length > 0) {
                 p.sendMessage("Usage: /chat-enable or disable");
             } else if (cmd.getName().equalsIgnoreCase("chat-enable") && args.length == 0) {
-                p.sendMessage("§2You successfully enabled the chat §b§l"+p.getDisplayName());
+                if (p.hasPermission("jeezy.core.chat.enable")) {
+                    p.sendMessage("§2You successfully enabled the chat §b§l" + p.getDisplayName());
+                } else {
+                    p.sendMessage("No permission.");
+                }
                 try {
                     MemorySection mc = (MemorySection) JeezyConfig.config_defaults.get("chat");
                     mc.set("muted", false);
