@@ -22,16 +22,20 @@ public class SetSpawn implements CommandExecutor {
             if (cmd.getName().equalsIgnoreCase("jeezy-spawn-set") && args.length > 0) {
                 p.sendMessage("Usage /jeezy-spawn-set");
             } else {
-                p.sendMessage("§2§lYou successfully setuped the spawn.");
-        try {
-            Location worldObject = p.getLocation();
+                if (p.hasPermission("jeezy.core.spawn.setup")) {
+                    p.sendMessage("§2§lYou successfully setuped the spawn.");
+                    try {
+                        Location worldObject = p.getLocation();
 
-            List<Location> locations = new ArrayList<>(Arrays.asList(worldObject));
-            JeezyConfig.config_defaults.set("entry-spawn-point", locations);
-            JeezyConfig.config_defaults.save(JeezyConfig.config);
-        } catch (Exception f) {
-            f.printStackTrace();
-        }
+                        List<Location> locations = new ArrayList<>(Arrays.asList(worldObject));
+                        JeezyConfig.config_defaults.set("entry-spawn-point", locations);
+                        JeezyConfig.config_defaults.save(JeezyConfig.config);
+                    } catch (Exception f) {
+                        f.printStackTrace();
+                    }
+                } else {
+                    p.sendMessage("No permission.");
+                }
             }
         }
         return false;
