@@ -21,7 +21,7 @@ public class Fly implements CommandExecutor {
 
 
             if (cmd.getName().equalsIgnoreCase("fly")) {
-                if (p.hasPermission("jeezyfly")) {
+                if (p.hasPermission("jeezy.core.fly")) {
 
                     System.out.println(fly_array.contains(p.getPlayer().getDisplayName()));
                     System.out.println(fly_array);
