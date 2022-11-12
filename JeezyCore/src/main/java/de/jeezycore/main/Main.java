@@ -33,7 +33,7 @@ public class Main extends JavaPlugin {
         this.getCommand("grant-rank").setExecutor(new GrantRank());
         this.getCommand("chat-disable").setExecutor(new ChatDisabler());
         this.getCommand("chat-enable").setExecutor(new ChatDisabler());
-        this.getCommand("jeezy-spawn-set").setExecutor(new SetSpawn());
+        this.getCommand("spawnSet").setExecutor(new SetSpawn());
         this.getCommand("spawn").setExecutor(new Spawn());
         this.getCommand("ping").setExecutor(new Ping());
         this.getCommand("msg").setExecutor(new Msg());

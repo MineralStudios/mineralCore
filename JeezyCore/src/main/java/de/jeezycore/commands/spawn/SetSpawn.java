@@ -19,8 +19,8 @@ public class SetSpawn implements CommandExecutor {
         if(sender instanceof Player) {
             Player p = (Player) sender;
 
-            if (cmd.getName().equalsIgnoreCase("jeezy-spawn-set") && args.length > 0) {
-                p.sendMessage("Usage /jeezy-spawn-set");
+            if (cmd.getName().equalsIgnoreCase("spawnSet") && args.length > 0) {
+                p.sendMessage("Usage /spawnSet");
             } else {
                 if (p.hasPermission("jeezy.core.spawn.setup")) {
                     p.sendMessage("§2§lYou successfully setuped the spawn.");
