@@ -33,6 +33,8 @@ commands:
     description: Changes player time to night.
   fly:
     description: Makes you fly.
+  core:
+      description: Author of the core and version.
   ban:
     description: Bans a player.
   tempban:
