@@ -3,8 +3,6 @@ main: de.jeezycore.main.Main
 author: JeezyDevelopment
 version: 1.0.0
 commands:
-  jeezycore-guide:
-    description: Helps you to navigate through the plugin.
   create-rank:
     description: Creates rank.
   permissionAdd:

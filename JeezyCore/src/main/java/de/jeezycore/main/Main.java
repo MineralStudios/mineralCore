@@ -29,7 +29,6 @@ public class Main extends JavaPlugin {
         JeezyConfig file_Jeezy_config = new JeezyConfig();
         file_Jeezy_config.create_folder();
         // Register Commands
-        this.getCommand("jeezycore-guide").setExecutor(new JeezyCoreGuide());
         this.getCommand("create-rank").setExecutor(new CreateRank());
         this.getCommand("grant-rank").setExecutor(new GrantRank());
         this.getCommand("chat-disable").setExecutor(new ChatDisabler());
