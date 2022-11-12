@@ -20,18 +20,20 @@ public class Mute implements CommandExecutor {
             Player p = (Player) sender;
 
             if (cmd.getName().equalsIgnoreCase("mute") && args.length > 1) {
-                List<String> ls = new ArrayList<String>(Arrays.asList(args));
-                String input = Joiner.on("")
-                        .skipNulls()
-                        .join(ls).replace(args[0], "");
+                if (p.hasPermission("jeezy.core.punishments.mute")) {
+                    List<String> ls = new ArrayList<String>(Arrays.asList(args));
+                    String input = Joiner.on("")
+                            .skipNulls()
+                            .join(ls).replace(args[0], "");
 
-                MuteSQL execute = new MuteSQL();
-                execute.mute(args[0], input, p.getPlayer());
-
+                    MuteSQL execute = new MuteSQL();
+                    execute.mute(args[0], input, p.getPlayer());
+                } else {
+                    p.sendMessage("No permission.");
+                }
             } else {
                 p.sendMessage("Usage: /mute <player><reason>.");
             }
-
         }
         return false;
     }
