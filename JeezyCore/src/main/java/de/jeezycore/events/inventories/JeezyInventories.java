@@ -1,5 +1,9 @@
 package de.jeezycore.events.inventories;
 
+import de.jeezycore.events.inventories.grant.GrantInventory;
+import de.jeezycore.events.inventories.manage.ManageInventory;
+import de.jeezycore.events.inventories.profiles.ProfileInventory;
+import de.jeezycore.events.inventories.punishments.PunishmentInventory;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -10,6 +14,19 @@ public class JeezyInventories implements Listener {
         if (e.getCurrentItem() == null || e.getCurrentItem().getItemMeta() == null || e.getClickedInventory() == null) {
             return;
         }
+
+        GrantInventory grantInventory = new GrantInventory();
+        grantInventory.run(e);
+
+        ProfileInventory profileInventory = new ProfileInventory();
+        profileInventory.run(e);
+
+        ManageInventory manageInventory = new ManageInventory();
+        manageInventory.run(e);
+
+        PunishmentInventory punishmentInventory = new PunishmentInventory();
+        punishmentInventory.run(e);
+
     }
 
 }

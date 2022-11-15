@@ -19,6 +19,7 @@ import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.discord.JeezyBot;
 import de.jeezycore.events.*;
+import de.jeezycore.events.inventories.JeezyInventories;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -53,7 +54,7 @@ public class Main extends JavaPlugin {
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
-        getServer().getPluginManager().registerEvents(new InventoryClickEvent(), this);
+        getServer().getPluginManager().registerEvents(new JeezyInventories(), this);
         getServer().getPluginManager().registerEvents(new LeaveEvent(), this);
         getServer().getPluginManager().registerEvents(new RespawnEvent(), this);
         getServer().getPluginManager().registerEvents(new DeathEvent(), this);
@@ -61,7 +62,7 @@ public class Main extends JavaPlugin {
         // Creating Connection / Creating Table
         JeezySQL con = new JeezySQL();
         con.createTable();
-
+        // Launching discord bot
        JeezyBot bot = new JeezyBot();
        bot.start();
 
