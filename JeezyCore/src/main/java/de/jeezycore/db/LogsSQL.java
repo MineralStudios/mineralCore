@@ -20,7 +20,7 @@ public class LogsSQL {
     public String password;
 
     public static String ban_log;
-    public static JSONObject ban_log_json = new JSONObject();
+    public static String mute_log;
 
     private void createConnection() {
 
@@ -40,6 +40,7 @@ public class LogsSQL {
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
                 ban_log = rs.getString(10);
+                mute_log = rs.getString(11);
             }
 
             con.close();
