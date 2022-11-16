@@ -9,7 +9,7 @@ commands:
     description: Gives a certain rank permission.
   permissionRemove:
       description: Removes a certain rank permission.
-  grant-rank:
+  grant:
     description: Grants selected player a rank.
   chat-disable:
     description: Disables chat.

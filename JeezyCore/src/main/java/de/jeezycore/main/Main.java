@@ -31,7 +31,7 @@ public class Main extends JavaPlugin {
         file_Jeezy_config.create_folder();
         // Register Commands
         this.getCommand("create-rank").setExecutor(new CreateRank());
-        this.getCommand("grant-rank").setExecutor(new GrantRank());
+        this.getCommand("grant").setExecutor(new GrantRank());
         this.getCommand("chat-disable").setExecutor(new ChatDisabler());
         this.getCommand("chat-enable").setExecutor(new ChatDisabler());
         this.getCommand("spawnSet").setExecutor(new SetSpawn());

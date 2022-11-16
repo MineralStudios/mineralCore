@@ -33,8 +33,8 @@ public class GrantRank implements CommandExecutor {
         if(sender instanceof Player) {
             Player p = (Player) sender;
 
-            if (cmd.getName().equalsIgnoreCase("grant-rank") && args.length == 0) {
-                p.sendMessage("Usage /grant-rank (player)");
+            if (cmd.getName().equalsIgnoreCase("grant") && args.length == 0) {
+                p.sendMessage("Usage /grant <player>");
             } else {
                 if (p.hasPermission("jeezy.core.rank.grant")) {
                     GrantInventory grantInventory = new GrantInventory();
