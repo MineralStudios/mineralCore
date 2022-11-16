@@ -14,6 +14,7 @@ import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MutesInventory {
 
@@ -32,8 +33,13 @@ public class MutesInventory {
 
     private void displayMutePunishments(org.bukkit.event.inventory.InventoryClickEvent e) {
         try {
+            getData(e);
             createMuteInventory(e);
+
+            if (LogsSQL.mute_log != null) {
+
             int num = 1;
+
             JSONParser jsParser = new JSONParser();
             JSONArray jsonA = (JSONArray) jsParser.parse(LogsSQL.mute_log);
             for (int i = 0; i < jsonA.size(); i++) {
@@ -41,10 +47,7 @@ public class MutesInventory {
                 JSONObject jsonOB = (JSONObject) jsParser.parse(jsonA.get(i).toString());
 
                 ItemStack rank = new ItemStack(Material.PAPER, 1);
-                ItemStack back = new ItemStack(Material.REDSTONE);
-                ItemMeta backm = back.getItemMeta();
-                backm.setDisplayName("§cBack");
-                back.setItemMeta(backm);
+
                 String displayName = "§9#§7"+0+0+num++;
                 ItemMeta rankMeta = rank.getItemMeta();
                 List<String> desc = new ArrayList<String>();
@@ -58,12 +61,15 @@ public class MutesInventory {
                 rankMeta.setDisplayName(displayName);
                 rankMeta.setLore(desc);
                 rank.setItemMeta(rankMeta);
-                mute_inventory.setItem(0, back);
                 mute_inventory.setItem(i+1, rank);
 
+                }
             }
+            back();
             e.getWhoClicked().openInventory(mute_inventory);
             e.setCancelled(true);
+            wipeData();
+
         } catch (Exception err) {
             err.printStackTrace();
         }
@@ -71,6 +77,27 @@ public class MutesInventory {
 
     private void createMuteInventory(org.bukkit.event.inventory.InventoryClickEvent e) {
         mute_inventory = Bukkit.createInventory(null, 27,"§8Mutes: §f§l"+ ArrayStorage.grant_array_names.get(e.getWhoClicked().getUniqueId()));
+    }
+
+    private void back() {
+        ItemStack back = new ItemStack(Material.REDSTONE);
+        ItemMeta backm = back.getItemMeta();
+        backm.setDisplayName("§cBack");
+        back.setItemMeta(backm);
+        mute_inventory.setItem(0, back);
+    }
+
+    private void wipeData() {
+        LogsSQL logsSQL = new LogsSQL();
+        logsSQL.refreshData();
+    }
+
+    private void getData(org.bukkit.event.inventory.InventoryClickEvent e) {
+        LogsSQL logs = new LogsSQL();
+        UUIDChecker udc = new UUIDChecker();
+        udc.check(ArrayStorage.grant_array_names.get(e.getWhoClicked().getUniqueId()));
+        logs.punishment_log(UUID.fromString(UUIDChecker.uuid));
+        System.out.println(ArrayStorage.grant_array_names.get(e.getWhoClicked().getUniqueId()));
     }
 
 }

@@ -14,6 +14,7 @@ import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class BansInventory {
     Inventory ban_inventory;
@@ -27,13 +28,16 @@ public class BansInventory {
         } else if (e.getClickedInventory().getName().contains("Bans") && e.getCurrentItem().getData().toString().contains("PAPER")) {
             e.setCancelled(true);
         }
-
     }
 
     private void displayBanPunishments(org.bukkit.event.inventory.InventoryClickEvent e) {
         try {
+            getData(e);
             createBanInventory(e);
+            if (LogsSQL.ban_log != null) {
+
             int num = 1;
+
             JSONParser jsParser = new JSONParser();
             JSONArray jsonA = (JSONArray) jsParser.parse(LogsSQL.ban_log);
             for (int i = 0; i < jsonA.size(); i++) {
@@ -41,10 +45,7 @@ public class BansInventory {
                 JSONObject jsonOB = (JSONObject) jsParser.parse(jsonA.get(i).toString());
 
                 ItemStack rank = new ItemStack(Material.PAPER, 1);
-                ItemStack back = new ItemStack(Material.REDSTONE);
-                ItemMeta backm = back.getItemMeta();
-                backm.setDisplayName("§cBack");
-                back.setItemMeta(backm);
+
                 String displayName = "§4#§7"+0+0+num++;
                 ItemMeta rankMeta = rank.getItemMeta();
                 List<String> desc = new ArrayList<String>();
@@ -58,11 +59,14 @@ public class BansInventory {
                 rankMeta.setDisplayName(displayName);
                 rankMeta.setLore(desc);
                 rank.setItemMeta(rankMeta);
-                ban_inventory.setItem(0, back);
+
                 ban_inventory.setItem(i+1, rank);
 
+             }
             }
+            back();
             e.getWhoClicked().openInventory(ban_inventory);
+            wipeData();
             e.setCancelled(true);
         } catch (Exception err) {
             err.printStackTrace();
@@ -72,4 +76,26 @@ public class BansInventory {
     private void createBanInventory(org.bukkit.event.inventory.InventoryClickEvent e) {
         ban_inventory = Bukkit.createInventory(null, 27,"§8Bans: §f§l"+ ArrayStorage.grant_array_names.get(e.getWhoClicked().getUniqueId()));
     }
+
+    private void back() {
+        ItemStack back = new ItemStack(Material.REDSTONE);
+        ItemMeta backm = back.getItemMeta();
+        backm.setDisplayName("§cBack");
+        back.setItemMeta(backm);
+        ban_inventory.setItem(0, back);
+    }
+
+    private void wipeData() {
+        LogsSQL logsSQL = new LogsSQL();
+        logsSQL.refreshData();
+    }
+
+    private void getData(org.bukkit.event.inventory.InventoryClickEvent e) {
+        LogsSQL logs = new LogsSQL();
+        UUIDChecker udc = new UUIDChecker();
+        udc.check(ArrayStorage.grant_array_names.get(e.getWhoClicked().getUniqueId()));
+        logs.punishment_log(UUID.fromString(UUIDChecker.uuid));
+        System.out.println(ArrayStorage.grant_array_names.get(e.getWhoClicked().getUniqueId()));
+    }
+
 }

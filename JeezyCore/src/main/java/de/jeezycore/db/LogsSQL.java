@@ -35,19 +35,23 @@ public class LogsSQL {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            Statement stm = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" +userUUID+"'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
                 ban_log = rs.getString(10);
                 mute_log = rs.getString(11);
             }
-
+            rs.close();
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
 
+    public void refreshData() {
+        ban_log = null;
+        mute_log = null;
     }
 
 }
