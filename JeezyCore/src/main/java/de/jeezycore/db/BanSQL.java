@@ -41,7 +41,7 @@ public class BanSQL {
 
     private final ArrayList<String> ban_logsArray = new ArrayList<>();
 
-    private LocalDateTime currentTime;
+    private final LocalDateTime currentTime = LocalDateTime.now();;
 
     private LocalDateTime updatedTime;
 
@@ -73,7 +73,8 @@ public class BanSQL {
             banData(UUID.fromString(UUIDChecker.uuid));
 
             json_o.put("banned by", p.getPlayer().getDisplayName());
-            json_o.put("time", "forever");
+            json_o.put("ban_start", currentTime.format(formatter));
+            json_o.put("ban_end", "forever");
             json_o.put("reason", input);
             ArrayStorage.ban_logs.add(json_o);
 
@@ -113,8 +114,10 @@ public class BanSQL {
             check_UUID.check(username);
             banData(UUID.fromString(UUIDChecker.uuid));
 
+
             json_o.put("banned by", p.getPlayer().getDisplayName());
-            json_o.put("time", "forever");
+            json_o.put("ban_start", currentTime.format(formatter));
+            json_o.put("ban_end", "forever");
             json_o.put("reason", input);
             ArrayStorage.ban_logs.add(json_o);
 
@@ -197,8 +200,6 @@ public class BanSQL {
 
 
     public void tempBanCalculate(String time) {
-        currentTime = LocalDateTime.now();
-
         if (time.contains("d")) {
             updatedTime = currentTime.plusDays(Integer.parseInt(time.replace("d", "")));
         } else if (time.contains("h")) {
