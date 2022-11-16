@@ -3,7 +3,9 @@ package de.jeezycore.events.inventories;
 import de.jeezycore.events.inventories.grant.GrantInventory;
 import de.jeezycore.events.inventories.manage.ManageInventory;
 import de.jeezycore.events.inventories.profiles.ProfileInventory;
+import de.jeezycore.events.inventories.punishments.bans.BansInventory;
 import de.jeezycore.events.inventories.punishments.PunishmentInventory;
+import de.jeezycore.events.inventories.punishments.mutes.MutesInventory;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -26,6 +28,12 @@ public class JeezyInventories implements Listener {
 
         PunishmentInventory punishmentInventory = new PunishmentInventory();
         punishmentInventory.run(e);
+
+        BansInventory bansInventory = new BansInventory();
+        bansInventory.run(e);
+
+        MutesInventory mutesInventory = new MutesInventory();
+        mutesInventory.run(e);
 
     }
 
