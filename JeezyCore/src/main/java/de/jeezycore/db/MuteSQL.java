@@ -32,7 +32,7 @@ public class MuteSQL {
 
     private final ArrayList<String> mute_logsArray = new ArrayList<>();
 
-    private LocalDateTime currentTime;
+    private final LocalDateTime currentTime = LocalDateTime.now();
 
     private LocalDateTime updatedTime;
 
@@ -64,7 +64,8 @@ public class MuteSQL {
             RealtimeMute discord = new RealtimeMute();
 
             json_o.put("muted by", p.getPlayer().getDisplayName());
-            json_o.put("time", "forever");
+            json_o.put("mute_start", currentTime.format(formatter));
+            json_o.put("mute_end", "forever");
             json_o.put("reason", input);
             ArrayStorage.mute_logs.add(json_o);
 
@@ -98,7 +99,8 @@ public class MuteSQL {
             muteData(UUID.fromString(UUIDChecker.uuid));
 
             json_o.put("muted by", p.getPlayer().getDisplayName());
-            json_o.put("time", "forever");
+            json_o.put("mute_start", currentTime.format(formatter));
+            json_o.put("mute_end", "forever");
             json_o.put("reason", input);
             ArrayStorage.mute_logs.add(json_o);
 
@@ -180,8 +182,6 @@ public class MuteSQL {
 
 
     public void tempMuteCalculate(String time) {
-        currentTime = LocalDateTime.now();
-
         if (time.contains("d")) {
             updatedTime = currentTime.plusDays(Integer.parseInt(time.replace("d", "")));
         } else if (time.contains("h")) {
