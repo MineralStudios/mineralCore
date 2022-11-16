@@ -57,7 +57,7 @@ public class GrantInventory {
 
         List<String> player_desc = new ArrayList<String>();
         player_desc.add(0, "§8§m-----------------------------------");
-        player_desc.add(1, "§7§lClick§7 to configurate §7§lranks §7and §7§lmore");
+        player_desc.add(1, "§7§lClick§7 to manage players §7§lranks §7and §7§lmore");
         player_desc.add(2, "§8§m-----------------------------------");
         skullMeta.setDisplayName("§b"+ArrayStorage.grant_array_names.get(p.getUniqueId()));
         skullMeta.setLore(player_desc);
