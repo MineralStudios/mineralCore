@@ -16,12 +16,14 @@ public class RealtimeBan {
 
     public void realtimeChatOnBan(UUID uuid_player, String uuid_name, String banner, String reason) {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-banning");
+        MemorySection discord_support = (MemorySection) JeezyConfig.discord_defaults.get("discord-support");
         MemorySection ban_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-banning-notifications");
 
         String id = (String) discord.get("onBan");
+        boolean activated = (boolean) discord_support.get("activated");
         boolean ban_notify_on = ban_notify.getBoolean("onBan");
 
-        if (!ban_notify_on) {
+        if (!ban_notify_on | !activated) {
             return;
         }
 
@@ -48,12 +50,14 @@ public class RealtimeBan {
 
     public void realtimeChatOnTempBan(UUID uuid_player, String uuid_name, String banner, String ban_end, String reason) {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-banning");
+        MemorySection discord_support = (MemorySection) JeezyConfig.discord_defaults.get("discord-support");
         MemorySection tempBan_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-banning-notifications");
 
         String id = (String) discord.get("onTempBan");
         boolean tempBan_notify_on = tempBan_notify.getBoolean("onTempBan");
+        boolean activated = (boolean) discord_support.get("activated");
 
-        if (!tempBan_notify_on) {
+        if (!tempBan_notify_on | !activated) {
             return;
         }
 
@@ -80,12 +84,14 @@ public class RealtimeBan {
 
     public void realtimeChatOnUnban(UUID uuid_player, String uuid_name, String unBanner) {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-banning");
+        MemorySection discord_support = (MemorySection) JeezyConfig.discord_defaults.get("discord-support");
         MemorySection UnBan_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-banning-notifications");
 
         String id = (String) discord.get("onUnBan");
         boolean UnBan_notify_on = UnBan_notify.getBoolean("onUnBan");
+        boolean activated = (boolean) discord_support.get("activated");
 
-        if (!UnBan_notify_on) {
+        if (!UnBan_notify_on | !activated) {
             return;
         }
 
@@ -107,5 +113,4 @@ public class RealtimeBan {
         // Send the embed
         channel.sendMessage(embed);
     }
-
 }

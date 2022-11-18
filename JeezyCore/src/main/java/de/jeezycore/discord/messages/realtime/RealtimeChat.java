@@ -11,11 +11,13 @@ public class RealtimeChat {
     public void realtimeMcChat(String msg) {
     try {
         MemorySection chat_channel = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-realtime-chat");
+        MemorySection discord_support = (MemorySection) JeezyConfig.discord_defaults.get("discord-support");
         MemorySection realtime_chat = (MemorySection) JeezyConfig.discord_defaults.get("discord-realtime-chat");
         String id = (String) chat_channel.get("mcToDiscord");
         boolean mc_to_discord_on = realtime_chat.getBoolean("mcToDiscord");
+        boolean activated = (boolean) discord_support.get("activated");
 
-        if (!mc_to_discord_on) {
+        if (!mc_to_discord_on | !activated) {
             return;
         }
 
@@ -28,9 +30,11 @@ public class RealtimeChat {
     public void realtimeChatViaDiscord(String msg) {
         try {
             MemorySection realtime_chat = (MemorySection) JeezyConfig.discord_defaults.get("discord-realtime-chat");
+            MemorySection discord_support = (MemorySection) JeezyConfig.discord_defaults.get("discord-support");
             boolean discord_to_mc_on = realtime_chat.getBoolean("discordToMc");
+            boolean activated = (boolean) discord_support.get("activated");
 
-            if (!discord_to_mc_on) {
+            if (!discord_to_mc_on | !activated) {
                 return;
             }
 

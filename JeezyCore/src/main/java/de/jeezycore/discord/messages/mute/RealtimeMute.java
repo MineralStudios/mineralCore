@@ -16,12 +16,14 @@ public class RealtimeMute {
 
     public void realtimeChatOnMute(UUID uuid_player, String uuid_name, String granter, String reason) {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-muting");
+        MemorySection discord_support = (MemorySection) JeezyConfig.discord_defaults.get("discord-support");
         MemorySection mute_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-muting-notifications");
 
         String id = (String) discord.get("onMute");
         boolean mute_notify_on = mute_notify.getBoolean("onMute");
+        boolean activated = (boolean) discord_support.get("activated");
 
-        if (!mute_notify_on) {
+        if (!mute_notify_on | !activated) {
             return;
         }
 
@@ -48,12 +50,14 @@ public class RealtimeMute {
 
     public void realtimeChatOnTempMute(UUID uuid_player, String uuid_name, String granter, String ban_end, String reason) {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-muting");
+        MemorySection discord_support = (MemorySection) JeezyConfig.discord_defaults.get("discord-support");
         MemorySection tempMute_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-muting-notifications");
 
         String id = (String) discord.get("onTempMute");
         boolean tempMute_notify_on = tempMute_notify.getBoolean("onTempMute");
+        boolean activated = (boolean) discord_support.get("activated");
 
-        if (!tempMute_notify_on) {
+        if (!tempMute_notify_on | !activated) {
             return;
         }
 
@@ -80,12 +84,14 @@ public class RealtimeMute {
 
     public void realtimeChatOnUnMute(UUID uuid_player, String uuid_name, String unMuter) {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-muting");
+        MemorySection discord_support = (MemorySection) JeezyConfig.discord_defaults.get("discord-support");
         MemorySection UnMute_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-muting-notifications");
 
         String id = (String) discord.get("onUnMute");
         boolean unMute_notify_on = UnMute_notify.getBoolean("onUnMute");
+        boolean activated = (boolean) discord_support.get("activated");
 
-        if (!unMute_notify_on) {
+        if (!unMute_notify_on | !activated) {
             return;
         }
 

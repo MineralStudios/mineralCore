@@ -16,12 +16,14 @@ public class RealtimeGrant {
 
     public void realtimeChatOnGranting(UUID uuid_player, String uuid_name, String granter, String rankName) {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-granting");
+        MemorySection discord_support = (MemorySection) JeezyConfig.discord_defaults.get("discord-support");
         MemorySection grant_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-granting-notifications");
 
         String id = (String) discord.get("onGranting");
         boolean on_granting_on = grant_notify.getBoolean("onGranting");
+        boolean activated = (boolean) discord_support.get("activated");
 
-        if (!on_granting_on) {
+        if (!on_granting_on | !activated) {
             return;
         }
 
@@ -46,12 +48,14 @@ public class RealtimeGrant {
 
     public void realtimeChatOnUnGranting(UUID uuid_player, String uuid_name, String granter) {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-granting");
+        MemorySection discord_support = (MemorySection) JeezyConfig.discord_defaults.get("discord-support");
         MemorySection unGrant_notify = (MemorySection) JeezyConfig.discord_defaults.get("discord-granting-notifications");
 
         String id = (String) discord.get("onUnGranting");
         boolean un_granting_on = unGrant_notify.getBoolean("onUnGranting");
+        boolean activated = (boolean) discord_support.get("activated");
 
-        if (!un_granting_on) {
+        if (!un_granting_on | !activated) {
             return;
         }
 
@@ -73,5 +77,4 @@ public class RealtimeGrant {
         // Send the embed
         channel.sendMessage(embed);
     }
-
 }
