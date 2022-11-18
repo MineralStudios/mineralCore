@@ -11,6 +11,9 @@ import de.jeezycore.commands.punishments.ban.UnBan;
 import de.jeezycore.commands.punishments.mute.Mute;
 import de.jeezycore.commands.punishments.mute.TempMute;
 import de.jeezycore.commands.punishments.mute.UnMute;
+import de.jeezycore.commands.punishments.wipe.WipeAll;
+import de.jeezycore.commands.punishments.wipe.WipeBans;
+import de.jeezycore.commands.punishments.wipe.WipeMutes;
 import de.jeezycore.commands.ranks.CreateRank;
 import de.jeezycore.commands.ranks.GrantRank;
 import de.jeezycore.commands.spawn.SetSpawn;
@@ -51,6 +54,9 @@ public class Main extends JavaPlugin {
         this.getCommand("mute").setExecutor(new Mute());
         this.getCommand("tempmute").setExecutor(new TempMute());
         this.getCommand("unmute").setExecutor(new UnMute());
+        this.getCommand("wipebans").setExecutor(new WipeBans());
+        this.getCommand("wipemutes").setExecutor(new WipeMutes());
+        this.getCommand("wipeall").setExecutor(new WipeAll());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);

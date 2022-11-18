@@ -45,4 +45,10 @@ commands:
     description: Mutes a player for a certain time.
   unmute:
     description: Unmutes a player.
+  wipebans:
+    description: Wipes a certain players bans.
+  wipemutes:
+    description: Wipes a certain players mutes.
+  wipeall:
+    description: Wipes all the punishments from all the players that got banned or muted.
 
