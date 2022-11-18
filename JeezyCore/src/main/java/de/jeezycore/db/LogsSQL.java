@@ -26,7 +26,7 @@ public class LogsSQL {
 
         MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
 
-        url = "jdbc:mysql://localhost:3306/" + mc.get("database");
+        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
         user = (String) mc.get("user");
         password = (String) mc.get("password");
     }
