@@ -1,5 +1,6 @@
 package de.jeezycore.commands.punishments.wipe;
 
+import de.jeezycore.db.WipeSQL;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,6 +16,8 @@ public class WipeMutes implements CommandExecutor {
 
             if (cmd.getName().equalsIgnoreCase("wipemutes") && args.length == 1) {
 
+                WipeSQL execute = new WipeSQL();
+                execute.wipeMutes(args[0], p);
 
 
             } else {

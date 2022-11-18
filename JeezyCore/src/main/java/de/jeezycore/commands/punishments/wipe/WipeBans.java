@@ -1,5 +1,6 @@
 package de.jeezycore.commands.punishments.wipe;
 
+import de.jeezycore.db.WipeSQL;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,7 +16,8 @@ public class WipeBans implements CommandExecutor {
 
             if (cmd.getName().equalsIgnoreCase("wipebans") && args.length == 1) {
 
-
+                WipeSQL execute = new WipeSQL();
+                execute.wipeBans(args[0], p);
 
             } else {
                 p.sendMessage("Usage: /wipebans <player>");
