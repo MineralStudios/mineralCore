@@ -41,6 +41,6 @@ public class TempBan implements CommandExecutor {
                 p.sendMessage("Usage: /tempban <player><time><reason>");
             }
         }
-        return false;
+        return true;
     }
 }

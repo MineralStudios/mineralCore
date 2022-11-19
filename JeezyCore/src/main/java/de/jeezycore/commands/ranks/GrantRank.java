@@ -44,6 +44,6 @@ public class GrantRank implements CommandExecutor {
                 }
             }
         }
-        return false;
+        return true;
     }
 }

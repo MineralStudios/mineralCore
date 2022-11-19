@@ -50,6 +50,6 @@ public class Ping implements CommandExecutor {
 
         }
 
-        return false;
+        return true;
     }
 }

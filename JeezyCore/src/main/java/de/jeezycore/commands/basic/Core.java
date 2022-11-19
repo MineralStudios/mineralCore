@@ -16,6 +16,6 @@ public class Core implements CommandExecutor {
                 p.sendMessage("§cJeezyCore §7coded by §9JeezyDevelopment §7with §4§l❤§7.\n§7- Version: §3§l1.0.0§7.");
             }
         }
-        return false;
+        return true;
     }
 }

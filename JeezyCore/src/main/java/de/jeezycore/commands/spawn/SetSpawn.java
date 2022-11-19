@@ -38,6 +38,6 @@ public class SetSpawn implements CommandExecutor {
                 }
             }
         }
-        return false;
+        return true;
     }
 }

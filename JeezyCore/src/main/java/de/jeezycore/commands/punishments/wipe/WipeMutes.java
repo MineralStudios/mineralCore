@@ -26,6 +26,6 @@ public class WipeMutes implements CommandExecutor {
 
         }
 
-        return false;
+        return true;
     }
 }

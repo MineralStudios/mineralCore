@@ -25,6 +25,6 @@ public class WipeBans implements CommandExecutor {
 
         }
 
-        return false;
+        return true;
     }
 }

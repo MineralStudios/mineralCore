@@ -35,6 +35,6 @@ public class Mute implements CommandExecutor {
                 p.sendMessage("Usage: /mute <player><reason>.");
             }
         }
-        return false;
+        return true;
     }
 }

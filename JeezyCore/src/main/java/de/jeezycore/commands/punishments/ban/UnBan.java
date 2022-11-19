@@ -27,6 +27,6 @@ public class UnBan implements CommandExecutor {
                 p.sendMessage("Usage: /unban <player>.");
             }
         }
-        return false;
+        return true;
     }
 }

@@ -27,6 +27,6 @@ public class TempMute implements CommandExecutor {
                 p.sendMessage("Usage: /tempmute <player><time><reason>");
             }
         }
-        return false;
+        return true;
     }
 }

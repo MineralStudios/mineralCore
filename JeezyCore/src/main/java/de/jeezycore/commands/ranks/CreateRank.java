@@ -32,6 +32,6 @@ public class CreateRank implements CommandExecutor {
 
            }
         }
-        return false;
+        return true;
     }
 }

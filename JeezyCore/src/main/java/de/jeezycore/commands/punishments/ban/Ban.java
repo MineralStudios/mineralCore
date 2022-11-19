@@ -32,6 +32,6 @@ public class Ban implements CommandExecutor {
                 p.sendMessage("Usage: /ban <player><reason>.");
             }
         }
-        return false;
+        return true;
     }
 }

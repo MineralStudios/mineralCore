@@ -47,6 +47,6 @@ public class Fly implements CommandExecutor {
 
         }
 
-        return false;
+        return true;
     }
 }

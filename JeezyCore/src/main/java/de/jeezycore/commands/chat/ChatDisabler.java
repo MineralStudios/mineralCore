@@ -63,6 +63,6 @@ public class ChatDisabler implements CommandExecutor {
                 }
             }
         }
-        return false;
+        return true;
     }
 }

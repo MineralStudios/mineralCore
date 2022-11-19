@@ -21,6 +21,6 @@ public class TimeChanger implements CommandExecutor {
             }
         }
 
-        return false;
+        return true;
     }
 }

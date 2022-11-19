@@ -26,6 +26,6 @@ public class UnMute implements CommandExecutor {
                 p.sendMessage("Usage: /unmute <player>.");
             }
         }
-        return false;
+        return true;
     }
 }

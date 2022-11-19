@@ -27,6 +27,6 @@ public class PermissionAdd implements CommandExecutor {
             p.sendMessage("Usage /permissionAdd <perm> <rankName>");
             }
         }
-        return false;
+        return true;
     }
 }

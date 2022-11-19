@@ -25,6 +25,6 @@ public class PermissionRemove implements CommandExecutor {
                 p.sendMessage("Usage /permissionRemove <perm> <rankName>");
             }
         }
-        return false;
+        return true;
     }
 }

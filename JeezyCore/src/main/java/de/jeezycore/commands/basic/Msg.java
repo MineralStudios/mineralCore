@@ -82,6 +82,6 @@ public class Msg implements CommandExecutor {
         }
 
 
-        return false;
+        return true;
     }
 }
