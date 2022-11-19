@@ -110,9 +110,14 @@ public class JeezySQL  {
                     " ban_logs longtext, " +
                     " mute_logs longtext, "+
                     " PRIMARY KEY ( UUID ))";
+            String staff_table = "CREATE TABLE IF NOT EXISTS staff " +
+                    " (rankName VARCHAR(255), " +
+                    " staffs INT(4), " +
+                    " PRIMARY KEY ( rankName ))";
 
             stm.executeUpdate(jeezyCore_table);
             stm.executeUpdate(punishments_table);
+            stm.executeUpdate(staff_table);
             stm.close();
             if (con.isValid(20)) {
                 System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" connected to database."+Color.RESET);
