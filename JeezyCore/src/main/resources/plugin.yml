@@ -5,50 +5,74 @@ version: 1.0.0
 commands:
   create-rank:
     description: Creates rank.
+    usage: /create-rank <player>
   permissionAdd:
     description: Gives a certain rank permission.
+    usage: /permissionadd <perm><rankName>
   permissionRemove:
       description: Removes a certain rank permission.
+      usage: /permissionremove <perm><rankName>
   grant:
     description: Grants selected player a rank.
+    usage: /grant <player>
   chat-disable:
     description: Disables chat.
+    usage: /chat-disable
   chat-enable:
     description: Enables chat.
+    usage: /chat-enable
   spawnSet:
     description: Sets entry point when joining.
+    usage: /spawnSet
   spawn:
     description: Teleports you back to spawn.
+    usage: /spawn
   ping:
     description: Shows player ping.
+    usage: /ping or /ping <player>
   msg:
     description: Message other people.
+    usage: /msg <player>
   r:
     description: Replies to messages.
+    usage: /r
   day:
     description: Changes player time to day.
+    usage: /day
   night:
     description: Changes player time to night.
+    usage: /night
   fly:
     description: Makes you fly.
+    usage: /fly
   core:
       description: Author of the core and version.
+      usage: /core
   ban:
     description: Bans a player.
+    usage: /ban <player>
   tempban:
     description: Bans a player for a certain time.
+    usage: /tempban <player><time><reason> (days = d, hours = h, minutes = m, seconds = s)
   unban:
     description: Unbans a player.
+    usage: /unban <player>
   mute:
     description: Mutes player.
+    usage: /mute <player>
   tempmute:
     description: Mutes a player for a certain time.
+    usage: /tempmute <player><time><reason> (days = d, hours = h, minutes = m, seconds = s)
   unmute:
     description: Unmutes a player.
+    /usage: /unmute <player>
   wipebans:
     description: Wipes a certain players bans.
+    usage: /wipebans <player>
   wipemutes:
     description: Wipes a certain players mutes.
+    usage: /wipemutes <player>
   wipeall:
     description: Wipes all the punishments from all the players that got banned or muted.
+    usage: /wipeall
 
