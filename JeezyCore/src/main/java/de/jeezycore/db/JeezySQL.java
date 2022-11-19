@@ -42,6 +42,10 @@ public class JeezySQL  {
 
     public String show_color;
 
+    public static String permPlayerRankName;
+
+    public static String permPlayerRankColor;
+
     public static String permPlayerName;
 
     public static String permRankPerms;
@@ -292,7 +296,7 @@ public class JeezySQL  {
 
     }
 
-    private void getRankData(String rank, Player p) {
+    public void getRankData(String rank, Player p) {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
@@ -300,6 +304,8 @@ public class JeezySQL  {
             String select_sql = "SELECT * FROM jeezycore WHERE rankName = '" +rank+"'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
+                permPlayerRankName = rs.getString(1);
+                permPlayerRankColor = rs.getString(2);
                 permPlayerName = rs.getString(4);
                 permRankPerms = rs.getString(5);
             }
