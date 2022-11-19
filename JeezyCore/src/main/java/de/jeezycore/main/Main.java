@@ -18,6 +18,8 @@ import de.jeezycore.commands.ranks.CreateRank;
 import de.jeezycore.commands.ranks.GrantRank;
 import de.jeezycore.commands.spawn.SetSpawn;
 import de.jeezycore.commands.spawn.Spawn;
+import de.jeezycore.commands.staff.StaffRankDisable;
+import de.jeezycore.commands.staff.StaffRankEnable;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.discord.JeezyBot;
@@ -57,6 +59,8 @@ public class Main extends JavaPlugin {
         this.getCommand("wipebans").setExecutor(new WipeBans());
         this.getCommand("wipemutes").setExecutor(new WipeMutes());
         this.getCommand("wipeall").setExecutor(new WipeAll());
+        this.getCommand("staffrank-enable").setExecutor(new StaffRankEnable());
+        this.getCommand("staffrank-disable").setExecutor(new StaffRankDisable());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
