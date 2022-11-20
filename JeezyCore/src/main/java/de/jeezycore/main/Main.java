@@ -24,6 +24,7 @@ import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.discord.JeezyBot;
 import de.jeezycore.events.*;
+import de.jeezycore.events.chat.ChatEvent;
 import de.jeezycore.events.inventories.JeezyInventories;
 import org.bukkit.plugin.java.JavaPlugin;
 
