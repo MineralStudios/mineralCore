@@ -62,6 +62,7 @@ public class Main extends JavaPlugin {
         this.getCommand("wipeall").setExecutor(new WipeAll());
         this.getCommand("staffrank-enable").setExecutor(new StaffRankEnable());
         this.getCommand("staffrank-disable").setExecutor(new StaffRankDisable());
+        this.getCommand("helpop").setExecutor(new Helpop());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
