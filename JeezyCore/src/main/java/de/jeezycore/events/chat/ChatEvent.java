@@ -1,4 +1,4 @@
-package de.jeezycore.events;
+package de.jeezycore.events.chat;
 
 import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.config.JeezyConfig;
@@ -16,6 +16,8 @@ public class ChatEvent implements Listener {
 
     @EventHandler
     public void onPlayerChat1(AsyncPlayerChatEvent e) {
+        StaffChat staffChat = new StaffChat();
+        staffChat.chat(e);
         JeezySQL display = new JeezySQL();
         String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ e.getPlayer().getUniqueId().toString() +"%'";
         display.displayChatRank(sql);
