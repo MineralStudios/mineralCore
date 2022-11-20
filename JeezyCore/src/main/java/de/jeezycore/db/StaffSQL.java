@@ -4,8 +4,12 @@ import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.config.JeezyConfig;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.UUID;
 
 public class StaffSQL {
 
@@ -13,7 +17,12 @@ public class StaffSQL {
     public String user;
     public String password;
 
-    public static String staffRank;
+    public static String staffPlayerNames;
+    public static boolean staffRank;
+
+    public static ArrayList<String> staff = new ArrayList<>();
+
+    public static String [] staff_array;
 
     private void createConnection() {
 
@@ -31,25 +40,30 @@ public class StaffSQL {
 
             this.createConnection();
 
+            getStaffRank(rankName);
+
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
 
             if (JeezySQL.permPlayerRankName == null) {
                 p.sendMessage("§4This rank hasn't been created yet.");
                 return;
+            } else if (staffRank) {
+                p.sendMessage("§7The "+ColorTranslator.colorTranslator.get(Integer.parseInt(JeezySQL.permPlayerRankColor))+JeezySQL.permPlayerRankName+" §7rank is §calready §7a staff rank.");
+                return;
             }
 
-            String sql = "INSERT INTO staff (rankName) VALUES ('"+rankName+"')";
+            String sql = "UPDATE jeezycore " +
+                    "SET staffRank = true WHERE rankName = '"+rankName+"'";
 
             stm.executeUpdate(sql);
 
             p.sendMessage("§bSuccessfully§7 changed the "+ColorTranslator.colorTranslator.get(Integer.parseInt(JeezySQL.permPlayerRankColor))+JeezySQL.permPlayerRankName+" §7rank to a staff rank.");
             con.close();
         } catch (SQLException e) {
-            p.sendMessage("§7The "+ColorTranslator.colorTranslator.get(Integer.parseInt(JeezySQL.permPlayerRankColor))+JeezySQL.permPlayerRankName+" §7rank is §calready §7a staff rank.");
-            System.out.println(e);
         }
         JeezySQL.permPlayerRankName = null;
+        staffRank = false;
     }
 
     public void removeFromStaff(String rankName, Player p) {
@@ -59,43 +73,86 @@ public class StaffSQL {
 
             this.createConnection();
 
-            getData(rankName);
+            getStaffRank(rankName);
 
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
 
-            if (JeezySQL.permPlayerRankName == null || staffRank == null) {
-                p.sendMessage("§4This rank isn't a staff rank.");
+            if (JeezySQL.permPlayerRankName == null) {
+                p.sendMessage("§4This rank hasn't been setuped yet.");
+                return;
+            } else if (!staffRank) {
+                p.sendMessage("§7The "+ColorTranslator.colorTranslator.get(Integer.parseInt(JeezySQL.permPlayerRankColor))+JeezySQL.permPlayerRankName+" §7rank is §calready §7removed from the staff ranks.");
                 return;
             }
 
-            String sql = "DELETE FROM staff WHERE rankName = '"+rankName+"'";
+            String sql = "UPDATE jeezycore " +
+                    "SET staffRank = false WHERE rankName = '"+rankName+"'";
 
             stm.executeUpdate(sql);
 
             p.sendMessage("§bSuccessfully§7 removed the "+ColorTranslator.colorTranslator.get(Integer.parseInt(JeezySQL.permPlayerRankColor))+JeezySQL.permPlayerRankName+" §7rank from the staff ranks.");
             con.close();
         } catch (SQLException e) {
-            p.sendMessage("§7The "+ColorTranslator.colorTranslator.get(Integer.parseInt(JeezySQL.permPlayerRankColor))+JeezySQL.permPlayerRankName+" §7rank is §calready §7removed from the staff ranks.");
             System.out.println(e);
         }
         JeezySQL.permPlayerRankName = null;
-        staffRank = null;
+        staffRank = false;
     }
 
-    public void getData(String rankName) {
+    public void getStaffRank(String rankName) {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String select_sql = "SELECT * FROM staff WHERE rankName = '" +rankName+"'";
+            String select_sql = "SELECT * FROM jeezycore WHERE staffRank = true AND rankName = '"+rankName+"'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
-                staffRank = rs.getString(1);
+                staffRank = rs.getBoolean(6);
             }
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    public void getStaff(AsyncPlayerChatEvent e) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String select_sql = "SELECT * FROM jeezycore WHERE staffRank = true AND playerName LIKE '%[%'";
+            ResultSet rs = stm.executeQuery(select_sql);
+            while (rs.next()) {
+                staffPlayerNames = rs.getString(4);
+
+               staff_array = staffPlayerNames.replace("]", "").replace("[", "").split(", ");
+
+               staff.addAll(Arrays.asList(staff_array));
+
+            }
+            con.close();
+        } catch (SQLException f) {
+            f.printStackTrace();
+        }
+    }
+
+    public void checkIfStaff(UUID get_UUID) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String select_sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+get_UUID+"%'";
+            ResultSet rs = stm.executeQuery(select_sql);
+            while (rs.next()) {
+                staffRank = rs.getBoolean(6);
+            }
+            System.out.println(staffRank);
+            System.out.println(select_sql);
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
