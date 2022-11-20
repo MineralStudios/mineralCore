@@ -116,7 +116,7 @@ public class StaffSQL {
         }
     }
 
-    public void getStaff(AsyncPlayerChatEvent e) {
+    public void getStaff() {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);

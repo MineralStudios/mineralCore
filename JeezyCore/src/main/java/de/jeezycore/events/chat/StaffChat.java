@@ -4,6 +4,7 @@ import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.db.StaffSQL;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.UUID;
@@ -19,7 +20,7 @@ public class StaffChat {
         staffSQL.checkIfStaff(UUID.fromString(e.getPlayer().getUniqueId().toString()));
 
         if (StaffSQL.staffRank && firstChar.equalsIgnoreCase(expectedOutput)) {
-            staffSQL.getStaff(e);
+            staffSQL.getStaff();
 
                 JeezySQL display = new JeezySQL();
                 String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ e.getPlayer().getUniqueId().toString() +"%'";
@@ -39,4 +40,25 @@ public class StaffChat {
                 }
         }
     }
+
+    public void helpopChat(Player p, String message) {
+        StaffSQL staffSQL = new StaffSQL();
+        staffSQL.getStaff();
+
+        JeezySQL display = new JeezySQL();
+        String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
+        display.displayChatRank(sql);
+
+        try {
+            for (int i = 0; i < StaffSQL.staff.size(); i++) {
+                Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).sendMessage("§7§l[§4Help§7§cop§7§l] "+ColorTranslator.colorTranslator.get(display.rankColor)+p.getPlayer().getDisplayName()+"§f: "+message);
+            }
+            StaffSQL.staffRank = false;
+            StaffSQL.staffPlayerNames = null;
+            StaffSQL.staff.clear();
+        } catch (Exception f) {
+            f.printStackTrace();
+        }
+    }
+
 }
