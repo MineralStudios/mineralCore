@@ -15,16 +15,16 @@ public class WipeBans implements CommandExecutor {
             Player p = (Player) sender;
 
             if (cmd.getName().equalsIgnoreCase("wipebans") && args.length == 1) {
-
-                WipeSQL execute = new WipeSQL();
-                execute.wipeBans(args[0], p);
-
+                if (p.hasPermission("jeezy.core.punishments.wipe.bans")) {
+                    WipeSQL execute = new WipeSQL();
+                    execute.wipeBans(args[0], p);
+                } else {
+                    p.sendMessage("No permission.");
+                }
             } else {
                 p.sendMessage("Usage: /wipebans <player>");
             }
-
         }
-
         return true;
     }
 }
