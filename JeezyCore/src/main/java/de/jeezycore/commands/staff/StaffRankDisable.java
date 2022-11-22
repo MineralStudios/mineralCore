@@ -14,16 +14,16 @@ public class StaffRankDisable implements CommandExecutor {
             Player p = (Player) sender;
 
             if (cmd.getName().equalsIgnoreCase("staffrank-disable") && args.length == 1) {
-
-               StaffSQL execute = new StaffSQL();
-                execute.removeFromStaff(args[0], p);
-
+                if (p.hasPermission("jeezy.core.staff.disable")) {
+                    StaffSQL execute = new StaffSQL();
+                    execute.removeFromStaff(args[0], p);
+                } else {
+                    p.sendMessage("No permission.");
+                }
             } else {
                 p.sendMessage("Usage: /staffrank-disable <rankName>");
             }
         }
-
-
         return true;
     }
 }
