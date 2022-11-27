@@ -20,6 +20,8 @@ public class JeezySQL  {
 
     public String rank;
     public int rankColor;
+
+    public int rankColor_second;
     public String grantPlayer;
 
     public String alreadyGranted;
@@ -263,6 +265,7 @@ public class JeezySQL  {
             while (rs.next()) {
                 rank = rs.getString(1);
                 rankColor = rs.getInt(2);
+                rankColor_second = rs.getInt(2);
             }
         con.close();
         }catch (SQLException e) {
