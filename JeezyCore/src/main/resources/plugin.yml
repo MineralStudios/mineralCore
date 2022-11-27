@@ -45,6 +45,9 @@ commands:
   fly:
     description: Makes you fly.
     usage: /fly
+  report:
+    description: Reports a player.
+    usage: /report <player><message>
   core:
       description: Author of the core and version.
       usage: /core
