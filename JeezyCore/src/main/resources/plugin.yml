@@ -82,9 +82,15 @@ commands:
     usage: /staffrank-enable <rankName>
     description: Elevates a normal rank to a staff rank.
   staffrank-disable:
-      usage: /staffrank-disable <rankName>
-      description: Delevates a normal rank to a staff rank.
+    usage: /staffrank-disable <rankName>
+    description: Delevates a normal rank to a staff rank.
   helpop:
-      usage: /helpop <message>
-      description: Sends a message to all the staffs.
+    usage: /helpop <message>
+    description: Sends a message to all the staffs.
+  create-tag:
+    usage: /create-tag <tagName><tagDesign><tagPriority>
+    description: Creates a tag.
+  grant-tag:
+    usage: /grant-tag <tagName><playerName>
+    description: Unlocks tag for player.
 

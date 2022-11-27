@@ -20,6 +20,8 @@ import de.jeezycore.commands.spawn.SetSpawn;
 import de.jeezycore.commands.spawn.Spawn;
 import de.jeezycore.commands.staff.StaffRankDisable;
 import de.jeezycore.commands.staff.StaffRankEnable;
+import de.jeezycore.commands.tags.CreateTag;
+import de.jeezycore.commands.tags.GrantTag;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.discord.JeezyBot;
@@ -64,6 +66,8 @@ public class Main extends JavaPlugin {
         this.getCommand("staffrank-enable").setExecutor(new StaffRankEnable());
         this.getCommand("staffrank-disable").setExecutor(new StaffRankDisable());
         this.getCommand("helpop").setExecutor(new Helpop());
+        this.getCommand("create-tag").setExecutor(new CreateTag());
+        this.getCommand("grant-tag").setExecutor(new GrantTag());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
