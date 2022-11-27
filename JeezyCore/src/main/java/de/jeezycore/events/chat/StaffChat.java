@@ -29,6 +29,9 @@ public class StaffChat {
                 try {
                     for (int i = 0; i < StaffSQL.staff.size(); i++) {
                         String new_message = e.getMessage().replace("@", "").trim();
+                        if (!Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).isOnline()) {
+                            break;
+                        }
                         Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).sendMessage("§7§l[§bStaff§7-§bChat§7§l] "+ColorTranslator.colorTranslator.get(display.rankColor)+e.getPlayer().getDisplayName()+"§f: "+new_message);
                         e.setCancelled(true);
                     }
@@ -51,7 +54,33 @@ public class StaffChat {
 
         try {
             for (int i = 0; i < StaffSQL.staff.size(); i++) {
+                if (!Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).isOnline()) {
+                    break;
+                }
                 Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).sendMessage("§7§l[§4Help§7§cop§7§l] "+ColorTranslator.colorTranslator.get(display.rankColor)+p.getPlayer().getDisplayName()+"§f: "+message);
+            }
+            StaffSQL.staffRank = false;
+            StaffSQL.staffPlayerNames = null;
+            StaffSQL.staff.clear();
+        } catch (Exception f) {
+            f.printStackTrace();
+        }
+    }
+
+    public void reportChat(Player p, String message) {
+        StaffSQL staffSQL = new StaffSQL();
+        staffSQL.getStaff();
+
+        JeezySQL display = new JeezySQL();
+        String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
+        display.displayChatRank(sql);
+
+        try {
+            for (int i = 0; i < StaffSQL.staff.size(); i++) {
+                if (!Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).isOnline()) {
+                    break;
+                }
+                Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).sendMessage(message);
             }
             StaffSQL.staffRank = false;
             StaffSQL.staffPlayerNames = null;
