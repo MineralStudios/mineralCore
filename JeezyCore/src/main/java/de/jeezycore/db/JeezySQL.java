@@ -117,9 +117,16 @@ public class JeezySQL  {
                     " ban_logs longtext, " +
                     " mute_logs longtext, "+
                     " PRIMARY KEY ( UUID ))";
+            String tags_table = "CREATE TABLE IF NOT EXISTS tags " +
+                    " (tagName VARCHAR(255), " +
+                    " tagDesign VARCHAR(255), " +
+                    " tagPriority INT(3), " +
+                    " playerName longtext, " +
+                    " PRIMARY KEY ( tagName ))";
 
             stm.executeUpdate(jeezyCore_table);
             stm.executeUpdate(punishments_table);
+            stm.executeUpdate(tags_table);
 
             stm.close();
             if (con.isValid(20)) {
