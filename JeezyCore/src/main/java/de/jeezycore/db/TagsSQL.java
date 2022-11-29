@@ -17,8 +17,6 @@ public class TagsSQL {
     public String user;
     public String password;
 
-    String alreadyGranted;
-
     String grant;
 
     String tag_players;
@@ -108,6 +106,62 @@ public class TagsSQL {
             con.close();
         } catch (SQLException e) {
             System.out.println(e);
+        }
+    }
+
+    public void deleteTag(String tagName, String playerName, Player p) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            UUIDChecker uc = new UUIDChecker();
+            uc.check(playerName);
+
+            Statement stm = con.createStatement();
+            String sql = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
+            ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                grant = rs.getString(1);
+                tag_players = rs.getString(4);
+            }
+
+            if (grant == null) {
+                p.sendMessage("§7This tag doesn't §4exit§7.");
+                return;
+            }
+
+            if (tag_players != null) {
+
+                grant_new_tag = tag_players.replace("]", "").replace("[", "").split(", ");
+
+                player_name_tags_array.addAll(Arrays.asList(grant_new_tag));
+            }
+
+            if (!player_name_tags_array.contains(UUIDChecker.uuid)) {
+                p.sendMessage("§7This player doesn't §4own §7that tag.");
+                return;
+            } else {
+                player_name_tags_array.remove(UUIDChecker.uuid);
+                p.sendMessage("§2Successfully §7removed the §b"+tagName+" §7tag for §9"+playerName+"§7.");
+            }
+
+            String sql2;
+            if (player_name_tags_array.size() == 0) {
+                sql2 = "UPDATE tags " +
+                        "SET playerName = NULL" +
+                        " WHERE tagName = '"+tagName+"'";
+            } else {
+                sql2 = "UPDATE tags " +
+                        "SET playerName = '"+player_name_tags_array +
+                        "' WHERE tagName = '"+tagName+"'";
+            }
+
+            stm.executeUpdate(sql2);
+            player_name_tags_array.clear();
+
+            con.close();
+        } catch (SQLException e) {
+        e.printStackTrace();
         }
     }
 }
