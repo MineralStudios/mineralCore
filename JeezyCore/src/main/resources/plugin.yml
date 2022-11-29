@@ -93,4 +93,7 @@ commands:
   grant-tag:
     usage: /grant-tag <tagName><playerName>
     description: Unlocks tag for player.
+  ungrant-tag:
+    usage: /ungrant-tag <tagName><playerName>
+    description: Removes tag from player.
 
