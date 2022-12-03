@@ -40,10 +40,11 @@ public class JoinEvent implements Listener {
         givePermsOnJoin.onJoinPerms(e.getPlayer().getUniqueId());
 
 
-        List<Location> ls = (List<Location>) JeezyConfig.config_defaults.get("entry-spawn-point");
         MemorySection mc = (MemorySection) JeezyConfig.config_defaults.get("spawn-settings");
         boolean spawnOnSpownpointOnJoin = mc.getBoolean("spawn-at-spawnpoint-on-join");
 
+        if (!spawnOnSpownpointOnJoin) return;
+        List<Location> ls = (List<Location>) JeezyConfig.config_defaults.get("entry-spawn-point");
         World w = ls.get(0).getWorld();
         double x = ls.get(0).getBlockX();
         double y = ls.get(0).getBlockY();
@@ -51,7 +52,7 @@ public class JoinEvent implements Listener {
         float pitch = ls.get(0).getPitch();
         float yaw = ls.get(0).getYaw();
 
-        if (!spawnOnSpownpointOnJoin) return;
+
         e.getPlayer().teleport(new Location(w, x, y, z, yaw, pitch));
 
     } catch (Exception f) {
