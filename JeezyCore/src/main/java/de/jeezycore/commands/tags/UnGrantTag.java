@@ -17,7 +17,7 @@ public class UnGrantTag implements CommandExecutor {
             if (cmd.getName().equalsIgnoreCase("ungrant-tag") && args.length == 2) {
                 if (p.hasPermission("jeezy.core.tag.ungrant")) {
                     TagsSQL tag = new TagsSQL();
-                    tag.deleteTag(args[0], args[1], p);
+                    tag.unGrantTag(args[0], args[1], p);
                 } else {
                     p.sendMessage("No permission");
                 }
