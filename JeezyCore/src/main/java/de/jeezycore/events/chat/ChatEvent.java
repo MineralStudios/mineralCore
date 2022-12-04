@@ -4,6 +4,7 @@ import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.db.MuteSQL;
+import de.jeezycore.db.TagsSQL;
 import de.jeezycore.discord.messages.realtime.RealtimeChat;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.event.EventHandler;
@@ -12,7 +13,10 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.List;
 
+import static de.jeezycore.db.TagsSQL.tag_in_chat;
+
 public class ChatEvent implements Listener {
+    private String chatFormatMessage;
 
     @EventHandler
     public void onPlayerChat1(AsyncPlayerChatEvent e) {
@@ -24,6 +28,8 @@ public class ChatEvent implements Listener {
         System.out.println(display.rank);
         System.out.println(display.rankColor);
         System.out.println(e.getPlayer().getUniqueId());
+        TagsSQL tagsSQL = new TagsSQL();
+        tagsSQL.tagChat(e.getPlayer().getUniqueId());
 
         RealtimeChat rmc = new RealtimeChat();
         MuteSQL check_if_banned = new MuteSQL();
@@ -41,16 +47,24 @@ public class ChatEvent implements Listener {
             return;
         }
 
+            if (tag_in_chat == null) {
+                tag_in_chat = "";
+            }
             if (display.rank == null) {
+                display.rank = "";
+
+
                 rmc.realtimeMcChat( e.getPlayer().getDisplayName()+": "+e.getMessage());
                 MemorySection cf = (MemorySection) JeezyConfig.config_defaults.get("chat");
-                String chat_format_rep = cf.getString("chat_format").replace("&", "§").replace("[player]", e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage());
-                e.setFormat(chat_format_rep.replace("%", "%%"));
+                String chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("&", "§").replace("[player]", "§2"+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat.replace("&", "§"));
+                e.setFormat(chat_format_rep.replace("%", "%%").trim());
             } else {
                 String show_color = ColorTranslator.colorTranslator.get(display.rankColor);
                 System.out.println(show_color);
                 rmc.realtimeMcChat("["+display.rank+"]"+" "+e.getPlayer().getDisplayName()+": "+e.getMessage());
-                e.setFormat("§7§l["+show_color+""+display.rank+"§7§l]§f "+e.getPlayer().getDisplayName()+": "+e.getMessage().replace("%", "%%"));
+                MemorySection cf = (MemorySection) JeezyConfig.config_defaults.get("chat");
+                String chat_format_rep = cf.getString("chat_format").replace("[rank]", "§7§l["+show_color+""+display.rank+"§7§l]§f").replace("&", "§").replace("[player]", "§f"+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat.replace("&", "§"));
+                e.setFormat(chat_format_rep.replace("%", "%%"));
             }
 
 
