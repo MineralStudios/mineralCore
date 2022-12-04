@@ -15,8 +15,9 @@ public class Tags implements CommandExecutor {
             Player p = (Player) sender;
 
             if (cmd.getName().equalsIgnoreCase("tags") && args.length == 0) {
-                TagsInventory tagsInventory = new TagsInventory();
                 ArrayStorage.tags_inv_array.put(p.getUniqueId(), 1);
+                TagsInventory tagsInventory = new TagsInventory();
+
                 tagsInventory.tags_menu(p);
             } else {
              p.sendMessage("Usage: /tags");
