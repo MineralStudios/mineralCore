@@ -1,7 +1,6 @@
 package de.jeezycore.db;
 
 import de.jeezycore.config.JeezyConfig;
-import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
@@ -9,7 +8,7 @@ import org.bukkit.entity.Player;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.UUID;
+import java.util.LinkedHashMap;
 
 public class TagsSQL {
 
@@ -19,11 +18,18 @@ public class TagsSQL {
 
     String grant;
 
+    String tagName;
+    String tagDesign;
+
     String tag_players;
 
     public static String [] grant_new_tag;
 
     public static ArrayList<String> player_name_tags_array = new ArrayList<String>();
+
+    public LinkedHashMap<String, String> tagData = new LinkedHashMap<String, String>();
+
+    public LinkedHashMap<String, String> tagDataFullSize = new LinkedHashMap<String, String>();
 
 
     private void createConnection() {
@@ -53,6 +59,44 @@ public class TagsSQL {
         } catch (SQLException e) {
             p.sendMessage("§7The tag §b§l"+tagName+"§7 has been §calready §7created!");
             System.out.println(e);
+        }
+    }
+
+    public void getFullDataSize() {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            Statement stm = con.createStatement();
+            String sql = "SELECT * FROM tags ORDER BY tagPriority DESC";
+            ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                tagName = rs.getString(1);
+                tagDesign = rs.getString(2);
+
+                tagDataFullSize.put(tagName, tagDesign);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getData(int startCount) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            Statement stm = con.createStatement();
+            String sql = "SELECT * FROM tags ORDER BY tagPriority DESC LIMIT "+startCount+","+1844674407;
+            ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                tagName = rs.getString(1);
+                tagDesign = rs.getString(2);
+
+                tagData.put(tagName, tagDesign);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -109,7 +153,7 @@ public class TagsSQL {
         }
     }
 
-    public void deleteTag(String tagName, String playerName, Player p) {
+    public void unGrantTag(String tagName, String playerName, Player p) {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
@@ -162,6 +206,21 @@ public class TagsSQL {
             con.close();
         } catch (SQLException e) {
         e.printStackTrace();
+        }
+    }
+
+    public void deleteTag(String tag, Player p) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            Statement stm = con.createStatement();
+            String sql = "DELETE FROM tags WHERE tagName = '"+tag+"'";
+            stm.executeUpdate(sql);
+            p.sendMessage("§2Successfully §7deleted the §9"+tag+" §7tag.");
+        } catch (SQLException e) {
+            p.sendMessage("§7This tag doesn't §cexist§7.");
+            e.printStackTrace();
         }
     }
 }
