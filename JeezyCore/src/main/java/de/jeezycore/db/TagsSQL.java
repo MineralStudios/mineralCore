@@ -4,12 +4,12 @@ import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
-
+import java.util.UUID;
+import static de.jeezycore.utils.ArrayStorage.set_current_tag_array;
 import static de.jeezycore.utils.ArrayStorage.tags_in_ownership_array;
 
 public class TagsSQL {
@@ -21,12 +21,20 @@ public class TagsSQL {
     String grant;
 
     String tagName;
+
     public static String ownerTagName;
     String tagDesign;
 
+
     String tag_players;
 
+    String current_tag;
+
+    public static String tag_in_chat;
+
     public static String [] grant_new_tag;
+
+    public static String [] already_set_tag;
 
     public static ArrayList<String> player_name_tags_array = new ArrayList<String>();
 
@@ -102,6 +110,88 @@ public class TagsSQL {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void alreadySetCurrentTag(String tagName, UUID get_uuid) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            Statement stm = con.createStatement();
+            String sql_already_g = "SELECT * FROM tags WHERE currentTag LIKE '%"+get_uuid+"%'";
+            ResultSet rs = stm.executeQuery(sql_already_g);
+            while (rs.next()) {
+                this.tagName = rs.getString(1);
+                current_tag = rs.getString(5);
+            }
+            if (current_tag != null) {
+
+                    System.out.println("getting executed");
+                    already_set_tag = current_tag.replace("]", "").replace("[", "").split(", ");
+
+                    set_current_tag_array.addAll(Arrays.asList(already_set_tag));
+
+                    set_current_tag_array.remove(get_uuid.toString());
+
+                    System.out.println(set_current_tag_array);
+
+                    String sql_already_g2;
+                    if (set_current_tag_array.size() == 0) {
+                        sql_already_g2 = "UPDATE tags " +
+                                "SET currentTag = NULL" +
+                                " WHERE tagName = '"+this.tagName+"'";
+                    } else {
+                        sql_already_g2 = "UPDATE tags " +
+                                "SET currentTag = '" + set_current_tag_array +
+                                "' WHERE tagName = '"+this.tagName+"'";
+                    }
+                    System.out.println(sql_already_g);
+                    System.out.println(sql_already_g2);
+                    stm.executeUpdate(sql_already_g2);
+
+                    set_current_tag_array.clear();
+                }
+
+            con.close();
+        }catch (SQLException e) {
+            System.out.println(e);
+        }
+
+    }
+    public void setCurrentTag(String tagName, UUID get_uuid) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            this.alreadySetCurrentTag(tagName, get_uuid);
+
+            Statement stm = con.createStatement();
+            String sql2 = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
+            ResultSet rs = stm.executeQuery(sql2);
+            while (rs.next()) {
+                current_tag = rs.getString(5);
+            }
+
+            if (current_tag != null) {
+                if (current_tag.contains(get_uuid.toString())) return;
+
+                grant_new_tag = current_tag.replace("]", "").replace("[", "").split(", ");
+
+                set_current_tag_array.addAll(Arrays.asList(grant_new_tag));
+
+            }
+            set_current_tag_array.add(String.valueOf(get_uuid));
+
+            String sql = "UPDATE tags " +
+                    "SET currentTag = '"+set_current_tag_array +
+                    "' WHERE tagName = '"+tagName+"'";
+            System.out.println(sql);
+            stm.executeUpdate(sql);
+            set_current_tag_array.clear();
+            con.close();
+        } catch (SQLException e) {
+            System.out.println(e);
         }
     }
 
@@ -247,4 +337,21 @@ public class TagsSQL {
             e.printStackTrace();
         }
     }
+
+    public void tagChat(UUID get_uuid) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            Statement stm = con.createStatement();
+            String sql = "SELECT * FROM tags WHERE currentTag LIKE '%"+get_uuid+"%'";
+            ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                tag_in_chat = rs.getString(2);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
