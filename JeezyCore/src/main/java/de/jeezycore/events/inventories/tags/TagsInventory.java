@@ -23,23 +23,29 @@ public class TagsInventory {
     private final TagsSQL display = new TagsSQL();
 
     public void run(org.bukkit.event.inventory.InventoryClickEvent e) {
+        if (e.getInventory().getTitle().contains("§8§lTags")) {
+            if (e.getCurrentItem().getData().toString().equalsIgnoreCase("NAME_TAG(0)") && e.getCurrentItem().getItemMeta().getLore().get(3).equalsIgnoreCase("§a§l You own this tag§7§l.")) {
+                e.getWhoClicked().sendMessage("§7You §2§lsuccessfully §7gave yourself the §9§l"+e.getCurrentItem().getItemMeta().getDisplayName()+ " §7tag§7.");
+                e.getWhoClicked().closeInventory();
+                executeMYSQL(e.getCurrentItem().getItemMeta().getDisplayName(), e.getWhoClicked().getUniqueId());
+            } else if (e.getCurrentItem().getData().toString().equalsIgnoreCase("NAME_TAG(0)") && e.getCurrentItem().getItemMeta().getLore().get(3).equalsIgnoreCase("§4§l You don't own this tag yet§7§l.")) {
+                e.getWhoClicked().sendMessage("§4§lYou don't own this tag.");
+            }
 
-        System.out.println(e.getCurrentItem().getData().toString());
-        System.out.println(e.getCurrentItem().getItemMeta().getDisplayName());
-        if (e.getClickedInventory().getName().contains("Tags") && e.getCurrentItem().getData().toString().equalsIgnoreCase("DIAMOND(0)")) {
-            int add = tags_inv_array.get(e.getWhoClicked().getUniqueId());
-            tags_inv_array.put(e.getWhoClicked().getUniqueId(), add + 1);
+            if (e.getCurrentItem().getData().toString().equalsIgnoreCase("DIAMOND(0)")) {
+                int add = tags_inv_array.get(e.getWhoClicked().getUniqueId());
+                tags_inv_array.put(e.getWhoClicked().getUniqueId(), add + 1);
 
-            tags_menu(Bukkit.getPlayer(UUID.fromString(String.valueOf(e.getWhoClicked().getUniqueId()))));
-        } else if (e.getClickedInventory().getName().contains("Tags") && e.getCurrentItem().getData().toString().equalsIgnoreCase("EMERALD(0)")) {
-            int add = tags_inv_array.get(e.getWhoClicked().getUniqueId());
-            tags_inv_array.put(e.getWhoClicked().getUniqueId(), add - 1);
+                tags_menu(Bukkit.getPlayer(UUID.fromString(String.valueOf(e.getWhoClicked().getUniqueId()))));
+            } else if (e.getCurrentItem().getData().toString().equalsIgnoreCase("EMERALD(0)")) {
+                int add = tags_inv_array.get(e.getWhoClicked().getUniqueId());
+                tags_inv_array.put(e.getWhoClicked().getUniqueId(), add - 1);
 
-            tags_menu(Bukkit.getPlayer(UUID.fromString(String.valueOf(e.getWhoClicked().getUniqueId()))));
+                tags_menu(Bukkit.getPlayer(UUID.fromString(String.valueOf(e.getWhoClicked().getUniqueId()))));
+            }
+            e.setCancelled(true);
         }
-        e.setCancelled(true);
-    }
-
+        }
     public void tags_menu(Player p) {
         if (tags_inv_array.get(p.getPlayer().getUniqueId()) == 1) {
             display.getData(0);
@@ -49,7 +55,7 @@ public class TagsInventory {
         tags_in_ownership_array.clear();
         display.getFullDataSize();
         display.getOwnershipData(p);
-        tag_inv = Bukkit.createInventory(null, 45,"§8Tags "+"§7§l(§f§l"+tags_inv_array.get(p.getPlayer().getUniqueId())+" §7§l/§9§l "+display.tagDataFullSize.size() % 20+"§7§l)");
+        tag_inv = Bukkit.createInventory(null, 45,"§8§lTags "+"§7§l(§f§l"+tags_inv_array.get(p.getPlayer().getUniqueId())+" §7§l/§9§l "+display.tagDataFullSize.size() % 20+"§7§l)");
         for (int b = 0; b < tag_inv.getSize(); b++) {
             ItemStack placeholder = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) ((int) 15));
             ItemMeta placeholderMeta = placeholder.getItemMeta();
@@ -110,5 +116,9 @@ public class TagsInventory {
                 i++;
             }
         p.openInventory(tag_inv);
+    }
+
+    public void executeMYSQL(String tagName, UUID p) {
+        display.setCurrentTag(tagName, p);
     }
 }
