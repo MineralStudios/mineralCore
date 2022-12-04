@@ -37,5 +37,7 @@ public class ArrayStorage {
     // mute_logs array
     public static ArrayList<JSONObject> mute_logs = new ArrayList<>();
 
+    // tags array
+    public static HashMap<UUID, Integer> tags_inv_array = new HashMap<>();
 
 }
