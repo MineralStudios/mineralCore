@@ -122,6 +122,7 @@ public class JeezySQL  {
                     " tagDesign VARCHAR(255), " +
                     " tagPriority INT(3), " +
                     " playerName longtext, " +
+                    " currentTag longtext, " +
                     " PRIMARY KEY ( tagName ))";
 
             stm.executeUpdate(jeezyCore_table);
