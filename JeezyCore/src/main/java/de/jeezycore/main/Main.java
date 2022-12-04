@@ -20,9 +20,7 @@ import de.jeezycore.commands.spawn.SetSpawn;
 import de.jeezycore.commands.spawn.Spawn;
 import de.jeezycore.commands.staff.StaffRankDisable;
 import de.jeezycore.commands.staff.StaffRankEnable;
-import de.jeezycore.commands.tags.CreateTag;
-import de.jeezycore.commands.tags.GrantTag;
-import de.jeezycore.commands.tags.UnGrantTag;
+import de.jeezycore.commands.tags.*;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.discord.JeezyBot;
@@ -70,6 +68,8 @@ public class Main extends JavaPlugin {
         this.getCommand("create-tag").setExecutor(new CreateTag());
         this.getCommand("grant-tag").setExecutor(new GrantTag());
         this.getCommand("ungrant-tag").setExecutor(new UnGrantTag());
+        this.getCommand("delete-tag").setExecutor(new DeleteTag());
+        this.getCommand("tags").setExecutor(new Tags());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);

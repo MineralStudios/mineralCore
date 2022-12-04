@@ -96,4 +96,10 @@ commands:
   ungrant-tag:
     usage: /ungrant-tag <tagName><playerName>
     description: Removes tag from player.
+  delete-tag:
+    usage: /delete-tag <tagName>
+    description: Deletes tag from system.
+  tags:
+    usage: /tags
+    description: Opens tags inventory.
 
