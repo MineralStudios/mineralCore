@@ -66,7 +66,7 @@ public class ChatEvent implements Listener {
                 String chat_format_rep = cf.getString("chat_format").replace("[rank]", "§7§l["+show_color+""+display.rank+"§7§l]§f").replace("&", "§").replace("[player]", "§f"+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat.replace("&", "§"));
                 e.setFormat(chat_format_rep.replace("%", "%%"));
             }
-
+        tag_in_chat = null;
 
         try {
             MemorySection mc = (MemorySection) JeezyConfig.config_defaults.get("chat");
