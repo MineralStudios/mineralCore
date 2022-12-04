@@ -42,4 +42,6 @@ public class ArrayStorage {
 
     public static ArrayList<String> tags_in_ownership_array = new ArrayList<>();
 
+    public static ArrayList<String> set_current_tag_array = new ArrayList<>();
+
 }
