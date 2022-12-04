@@ -40,4 +40,6 @@ public class ArrayStorage {
     // tags array
     public static HashMap<UUID, Integer> tags_inv_array = new HashMap<>();
 
+    public static ArrayList<String> tags_in_ownership_array = new ArrayList<>();
+
 }
