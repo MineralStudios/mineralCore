@@ -43,6 +43,13 @@ public class TagsInventory {
 
                 tags_menu(Bukkit.getPlayer(UUID.fromString(String.valueOf(e.getWhoClicked().getUniqueId()))));
             }
+
+            if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§cReset tag")) {
+                display.resetTag(e.getCurrentItem().getItemMeta().getLore().get(1).replace("§9§l", ""), e.getWhoClicked().getName(), (Player) e.getWhoClicked());
+                e.getWhoClicked().sendMessage("§7You §2successfully §creset §7your tag.");
+                e.getWhoClicked().closeInventory();
+            }
+
             e.setCancelled(true);
         }
         }
@@ -53,6 +60,7 @@ public class TagsInventory {
             display.getData(tags_inv_array.get(p.getPlayer().getUniqueId()) * 20 / 2 + 1);
         }
         tags_in_ownership_array.clear();
+        display.check(p);
         display.getFullDataSize();
         display.getOwnershipData(p);
         tag_inv = Bukkit.createInventory(null, 45,"§8§lTags "+"§7§l(§f§l"+tags_inv_array.get(p.getPlayer().getUniqueId())+" §7§l/§9§l "+display.tagDataFullSize.size() % 20+"§7§l)");
@@ -79,6 +87,22 @@ public class TagsInventory {
                 pagesMeta.setDisplayName("§9§lNext Site §7§l(§f§l"+tags_inv_array.get(p.getPlayer().getUniqueId())+" §7§l/§9§l "+display.tagDataFullSize.size() % 20+"§7§l)");
                 pages.setItemMeta(pagesMeta);
                 tag_inv.setItem(8, pages);
+            }
+
+            if (TagsSQL.tag_exist_name != null) {
+                ItemStack removeTagViaGui = new ItemStack(Material.TORCH, 1);
+                ItemMeta removeTagViaGuiMeta = removeTagViaGui.getItemMeta();
+                ArrayList<String> reset_tag_desc = new ArrayList<>();
+                reset_tag_desc.add(0, "§8§m-----------------------------------");
+                reset_tag_desc.add(1, "§9§l"+TagsSQL.tag_exist_name);
+                reset_tag_desc.add(2, "§7Current tag format: §9§l" + TagsSQL.tag_exist_format.replace("&", "§")+ "§7§l.");
+                reset_tag_desc.add(3, "§8§m-----------------------------------");
+                reset_tag_desc.add(4, "§eClick to reset your tag§7.");
+                removeTagViaGuiMeta.setDisplayName("§cReset tag");
+                removeTagViaGuiMeta.setLore(reset_tag_desc);
+                removeTagViaGui.setItemMeta(removeTagViaGuiMeta);
+                tag_inv.setItem(4, removeTagViaGui);
+                TagsSQL.tag_exist_name = null;
             }
 
         }

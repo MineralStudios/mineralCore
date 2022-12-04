@@ -32,6 +32,9 @@ public class TagsSQL {
 
     public static String tag_in_chat;
 
+    public static String tag_exist_format;
+    public static String tag_exist_name;
+
     public static String [] grant_new_tag;
 
     public static String [] already_set_tag;
@@ -87,6 +90,7 @@ public class TagsSQL {
 
                 tagDataFullSize.put(tagName, tagDesign);
             }
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -108,6 +112,7 @@ public class TagsSQL {
                     System.out.println(tags_in_ownership_array);
                 }
             }
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -209,6 +214,7 @@ public class TagsSQL {
 
                 tagData.put(tagName, tagDesign);
             }
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -332,6 +338,7 @@ public class TagsSQL {
             String sql = "DELETE FROM tags WHERE tagName = '"+tag+"'";
             stm.executeUpdate(sql);
             p.sendMessage("§2Successfully §7deleted the §9"+tag+" §7tag.");
+            con.close();
         } catch (SQLException e) {
             p.sendMessage("§7This tag doesn't §cexist§7.");
             e.printStackTrace();
@@ -349,6 +356,81 @@ public class TagsSQL {
             while (rs.next()) {
                 tag_in_chat = rs.getString(2);
             }
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void check(Player p) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            Statement stm = con.createStatement();
+            String sql = "SELECT * FROM tags WHERE currentTag LIKE '%"+p.getUniqueId()+"%'";
+            ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                tag_exist_name = rs.getString(1);
+                tag_exist_format = rs.getString(2);
+            }
+
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void resetTag(String tagName, String playerName, Player p) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            UUIDChecker uc = new UUIDChecker();
+            uc.check(playerName);
+
+            Statement stm = con.createStatement();
+            String sql = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
+            ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                grant = rs.getString(1);
+                current_tag = rs.getString(5);
+            }
+
+            if (grant == null) {
+                p.sendMessage("§7This tag doesn't §4exit§7.");
+                return;
+            }
+
+            if (current_tag != null) {
+
+                grant_new_tag = current_tag.replace("]", "").replace("[", "").split(", ");
+
+                player_name_tags_array.addAll(Arrays.asList(grant_new_tag));
+            }
+
+            if (!player_name_tags_array.contains(UUIDChecker.uuid)) {
+                p.sendMessage("§7This player doesn't §4own §7that tag.");
+                return;
+            } else {
+                player_name_tags_array.remove(UUIDChecker.uuid);
+            }
+
+            String sql2;
+            if (player_name_tags_array.size() == 0) {
+                sql2 = "UPDATE tags " +
+                        "SET currentTag = NULL" +
+                        " WHERE tagName = '"+tagName+"'";
+            } else {
+                sql2 = "UPDATE tags " +
+                        "SET currentTag = '"+player_name_tags_array +
+                        "' WHERE tagName = '"+tagName+"'";
+            }
+
+            stm.executeUpdate(sql2);
+            player_name_tags_array.clear();
+
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
