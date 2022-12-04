@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 
+import static de.jeezycore.utils.ArrayStorage.tags_in_ownership_array;
+
 public class TagsSQL {
 
     public String url;
@@ -19,6 +21,7 @@ public class TagsSQL {
     String grant;
 
     String tagName;
+    public static String ownerTagName;
     String tagDesign;
 
     String tag_players;
@@ -75,6 +78,27 @@ public class TagsSQL {
                 tagDesign = rs.getString(2);
 
                 tagDataFullSize.put(tagName, tagDesign);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getOwnershipData(Player p) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            Statement stm = con.createStatement();
+            String sql = "SELECT * FROM tags WHERE playerName LIKE '%"+p.getPlayer().getUniqueId()+"%'";
+            ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                ownerTagName = rs.getString(1);
+                if (ownerTagName != null) {
+                    String[] get_owned_tags = ownerTagName.split(", ");
+                    tags_in_ownership_array.addAll(Arrays.asList(get_owned_tags));
+                    System.out.println(tags_in_ownership_array);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

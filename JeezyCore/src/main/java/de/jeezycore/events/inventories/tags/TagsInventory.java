@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static de.jeezycore.utils.ArrayStorage.tags_in_ownership_array;
 import static de.jeezycore.utils.ArrayStorage.tags_inv_array;
 
 public class TagsInventory {
@@ -45,7 +46,9 @@ public class TagsInventory {
         } else {
             display.getData(tags_inv_array.get(p.getPlayer().getUniqueId()) * 20 / 2 + 1);
         }
+        tags_in_ownership_array.clear();
         display.getFullDataSize();
+        display.getOwnershipData(p);
         tag_inv = Bukkit.createInventory(null, 45,"§8Tags "+"§7§l(§f§l"+tags_inv_array.get(p.getPlayer().getUniqueId())+" §7§l/§9§l "+display.tagDataFullSize.size() % 20+"§7§l)");
         for (int b = 0; b < tag_inv.getSize(); b++) {
             ItemStack placeholder = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) ((int) 15));
@@ -84,19 +87,21 @@ public class TagsInventory {
                 desc.add(0, "§8§m-----------------------------------");
                 desc.add(1, "§9Format: " + tagFormat.replaceAll("&", "§"));
                 desc.add(2, "§8§m-----------------------------------");
-
+                desc.add(3, "§4§l You don't own this tag yet§7§l.");
                 if (i == 7 || i == 14)  {
                     addUp +=2;
                 } else if (i >= 21) {
                     break;
                 }
-
-                if (entry.getKey().equalsIgnoreCase("Sad")) {
-                    desc.add(3, "§a§l You own this tag§7§l.");
-                } else {
-                    desc.add(3, "§4§l You don't own this tag yet§7§l.");
+                if (tags_in_ownership_array.size() != 0) {
+                    for (int x = 0; x < tags_in_ownership_array.size(); x++) {
+                        if (entry.getKey().equalsIgnoreCase(tags_in_ownership_array.get(x))) {
+                            desc.remove(3);
+                            desc.add(3, "§a§l You own this tag§7§l.");
+                            break;
+                        }
+                    }
                 }
-
                tagMeta.setDisplayName(tagName);
                tagMeta.setLore(desc);
                tag.setItemMeta(tagMeta);
