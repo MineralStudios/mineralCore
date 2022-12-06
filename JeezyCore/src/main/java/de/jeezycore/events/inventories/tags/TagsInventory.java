@@ -24,11 +24,11 @@ public class TagsInventory {
 
     public void run(org.bukkit.event.inventory.InventoryClickEvent e) {
         if (e.getInventory().getTitle().contains("§8§lTags")) {
-            if (e.getCurrentItem().getData().toString().equalsIgnoreCase("NAME_TAG(0)") && e.getCurrentItem().getItemMeta().getLore().get(3).equalsIgnoreCase("§a§l You own this tag§7§l.")) {
+            if (e.getCurrentItem().getData().toString().equalsIgnoreCase("NAME_TAG(0)") && e.getCurrentItem().getItemMeta().getLore().get(3).equalsIgnoreCase("§a§lYou own this tag§7§l.")) {
                 e.getWhoClicked().sendMessage("§7You §2§lsuccessfully §7gave yourself the §9§l"+e.getCurrentItem().getItemMeta().getDisplayName()+ " §7tag§7.");
                 e.getWhoClicked().closeInventory();
                 executeMYSQL(e.getCurrentItem().getItemMeta().getDisplayName(), e.getWhoClicked().getUniqueId());
-            } else if (e.getCurrentItem().getData().toString().equalsIgnoreCase("NAME_TAG(0)") && e.getCurrentItem().getItemMeta().getLore().get(3).equalsIgnoreCase("§4§l You don't own this tag yet§7§l.")) {
+            } else if (e.getCurrentItem().getData().toString().equalsIgnoreCase("NAME_TAG(0)") && e.getCurrentItem().getItemMeta().getLore().get(3).equalsIgnoreCase("§4§lYou don't own this tag yet§7§l.")) {
                 e.getWhoClicked().sendMessage("§4§lYou don't own this tag.");
             }
 
@@ -117,7 +117,7 @@ public class TagsInventory {
                 desc.add(0, "§8§m-----------------------------------");
                 desc.add(1, "§9Format: " + tagFormat.replaceAll("&", "§"));
                 desc.add(2, "§8§m-----------------------------------");
-                desc.add(3, "§4§l You don't own this tag yet§7§l.");
+                desc.add(3, "§4§lYou don't own this tag yet§7§l.");
                 if (i == 7 || i == 14)  {
                     addUp +=2;
                 } else if (i >= 21) {
@@ -127,7 +127,7 @@ public class TagsInventory {
                     for (int x = 0; x < tags_in_ownership_array.size(); x++) {
                         if (entry.getKey().equalsIgnoreCase(tags_in_ownership_array.get(x))) {
                             desc.remove(3);
-                            desc.add(3, "§a§l You own this tag§7§l.");
+                            desc.add(3, "§a§lYou own this tag§7§l.");
                             break;
                         }
                     }
