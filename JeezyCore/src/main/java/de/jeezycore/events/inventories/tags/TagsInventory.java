@@ -57,13 +57,15 @@ public class TagsInventory {
         if (tags_inv_array.get(p.getPlayer().getUniqueId()) == 1) {
             display.getData(0);
         } else {
-            display.getData(tags_inv_array.get(p.getPlayer().getUniqueId()) * 20 / 2 + 1);
+            display.getData(tags_inv_array.get(p.getPlayer().getUniqueId()) * 21 - 21);
         }
         tags_in_ownership_array.clear();
         display.check(p);
         display.getFullDataSize();
         display.getOwnershipData(p);
-        tag_inv = Bukkit.createInventory(null, 45,"§8§lTags "+"§7(§f§l"+tags_inv_array.get(p.getPlayer().getUniqueId())+" §7§l/§9§l "+display.tagDataFullSize.size() % 20+"§7)");
+        int pageEnd = (int) Math.ceil((double)display.tagDataFullSize.size() / 21);
+
+        tag_inv = Bukkit.createInventory(null, 45,"§8§lTags "+"§7(§f§l"+tags_inv_array.get(p.getPlayer().getUniqueId())+" §7§l/§9§l "+pageEnd+"§7)");
         for (int b = 0; b < tag_inv.getSize(); b++) {
             ItemStack placeholder = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) ((int) 15));
             ItemMeta placeholderMeta = placeholder.getItemMeta();
@@ -77,14 +79,14 @@ public class TagsInventory {
             if (tags_inv_array.get(p.getPlayer().getUniqueId()) >= 2) {
                 ItemStack pagesBack = new ItemStack(Material.EMERALD, 1);
                 ItemMeta pagesBackMeta = pagesBack.getItemMeta();
-                pagesBackMeta.setDisplayName("§c§lPrevious Site §7§l(§f§l"+tags_inv_array.get(p.getPlayer().getUniqueId())+" §7§l/§9§l "+display.tagDataFullSize.size() % 20+"§7§l)");
+                pagesBackMeta.setDisplayName("§c§lPrevious Site §7§l(§f§l"+tags_inv_array.get(p.getPlayer().getUniqueId())+" §7§l/§9§l "+pageEnd+"§7§l)");
                 pagesBack.setItemMeta(pagesBackMeta);
                 tag_inv.setItem(0, pagesBack);
             }
-            if (tags_inv_array.get(p.getPlayer().getUniqueId()) != display.tagDataFullSize.size() % 20) {
+            if (tags_inv_array.get(p.getPlayer().getUniqueId()) != pageEnd) {
                 ItemStack pages = new ItemStack(Material.DIAMOND, 1);
                 ItemMeta pagesMeta = pages.getItemMeta();
-                pagesMeta.setDisplayName("§9§lNext Site §7§l(§f§l"+tags_inv_array.get(p.getPlayer().getUniqueId())+" §7§l/§9§l "+display.tagDataFullSize.size() % 20+"§7§l)");
+                pagesMeta.setDisplayName("§9§lNext Site §7§l(§f§l"+tags_inv_array.get(p.getPlayer().getUniqueId())+" §7§l/§9§l "+pageEnd+"§7§l)");
                 pages.setItemMeta(pagesMeta);
                 tag_inv.setItem(8, pages);
             }
