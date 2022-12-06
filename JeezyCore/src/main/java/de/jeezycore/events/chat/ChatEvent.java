@@ -49,6 +49,8 @@ public class ChatEvent implements Listener {
 
             if (tag_in_chat == null) {
                 tag_in_chat = "";
+            } else {
+                tag_in_chat = " "+tag_in_chat;
             }
             if (display.rank == null) {
                 display.rank = "";
@@ -56,14 +58,14 @@ public class ChatEvent implements Listener {
 
                 rmc.realtimeMcChat( e.getPlayer().getDisplayName()+": "+e.getMessage());
                 MemorySection cf = (MemorySection) JeezyConfig.config_defaults.get("chat");
-                String chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("&", "§").replace("[player]", "§2"+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat.replace("&", "§"));
+                String chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("&", "§").replace("[player]", "§2"+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat).replace("&", "§");
                 e.setFormat(chat_format_rep.replace("%", "%%").trim());
             } else {
                 String show_color = ColorTranslator.colorTranslator.get(display.rankColor);
                 System.out.println(show_color);
                 rmc.realtimeMcChat("["+display.rank+"]"+" "+e.getPlayer().getDisplayName()+": "+e.getMessage());
                 MemorySection cf = (MemorySection) JeezyConfig.config_defaults.get("chat");
-                String chat_format_rep = cf.getString("chat_format").replace("[rank]", "§7§l["+show_color+""+display.rank+"§7§l]§f").replace("&", "§").replace("[player]", "§f"+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat.replace("&", "§"));
+                String chat_format_rep = cf.getString("chat_format").replace("[rank]", "§7["+show_color+""+display.rank+"§7§l]§f").replace("&", "§").replace("[player]", "§f"+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat.replace("&", "§"));
                 e.setFormat(chat_format_rep.replace("%", "%%"));
             }
         tag_in_chat = null;

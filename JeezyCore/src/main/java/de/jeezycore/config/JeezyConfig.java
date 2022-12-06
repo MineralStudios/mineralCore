@@ -40,7 +40,7 @@ public class JeezyConfig {
             String path_chat_2 = "chat.muted";
             String path_chat_3 = "chat.ignored_roles_on_chat-mute";
 
-            config_defaults.addDefault(path_chat_1, "[rank] &2[player] [tag]&f : [msg]");
+            config_defaults.addDefault(path_chat_1, "[rank] &2[player][tag]&f: [msg]");
             config_defaults.addDefault(path_chat_2, false);
 
             List<Object> list = new ArrayList<>();
