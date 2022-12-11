@@ -49,6 +49,14 @@
             <version>2.19.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.nametagedit</groupId>
+            <artifactId>Nametag</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/libs/NametagEdit.jar</systemPath>
+        </dependency>
+
     </dependencies>
 
     <build>
