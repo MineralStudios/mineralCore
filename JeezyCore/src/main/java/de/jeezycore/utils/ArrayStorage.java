@@ -1,5 +1,6 @@
 package de.jeezycore.utils;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.json.simple.JSONObject;
 
@@ -43,5 +44,7 @@ public class ArrayStorage {
     public static ArrayList<String> tags_in_ownership_array = new ArrayList<>();
 
     public static ArrayList<String> set_current_tag_array = new ArrayList<>();
+
+    public static HashMap<Player, Integer> tab_name_list_array = new HashMap<>();
 
 }
