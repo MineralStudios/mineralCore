@@ -1,15 +1,19 @@
 package de.jeezycore.events;
 
 
+import com.nametagedit.plugin.NametagEdit;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.BanSQL;
 import de.jeezycore.db.JeezySQL;
+import de.jeezycore.utils.NameTag;
 import de.jeezycore.utils.PermissionHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -21,8 +25,11 @@ import java.util.*;
 
 public class JoinEvent implements Listener {
 
+    NameTag nameTag = new NameTag();
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
+        nameTag.giveTagOnJoin(e.getPlayer());
         e.setJoinMessage("");
         BanSQL check_if_banned = new BanSQL();
         check_if_banned.banData(e.getPlayer().getUniqueId());
@@ -60,5 +67,7 @@ public class JoinEvent implements Listener {
     }
 
     }
+
+
 
 }
