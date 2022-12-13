@@ -67,7 +67,7 @@ public class TagsInventory {
 
         tag_inv = Bukkit.createInventory(null, 45,"§8§lTags "+"§7(§f§l"+tags_inv_array.get(p.getPlayer().getUniqueId())+" §7§l/§9§l "+pageEnd+"§7)");
         for (int b = 0; b < tag_inv.getSize(); b++) {
-            ItemStack placeholder = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) ((int) 15));
+            ItemStack placeholder = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) ((int) 11));
             ItemMeta placeholderMeta = placeholder.getItemMeta();
             placeholderMeta.setDisplayName("§9§lChoose your tag!");
             placeholder.setItemMeta(placeholderMeta);
