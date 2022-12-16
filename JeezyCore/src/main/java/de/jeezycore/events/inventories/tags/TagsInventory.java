@@ -65,6 +65,7 @@ public class TagsInventory {
         display.check(p);
         display.getFullDataSize();
         display.getOwnershipData(p);
+        rewardSQL.checkIfClaimed(p);
         int pageEnd = (int) Math.ceil((double)display.tagDataFullSize.size() / 21);
 
         tag_inv = Bukkit.createInventory(null, 45,"§8§lTags "+"§7(§f§l"+tags_inv_array.get(p.getPlayer().getUniqueId())+" §7§l/§9§l "+pageEnd+"§7)");
@@ -127,10 +128,16 @@ public class TagsInventory {
                 } else if (i >= 21) {
                     break;
                 }
+
+
+                if (entry.getKey().equalsIgnoreCase(RewardSQL.rewardPrice)) {
+                    desc.remove(3);
+                    desc.add(3, "§a§lYou own this tag§7§l.");
+                }
+
                 if (tags_in_ownership_array.size() != 0) {
-                    rewardSQL.checkIfClaimed(p);
                     for (int x = 0; x < tags_in_ownership_array.size(); x++) {
-                        if (entry.getKey().equalsIgnoreCase(tags_in_ownership_array.get(x)) || entry.getKey().equalsIgnoreCase(RewardSQL.rewardPrice)) {
+                        if (entry.getKey().equalsIgnoreCase(tags_in_ownership_array.get(x))) {
                             desc.remove(3);
                             desc.add(3, "§a§lYou own this tag§7§l.");
                             break;
