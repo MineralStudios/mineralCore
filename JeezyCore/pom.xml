@@ -57,6 +57,14 @@
             <systemPath>${project.basedir}/src/main/resources/libs/NametagEdit.jar</systemPath>
         </dependency>
 
+        <dependency>
+            <groupId>de.mineral.rewards</groupId>
+            <artifactId>MineralRewards</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/libs/MineralRewards.jar</systemPath>
+        </dependency>
+
     </dependencies>
 
     <build>
