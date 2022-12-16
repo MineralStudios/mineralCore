@@ -125,7 +125,7 @@ public class JeezySQL  {
                     " currentTag longtext, " +
                     " PRIMARY KEY ( tagName ))";
 
-            String reward_table = "CREATE TABLE IF NOT EXISTS reward " +
+            String reward_table = "CREATE TABLE IF NOT EXISTS mineralrewards.reward " +
                     " (UUID VARCHAR(255), " +
                     " playerName VARCHAR(255), " +
                     " claimed boolean, " +
