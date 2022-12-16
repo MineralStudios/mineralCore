@@ -1,6 +1,7 @@
 package de.jeezycore.events.inventories.tags;
 
 import de.jeezycore.db.TagsSQL;
+import de.mineral.rewards.db.RewardSQL;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,6 +19,7 @@ import static de.jeezycore.utils.ArrayStorage.tags_inv_array;
 
 public class TagsInventory {
     Inventory tag_inv;
+    RewardSQL rewardSQL = new RewardSQL();
     private int addUp = 10;
 
     private final TagsSQL display = new TagsSQL();
@@ -126,8 +128,9 @@ public class TagsInventory {
                     break;
                 }
                 if (tags_in_ownership_array.size() != 0) {
+                    rewardSQL.checkIfClaimed(p);
                     for (int x = 0; x < tags_in_ownership_array.size(); x++) {
-                        if (entry.getKey().equalsIgnoreCase(tags_in_ownership_array.get(x))) {
+                        if (entry.getKey().equalsIgnoreCase(tags_in_ownership_array.get(x)) || entry.getKey().equalsIgnoreCase(RewardSQL.rewardPrice)) {
                             desc.remove(3);
                             desc.add(3, "§a§lYou own this tag§7§l.");
                             break;
@@ -142,6 +145,7 @@ public class TagsInventory {
                 i++;
             }
         p.openInventory(tag_inv);
+        RewardSQL.rewardPrice = null;
     }
 
     public void executeMYSQL(String tagName, UUID p) {
