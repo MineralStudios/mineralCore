@@ -125,9 +125,18 @@ public class JeezySQL  {
                     " currentTag longtext, " +
                     " PRIMARY KEY ( tagName ))";
 
+            String reward_table = "CREATE TABLE IF NOT EXISTS reward " +
+                    " (UUID VARCHAR(255), " +
+                    " playerName VARCHAR(255), " +
+                    " claimed boolean, " +
+                    " time longtext, " +
+                    " price VARCHAR(255), " +
+                    " PRIMARY KEY ( UUID ))";
+
             stm.executeUpdate(jeezyCore_table);
             stm.executeUpdate(punishments_table);
             stm.executeUpdate(tags_table);
+            stm.executeUpdate(reward_table);
 
             stm.close();
             if (con.isValid(20)) {
