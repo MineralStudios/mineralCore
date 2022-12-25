@@ -3,6 +3,7 @@ package de.jeezycore.main;
 import de.jeezycore.colors.Color;
 import de.jeezycore.commands.basic.*;
 import de.jeezycore.commands.chat.ChatDisabler;
+import de.jeezycore.commands.minerals.Minerals;
 import de.jeezycore.commands.permissions.PermissionAdd;
 import de.jeezycore.commands.permissions.PermissionRemove;
 import de.jeezycore.commands.punishments.ban.Ban;
@@ -16,6 +17,7 @@ import de.jeezycore.commands.punishments.wipe.WipeBans;
 import de.jeezycore.commands.punishments.wipe.WipeMutes;
 import de.jeezycore.commands.ranks.CreateRank;
 import de.jeezycore.commands.ranks.GrantRank;
+import de.jeezycore.commands.rewards.DailyReward;
 import de.jeezycore.commands.spawn.SetSpawn;
 import de.jeezycore.commands.spawn.Spawn;
 import de.jeezycore.commands.staff.StaffRankDisable;
@@ -23,6 +25,8 @@ import de.jeezycore.commands.staff.StaffRankEnable;
 import de.jeezycore.commands.tags.*;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.MineralsSQL;
+import de.jeezycore.db.RewardSQL;
 import de.jeezycore.discord.JeezyBot;
 import de.jeezycore.events.*;
 import de.jeezycore.events.chat.ChatEvent;
@@ -70,6 +74,9 @@ public class Main extends JavaPlugin {
         this.getCommand("ungrant-tag").setExecutor(new UnGrantTag());
         this.getCommand("delete-tag").setExecutor(new DeleteTag());
         this.getCommand("tags").setExecutor(new Tags());
+        this.getCommand("minerals").setExecutor(new Minerals());
+        this.getCommand("coins").setExecutor(new Minerals());
+        this.getCommand("daily-reward").setExecutor(new DailyReward());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
@@ -84,6 +91,13 @@ public class Main extends JavaPlugin {
         // Launching discord bot
        JeezyBot bot = new JeezyBot();
        bot.start();
+
+       MineralsSQL mineralsSQL = new MineralsSQL();
+       mineralsSQL.start();
+
+        // Get rewards ready at server start
+        RewardSQL rewardSQL = new RewardSQL();
+        rewardSQL.tagData();
 
     }
 
