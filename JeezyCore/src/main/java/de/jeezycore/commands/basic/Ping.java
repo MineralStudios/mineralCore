@@ -33,7 +33,7 @@ public class Ping implements CommandExecutor {
                      return true;
                  }
                 try {
-                    Object entityPlayer = Bukkit.getPlayer(args[0]).getClass().getMethod("getHandle").invoke(p);
+                    Object entityPlayer = Bukkit.getPlayer(args[0]).getClass().getMethod("getHandle").invoke(Bukkit.getPlayer(args[0]));
                     int ping = (int) entityPlayer.getClass().getField("ping").get(entityPlayer);
 
                     p.sendMessage(args[0] + "´s"+" §b§lping: §7§l"+ ping+" §b§lms");
