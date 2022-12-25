@@ -19,9 +19,11 @@ public class JeezySQL  {
     public String password;
 
     public String rank;
-    public int rankColor;
+    public int woolColor;
 
-    public int rankColor_second;
+    public String rankColor;
+
+    public String rankColor_second;
     public String grantPlayer;
 
     public String alreadyGranted;
@@ -37,6 +39,8 @@ public class JeezySQL  {
     public static HashSet<String> rankPerms = new HashSet<String>();
 
     public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integer>();
+
+    public static LinkedList<String> rankColorData = new LinkedList<>();
 
     public String getRankPerms;
 
@@ -98,7 +102,8 @@ public class JeezySQL  {
             Statement stm = con.createStatement();
             String jeezyCore_table = "CREATE TABLE IF NOT EXISTS jeezycore " +
                     " (rankName VARCHAR(255), " +
-                    " rankColor INT(2), " +
+                    " woolColor INT(2), " +
+                    " rankColor VARCHAR(10), " +
                     " rankPriority INT(3), " +
                     " playerName longtext, " +
                     " rankPerms longtext, " +
@@ -125,7 +130,7 @@ public class JeezySQL  {
                     " currentTag longtext, " +
                     " PRIMARY KEY ( tagName ))";
 
-            String reward_table = "CREATE TABLE IF NOT EXISTS mineralrewards.reward " +
+            String reward_table = "CREATE TABLE IF NOT EXISTS rewards " +
                     " (UUID VARCHAR(255), " +
                     " playerName VARCHAR(255), " +
                     " claimed boolean, " +
@@ -133,10 +138,16 @@ public class JeezySQL  {
                     " price VARCHAR(255), " +
                     " PRIMARY KEY ( UUID ))";
 
+            String minerals_table = "CREATE TABLE IF NOT EXISTS minerals " +
+                    " (ServerName VARCHAR(255), " +
+                    " minerals_data longtext, " +
+                    " PRIMARY KEY ( ServerName ))";
+
             stm.executeUpdate(jeezyCore_table);
             stm.executeUpdate(punishments_table);
             stm.executeUpdate(tags_table);
             stm.executeUpdate(reward_table);
+            stm.executeUpdate(minerals_table);
 
             stm.close();
             if (con.isValid(20)) {
@@ -150,7 +161,7 @@ public class JeezySQL  {
         }
     }
 
-    public void pushData(String sql, String rankName, String rankColor, String rankPriority)  {
+    public void pushData(String sql, String rankName, String woolColor, String rankColor, String rankPriority)  {
         this.createConnection();
         try {
             System.out.println(sql);
@@ -158,14 +169,15 @@ public class JeezySQL  {
 
             PreparedStatement pstmt = con.prepareStatement(sql);
             pstmt.setString(1, rankName);
-            pstmt.setString(2, rankColor);
-            pstmt.setString(3, rankPriority);
+            pstmt.setString(2, woolColor);
+            pstmt.setString(3, rankColor);
+            pstmt.setString(4, rankPriority);
 
             pstmt.executeUpdate();
             createRankMsg = "§bSuccessfully§f created §l{colorID}{rank}§f rank.";
             con.close();
         } catch (SQLException e) {
-            createRankMsg = "Rank §l{colorID}{rank}§4 already exist.";
+            createRankMsg = "§7Rank §l{colorID}{rank}§4 §7already §4exist§7.";
             System.out.println(e);
         }
     }
@@ -179,7 +191,7 @@ public class JeezySQL  {
             String sql_already_g = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ ArrayStorage.grant_array.get(getWhoExecuted)+"%'";
             ResultSet rs = stm.executeQuery(sql_already_g);
             while (rs.next()) {
-                alreadyGranted = rs.getString(4);
+                alreadyGranted = rs.getString(5);
             }
             if (alreadyGranted != null) {
                 if (alreadyGranted.contains(UUIDChecker.uuid)) {
@@ -263,8 +275,10 @@ public class JeezySQL  {
             ResultSet rs = stm.executeQuery(sql);
             while(rs.next()){
                 rank = rs.getString(1);
-                rankColor = rs.getInt(2);
-                rankData.put(rank, rankColor);
+                woolColor = rs.getInt(2);
+                rankColor = rs.getString(3);
+                rankData.put(rank, woolColor);
+                rankColorData.add(rankColor);
             }
             con.close();
         } catch (SQLException e) {
@@ -281,8 +295,13 @@ public class JeezySQL  {
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
                 rank = rs.getString(1);
-                rankColor = rs.getInt(2);
-                rankColor_second = rs.getInt(2);
+                woolColor = rs.getInt(2);
+                rankColor_second = rs.getString(3);
+                rankColor = rs.getString(3);
+            }
+            if (rankColor == null || rankColor_second == null) {
+                rankColor_second = "§2";
+                rankColor = "§2";
             }
         con.close();
         }catch (SQLException e) {
@@ -303,7 +322,7 @@ public class JeezySQL  {
             System.out.println(select_color);
             System.out.println(rankColorPerms);
             if (rankColorPerms != null) {
-                show_color = ColorTranslator.colorTranslator.get(Integer.parseInt(rankColorPerms));
+                show_color = rankColorPerms.replace("&", "§");
             }
 
             con.close();
@@ -323,8 +342,8 @@ public class JeezySQL  {
             while (rs.next()) {
                 permPlayerRankName = rs.getString(1);
                 permPlayerRankColor = rs.getString(2);
-                permPlayerName = rs.getString(4);
-                permRankPerms = rs.getString(5);
+                permPlayerName = rs.getString(5);
+                permRankPerms = rs.getString(6);
             }
             con.close();
         } catch (SQLException e) {
