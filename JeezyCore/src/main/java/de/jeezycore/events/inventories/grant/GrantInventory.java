@@ -71,7 +71,7 @@ public class GrantInventory {
             int i = 0;
             for (Map.Entry<String, Integer> entry : display.rankData.entrySet()) {
                 ItemStack rank = new ItemStack(Material.WOOL, 1, (short) ((int) entry.getValue()));
-                String show_color = ColorTranslator.colorTranslator.get(entry.getValue());
+                String show_color = JeezySQL.rankColorData.get(i).replace("&", "§");
                 String displayName = entry.getKey();
                 ItemMeta rankMeta = rank.getItemMeta();
                 List<String> desc = new ArrayList<String>();
