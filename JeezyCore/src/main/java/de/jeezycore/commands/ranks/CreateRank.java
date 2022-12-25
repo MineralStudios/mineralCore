@@ -1,6 +1,5 @@
 package de.jeezycore.commands.ranks;
 
-import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.db.JeezySQL;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,18 +13,17 @@ public class CreateRank implements CommandExecutor {
         if (sender instanceof Player) {
             Player p = (Player) sender;
 
-           if (cmd.getName().equalsIgnoreCase("create-rank") && args.length < 3) {
-              p.sendMessage("Usage: /create-rank (name) (color) (priority)");
+           if (cmd.getName().equalsIgnoreCase("create-rank") && args.length < 4) {
+              p.sendMessage("Usage: /create-rank (name) (woolColor) (rankColor) (priority)");
            } else {
                if (p.hasPermission("jeezy.core.rank.create")) {
                    JeezySQL mySQL = new JeezySQL();
                    String input = "INSERT INTO jeezycore " +
-                           "(rankName, rankColor, rankPriority) " +
+                           "(rankName, woolColor, rankColor, rankPriority) " +
                            "VALUES " +
-                           "(?, ?, ?)";
-                   mySQL.pushData(input, args[0], args[1], args[2]);
-                   String show_color = ColorTranslator.colorTranslator.get(Integer.parseInt(args[1]));
-                   p.sendMessage(mySQL.createRankMsg.replace("{rank}", args[0]).replace("{colorID}", show_color));
+                           "(?, ?, ?, ?)";
+                   mySQL.pushData(input, args[0], args[1], args[2], args[3]);
+                   p.sendMessage(mySQL.createRankMsg.replace("{rank}", args[0]).replace("{colorID}", args[2].replace("&", "§")));
                } else {
                    p.sendMessage("No permission.");
                }
