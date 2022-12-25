@@ -2,6 +2,7 @@ package de.jeezycore.utils;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
@@ -46,5 +47,15 @@ public class ArrayStorage {
     public static ArrayList<String> set_current_tag_array = new ArrayList<>();
 
     public static HashMap<Player, Integer> tab_name_list_array = new HashMap<>();
+
+    public static ArrayList<ItemStack> rewardItems = new ArrayList<>();
+
+    public static ArrayList<String> tagItems = new ArrayList<>();
+
+    public static HashMap<Player, Inventory> rewardPerPLayerInventory = new HashMap<>();
+
+    public static HashMap<Player, Integer> rewardPerPlayerTimer = new HashMap<>();
+
+    public static HashMap<String, String> mineralsStorage = new HashMap<String, String>();
 
 }
