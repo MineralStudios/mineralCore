@@ -26,7 +26,7 @@ public class ChatEvent implements Listener {
         String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ e.getPlayer().getUniqueId().toString() +"%'";
         display.displayChatRank(sql);
         System.out.println(display.rank);
-        System.out.println(display.rankColor);
+        System.out.println(display.woolColor);
         System.out.println(e.getPlayer().getUniqueId());
         TagsSQL tagsSQL = new TagsSQL();
         tagsSQL.tagChat(e.getPlayer().getUniqueId());
@@ -61,7 +61,7 @@ public class ChatEvent implements Listener {
                 String chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("&", "§").replace("[player]", "§2"+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat).replace("&", "§");
                 e.setFormat(chat_format_rep.replace("%", "%%").trim());
             } else {
-                String show_color = ColorTranslator.colorTranslator.get(display.rankColor);
+                String show_color = display.rankColor;
                 System.out.println(show_color);
                 rmc.realtimeMcChat("["+display.rank+"]"+" "+e.getPlayer().getDisplayName()+": "+e.getMessage());
                 MemorySection cf = (MemorySection) JeezyConfig.config_defaults.get("chat");
