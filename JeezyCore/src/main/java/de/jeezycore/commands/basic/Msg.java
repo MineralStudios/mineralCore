@@ -44,8 +44,9 @@ public class Msg implements CommandExecutor {
                 String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
                 display.displayChatRank(sql);
 
-                p.sendMessage("§8§l(§4§lmsg§8§l) "+ColorTranslator.colorTranslator.get(display.rankColor)+p.getPlayer().getDisplayName()+"§7: "+input);
-                Bukkit.getPlayer(args[0]).sendMessage("§8§l(§4§lmsg§8§l) "+ColorTranslator.colorTranslator.get(display.rankColor)+p.getPlayer().getDisplayName()+"§7: "+input);
+
+                p.sendMessage("§8§l(§4§lmsg§8§l) "+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§7: "+input);
+                Bukkit.getPlayer(args[0]).sendMessage("§8§l(§4§lmsg§8§l) "+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§7: "+input);
                 reply_array.remove(p.getPlayer().getDisplayName());
                 reply_array.put(args[0], p.getPlayer().getDisplayName());
                 System.out.println(reply_array);
@@ -70,18 +71,14 @@ public class Msg implements CommandExecutor {
                 String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
                 display.displayChatRank(sql);
 
-                Bukkit.getPlayer(result).sendMessage("§8§l(§4§lmsg§8§l) "+ColorTranslator.colorTranslator.get(display.rankColor)+p.getPlayer().getDisplayName()+"§7: "+input);
+                Bukkit.getPlayer(result).sendMessage("§8§l(§4§lmsg§8§l) "+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§7: "+input);
                 reply_array.put(result, p.getPlayer().getDisplayName());
-                p.sendMessage("§8§l(§4§lreplied§8§l) "+ColorTranslator.colorTranslator.get(display.rankColor)+p.getPlayer().getDisplayName()+"§7: "+input);
+                p.sendMessage("§8§l(§4§lreplied§8§l) "+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§7: "+input);
 
             } else if (cmd.getName().equalsIgnoreCase("r") && args.length == 0) {
                 p.sendMessage("Usage /r <message>");
             }
-
-
         }
-
-
         return true;
     }
 }

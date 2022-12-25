@@ -38,7 +38,6 @@ public class Report implements CommandExecutor {
 
                 String show_rank_color_reporter = display.rankColor.replace("&", "§");
 
-                display.rankColor_second = "&2";
 
                 String sql2 = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ UUIDChecker.uuid +"%'";
                 display.displayChatRank(sql2);
