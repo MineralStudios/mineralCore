@@ -5,7 +5,6 @@ import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.events.chat.StaffChat;
 import de.jeezycore.utils.UUIDChecker;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -37,18 +36,21 @@ public class Report implements CommandExecutor {
                 String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
                 display.displayChatRank(sql);
 
-                String show_rank_color_reporter = ColorTranslator.colorTranslator.get(display.rankColor);
+                String show_rank_color_reporter = display.rankColor.replace("&", "§");
 
-                display.rankColor_second = 0;
+                display.rankColor_second = "&2";
 
                 String sql2 = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ UUIDChecker.uuid +"%'";
                 display.displayChatRank(sql2);
 
-                String show_rank_color_reported = ColorTranslator.colorTranslator.get(display.rankColor_second);
+                String show_rank_color_reported = display.rankColor_second.replace("&", "§");
 
                 String report_msg = "§7§l[§4Report§7§l] ("+show_rank_color_reporter+p.getDisplayName()+"§6§l -> §7"+show_rank_color_reported+args[0]+"§7§l) §c§lReason§f§l: §7"+input;
 
                 staffChat.reportChat(p, report_msg);
+
+                p.sendMessage("§7You §a§lsuccessfully §7reported "+show_rank_color_reported+args[0]+"§7.\n" +
+                        "§7§l► §9Thanks §7for §9§lcaring §7about our §9§lcommunity§7. §7§l[§4§l❤§7§l]");
 
             } else {
                 p.sendMessage("Usage: /report <player><message>");
