@@ -1,0 +1,111 @@
+package de.jeezycore.db;
+
+import com.google.common.base.Splitter;
+import de.jeezycore.config.JeezyConfig;
+import de.jeezycore.utils.ArrayStorage;
+import org.bukkit.configuration.MemorySection;
+import org.bukkit.entity.Player;
+import java.sql.*;
+import java.util.Map;
+
+
+public class MineralsSQL {
+
+    public String url;
+    public String user;
+    public String password;
+    public String mineralsData;
+
+    private void createConnection() {
+        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
+
+        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
+        user = (String) mc.get("user");
+        password = (String) mc.get("password");
+    }
+
+    public void start() {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+
+            String sql = "INSERT INTO minerals " +
+                    "(serverName, minerals_data) " +
+                    "VALUES " +
+                    "('mineral', null)";
+
+            stm.executeUpdate(sql);
+            con.close();
+        } catch (SQLException e) {
+        }
+    }
+
+    public void mineralsData() {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String select_sql = "SELECT * FROM minerals WHERE serverName = 'mineral'";
+            ResultSet rs = stm.executeQuery(select_sql);
+            while (rs.next()) {
+                mineralsData = rs.getString(2);
+
+                if (mineralsData != null) {
+                    String replacedMineralsData = mineralsData.replace("{", "").replace("}", "");
+                    Map<String, String> properties = Splitter.on(", ")
+                            .withKeyValueSeparator("=")
+                            .split(replacedMineralsData);
+
+                    System.out.println(properties);
+
+                    ArrayStorage.mineralsStorage.putAll(properties);
+                }
+            }
+            rs.close();
+            stm.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateMineralsData() {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+
+                String sql = "UPDATE minerals " +
+                        "SET minerals_data = '"+ ArrayStorage.mineralsStorage +"'"+
+                        " WHERE serverName = 'mineral'";
+                stm.executeUpdate(sql);
+
+            stm.close();
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void mineralsBalance(Player p) {
+        try {
+            ArrayStorage.mineralsStorage.clear();
+             mineralsData();
+
+             String message;
+
+                if (ArrayStorage.mineralsStorage.get(p.getPlayer().getUniqueId().toString()) != null) {
+                    message = "§9§lYou §7§lhave: §f§l"+ArrayStorage.mineralsStorage.get(p.getPlayer().getUniqueId().toString())+" §9§lminerals§7§l.";
+                } else {
+                    message = "§9§lYou §7§lhave: §f§l0 §9§lminerals§7§l.";
+                }
+             System.out.println(ArrayStorage.mineralsStorage);
+             p.sendMessage(message);
+            mineralsData = null;
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
+
+    }
+}
