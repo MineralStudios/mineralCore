@@ -1,7 +1,7 @@
 package de.jeezycore.events.inventories.tags;
 
+import de.jeezycore.db.RewardSQL;
 import de.jeezycore.db.TagsSQL;
-import de.mineral.rewards.db.RewardSQL;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
