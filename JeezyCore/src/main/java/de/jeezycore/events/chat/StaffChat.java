@@ -32,7 +32,7 @@ public class StaffChat {
                         if (!Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).isOnline()) {
                             break;
                         }
-                        Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).sendMessage("§7§l[§bStaff§7-§bChat§7§l] "+ColorTranslator.colorTranslator.get(display.rankColor)+e.getPlayer().getDisplayName()+"§f: "+new_message);
+                        Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).sendMessage("§7§l[§bStaff§7-§bChat§7§l] "+display.rankColor.replace("&", "§")+e.getPlayer().getDisplayName()+"§f: "+new_message);
                         e.setCancelled(true);
                     }
                     StaffSQL.staffRank = false;
@@ -57,7 +57,7 @@ public class StaffChat {
                 if (!Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).isOnline()) {
                     break;
                 }
-                Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).sendMessage("§7§l[§4Help§7§cop§7§l] "+ColorTranslator.colorTranslator.get(display.rankColor)+p.getPlayer().getDisplayName()+"§f: "+message);
+                Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).sendMessage("§7§l[§4Help§7§cop§7§l] "+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§f: "+message);
             }
             StaffSQL.staffRank = false;
             StaffSQL.staffPlayerNames = null;
