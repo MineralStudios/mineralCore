@@ -26,44 +26,50 @@ public class StaffChat {
                 String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ e.getPlayer().getUniqueId().toString() +"%'";
                 display.displayChatRank(sql);
 
-                try {
+
                     for (int i = 0; i < StaffSQL.staff.size(); i++) {
                         String new_message = e.getMessage().replace("@", "").trim();
+                        try {
                         if (!Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).isOnline()) {
-                            break;
+                            continue;
                         }
-                        Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).sendMessage("§7§l[§bStaff§7-§bChat§7§l] "+display.rankColor.replace("&", "§")+e.getPlayer().getDisplayName()+"§f: "+new_message);
-                        e.setCancelled(true);
+                            Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).sendMessage("§7§l[§bStaff§7-§bChat§7§l] "+display.rankColor.replace("&", "§")+e.getPlayer().getDisplayName()+"§f: "+new_message);
+                            e.setCancelled(true);
+                        } catch (Exception f) {
+                        }
                     }
                     StaffSQL.staffRank = false;
                     StaffSQL.staffPlayerNames = null;
                     StaffSQL.staff.clear();
-                } catch (Exception f) {
-                    f.printStackTrace();
-                }
         }
     }
 
     public void helpopChat(Player p, String message) {
         StaffSQL staffSQL = new StaffSQL();
-        staffSQL.getStaff();
+        staffSQL.checkIfStaff(UUID.fromString(p.getPlayer().getUniqueId().toString()));
 
-        JeezySQL display = new JeezySQL();
-        String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
-        display.displayChatRank(sql);
+        if (StaffSQL.staffRank) {
+            staffSQL.getStaff();
 
-        try {
+            JeezySQL display = new JeezySQL();
+            String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
+            display.displayChatRank(sql);
+
+
             for (int i = 0; i < StaffSQL.staff.size(); i++) {
-                if (!Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).isOnline()) {
-                    break;
+
+                try {
+                    if (!Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).isOnline()) {
+                        continue;
+                    }
+                    Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).sendMessage("§7§l[§4Help§7§cop§7§l] "+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§f: "+message);
+
+                } catch (Exception f) {
                 }
-                Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).sendMessage("§7§l[§4Help§7§cop§7§l] "+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§f: "+message);
             }
             StaffSQL.staffRank = false;
             StaffSQL.staffPlayerNames = null;
             StaffSQL.staff.clear();
-        } catch (Exception f) {
-            f.printStackTrace();
         }
     }
 
@@ -75,19 +81,20 @@ public class StaffChat {
         String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
         display.displayChatRank(sql);
 
-        try {
-            for (int i = 0; i < StaffSQL.staff.size(); i++) {
+
+        for (int i = 0; i < StaffSQL.staff.size(); i++) {
+
+            try {
                 if (!Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).isOnline()) {
-                    break;
+                    continue;
                 }
                 Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).sendMessage(message);
-            }
-            StaffSQL.staffRank = false;
-            StaffSQL.staffPlayerNames = null;
-            StaffSQL.staff.clear();
-        } catch (Exception f) {
-            f.printStackTrace();
-        }
-    }
 
+            } catch (Exception f) {
+            }
+        }
+        StaffSQL.staffRank = false;
+        StaffSQL.staffPlayerNames = null;
+        StaffSQL.staff.clear();
+    }
 }
