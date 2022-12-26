@@ -81,7 +81,6 @@ public class RewardsInventory implements Listener {
                   p.getPlayer().closeInventory();
                   wonItemMessage(p);
                   rewardSQL.rewardClaimed(p, rewardPerPLayerInventory.get(p).getItem(13).getItemMeta().getDisplayName());
-                    mineralsSQL.mineralsData();
                     addMineralsToDB(p);
               }
             }
@@ -106,15 +105,20 @@ public class RewardsInventory implements Listener {
     }
 
     private void addMineralsToDB(Player p) {
+        mineralsSQL.mineralsData();
         String minerals = rewardPerPLayerInventory.get(p).getItem(13).getType().name();
 
         if (minerals.equalsIgnoreCase("INK_SACK")) {
-
-            mineralsStorage.put(p.getPlayer().getUniqueId().toString(), rewardPerPLayerInventory.get(p).getItem(13).getItemMeta().getDisplayName());
+            if(mineralsStorage.containsKey(p.getPlayer().getUniqueId().toString())) {
+                String getCurrentMinerals = mineralsStorage.get(p.getPlayer().getUniqueId().toString());
+                int count = Integer.parseInt(getCurrentMinerals) + Integer.parseInt(rewardPerPLayerInventory.get(p).getItem(13).getItemMeta().getDisplayName());
+                mineralsStorage.put(p.getPlayer().getUniqueId().toString(), String.valueOf(count));
+            } else {
+                mineralsStorage.put(p.getPlayer().getUniqueId().toString(), rewardPerPLayerInventory.get(p).getItem(13).getItemMeta().getDisplayName());
+            }
 
             mineralsSQL.updateMineralsData();
             ArrayStorage.mineralsStorage.clear();
-            System.out.println(minerals);
         }
     }
 
