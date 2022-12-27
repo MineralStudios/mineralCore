@@ -105,6 +105,9 @@ commands:
   minerals:
     usage: /minerals
     description: Shows current minerals balance.
+  addminerals:
+    usage: /addminerals <player> <amount>
+    description: Adds coins to specific player.
   coins:
       usage: /coins
       description: Shows current coin balance.

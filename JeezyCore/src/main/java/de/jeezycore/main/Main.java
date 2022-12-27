@@ -4,6 +4,7 @@ import de.jeezycore.colors.Color;
 import de.jeezycore.commands.basic.*;
 import de.jeezycore.commands.chat.ChatDisabler;
 import de.jeezycore.commands.minerals.Minerals;
+import de.jeezycore.commands.minerals.addMinerals;
 import de.jeezycore.commands.permissions.PermissionAdd;
 import de.jeezycore.commands.permissions.PermissionRemove;
 import de.jeezycore.commands.punishments.ban.Ban;
@@ -75,6 +76,7 @@ public class Main extends JavaPlugin {
         this.getCommand("delete-tag").setExecutor(new DeleteTag());
         this.getCommand("tags").setExecutor(new Tags());
         this.getCommand("minerals").setExecutor(new Minerals());
+        this.getCommand("addminerals").setExecutor(new addMinerals());
         this.getCommand("coins").setExecutor(new Minerals());
         this.getCommand("daily-reward").setExecutor(new DailyReward());
         // Register Listener
