@@ -112,6 +112,29 @@ public class MineralsSQL {
             ArrayStorage.mineralsStorage.clear();
     }
 
+    public void removeMinerals(Player player, String p, int amount) {
+        if (UUIDChecker.uuid == null) {
+            player.sendMessage("§7This player doesn't §4exist§7.");
+            return;
+        }
+        mineralsData();
+        if(mineralsStorage.containsKey(UUID.fromString(p).toString())) {
+            String getCurrentMinerals = mineralsStorage.get(UUID.fromString(p).toString());
+            int count = Integer.parseInt(getCurrentMinerals) - amount;
+            if (count < 0) {
+                count = 0;
+            }
+            mineralsStorage.put(UUID.fromString(p).toString(), String.valueOf(count));
+        } else {
+            mineralsStorage.put(UUID.fromString(p).toString(), String.valueOf(0));
+        }
+
+        player.sendMessage("§7You §2successfully §7removed §9"+amount+" §fminerals §7from §9§l"+ UUIDChecker.uuidName+"§7.");
+
+        updateMineralsData();
+        ArrayStorage.mineralsStorage.clear();
+    }
+
     public void mineralsBalance(Player p) {
         try {
             ArrayStorage.mineralsStorage.clear();
