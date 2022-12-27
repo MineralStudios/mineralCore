@@ -108,6 +108,9 @@ commands:
   addminerals:
     usage: /addminerals <player> <amount>
     description: Adds coins to specific player.
+  removeminerals:
+    usage: /removeminerals <player> <amount>
+    description: Removes coins from specific player.
   coins:
       usage: /coins
       description: Shows current coin balance.
