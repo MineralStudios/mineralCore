@@ -19,7 +19,7 @@ public class addMinerals implements CommandExecutor {
             if (p.hasPermission("jeezy.core.minerals.add")) {
                 if (cmd.getName().equalsIgnoreCase("addminerals") && args.length == 2) {
                     uuidChecker.check(args[0]);
-                    mineralsSQL.addMinerals(p, UUIDChecker.uuid, Integer.parseInt(args[1]));
+                    mineralsSQL.addMinerals(p, UUIDChecker.uuid, Integer.parseInt(args[1]), "&7You &2successfully &7added &9"+args[1]+" &fminerals &7to &9&l"+ UUIDChecker.uuidName+"&7.");
                 } else {
                     p.sendMessage("Usage: /addminerals <player> <amount>");
                 }
