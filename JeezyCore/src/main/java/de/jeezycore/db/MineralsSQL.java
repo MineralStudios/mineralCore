@@ -3,10 +3,14 @@ package de.jeezycore.db;
 import com.google.common.base.Splitter;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.utils.ArrayStorage;
+import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import java.sql.*;
 import java.util.Map;
+import java.util.UUID;
+
+import static de.jeezycore.utils.ArrayStorage.mineralsStorage;
 
 
 public class MineralsSQL {
@@ -86,6 +90,26 @@ public class MineralsSQL {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void addMinerals(Player player, String p, int amount) {
+        if (UUIDChecker.uuid == null) {
+            player.sendMessage("§7This player doesn't §4exist§7.");
+            return;
+        }
+        mineralsData();
+        if(mineralsStorage.containsKey(UUID.fromString(p).toString())) {
+            String getCurrentMinerals = mineralsStorage.get(UUID.fromString(p).toString());
+            int count = Integer.parseInt(getCurrentMinerals) + amount;
+            mineralsStorage.put(UUID.fromString(p).toString(), String.valueOf(count));
+        } else {
+            mineralsStorage.put(UUID.fromString(p).toString(), String.valueOf(amount));
+        }
+
+        player.sendMessage("§7You §2successfully §7added §9"+amount+" §fminerals §7to §9§l"+ UUIDChecker.uuidName+"§7.");
+
+            updateMineralsData();
+            ArrayStorage.mineralsStorage.clear();
     }
 
     public void mineralsBalance(Player p) {
