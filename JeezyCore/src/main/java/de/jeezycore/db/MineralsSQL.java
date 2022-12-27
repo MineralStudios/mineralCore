@@ -92,21 +92,21 @@ public class MineralsSQL {
         }
     }
 
-    public void addMinerals(Player player, String p, int amount) {
+    public void addMinerals(Player player, String uuid, int amount, String message) {
         if (UUIDChecker.uuid == null) {
             player.sendMessage("§7This player doesn't §4exist§7.");
             return;
         }
         mineralsData();
-        if(mineralsStorage.containsKey(UUID.fromString(p).toString())) {
-            String getCurrentMinerals = mineralsStorage.get(UUID.fromString(p).toString());
+        if(mineralsStorage.containsKey(UUID.fromString(uuid).toString())) {
+            String getCurrentMinerals = mineralsStorage.get(UUID.fromString(uuid).toString());
             int count = Integer.parseInt(getCurrentMinerals) + amount;
-            mineralsStorage.put(UUID.fromString(p).toString(), String.valueOf(count));
+            mineralsStorage.put(UUID.fromString(uuid).toString(), String.valueOf(count));
         } else {
-            mineralsStorage.put(UUID.fromString(p).toString(), String.valueOf(amount));
+            mineralsStorage.put(UUID.fromString(uuid).toString(), String.valueOf(amount));
         }
 
-        player.sendMessage("§7You §2successfully §7added §9"+amount+" §fminerals §7to §9§l"+ UUIDChecker.uuidName+"§7.");
+            player.sendMessage(message.replace("&", "§"));
 
             updateMineralsData();
             ArrayStorage.mineralsStorage.clear();
