@@ -74,6 +74,18 @@ public class MineralsSQL {
         }
     }
 
+    public String minerals(String uuid) {
+        mineralsData();
+        String getCurrentMinerals;
+        if(mineralsStorage.containsKey(UUID.fromString(uuid).toString())) {
+            getCurrentMinerals = mineralsStorage.get(UUID.fromString(uuid).toString());
+        } else {
+            getCurrentMinerals = String.valueOf(0);
+        }
+
+       return getCurrentMinerals;
+    }
+
     public void updateMineralsData() {
         try {
             this.createConnection();
