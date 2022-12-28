@@ -112,9 +112,12 @@ commands:
     usage: /removeminerals <player> <amount>
     description: Removes coins from specific player.
   coins:
-      usage: /coins
-      description: Shows current coin balance.
+    usage: /coins
+    description: Shows current coin balance.
   daily-reward:
-      description: Opens Inventory that gives player gift every 24 hours.
-      usage: /daily-reward
+    description: Opens Inventory that gives player gift every 24 hours.
+    usage: /daily-reward
+  store:
+    description: Opens store where Players can buy stuff with minerals / coins.
+    usage: /store
 

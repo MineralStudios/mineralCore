@@ -24,6 +24,7 @@ import de.jeezycore.commands.spawn.SetSpawn;
 import de.jeezycore.commands.spawn.Spawn;
 import de.jeezycore.commands.staff.StaffRankDisable;
 import de.jeezycore.commands.staff.StaffRankEnable;
+import de.jeezycore.commands.store.Store;
 import de.jeezycore.commands.tags.*;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.JeezySQL;
@@ -81,6 +82,7 @@ public class Main extends JavaPlugin {
         this.getCommand("removeminerals").setExecutor(new removeMinerals());
         this.getCommand("coins").setExecutor(new Minerals());
         this.getCommand("daily-reward").setExecutor(new DailyReward());
+        this.getCommand("store").setExecutor(new Store());
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
