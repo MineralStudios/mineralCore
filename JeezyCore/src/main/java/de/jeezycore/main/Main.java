@@ -1,8 +1,10 @@
 package de.jeezycore.main;
 
+import de.jeezycore.disguise.manger.DisguiseManager;
 import de.jeezycore.colors.Color;
 import de.jeezycore.commands.basic.*;
 import de.jeezycore.commands.chat.ChatDisabler;
+import de.jeezycore.commands.disguise.DisguiseCommand;
 import de.jeezycore.commands.minerals.Minerals;
 import de.jeezycore.commands.minerals.addMinerals;
 import de.jeezycore.commands.minerals.removeMinerals;
@@ -34,6 +36,7 @@ import de.jeezycore.discord.JeezyBot;
 import de.jeezycore.events.*;
 import de.jeezycore.events.chat.ChatEvent;
 import de.jeezycore.events.inventories.JeezyInventories;
+import de.jeezycore.utils.HTTPUtility;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -43,6 +46,8 @@ public class Main extends JavaPlugin {
         System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.GREEN_BOLD+" Successfully"+Color.CYAN_BOLD+" started JeezyCore coded by JeezyDevelopment!"+Color.RESET);
         JeezyConfig file_Jeezy_config = new JeezyConfig();
         file_Jeezy_config.create_folder();
+        HTTPUtility httpUtility = new HTTPUtility(this);
+        DisguiseManager disguiseManager = new DisguiseManager(this, httpUtility);
         // Register Commands
         this.getCommand("create-rank").setExecutor(new CreateRank());
         this.getCommand("grant").setExecutor(new GrantRank());
@@ -83,6 +88,8 @@ public class Main extends JavaPlugin {
         this.getCommand("coins").setExecutor(new Minerals());
         this.getCommand("daily-reward").setExecutor(new DailyReward());
         this.getCommand("store").setExecutor(new Store());
+        this.getCommand("disguise").setExecutor(new DisguiseCommand(disguiseManager));
+
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
@@ -91,6 +98,8 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new RespawnEvent(), this);
         getServer().getPluginManager().registerEvents(new DeathEvent(), this);
         getServer().getPluginManager().registerEvents(new WeatherEvent(), this);
+        getServer().getPluginManager().registerEvents(new QuitEvent(disguiseManager), this);
+
         // Creating Connection / Creating Table
         JeezySQL con = new JeezySQL();
         con.createTable();

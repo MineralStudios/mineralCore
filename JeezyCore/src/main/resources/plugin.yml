@@ -120,4 +120,6 @@ commands:
   store:
     description: Opens store where Players can buy stuff with minerals / coins.
     usage: /store
-
+  disguise:
+    description: Disguises player to another player.
+    usage: /disguise <player> |
