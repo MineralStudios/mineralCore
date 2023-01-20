@@ -7,11 +7,15 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ArrayStorage {
     // Msg command array
+
     public static HashMap<String, String> reply_array = new HashMap<String, String>();
+
+    public static HashMap<UUID, String> msg_ignore_list = new HashMap<UUID, String>();
 
     // fly command array
     public  static ArrayList<String> fly_array = new ArrayList<String>();
