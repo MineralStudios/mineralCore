@@ -36,6 +36,12 @@ commands:
   r:
     description: Replies to messages.
     usage: /r
+  ignore:
+    description: Ignores a certain player.
+    usage: /ignore <player>
+  unignore:
+    description: UnIgnores a certain player.
+    usage: /unignore <player>
   day:
     description: Changes player time to day.
     usage: /day
