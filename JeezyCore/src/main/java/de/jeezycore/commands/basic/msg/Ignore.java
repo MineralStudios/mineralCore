@@ -18,11 +18,9 @@ public class Ignore implements CommandExecutor {
 
             if (cmd.getName().equalsIgnoreCase("ignore") && args.length == 1) {
                 uuidChecker.check(args[0]);
-                if (msg_ignore_list.get(p.getPlayer().getUniqueId()) != null) {
-                    if (msg_ignore_list.get(p.getPlayer().getUniqueId()).contains(UUIDChecker.uuid)) {
+                if (msg_ignore_list.get(p.getPlayer().getUniqueId()) != null && msg_ignore_list.get(p.getPlayer().getUniqueId()).contains(UUIDChecker.uuid)) {
                         p.sendMessage("§7You have already §cignored §7that player.");
                         return true;
-                    }
                 } else {
                     String oldIgnores = msg_ignore_list.get(p.getPlayer().getUniqueId());
                     msg_ignore_list.put(p.getPlayer().getUniqueId(), oldIgnores + UUIDChecker.uuid);
