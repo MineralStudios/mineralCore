@@ -12,7 +12,7 @@ public class TabListSQL {
     public String url;
     public String user;
     public String password;
-    int rankColor;
+    String rankColor;
 
     private void createConnection() {
         MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
@@ -30,9 +30,9 @@ public class TabListSQL {
             String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+p.getPlayer().getUniqueId()+"%'";
             ResultSet rs = stm.executeQuery(sql);
             while(rs.next()){
-                rankColor = rs.getInt(2);
+                rankColor = rs.getString(3);
 
-                if (rankColor == 0) {
+                if (rankColor == null) {
                 return;
                 }
 
