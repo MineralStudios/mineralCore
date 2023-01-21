@@ -1,6 +1,5 @@
 package de.jeezycore.events.chat;
 
-import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.db.MuteSQL;
@@ -26,7 +25,7 @@ public class ChatEvent implements Listener {
         String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ e.getPlayer().getUniqueId().toString() +"%'";
         display.displayChatRank(sql);
         System.out.println(display.rank);
-        System.out.println(display.woolColor);
+        System.out.println(display.rankRGB);
         System.out.println(e.getPlayer().getUniqueId());
         TagsSQL tagsSQL = new TagsSQL();
         tagsSQL.tagChat(e.getPlayer().getUniqueId());
