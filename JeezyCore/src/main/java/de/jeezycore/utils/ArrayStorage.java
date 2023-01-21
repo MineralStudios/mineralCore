@@ -50,7 +50,7 @@ public class ArrayStorage {
 
     public static ArrayList<String> set_current_tag_array = new ArrayList<>();
 
-    public static HashMap<Player, Integer> tab_name_list_array = new HashMap<>();
+    public static HashMap<Player, String> tab_name_list_array = new HashMap<>();
 
     public static ArrayList<ItemStack> rewardItems = new ArrayList<>();
 
