@@ -1,6 +1,5 @@
 package de.jeezycore.db;
 import de.jeezycore.colors.Color;
-import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.discord.messages.grant.RealtimeGrant;
 import de.jeezycore.utils.ArrayStorage;
@@ -19,7 +18,7 @@ public class JeezySQL  {
     public String password;
 
     public String rank;
-    public int woolColor;
+    public String rankRGB;
 
     public String rankColor;
 
@@ -38,7 +37,7 @@ public class JeezySQL  {
 
     public static HashSet<String> rankPerms = new HashSet<String>();
 
-    public LinkedHashMap<String, Integer> rankData = new LinkedHashMap<String, Integer>();
+    public LinkedHashMap<String, String> rankData = new LinkedHashMap<String, String>();
 
     public static LinkedList<String> rankColorData = new LinkedList<>();
 
@@ -102,7 +101,7 @@ public class JeezySQL  {
             Statement stm = con.createStatement();
             String jeezyCore_table = "CREATE TABLE IF NOT EXISTS jeezycore " +
                     " (rankName VARCHAR(255), " +
-                    " woolColor INT(2), " +
+                    " rankRGB VARCHAR(50), " +
                     " rankColor VARCHAR(10), " +
                     " rankPriority INT(3), " +
                     " playerName longtext, " +
@@ -275,9 +274,9 @@ public class JeezySQL  {
             ResultSet rs = stm.executeQuery(sql);
             while(rs.next()){
                 rank = rs.getString(1);
-                woolColor = rs.getInt(2);
+                rankRGB = rs.getString(2);
                 rankColor = rs.getString(3);
-                rankData.put(rank, woolColor);
+                rankData.put(rank, rankRGB);
                 rankColorData.add(rankColor);
             }
             con.close();
@@ -295,7 +294,7 @@ public class JeezySQL  {
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
                 rank = rs.getString(1);
-                woolColor = rs.getInt(2);
+                rankRGB = rs.getString(2);
                 rankColor_second = rs.getString(3);
                 rankColor = rs.getString(3);
             }

@@ -7,11 +7,13 @@ import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.PermissionHandler;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
@@ -69,11 +71,18 @@ public class GrantInventory {
             p.openInventory(ArrayStorage.grant_inv_array.get(p.getPlayer().getDisplayName()));
         } else {
             int i = 0;
-            for (Map.Entry<String, Integer> entry : display.rankData.entrySet()) {
-                ItemStack rank = new ItemStack(Material.WOOL, 1, (short) ((int) entry.getValue()));
+            for (Map.Entry<String, String> entry : display.rankData.entrySet()) {
+                ItemStack rank = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
                 String show_color = JeezySQL.rankColorData.get(i).replace("&", "§");
                 String displayName = entry.getKey();
-                ItemMeta rankMeta = rank.getItemMeta();
+                LeatherArmorMeta rankMeta = (LeatherArmorMeta) rank.getItemMeta();
+
+                 String str = entry.getValue();
+                 String[] rgbColors = str.split(", ");
+
+
+                rankMeta.setColor(Color.fromRGB(Integer.parseInt(rgbColors[0]), Integer.parseInt(rgbColors[1]), Integer.parseInt(rgbColors[2])));
+
                 List<String> desc = new ArrayList<String>();
                 desc.add(0, "§8§m-----------------------------------");
                 desc.add(1, "§7Click to grant §l"+show_color+displayName+"§7 to " + "§b"+username);
@@ -83,6 +92,7 @@ public class GrantInventory {
                 rank.setItemMeta(rankMeta);
                 grant_inv.setItem(9+i, rank);
                 ++i;
+                rgbColors = null;
             }
         }
         p.openInventory(ArrayStorage.grant_inv_array.get(p.getPlayer().getDisplayName()));
