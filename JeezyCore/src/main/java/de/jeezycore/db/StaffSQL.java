@@ -108,7 +108,7 @@ public class StaffSQL {
             String select_sql = "SELECT * FROM jeezycore WHERE staffRank = true AND rankName = '"+rankName+"'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
-                staffRank = rs.getBoolean(7);
+                staffRank = rs.getBoolean(8);
             }
             con.close();
         } catch (SQLException e) {
@@ -124,7 +124,7 @@ public class StaffSQL {
             String select_sql = "SELECT * FROM jeezycore WHERE staffRank = true AND playerUUID LIKE '%[%'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
-                staffPlayerNames = rs.getString(5);
+                staffPlayerNames = rs.getString(6);
 
                staff_array = staffPlayerNames.replace("]", "").replace("[", "").split(", ");
 
@@ -145,7 +145,7 @@ public class StaffSQL {
             String select_sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+get_UUID+"%'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
-                staffRank = rs.getBoolean(7);
+                staffRank = rs.getBoolean(8);
             }
             System.out.println(staffRank);
             System.out.println(select_sql);
