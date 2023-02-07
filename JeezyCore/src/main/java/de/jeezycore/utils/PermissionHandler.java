@@ -18,8 +18,8 @@ public class PermissionHandler {
 
 
     public void onAddPerms(Player p, String perm) {
-        if (JeezySQL.permPlayerName == null) return;
-        String[] uuidStrings = JeezySQL.permPlayerName.replace("[", "").replace("]", "").
+        if (JeezySQL.permPlayerUUID == null) return;
+        String[] uuidStrings = JeezySQL.permPlayerUUID.replace("[", "").replace("]", "").
                 replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
 
         for (int i = 0; i < uuidStrings.length; i++) {
@@ -43,8 +43,8 @@ public class PermissionHandler {
     }
 
     public void onRemovePerms(Player p, String perm) {
-        if (JeezySQL.permPlayerName == null) return;
-        String[] uuidStrings = JeezySQL.permPlayerName.replace("[", "").replace("]", "").
+        if (JeezySQL.permPlayerUUID == null) return;
+        String[] uuidStrings = JeezySQL.permPlayerUUID.replace("[", "").replace("]", "").
                 replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
 
         for (int i = 0; i < uuidStrings.length; i++) {

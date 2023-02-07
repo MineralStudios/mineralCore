@@ -27,7 +27,7 @@ public class TabListSQL {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+p.getPlayer().getUniqueId()+"%'";
+            String sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+p.getPlayer().getUniqueId()+"%'";
             ResultSet rs = stm.executeQuery(sql);
             while(rs.next()){
                 rankColor = rs.getString(3);

@@ -22,7 +22,7 @@ public class ChatEvent implements Listener {
         StaffChat staffChat = new StaffChat();
         staffChat.chat(e);
         JeezySQL display = new JeezySQL();
-        String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ e.getPlayer().getUniqueId().toString() +"%'";
+        String sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ e.getPlayer().getUniqueId().toString() +"%'";
         display.displayChatRank(sql);
         System.out.println(display.rank);
         System.out.println(display.rankRGB);

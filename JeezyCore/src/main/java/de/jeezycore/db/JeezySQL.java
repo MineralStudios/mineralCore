@@ -51,7 +51,7 @@ public class JeezySQL  {
 
     public static String permPlayerRankColor;
 
-    public static String permPlayerName;
+    public static String permPlayerUUID;
 
     public static String permRankPerms;
 
@@ -105,6 +105,7 @@ public class JeezySQL  {
                     " rankColor VARCHAR(10), " +
                     " rankPriority INT(3), " +
                     " playerName longtext, " +
+                    " playerUUID longtext, " +
                     " rankPerms longtext, " +
                     " staffRank boolean DEFAULT FALSE," +
                     " PRIMARY KEY ( rankName ))";
@@ -187,10 +188,10 @@ public class JeezySQL  {
             Connection con = DriverManager.getConnection(url, user, password);
 
             Statement stm = con.createStatement();
-            String sql_already_g = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ ArrayStorage.grant_array.get(getWhoExecuted)+"%'";
+            String sql_already_g = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ ArrayStorage.grant_array.get(getWhoExecuted)+"%'";
             ResultSet rs = stm.executeQuery(sql_already_g);
             while (rs.next()) {
-                alreadyGranted = rs.getString(5);
+                alreadyGranted = rs.getString(6);
             }
             if (alreadyGranted != null) {
                 if (alreadyGranted.contains(UUIDChecker.uuid)) {
@@ -209,12 +210,12 @@ public class JeezySQL  {
                     String sql_already_g2;
                     if (player_name_array.size() == 0) {
                         sql_already_g2 = "UPDATE jeezycore " +
-                                "SET playerName = NULL" +
-                                " WHERE playerName LIKE '%" + ArrayStorage.grant_array.get(getWhoExecuted) + "%'";
+                                "SET playerUUID = NULL" +
+                                " WHERE playerUUID LIKE '%" + ArrayStorage.grant_array.get(getWhoExecuted) + "%'";
                     } else {
                         sql_already_g2 = "UPDATE jeezycore " +
-                                "SET playerName = '" + player_name_array +
-                                "' WHERE playerName LIKE '%" + ArrayStorage.grant_array.get(getWhoExecuted) + "%'";
+                                "SET playerUUID = '" + player_name_array +
+                                "' WHERE playerUUID LIKE '%" + ArrayStorage.grant_array.get(getWhoExecuted) + "%'";
                     }
                     System.out.println(sql_already_g);
                     System.out.println(sql_already_g2);
@@ -238,7 +239,7 @@ public class JeezySQL  {
             this.alreadyGranted(getWhoExecuted);
 
             Statement stm = con.createStatement();
-            String sql2 = "SELECT playerName FROM jeezycore WHERE rankName = '"+rankName+"'";
+            String sql2 = "SELECT playerUUID FROM jeezycore WHERE rankName = '"+rankName+"'";
             ResultSet rs = stm.executeQuery(sql2);
             while (rs.next()) {
                 grantPlayer = rs.getString(1);
@@ -254,7 +255,7 @@ public class JeezySQL  {
             player_name_array.add(String.valueOf(ArrayStorage.grant_array.get(getWhoExecuted)));
 
             String sql = "UPDATE jeezycore " +
-                    "SET playerName = '"+player_name_array +
+                    "SET playerUUID = '"+player_name_array +
                     "' WHERE rankName = '"+rankName+"'";
             System.out.println(sql);
             stm.executeUpdate(sql);
@@ -341,8 +342,8 @@ public class JeezySQL  {
             while (rs.next()) {
                 permPlayerRankName = rs.getString(1);
                 permPlayerRankColor = rs.getString(2);
-                permPlayerName = rs.getString(5);
-                permRankPerms = rs.getString(6);
+                permPlayerUUID = rs.getString(6);
+                permRankPerms = rs.getString(7);
             }
             con.close();
         } catch (SQLException e) {
@@ -453,7 +454,7 @@ public class JeezySQL  {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String select_sql = "SELECT rankPerms FROM jeezycore WHERE playerName LIKE '%"+ u.toString() +"%'";
+            String select_sql = "SELECT rankPerms FROM jeezycore WHERE playerUUID LIKE '%"+ u.toString() +"%'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
                 joinPermRanks = rs.getString(1);
@@ -477,7 +478,7 @@ public class JeezySQL  {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String select_sql = "SELECT rankPerms FROM jeezycore WHERE playerName LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()).toString() +"%'";
+            String select_sql = "SELECT rankPerms FROM jeezycore WHERE playerUUID LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()).toString() +"%'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
                 grantingPermRanks = rs.getString(1);
@@ -498,7 +499,7 @@ public class JeezySQL  {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String select_sql = "SELECT rankPerms FROM jeezycore WHERE playerName LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()).toString() +"%'";
+            String select_sql = "SELECT rankPerms FROM jeezycore WHERE playerUUID LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()).toString() +"%'";
 
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
@@ -523,7 +524,7 @@ public class JeezySQL  {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String select_sql = "SELECT playerName FROM jeezycore WHERE playerName LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()) +"%'";
+            String select_sql = "SELECT playerUUID FROM jeezycore WHERE playerUUID LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()) +"%'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
                 removeRankGui_result = rs.getString(1);
@@ -537,12 +538,12 @@ public class JeezySQL  {
             removeRankGui_list.remove(ArrayStorage.grant_array.get(p.getUniqueId()).toString());
             if (removeRankGui_arr.length == 1) {
                 sql = "UPDATE jeezycore " +
-                        "SET playerName = "+null +
-                        " WHERE playerName LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()) +"%'";
+                        "SET playerUUID = "+null +
+                        " WHERE playerUUID LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()) +"%'";
             } else {
                 sql = "UPDATE jeezycore " +
-                        "SET playerName = '"+removeRankGui_list+
-                        "' WHERE playerName LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()) +"%'";
+                        "SET playerUUID = '"+removeRankGui_list+
+                        "' WHERE playerUUID LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()) +"%'";
             }
                 stm.executeUpdate(sql);
                 RealtimeGrant unGrant_discord = new RealtimeGrant();

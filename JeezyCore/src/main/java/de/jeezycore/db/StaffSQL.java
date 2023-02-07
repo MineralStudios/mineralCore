@@ -121,7 +121,7 @@ public class StaffSQL {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String select_sql = "SELECT * FROM jeezycore WHERE staffRank = true AND playerName LIKE '%[%'";
+            String select_sql = "SELECT * FROM jeezycore WHERE staffRank = true AND playerUUID LIKE '%[%'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
                 staffPlayerNames = rs.getString(5);
@@ -142,7 +142,7 @@ public class StaffSQL {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String select_sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+get_UUID+"%'";
+            String select_sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+get_UUID+"%'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
                 staffRank = rs.getBoolean(7);
