@@ -160,7 +160,7 @@ public class JeezySQL  {
         }
     }
 
-    public void pushData(String sql, String rankName, String woolColor, String rankColor, String rankPriority)  {
+    public void pushData(String sql, String rankName, String rankRGB, String rankColor, String rankPriority)  {
         this.createConnection();
         try {
             System.out.println(sql);
@@ -168,7 +168,7 @@ public class JeezySQL  {
 
             PreparedStatement pstmt = con.prepareStatement(sql);
             pstmt.setString(1, rankName);
-            pstmt.setString(2, woolColor);
+            pstmt.setString(2, rankRGB);
             pstmt.setString(3, rankColor);
             pstmt.setString(4, rankPriority);
 
