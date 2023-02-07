@@ -534,7 +534,7 @@ public class JeezySQL  {
                 removeRankGui_list.addAll(Arrays.asList(removeRankGui_arr));
 
 
-            removeRankGui_list.remove(ArrayStorage.grant_array.get(p.getUniqueId()));
+            removeRankGui_list.remove(ArrayStorage.grant_array.get(p.getUniqueId()).toString());
             if (removeRankGui_arr.length == 1) {
                 sql = "UPDATE jeezycore " +
                         "SET playerName = "+null +
@@ -552,6 +552,8 @@ public class JeezySQL  {
                 p.sendMessage("§4§lThis player doesn't have a rank!");
             }
             con.close();
+            removeRankGui_list.clear();
+            ArrayStorage.grant_array.remove(p.getPlayer().getUniqueId());
         } catch (SQLException e) {
             e.printStackTrace();
         }
