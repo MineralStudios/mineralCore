@@ -122,6 +122,7 @@ public class JeezySQL  {
                     " playerUUID VARCHAR(255), " +
                     " firstJoined VARCHAR(255), " +
                     " lastSeen VARCHAR(255), " +
+                    " online boolean DEFAULT FALSE," +
                     " PRIMARY KEY ( playerUUID ))";
             String punishments_table = "CREATE TABLE IF NOT EXISTS punishments " +
                     " (UUID VARCHAR(255), " +
