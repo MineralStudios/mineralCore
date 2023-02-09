@@ -117,6 +117,12 @@ public class JeezySQL  {
                     " rankPerms longtext, " +
                     " staffRank boolean DEFAULT FALSE," +
                     " PRIMARY KEY ( rankName ))";
+            String status_table = "CREATE TABLE IF NOT EXISTS status " +
+                    " (playerName VARCHAR(255), " +
+                    " playerUUID VARCHAR(255), " +
+                    " firstJoined VARCHAR(255), " +
+                    " lastSeen VARCHAR(255), " +
+                    " PRIMARY KEY ( playerUUID ))";
             String punishments_table = "CREATE TABLE IF NOT EXISTS punishments " +
                     " (UUID VARCHAR(255), " +
                     " banned_forever boolean, " +
@@ -152,6 +158,7 @@ public class JeezySQL  {
                     " PRIMARY KEY ( ServerName ))";
 
             stm.executeUpdate(jeezyCore_table);
+            stm.executeUpdate(status_table);
             stm.executeUpdate(punishments_table);
             stm.executeUpdate(tags_table);
             stm.executeUpdate(reward_table);
