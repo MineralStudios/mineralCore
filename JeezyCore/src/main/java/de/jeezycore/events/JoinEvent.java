@@ -5,6 +5,7 @@ import com.nametagedit.plugin.NametagEdit;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.BanSQL;
 import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.StatusSQL;
 import de.jeezycore.utils.NameTag;
 import de.jeezycore.utils.PermissionHandler;
 import org.bukkit.Bukkit;
@@ -26,9 +27,11 @@ import java.util.*;
 public class JoinEvent implements Listener {
 
     NameTag nameTag = new NameTag();
+    StatusSQL statusSQL = new StatusSQL();
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
+        statusSQL.firstJoined(e);
         nameTag.giveTagOnJoin(e.getPlayer());
         e.setJoinMessage("");
         BanSQL check_if_banned = new BanSQL();
