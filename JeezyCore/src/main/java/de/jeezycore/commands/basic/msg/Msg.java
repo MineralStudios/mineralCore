@@ -44,7 +44,7 @@ public class Msg implements CommandExecutor {
                         .join(ls).replace(args[0], "").replaceAll("\\s+", " ").trim();
 
                 JeezySQL display = new JeezySQL();
-                String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
+                String sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
                 display.displayChatRank(sql);
 
 

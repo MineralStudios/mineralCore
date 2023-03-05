@@ -33,13 +33,13 @@ public class Report implements CommandExecutor {
                 uc.check(args[0]);
                 JeezySQL display = new JeezySQL();
                 StaffChat staffChat = new StaffChat();
-                String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
+                String sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
                 display.displayChatRank(sql);
 
                 String show_rank_color_reporter = display.rankColor.replace("&", "§");
 
 
-                String sql2 = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ UUIDChecker.uuid +"%'";
+                String sql2 = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ UUIDChecker.uuid +"%'";
                 display.displayChatRank(sql2);
 
                 String show_rank_color_reported = display.rankColor_second.replace("&", "§");

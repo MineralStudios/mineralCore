@@ -42,7 +42,7 @@ public class Reply implements CommandExecutor {
                         .skipNulls()
                         .join(ls);
                 JeezySQL display = new JeezySQL();
-                String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
+                String sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
                 display.displayChatRank(sql);
 
                 Bukkit.getPlayer(result).sendMessage("§8§l(§4§lmsg§8§l) "+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§7: "+input);

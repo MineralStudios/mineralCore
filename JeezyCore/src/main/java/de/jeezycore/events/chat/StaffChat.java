@@ -23,7 +23,7 @@ public class StaffChat {
             staffSQL.getStaff();
 
                 JeezySQL display = new JeezySQL();
-                String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ e.getPlayer().getUniqueId().toString() +"%'";
+                String sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ e.getPlayer().getUniqueId().toString() +"%'";
                 display.displayChatRank(sql);
 
 
@@ -52,7 +52,7 @@ public class StaffChat {
             staffSQL.getStaff();
 
             JeezySQL display = new JeezySQL();
-            String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
+            String sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
             display.displayChatRank(sql);
 
 
@@ -78,7 +78,7 @@ public class StaffChat {
         staffSQL.getStaff();
 
         JeezySQL display = new JeezySQL();
-        String sql = "SELECT * FROM jeezycore WHERE playerName LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
+        String sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
         display.displayChatRank(sql);
 
 
