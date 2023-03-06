@@ -3,6 +3,7 @@ package de.jeezycore.db;
 import com.google.common.base.Splitter;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.utils.ArrayStorage;
+import de.jeezycore.utils.FakePlayerChecker;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
@@ -19,6 +20,8 @@ public class MineralsSQL {
     public String user;
     public String password;
     public String mineralsData;
+
+    FakePlayerChecker fakePlayerChecker = new FakePlayerChecker();
 
     private void createConnection() {
         MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
@@ -105,6 +108,9 @@ public class MineralsSQL {
     }
 
     public void addMinerals(Player player, String uuid, int amount, String message) {
+        if (fakePlayerChecker.isFakePlayer(player)) {
+            return;
+        }
         if (UUIDChecker.uuid == null) {
             player.sendMessage("§7This player doesn't §4exist§7.");
             return;
