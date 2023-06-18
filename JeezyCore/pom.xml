@@ -11,7 +11,7 @@
     <repositories>
         <repository>
             <id>spigot-repo</id>
-            <url>https://repo.songoda.com/repository/public/</url>
+            <url>https://maven.elmakers.com/repository/</url>
         </repository>
     </repositories>
 
