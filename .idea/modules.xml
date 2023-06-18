@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/JeezyCore/JeezyCore.iml" filepath="$PROJECT_DIR$/JeezyCore/JeezyCore.iml" />
-      <module fileurl="file://$PROJECT_DIR$/JeezyDevelopment.iml" filepath="$PROJECT_DIR$/JeezyDevelopment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/MineralCore.iml" filepath="$PROJECT_DIR$/.idea/MineralCore.iml" />
     </modules>
   </component>
 </project>

@@ -9,8 +9,5 @@
         <module name="JeezyCore" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="JeezyCore" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
