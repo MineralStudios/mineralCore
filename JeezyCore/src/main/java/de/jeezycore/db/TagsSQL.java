@@ -55,15 +55,16 @@ public class TagsSQL {
         password = (String) mc.get("password");
     }
 
-    public void pushData(String sql, Player p, String tagName, String tagDesign, String tagPriority) {
+    public void pushData(String sql, Player p, String tagName, String tagCategory, String tagDesign, String tagPriority) {
         this.createConnection();
         try {
             Connection con = DriverManager.getConnection(url, user, password);
 
             PreparedStatement pstmt = con.prepareStatement(sql);
             pstmt.setString(1, tagName);
-            pstmt.setString(2, tagDesign);
-            pstmt.setString(3, tagPriority);
+            pstmt.setString(2, tagCategory);
+            pstmt.setString(3, tagDesign);
+            pstmt.setString(4, tagPriority);
 
             pstmt.executeUpdate();
 
@@ -86,7 +87,7 @@ public class TagsSQL {
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
                 tagName = rs.getString(1);
-                tagDesign = rs.getString(2);
+                tagDesign = rs.getString(3);
 
                 tagDataFullSize.put(tagName, tagDesign);
             }
@@ -128,7 +129,7 @@ public class TagsSQL {
             ResultSet rs = stm.executeQuery(sql_already_g);
             while (rs.next()) {
                 this.tagName = rs.getString(1);
-                current_tag = rs.getString(5);
+                current_tag = rs.getString(6);
             }
             if (current_tag != null) {
 
@@ -210,7 +211,7 @@ public class TagsSQL {
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
                 tagName = rs.getString(1);
-                tagDesign = rs.getString(2);
+                tagDesign = rs.getString(3);
 
                 tagData.put(tagName, tagDesign);
             }
@@ -233,7 +234,7 @@ public class TagsSQL {
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
                 grant = rs.getString(1);
-                tag_players = rs.getString(4);
+                tag_players = rs.getString(5);
             }
 
 
@@ -286,7 +287,7 @@ public class TagsSQL {
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
                 grant = rs.getString(1);
-                tag_players = rs.getString(4);
+                tag_players = rs.getString(5);
             }
 
             if (grant == null) {
@@ -354,7 +355,7 @@ public class TagsSQL {
             String sql = "SELECT * FROM tags WHERE currentTag LIKE '%"+get_uuid+"%'";
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
-                tag_in_chat = rs.getString(2);
+                tag_in_chat = rs.getString(3);
             }
             con.close();
         } catch (SQLException e) {
@@ -372,7 +373,7 @@ public class TagsSQL {
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
                 tag_exist_name = rs.getString(1);
-                tag_exist_format = rs.getString(2);
+                tag_exist_format = rs.getString(3);
             }
 
             con.close();
@@ -394,7 +395,7 @@ public class TagsSQL {
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
                 grant = rs.getString(1);
-                current_tag = rs.getString(5);
+                current_tag = rs.getString(6);
             }
 
             if (grant == null) {
