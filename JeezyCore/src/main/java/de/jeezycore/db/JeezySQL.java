@@ -139,6 +139,7 @@ public class JeezySQL  {
                     " PRIMARY KEY ( UUID ))";
             String tags_table = "CREATE TABLE IF NOT EXISTS tags " +
                     " (tagName VARCHAR(255), " +
+                    " tagCategory VARCHAR(255), " +
                     " tagDesign VARCHAR(255), " +
                     " tagPriority INT(3), " +
                     " playerName longtext, " +
