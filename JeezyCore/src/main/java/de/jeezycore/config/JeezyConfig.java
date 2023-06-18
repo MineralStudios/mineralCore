@@ -36,6 +36,10 @@ public class JeezyConfig {
             config_defaults.addDefault(path_settings_1, false);
             config_defaults.addDefault(path_settings_2, false);
 
+            String path_tags_1 = "tags.categories";
+            List<Object> tag_categories_list = new ArrayList<>();
+            config_defaults.addDefault(path_tags_1, tag_categories_list);
+
             String path_chat_1 = "chat.chat_format";
             String path_chat_2 = "chat.muted";
             String path_chat_3 = "chat.ignored_roles_on_chat-mute";
