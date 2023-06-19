@@ -176,7 +176,7 @@ public class TagsSQL {
             String sql2 = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
             ResultSet rs = stm.executeQuery(sql2);
             while (rs.next()) {
-                current_tag = rs.getString(5);
+                current_tag = rs.getString(6);
             }
 
             if (current_tag != null) {
