@@ -32,6 +32,7 @@ public class CreateTag implements CommandExecutor {
                    if (tag_categories_list.contains(args[1])) {
                        mySQL.pushData(input, p, args[0], args[1], args[2], args[3]);
                    } else {
+                       p.sendMessage("The Category you chose doesn't exist.");
                        return true;
                    }
                } else {
