@@ -22,6 +22,8 @@ public class TagsSQL {
 
     String tagName;
 
+    String tagCategory;
+
     public static String ownerTagName;
     String tagDesign;
 
@@ -39,9 +41,9 @@ public class TagsSQL {
 
     public static String [] already_set_tag;
 
-    public static ArrayList<String> player_name_tags_array = new ArrayList<String>();
+    public ArrayList<String> arrayList = new ArrayList<>();
 
-    public LinkedHashMap<String, String> tagData = new LinkedHashMap<String, String>();
+    public static ArrayList<String> player_name_tags_array = new ArrayList<String>();
 
     public LinkedHashMap<String, String> tagDataFullSize = new LinkedHashMap<String, String>();
 
@@ -211,9 +213,11 @@ public class TagsSQL {
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
                 tagName = rs.getString(1);
+                tagCategory = rs.getString(2);
                 tagDesign = rs.getString(3);
 
-                tagData.put(tagName, tagDesign);
+                arrayList.add(Arrays.asList(tagName, tagCategory, tagDesign).toString());
+
             }
             con.close();
         } catch (SQLException e) {
