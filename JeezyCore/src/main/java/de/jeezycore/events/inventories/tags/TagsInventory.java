@@ -2,6 +2,7 @@ package de.jeezycore.events.inventories.tags;
 
 import de.jeezycore.db.RewardSQL;
 import de.jeezycore.db.TagsSQL;
+import de.jeezycore.utils.ArrayStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,6 +28,11 @@ public class TagsInventory {
     public void run(org.bukkit.event.inventory.InventoryClickEvent e) {
         if (e.getInventory().getTitle().contains("§8§lTags")) {
             if (e.getCurrentItem().getData().toString().equalsIgnoreCase("NAME_TAG(0)") && e.getCurrentItem().getItemMeta().getLore().get(5).equalsIgnoreCase("§a§lYou own this tag§7§l.")) {
+                if (e.getCurrentItem().getItemMeta().getDisplayName().substring(4).equalsIgnoreCase(ArrayStorage.tagsCheckStatus.get(e.getWhoClicked().getUniqueId()))) {
+                    e.getWhoClicked().sendMessage("§7You have §c§lalready §7selected that tag.");
+                    e.getWhoClicked().closeInventory();
+                    return;
+                }
                 e.getWhoClicked().sendMessage("§7You §2§lsuccessfully §7gave yourself the §9§l"+e.getCurrentItem().getItemMeta().getDisplayName()+ " §7tag§7.");
                 e.getWhoClicked().closeInventory();
                 executeMYSQL(e.getCurrentItem().getItemMeta().getDisplayName().substring(4), e.getWhoClicked().getUniqueId());
@@ -50,6 +56,7 @@ public class TagsInventory {
                 display.resetTag(e.getCurrentItem().getItemMeta().getLore().get(1).replace("§9§l", ""), e.getWhoClicked().getName(), (Player) e.getWhoClicked());
                 e.getWhoClicked().sendMessage("§7You §2successfully §creset §7your tag.");
                 e.getWhoClicked().closeInventory();
+                ArrayStorage.tagsCheckStatus.remove(e.getWhoClicked().getUniqueId());
             }
 
             e.setCancelled(true);
@@ -66,6 +73,11 @@ public class TagsInventory {
         display.getFullDataSize();
         display.getOwnershipData(p);
         rewardSQL.checkIfClaimed(p);
+
+        if (TagsSQL.tag_exist_name != null) {
+            ArrayStorage.tagsCheckStatus.put(p.getPlayer().getUniqueId(), TagsSQL.tag_exist_name);
+        }
+
         int pageEnd = (int) Math.ceil((double)display.tagDataFullSize.size() / 21);
 
         tag_inv = Bukkit.createInventory(null, 45,"§8§lTags "+"§7(§f§l"+tags_inv_array.get(p.getPlayer().getUniqueId())+" §7§l/§9§l "+pageEnd+"§7)");
