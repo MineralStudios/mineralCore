@@ -157,9 +157,10 @@ public class TagsInventory {
                 tag_inv.setItem(addUp + i, tag);
 
 
-                p.openInventory(tag_inv);
-                RewardSQL.rewardPrice = null;
+
             }
+        p.openInventory(tag_inv);
+        RewardSQL.rewardPrice = null;
     }
 
     public void executeMYSQL(String tagName, UUID p) {
