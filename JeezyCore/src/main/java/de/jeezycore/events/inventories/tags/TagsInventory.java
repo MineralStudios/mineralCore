@@ -100,7 +100,7 @@ public class TagsInventory {
                 ArrayList<String> reset_tag_desc = new ArrayList<>();
                 reset_tag_desc.add(0, "§8§m-----------------------------------");
                 reset_tag_desc.add(1, "§9§l"+TagsSQL.tag_exist_name);
-                reset_tag_desc.add(2, "§7Current tag format: §9§l" + TagsSQL.tag_exist_format.replace("&", "§")+ "§7§l.");
+                reset_tag_desc.add(2, "§7Current tag display: §2"+p.getDisplayName()+ " §9§l" + TagsSQL.tag_exist_format.replace("&", "§")+ "§7§l.");
                 reset_tag_desc.add(3, "§8§m-----------------------------------");
                 reset_tag_desc.add(4, "§eClick to reset your tag§7.");
                 removeTagViaGuiMeta.setDisplayName("§cReset tag");
