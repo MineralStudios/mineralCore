@@ -11,6 +11,7 @@ public class LeaveEvent implements Listener {
     public void onLeave(PlayerQuitEvent e) {
         ArrayStorage.reply_array.remove(e.getPlayer().getDisplayName());
         ArrayStorage.tags_inv_array.remove(e.getPlayer().getUniqueId());
+        ArrayStorage.tagsCheckStatus.remove(e.getPlayer().getUniqueId());
         e.setQuitMessage("");
     }
 
