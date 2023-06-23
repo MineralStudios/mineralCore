@@ -130,7 +130,7 @@ public class TagsSQL {
             String sql_already_g = "SELECT * FROM tags WHERE currentTag LIKE '%"+get_uuid+"%'";
             ResultSet rs = stm.executeQuery(sql_already_g);
             while (rs.next()) {
-                this.tagName = rs.getString(1);
+                tagName = rs.getString(1);
                 current_tag = rs.getString(6);
             }
             if (current_tag != null) {
@@ -148,14 +148,14 @@ public class TagsSQL {
                     if (set_current_tag_array.size() == 0) {
                         sql_already_g2 = "UPDATE tags " +
                                 "SET currentTag = NULL" +
-                                " WHERE tagName = '"+this.tagName+"'";
+                                " WHERE tagName = '"+tagName+"'";
                     } else {
                         sql_already_g2 = "UPDATE tags " +
                                 "SET currentTag = '" + set_current_tag_array +
-                                "' WHERE tagName = '"+this.tagName+"'";
+                                "' WHERE tagName = '"+tagName+"'";
                     }
 
-
+                    stm.executeUpdate(sql_already_g2);
                     set_current_tag_array.clear();
                 }
 
