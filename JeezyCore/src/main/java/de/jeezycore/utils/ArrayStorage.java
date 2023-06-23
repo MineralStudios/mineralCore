@@ -62,4 +62,6 @@ public class ArrayStorage {
 
     public static HashMap<String, String> mineralsStorage = new HashMap<String, String>();
 
+    public static HashMap<UUID, String> tagsCheckStatus = new HashMap<>();
+
 }
