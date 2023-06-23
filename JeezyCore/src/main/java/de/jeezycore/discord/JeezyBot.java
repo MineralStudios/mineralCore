@@ -31,8 +31,8 @@ public class JeezyBot {
                 .setAllIntents()
                 .login().join();
 
-        BotStatus botStatus = new BotStatus();
-        botStatus.set();
+        //BotStatus botStatus = new BotStatus();
+        //botStatus.set();
 
         // Register EventListener
         api.addListener(new MessageCreate());
