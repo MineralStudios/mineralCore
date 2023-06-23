@@ -112,7 +112,7 @@ public class TagsSQL {
                 if (ownerTagName != null) {
                     String[] get_owned_tags = ownerTagName.split(", ");
                     tags_in_ownership_array.addAll(Arrays.asList(get_owned_tags));
-                    System.out.println(tags_in_ownership_array);
+
                 }
             }
             con.close();
@@ -135,14 +135,14 @@ public class TagsSQL {
             }
             if (current_tag != null) {
 
-                    System.out.println("getting executed");
+
                     already_set_tag = current_tag.replace("]", "").replace("[", "").split(", ");
 
                     set_current_tag_array.addAll(Arrays.asList(already_set_tag));
 
                     set_current_tag_array.remove(get_uuid.toString());
 
-                    System.out.println(set_current_tag_array);
+
 
                     String sql_already_g2;
                     if (set_current_tag_array.size() == 0) {
@@ -154,9 +154,7 @@ public class TagsSQL {
                                 "SET currentTag = '" + set_current_tag_array +
                                 "' WHERE tagName = '"+this.tagName+"'";
                     }
-                    System.out.println(sql_already_g);
-                    System.out.println(sql_already_g2);
-                    stm.executeUpdate(sql_already_g2);
+
 
                     set_current_tag_array.clear();
                 }
@@ -194,7 +192,7 @@ public class TagsSQL {
             String sql = "UPDATE tags " +
                     "SET currentTag = '"+set_current_tag_array +
                     "' WHERE tagName = '"+tagName+"'";
-            System.out.println(sql);
+
             stm.executeUpdate(sql);
             set_current_tag_array.clear();
             con.close();
@@ -255,7 +253,7 @@ public class TagsSQL {
 
             }
 
-            System.out.println(player_name_tags_array);
+
 
             if (player_name_tags_array.contains(UUIDChecker.uuid)) {
                 p.sendMessage("§7Tag has been §calready §7unlocked for §b"+playerName+"§7.");
