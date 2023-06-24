@@ -7,6 +7,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class GrantTag implements CommandExecutor {
+
+    TagsSQL mySQL = new TagsSQL();
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -15,7 +18,7 @@ public class GrantTag implements CommandExecutor {
 
             if (cmd.getName().equalsIgnoreCase("grant-tag") && args.length == 2) {
                 if (p.hasPermission("jeezy.core.tags.grant")) {
-                    TagsSQL mySQL = new TagsSQL();
+
                     String input = "INSERT INTO tags " +
                             "(tagName, tagDesign, tagPriority) " +
                             "VALUES " +
@@ -28,6 +31,8 @@ public class GrantTag implements CommandExecutor {
             } else {
                 p.sendMessage("Usage: /grant-tag (tagName) (playerName)");
             }
+        } else {
+            mySQL.grantTagConsole(sender, args[0], args[1]);
         }
         return true;
     }
