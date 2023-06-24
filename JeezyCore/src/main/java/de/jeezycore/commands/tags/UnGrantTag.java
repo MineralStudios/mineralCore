@@ -7,6 +7,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class UnGrantTag implements CommandExecutor {
+
+    TagsSQL tag = new TagsSQL();
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -16,14 +19,18 @@ public class UnGrantTag implements CommandExecutor {
 
             if (cmd.getName().equalsIgnoreCase("ungrant-tag") && args.length == 2) {
                 if (p.hasPermission("jeezy.core.tag.ungrant")) {
-                    TagsSQL tag = new TagsSQL();
+
                     tag.unGrantTag(args[0], args[1], p);
+                    tag.resetTag(args[0], args[1], p);
                 } else {
                     p.sendMessage("No permission");
                 }
             } else {
                 p.sendMessage("Usage: /ungrant-tag <tagName><player>");
             }
+        } else {
+            tag.unGrantTagConsole(args[0], args[1], sender);
+            tag.resetTagConsole(args[0], args[1], sender);
         }
         return true;
     }
