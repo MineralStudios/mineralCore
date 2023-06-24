@@ -2,6 +2,7 @@ package de.jeezycore.db;
 
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.utils.UUIDChecker;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import java.sql.*;
@@ -276,6 +277,61 @@ public class TagsSQL {
         }
     }
 
+
+    public void grantTagConsole(CommandSender sender, String tagName, String playerName) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            UUIDChecker uc = new UUIDChecker();
+            uc.check(playerName);
+
+            Statement stm = con.createStatement();
+            String sql = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
+            ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                grant = rs.getString(1);
+                tag_players = rs.getString(5);
+            }
+
+
+            if (grant == null) {
+                sender.sendMessage("§4This rank hasn't been created yet.");
+                return;
+            }
+
+            if (tag_players != null) {
+
+                grant_new_tag = tag_players.replace("]", "").replace("[", "").split(", ");
+
+                player_name_tags_array.addAll(Arrays.asList(grant_new_tag));
+
+            }
+
+
+
+            if (player_name_tags_array.contains(UUIDChecker.uuid)) {
+                sender.sendMessage("§7Tag has been §calready §7unlocked for §b"+playerName+"§7.");
+            } else {
+                player_name_tags_array.add(UUIDChecker.uuid);
+                sender.sendMessage("§2Successfully §7unlocked the §b"+tagName+" §7tag for §9"+playerName+"§7.");
+            }
+
+            String sql2 = "UPDATE tags " +
+                    "SET playerName = '"+player_name_tags_array +
+                    "' WHERE tagName = '"+tagName+"'";
+
+            stm.executeUpdate(sql2);
+            player_name_tags_array.clear();
+
+
+            con.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+
     public void unGrantTag(String tagName, String playerName, Player p) {
         try {
             this.createConnection();
@@ -329,6 +385,62 @@ public class TagsSQL {
             con.close();
         } catch (SQLException e) {
         e.printStackTrace();
+        }
+    }
+
+    public void unGrantTagConsole(String tagName, String playerName, CommandSender sender) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            UUIDChecker uc = new UUIDChecker();
+            uc.check(playerName);
+
+            Statement stm = con.createStatement();
+            String sql = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
+            ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                grant = rs.getString(1);
+                tag_players = rs.getString(5);
+            }
+
+            if (grant == null) {
+                sender.sendMessage("§7This tag doesn't §4exit§7.");
+                return;
+            }
+
+            if (tag_players != null) {
+
+                grant_new_tag = tag_players.replace("]", "").replace("[", "").split(", ");
+
+                player_name_tags_array.addAll(Arrays.asList(grant_new_tag));
+            }
+
+            if (!player_name_tags_array.contains(UUIDChecker.uuid)) {
+                sender.sendMessage("§7This player doesn't §4own §7that tag.");
+                return;
+            } else {
+                player_name_tags_array.remove(UUIDChecker.uuid);
+                sender.sendMessage("§2Successfully §7removed the §b"+tagName+" §7tag for §9"+playerName+"§7.");
+            }
+
+            String sql2;
+            if (player_name_tags_array.size() == 0) {
+                sql2 = "UPDATE tags " +
+                        "SET playerName = NULL" +
+                        " WHERE tagName = '"+tagName+"'";
+            } else {
+                sql2 = "UPDATE tags " +
+                        "SET playerName = '"+player_name_tags_array +
+                        "' WHERE tagName = '"+tagName+"'";
+            }
+
+            stm.executeUpdate(sql2);
+            player_name_tags_array.clear();
+
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -414,6 +526,61 @@ public class TagsSQL {
 
             if (!player_name_tags_array.contains(UUIDChecker.uuid)) {
                 p.sendMessage("§7This player doesn't §4own §7that tag.");
+                return;
+            } else {
+                player_name_tags_array.remove(UUIDChecker.uuid);
+            }
+
+            String sql2;
+            if (player_name_tags_array.size() == 0) {
+                sql2 = "UPDATE tags " +
+                        "SET currentTag = NULL" +
+                        " WHERE tagName = '"+tagName+"'";
+            } else {
+                sql2 = "UPDATE tags " +
+                        "SET currentTag = '"+player_name_tags_array +
+                        "' WHERE tagName = '"+tagName+"'";
+            }
+
+            stm.executeUpdate(sql2);
+            player_name_tags_array.clear();
+
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void resetTagConsole(String tagName, String playerName, CommandSender sender) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            UUIDChecker uc = new UUIDChecker();
+            uc.check(playerName);
+
+            Statement stm = con.createStatement();
+            String sql = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
+            ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                grant = rs.getString(1);
+                current_tag = rs.getString(6);
+            }
+
+            if (grant == null) {
+                sender.sendMessage("§7This tag doesn't §4exit§7.");
+                return;
+            }
+
+            if (current_tag != null) {
+
+                grant_new_tag = current_tag.replace("]", "").replace("[", "").split(", ");
+
+                player_name_tags_array.addAll(Arrays.asList(grant_new_tag));
+            }
+
+            if (!player_name_tags_array.contains(UUIDChecker.uuid)) {
+                sender.sendMessage("§7This player doesn't §4own §7that tag.");
                 return;
             } else {
                 player_name_tags_array.remove(UUIDChecker.uuid);
