@@ -5,6 +5,7 @@ import de.jeezycore.discord.messages.ban.RealtimeBan;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -100,6 +101,86 @@ public class BanSQL {
             ArrayStorage.ban_logs.clear();
             discord.realtimeChatOnBan(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName(), input);
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void banConsole(String username, String input, CommandSender sender) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+
+            RealtimeBan discord = new RealtimeBan();
+            UUIDChecker uc = new UUIDChecker();
+            uc.check(username);
+            banData(UUID.fromString(UUIDChecker.uuid));
+
+            json_o.put("banned by", "Console");
+            json_o.put("ban_start", currentTime.format(formatter));
+            json_o.put("ban_end", "forever");
+            json_o.put("reason", input);
+            ArrayStorage.ban_logs.add(json_o);
+
+            try {
+                Bukkit.getServer().getPlayer(UUID.fromString(UUIDChecker.uuid)).kickPlayer("§4You are permanently banned from JeezyDevelopment.\n\n" +
+                        "§6Reason: §c" + input + "\n\n" +
+                        "§7If you feel this ban has been unjustified, appeal on our discord at\n §bjeezydevelopment.com§7.");
+            } catch (Exception e) {
+
+            }
+
+            String sql = "INSERT INTO punishments " +
+                    "(UUID, banned_forever, ban_start, ban_end, ban_status, ban_logs) " +
+                    "VALUES " +
+                    "('" + UUIDChecker.uuid + "', true, " + "NULL, NULL, true, '" + ArrayStorage.ban_logs + "')";
+
+            System.out.println(sql);
+            if (punishment_UUID == null && ban_logs == null) {
+                stm.executeUpdate(sql);
+            } else {
+                banUpdateConsole(username, input, sender);
+            }
+            ArrayStorage.ban_logs.clear();
+            discord.realtimeChatOnBan(UUID.fromString(UUIDChecker.uuid), username, "Console", input);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void banUpdateConsole(String username, String input, CommandSender sender) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+
+            UUIDChecker check_UUID = new UUIDChecker();
+            check_UUID.check(username);
+            banData(UUID.fromString(UUIDChecker.uuid));
+
+
+            json_o.put("banned by", "Console");
+            json_o.put("ban_start", currentTime.format(formatter));
+            json_o.put("ban_end", "forever");
+            json_o.put("reason", input);
+            ArrayStorage.ban_logs.add(json_o);
+
+            if (ban_forever) {
+                sender.sendMessage("§b" + username + " §7has been already §4banned§7.");
+                return;
+            } else {
+                sender.sendMessage("§7You §asuccessfully §7banned §b" + username + "§7.");
+            }
+
+            String sql = "UPDATE punishments " +
+                    "SET banned_forever = true, ban_status = true" +
+                    " WHERE UUID = '" + UUIDChecker.uuid + "'";
+            stm.executeUpdate(sql);
+            stm.close();
+
+            ban_logsUpdate(username);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
