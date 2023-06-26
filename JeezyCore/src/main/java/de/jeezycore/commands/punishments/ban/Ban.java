@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 public class Ban implements CommandExecutor {
+    BanSQL execute = new BanSQL();
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -23,7 +24,7 @@ public class Ban implements CommandExecutor {
                             .skipNulls()
                             .join(ls).replace(args[0], "").replaceAll("\\s+", " ").trim();
 
-                    BanSQL execute = new BanSQL();
+
                     execute.ban(args[0], input, p.getPlayer());
                 } else {
                     p.sendMessage("No permission.");
@@ -31,6 +32,12 @@ public class Ban implements CommandExecutor {
             } else {
                 p.sendMessage("Usage: /ban <player><reason>.");
             }
+        } else {
+            List<String> lsConsole = new ArrayList<String>(Arrays.asList(args));
+            String input = Joiner.on(" ")
+                    .skipNulls()
+                    .join(lsConsole).replace(args[0], "").replaceAll("\\s+", " ").trim();
+            execute.banConsole(args[0], input, sender);
         }
         return true;
     }
