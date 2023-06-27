@@ -568,7 +568,8 @@ public class JeezySQL  {
             removeRankGui_list.remove(ArrayStorage.grant_array.get(p.getUniqueId()).toString());
             if (removeRankGui_arr.length == 1) {
                 sql = "UPDATE jeezycore " +
-                        "SET playerUUID = "+null +
+                        "SET playerUUID = "+null+
+                        ", playerName = "+null +
                         " WHERE playerUUID LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()) +"%'";
             } else {
                 sql = "UPDATE jeezycore " +
