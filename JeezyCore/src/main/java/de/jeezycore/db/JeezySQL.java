@@ -296,6 +296,103 @@ public class JeezySQL  {
         }
     }
 
+    private void alreadyGrantedNoGui(UUID getWhoExecuted) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            Statement stm = con.createStatement();
+            String sql_already_g = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ ArrayStorage.grant_array.get(getWhoExecuted)+"%' AND " +
+                    "playerName LIKE '%" + ArrayStorage.grant_array_names.get(getWhoExecuted) + "%'" ;
+            ResultSet rs = stm.executeQuery(sql_already_g);
+            while (rs.next()) {
+                alreadyGranted = rs.getString(6);
+                alreadyGranted_2 = rs.getString(5);
+            }
+            if (alreadyGranted != null) {
+                if (alreadyGranted.contains(getWhoExecuted.toString())) {
+                    System.out.println("getting executed");
+                    grant_new_player = alreadyGranted.replace("]", "").replace("[", "").split(", ");
+                    grant_new_player_2 = alreadyGranted_2.replace("]", "").replace("[", "").split(", ");
+
+                    player_name_array.addAll(Arrays.asList(grant_new_player));
+                    player_name_array_2.addAll(Arrays.asList(grant_new_player_2));
+
+                    player_name_array.remove(ArrayStorage.grant_array.get(getWhoExecuted).toString());
+                    player_name_array_2.remove(String.valueOf(ArrayStorage.grant_array_names.get(getWhoExecuted)));
+
+
+                    System.out.println(player_name_array);
+
+                    String sql_already_g2;
+                    if (player_name_array.size() == 0 || player_name_array_2.size() == 0) {
+                        sql_already_g2 = "UPDATE jeezycore " +
+                                "SET playerName = NULL" +
+                                ", playerUUID = NULL" +
+                                " WHERE playerUUID LIKE '%" + ArrayStorage.grant_array.get(getWhoExecuted) + "%' AND " +
+                                "playerName LIKE '%" + ArrayStorage.grant_array_names.get(getWhoExecuted) + "%'" ;
+                    } else {
+                        sql_already_g2 = "UPDATE jeezycore " +
+                                "SET playerName = '" + player_name_array_2 +
+                                "', playerUUID = '" + player_name_array +
+                                "' WHERE playerUUID LIKE '%" + ArrayStorage.grant_array.get(getWhoExecuted) + "%' AND " +
+                                "playerName LIKE '%" + ArrayStorage.grant_array_names.get(getWhoExecuted) + "%'" ;
+                    }
+                    System.out.println(sql_already_g);
+                    System.out.println(sql_already_g2);
+                    stm.executeUpdate(sql_already_g2);
+
+                    player_name_array.clear();
+                    player_name_array_2.clear();
+                }
+            }
+            con.close();
+        }catch (SQLException e) {
+            System.out.println(e);
+        }
+
+    }
+
+    public void grantPlayerNoGui(String rankName, UUID getWhoExecuted) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            this.alreadyGrantedNoGui(getWhoExecuted);
+
+            Statement stm = con.createStatement();
+            String sql2 = "SELECT playerName, playerUUID FROM jeezycore WHERE rankName = '"+rankName+"'";
+            ResultSet rs = stm.executeQuery(sql2);
+            while (rs.next()) {
+                grantPlayer = rs.getString(2);
+                grantPlayer_2 = rs.getString(1);
+            }
+
+            if (grantPlayer != null) {
+                if (grantPlayer.contains(UUIDChecker.uuid)) return;
+                grant_new_player = grantPlayer.replace("]", "").replace("[", "").split(", ");
+                grant_new_player_2 = grantPlayer_2.replace("]", "").replace("[", "").split(", ");
+
+                player_name_array.addAll(Arrays.asList(grant_new_player));
+                player_name_array_2.addAll(Arrays.asList(grant_new_player_2));
+            }
+            player_name_array.add(String.valueOf(ArrayStorage.grant_array.get(getWhoExecuted)));
+            player_name_array_2.add(String.valueOf(ArrayStorage.grant_array_names.get(getWhoExecuted)));
+
+            String sql = "UPDATE jeezycore " +
+                    "SET playerName = '"+player_name_array_2 +
+                    "', playerUUID = '"+player_name_array +
+                    "' WHERE rankName = '"+rankName+"'";
+            System.out.println(sql);
+            stm.executeUpdate(sql);
+            player_name_array.clear();
+            player_name_array_2.clear();
+            con.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
     public void displayData() {
         try {
             this.createConnection();
