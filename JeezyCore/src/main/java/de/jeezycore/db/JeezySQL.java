@@ -71,9 +71,14 @@ public class JeezySQL  {
 
     String removeRankGui_result;
 
+    String removeRankGui_result_names;
+
     public static String [] removeRankGui_arr;
+    public static String [] removeRankGui_arr_names;
 
     public static ArrayList<String> removeRankGui_list = new ArrayList<String>();
+
+    public static ArrayList<String> removeRankGui_list_names = new ArrayList<String>();
 
     private void createConnection() {
 
@@ -651,18 +656,22 @@ public class JeezySQL  {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String select_sql = "SELECT playerUUID FROM jeezycore WHERE playerUUID LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()) +"%'";
+            String select_sql = "SELECT playerUUID, playerName FROM jeezycore WHERE playerUUID LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()) +"%'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
                 removeRankGui_result = rs.getString(1);
+                removeRankGui_result_names = rs.getString(2);
             }
 
             if (removeRankGui_result != null) {
                 removeRankGui_arr = removeRankGui_result.replace("[", "").replace("]", "").split(", ");
                 removeRankGui_list.addAll(Arrays.asList(removeRankGui_arr));
+                removeRankGui_arr_names = removeRankGui_result_names.replace("[", "").replace("]", "").split(", ");
+                removeRankGui_list_names.addAll(Arrays.asList(removeRankGui_arr_names));
 
 
             removeRankGui_list.remove(ArrayStorage.grant_array.get(p.getUniqueId()).toString());
+            removeRankGui_list_names.remove(ArrayStorage.grant_array_names.get(p.getUniqueId()));
             if (removeRankGui_arr.length == 1) {
                 sql = "UPDATE jeezycore " +
                         "SET playerUUID = "+null+
@@ -671,6 +680,7 @@ public class JeezySQL  {
             } else {
                 sql = "UPDATE jeezycore " +
                         "SET playerUUID = '"+removeRankGui_list+
+                        "', playerName = '"+removeRankGui_list_names+
                         "' WHERE playerUUID LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()) +"%'";
             }
                 stm.executeUpdate(sql);
