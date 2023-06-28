@@ -47,12 +47,14 @@ public class GrantRank implements CommandExecutor {
                     grantInventory.grant_menu(p, args[0]);
                 } else {
                     uc.check(args[1]);
+                    mysql.colorPerms(args[0]);
                     ArrayStorage.grant_array_names.put(p.getUniqueId(), args[1]);
                     ArrayStorage.grant_array.put(p.getUniqueId(), UUID.fromString(UUIDChecker.uuid));
                     mysql.grantPlayerNoGui(args[0], p.getUniqueId());
                     System.out.println(UUIDChecker.uuid);
                     mysql.onGrantingPerms(p);
                     grant_discord.realtimeChatOnGranting(ArrayStorage.grant_array.get(p.getUniqueId()), ArrayStorage.grant_array_names.get(p.getUniqueId()), p.getDisplayName(), args[0]);
+                    p.sendMessage("You §b§lsuccessfully§f granted §l§7" + ArrayStorage.grant_array_names.get(p.getUniqueId()) + "§f the §l" + mysql.rankColorPerms.replace("&", "§") + args[0] + " §frank.");
                     ArrayStorage.grant_array.clear();
                     ArrayStorage.grant_array_names.clear();
                 }
