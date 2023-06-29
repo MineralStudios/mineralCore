@@ -22,8 +22,9 @@ import java.util.*;
 
 public class JoinEvent implements Listener {
 
+    JeezySQL givePermsOnJoin = new JeezySQL();
+    BanSQL check_if_banned = new BanSQL();
     FakePlayerChecker fakePlayerChecker = new FakePlayerChecker();
-
     NameTag nameTag = new NameTag();
     StatusSQL statusSQL = new StatusSQL();
 
@@ -33,9 +34,9 @@ public class JoinEvent implements Listener {
             return;
         }
         statusSQL.firstJoined(e);
+        statusSQL.checkIfUsernameChanged(e);
         nameTag.giveTagOnJoin(e.getPlayer());
         e.setJoinMessage("");
-        BanSQL check_if_banned = new BanSQL();
         check_if_banned.banData(e.getPlayer().getUniqueId());
         BanSQL.punishment_UUID = null;
         if (BanSQL.ban_forever) {
@@ -47,9 +48,7 @@ public class JoinEvent implements Listener {
         }
 
     try {
-        JeezySQL givePermsOnJoin = new JeezySQL();
         givePermsOnJoin.onJoinPerms(e.getPlayer().getUniqueId());
-
 
         MemorySection mc = (MemorySection) JeezyConfig.config_defaults.get("spawn-settings");
         boolean spawnOnSpownpointOnJoin = mc.getBoolean("spawn-at-spawnpoint-on-join");
@@ -71,7 +70,4 @@ public class JoinEvent implements Listener {
     }
 
     }
-
-
-
 }

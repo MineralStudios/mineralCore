@@ -73,4 +73,44 @@ public class StatusSQL {
            e.printStackTrace();
        }
    }
+
+   public void checkIfUsernameChanged(PlayerJoinEvent p) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String playerName = null;
+
+            String select_sql = "SELECT playerName FROM status WHERE '"+p.getPlayer().getUniqueId()+"'";
+
+            ResultSet rs = stm.executeQuery(select_sql);
+            while (rs.next()) {
+                playerName = rs.getString(1);
+            }
+
+            if (!p.getPlayer().getDisplayName().equalsIgnoreCase(playerName)) {
+                updateIfUsernameChanged(p);
+            }
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+   }
+
+
+   public void updateIfUsernameChanged(PlayerJoinEvent p) {
+       try {
+           this.createConnection();
+           Connection con = DriverManager.getConnection(url, user, password);
+           Statement stm = con.createStatement();
+
+           String select_sql ="UPDATE status " +
+                   "SET playerName = '"+ p.getPlayer().getDisplayName() + "'"+
+                   " WHERE playerUUID = '"+ p.getPlayer().getUniqueId() + "'";;
+           stm.executeUpdate(select_sql);
+           con.close();
+       } catch (SQLException e) {
+           e.printStackTrace();
+       }
+   }
 }
