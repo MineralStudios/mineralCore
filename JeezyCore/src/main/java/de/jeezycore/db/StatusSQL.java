@@ -22,6 +22,14 @@ public class StatusSQL {
         password = (String) mc.get("password");
     }
 
+    private void createConnectionPractice() {
+        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
+
+        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+"practice";
+        user = (String) mc.get("user");
+        password = (String) mc.get("password");
+    }
+
     public void alreadyJoined(PlayerJoinEvent join) {
         try {
             this.createConnection();
@@ -90,6 +98,7 @@ public class StatusSQL {
 
             if (!p.getPlayer().getDisplayName().equalsIgnoreCase(playerName)) {
                 updateIfUsernameChanged(p);
+                updateEloTable(p);
             }
             con.close();
         } catch (SQLException e) {
@@ -97,6 +106,21 @@ public class StatusSQL {
         }
    }
 
+   private void updateEloTable(PlayerJoinEvent p) {
+       try {
+           this.createConnectionPractice();
+           Connection con = DriverManager.getConnection(url, user, password);
+           Statement stm = con.createStatement();
+
+           String select_sql ="UPDATE elo " +
+                   "SET PLAYER = '"+ p.getPlayer().getDisplayName() + "'"+
+                   " WHERE UUID = '"+ p.getPlayer().getUniqueId() + "'";;
+           stm.executeUpdate(select_sql);
+           con.close();
+       } catch (SQLException e) {
+           e.printStackTrace();
+       }
+   }
 
    public void updateIfUsernameChanged(PlayerJoinEvent p) {
        try {
