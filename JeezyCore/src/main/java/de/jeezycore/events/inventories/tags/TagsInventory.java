@@ -141,7 +141,11 @@ public class TagsInventory {
                 desc.add(2, "");
                 desc.add(3, "§7§lDisplay: §2" + p.getDisplayName() + " " + tagFormat.replaceAll("&", "§"));
                 desc.add(4, "§8§m-----------------------------------");
-                desc.add(5, "§4§lYou don't own this tag yet§7§l.");
+                if (p.hasPermission("jeezy.core.staff.tags")) {
+                    desc.add(5, "§a§lYou own this tag§7§l.");
+                } else {
+                    desc.add(5, "§4§lYou don't own this tag yet§7§l.");
+                }
                 if (i == 7 || i == 14) {
                     addUp += 2;
                 } else if (i >= 21) {
