@@ -473,7 +473,7 @@ public class JeezySQL  {
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
                 permPlayerRankName = rs.getString(1);
-                permPlayerRankColor = rs.getString(2);
+                permPlayerRankColor = rs.getString(3);
                 permPlayerUUID = rs.getString(6);
                 permRankPerms = rs.getString(7);
             }
