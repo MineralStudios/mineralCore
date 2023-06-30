@@ -49,7 +49,7 @@ public class StaffSQL {
                 p.sendMessage("§4This rank hasn't been created yet.");
                 return;
             } else if (staffRank) {
-                p.sendMessage("§7The "+ColorTranslator.colorTranslator.get(Integer.parseInt(JeezySQL.permPlayerRankColor))+JeezySQL.permPlayerRankName+" §7rank is §calready §7a staff rank.");
+                p.sendMessage("§7The "+JeezySQL.permPlayerRankColor.replace("&","§")+JeezySQL.permPlayerRankName+" §7rank is §calready §7a staff rank.");
                 return;
             }
 
@@ -58,7 +58,7 @@ public class StaffSQL {
 
             stm.executeUpdate(sql);
 
-            p.sendMessage("§bSuccessfully§7 changed the "+ColorTranslator.colorTranslator.get(Integer.parseInt(JeezySQL.permPlayerRankColor))+JeezySQL.permPlayerRankName+" §7rank to a staff rank.");
+            p.sendMessage("§bSuccessfully§7 changed the "+JeezySQL.permPlayerRankColor.replace("&","§")+JeezySQL.permPlayerRankName+" §7rank to a staff rank.");
             con.close();
         } catch (SQLException e) {
         }
@@ -82,7 +82,7 @@ public class StaffSQL {
                 p.sendMessage("§4This rank hasn't been setuped yet.");
                 return;
             } else if (!staffRank) {
-                p.sendMessage("§7The "+ColorTranslator.colorTranslator.get(Integer.parseInt(JeezySQL.permPlayerRankColor))+JeezySQL.permPlayerRankName+" §7rank is §calready §7removed from the staff ranks.");
+                p.sendMessage("§7The "+JeezySQL.permPlayerRankColor.replace("&","§")+JeezySQL.permPlayerRankName+" §7rank is §calready §7removed from the staff ranks.");
                 return;
             }
 
@@ -91,7 +91,7 @@ public class StaffSQL {
 
             stm.executeUpdate(sql);
 
-            p.sendMessage("§bSuccessfully§7 removed the "+ColorTranslator.colorTranslator.get(Integer.parseInt(JeezySQL.permPlayerRankColor))+JeezySQL.permPlayerRankName+" §7rank from the staff ranks.");
+            p.sendMessage("§bSuccessfully§7 removed the "+JeezySQL.permPlayerRankColor.replace("&","§")+JeezySQL.permPlayerRankName+" §7rank from the staff ranks.");
             con.close();
         } catch (SQLException e) {
             System.out.println(e);
