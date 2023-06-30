@@ -96,7 +96,7 @@ public class StatusSQL {
             Statement stm = con.createStatement();
             String playerName = null;
 
-            String select_sql = "SELECT playerName FROM status WHERE '"+p.getPlayer().getUniqueId()+"'";
+            String select_sql = "SELECT playerName FROM status WHERE playerUUID = '"+p.getPlayer().getUniqueId()+"'";
 
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
@@ -108,6 +108,7 @@ public class StatusSQL {
                 updateEloTable(p);
                 updateRanksUsernames(p);
             }
+            playerName = null;
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -161,7 +162,6 @@ public class StatusSQL {
            String sql_update = "UPDATE jeezycore " +
                    "SET playerName = '"+player_rank_usernames +
                    "' WHERE playerUUID LIKE '%"+ p.getPlayer().getUniqueId() +"%'";
-           System.out.println(sql_update);
            stm.executeUpdate(sql_update);
            player_rank_usernames.clear();
            player_rank_uuids.clear();
