@@ -1,17 +1,24 @@
 package de.jeezycore.db;
 
 import de.jeezycore.config.JeezyConfig;
+import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.UUID;
 
 public class StatusSQL {
 
     public String url;
     public String user;
     public String password;
+
+    ArrayList<String> player_rank_usernames = new ArrayList<String>();
+    ArrayList<String> player_rank_uuids = new ArrayList<String>();
 
     private void createConnection() {
 
@@ -99,6 +106,7 @@ public class StatusSQL {
             if (!p.getPlayer().getDisplayName().equalsIgnoreCase(playerName)) {
                 updateIfUsernameChanged(p);
                 updateEloTable(p);
+                updateRanksUsernames(p);
             }
             con.close();
         } catch (SQLException e) {
@@ -119,6 +127,47 @@ public class StatusSQL {
            con.close();
        } catch (SQLException e) {
            e.printStackTrace();
+       }
+   }
+
+   private void updateRanksUsernames(PlayerJoinEvent p) {
+       try {
+           this.createConnection();
+           Connection con = DriverManager.getConnection(url, user, password);
+
+           Statement stm = con.createStatement();
+           String sql = "SELECT playerName, playerUUID FROM jeezycore WHERE playerUUID LIKE '%"+ p.getPlayer().getUniqueId() +"%'";
+
+           String grantPlayer = null;
+           String grantUUID = null;
+           String [] grant_new_player;
+           String [] grant_new_UUIDS;
+
+           ResultSet rs = stm.executeQuery(sql);
+           while (rs.next()) {
+               grantPlayer = rs.getString(1);
+               grantUUID = rs.getString(2);
+           }
+
+           if (grantPlayer != null) {
+               grant_new_player = grantPlayer.replace("]", "").replace("[", "").split(", ");
+               grant_new_UUIDS = grantUUID.replace("]", "").replace("[", "").split(", ");
+
+               player_rank_usernames.addAll(Arrays.asList(grant_new_player));
+               player_rank_uuids.addAll(Arrays.asList(grant_new_UUIDS));
+               player_rank_usernames.remove(player_rank_uuids.indexOf(p.getPlayer().getUniqueId().toString()));
+               player_rank_usernames.add(p.getPlayer().getDisplayName());
+           }
+           String sql_update = "UPDATE jeezycore " +
+                   "SET playerName = '"+player_rank_usernames +
+                   "' WHERE playerUUID LIKE '%"+ p.getPlayer().getUniqueId() +"%'";
+           System.out.println(sql_update);
+           stm.executeUpdate(sql_update);
+           player_rank_usernames.clear();
+           player_rank_uuids.clear();
+           con.close();
+       } catch (SQLException e) {
+           System.out.println(e);
        }
    }
 
