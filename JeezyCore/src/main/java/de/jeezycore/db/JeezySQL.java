@@ -122,13 +122,26 @@ public class JeezySQL  {
                     " rankPerms longtext, " +
                     " staffRank boolean DEFAULT FALSE," +
                     " PRIMARY KEY ( rankName ))";
-            String status_table = "CREATE TABLE IF NOT EXISTS status " +
+
+            String players_table = "CREATE TABLE IF NOT EXISTS players " +
                     " (playerName VARCHAR(255), " +
                     " playerUUID VARCHAR(255), " +
+                    " minerals longtext, " +
+                    " rank VARCHAR(255), " +
+                    " tag VARCHAR(255), " +
+                    " chatColor VARCHAR(255), " +
                     " firstJoined VARCHAR(255), " +
                     " lastSeen VARCHAR(255), " +
                     " online boolean DEFAULT FALSE," +
                     " PRIMARY KEY ( playerUUID ))";
+
+            String items_table = "CREATE TABLE IF NOT EXISTS items " +
+                    " (playerName VARCHAR(255), " +
+                    " playerUUID VARCHAR(255), " +
+                    " ownedTags longtext, " +
+                    " currentChatColor VARCHAR(255), " +
+                    " PRIMARY KEY ( playerUUID ))";
+
             String punishments_table = "CREATE TABLE IF NOT EXISTS punishments " +
                     " (UUID VARCHAR(255), " +
                     " banned_forever boolean, " +
@@ -142,6 +155,7 @@ public class JeezySQL  {
                     " ban_logs longtext, " +
                     " mute_logs longtext, "+
                     " PRIMARY KEY ( UUID ))";
+
             String tags_table = "CREATE TABLE IF NOT EXISTS tags " +
                     " (tagName VARCHAR(255), " +
                     " tagCategory VARCHAR(255), " +
@@ -165,7 +179,8 @@ public class JeezySQL  {
                     " PRIMARY KEY ( ServerName ))";
 
             stm.executeUpdate(jeezyCore_table);
-            stm.executeUpdate(status_table);
+            stm.executeUpdate(players_table);
+            stm.executeUpdate(items_table);
             stm.executeUpdate(punishments_table);
             stm.executeUpdate(tags_table);
             stm.executeUpdate(reward_table);
