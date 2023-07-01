@@ -1,15 +1,12 @@
 package de.jeezycore.db;
 
 import de.jeezycore.config.JeezyConfig;
-import de.jeezycore.utils.ArrayStorage;
-import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.UUID;
 
 public class StatusSQL {
 
@@ -43,7 +40,7 @@ public class StatusSQL {
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
 
-            String select_sql ="UPDATE status " +
+            String select_sql ="UPDATE players " +
                     "SET online = true" +
                     " WHERE playerUUID = '"+ join.getPlayer().getUniqueId() + "'";;
             stm.executeUpdate(select_sql);
@@ -60,9 +57,9 @@ public class StatusSQL {
 
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-            String select_sql ="INSERT INTO status" +
+            String select_sql ="INSERT INTO players" +
                     "(playerName, playerUUID, firstJoined, online) " +
-                    "VALUES ('"+ join.getPlayer().getDisplayName() + "', '"+ join.getPlayer().getUniqueId() +"', " +
+                    "VALUES ('"+ join.getPlayer().getDisplayName() + "', '"+ join.getPlayer().getUniqueId() +"', "+
                     "'"+ timestamp + "', true)";
             stm.executeUpdate(select_sql);
             con.close();
@@ -79,7 +76,7 @@ public class StatusSQL {
 
            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-           String select_sql ="UPDATE status " +
+           String select_sql ="UPDATE players " +
                    "SET lastSeen = '"+ timestamp + "', online = false" +
                    " WHERE playerUUID = '"+ quit.getPlayer().getUniqueId() + "'";;
            stm.executeUpdate(select_sql);
@@ -96,7 +93,7 @@ public class StatusSQL {
             Statement stm = con.createStatement();
             String playerName = null;
 
-            String select_sql = "SELECT playerName FROM status WHERE playerUUID = '"+p.getPlayer().getUniqueId()+"'";
+            String select_sql = "SELECT playerName FROM players WHERE playerUUID = '"+p.getPlayer().getUniqueId()+"'";
 
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
@@ -177,7 +174,7 @@ public class StatusSQL {
            Connection con = DriverManager.getConnection(url, user, password);
            Statement stm = con.createStatement();
 
-           String select_sql ="UPDATE status " +
+           String select_sql ="UPDATE players " +
                    "SET playerName = '"+ p.getPlayer().getDisplayName() + "'"+
                    " WHERE playerUUID = '"+ p.getPlayer().getUniqueId() + "'";;
            stm.executeUpdate(select_sql);
