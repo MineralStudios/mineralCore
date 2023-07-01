@@ -139,7 +139,7 @@ public class JeezySQL  {
                     " (playerName VARCHAR(255), " +
                     " playerUUID VARCHAR(255), " +
                     " ownedTags longtext, " +
-                    " currentChatColor VARCHAR(255), " +
+                    " ownedChatColors VARCHAR(255), " +
                     " PRIMARY KEY ( playerUUID ))";
 
             String punishments_table = "CREATE TABLE IF NOT EXISTS punishments " +
