@@ -22,7 +22,7 @@ public class Ping implements CommandExecutor {
                     Object entityPlayer = p.getClass().getMethod("getHandle").invoke(p);
                     int ping = (int) entityPlayer.getClass().getField("ping").get(entityPlayer);
 
-                    p.sendMessage(p.getDisplayName() + "´s"+" §b§lping: §7§l"+ ping+" §b§lms");
+                    p.sendMessage(p.getDisplayName() + "´s"+" §9§lping: §7§l"+ ping+" §9§lms");
 
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | NoSuchFieldException e) {
                     e.printStackTrace();
@@ -36,7 +36,7 @@ public class Ping implements CommandExecutor {
                     Object entityPlayer = Bukkit.getPlayer(args[0]).getClass().getMethod("getHandle").invoke(Bukkit.getPlayer(args[0]));
                     int ping = (int) entityPlayer.getClass().getField("ping").get(entityPlayer);
 
-                    p.sendMessage(args[0] + "´s"+" §b§lping: §7§l"+ ping+" §b§lms");
+                    p.sendMessage(args[0] + "´s"+" §9§lping: §7§l"+ ping+" §9§lms");
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | NoSuchFieldException e) {
                 e.printStackTrace();
                 }
