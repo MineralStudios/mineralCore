@@ -18,7 +18,7 @@ public class CreateRank implements CommandExecutor {
            } else {
                if (p.hasPermission("jeezy.core.rank.create")) {
                    JeezySQL mySQL = new JeezySQL();
-                   String input = "INSERT INTO jeezycore " +
+                   String input = "INSERT INTO ranks " +
                            "(rankName, rankRGB, rankColor, rankPriority) " +
                            "VALUES " +
                            "(?, ?, ?, ?)";
