@@ -15,6 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Report implements CommandExecutor {
+    JeezySQL display = new JeezySQL();
+    StaffChat staffChat = new StaffChat();
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -31,16 +33,14 @@ public class Report implements CommandExecutor {
 
                 UUIDChecker uc = new UUIDChecker();
                 uc.check(args[0]);
-                JeezySQL display = new JeezySQL();
-                StaffChat staffChat = new StaffChat();
-                String sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
+
+                display.getPlayerInformation(p.getPlayer());
+                String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
                 display.displayChatRank(sql);
 
                 String show_rank_color_reporter = display.rankColor.replace("&", "§");
 
-
-                String sql2 = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ UUIDChecker.uuid +"%'";
-                display.displayChatRank(sql2);
+                display.displayChatRank(sql);
 
                 String show_rank_color_reported = display.rankColor_second.replace("&", "§");
 
