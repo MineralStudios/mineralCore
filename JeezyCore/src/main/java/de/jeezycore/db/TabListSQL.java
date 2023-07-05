@@ -14,6 +14,8 @@ public class TabListSQL {
     public String password;
     String rankColor;
 
+    JeezySQL jeezySQL = new JeezySQL();
+
     private void createConnection() {
         MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
         url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
@@ -27,7 +29,8 @@ public class TabListSQL {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+p.getPlayer().getUniqueId()+"%'";
+            jeezySQL.getPlayerInformation(p);
+            String sql = "SELECT * FROM ranks WHERE rankName = '"+jeezySQL.rankNameInformation+"'";
             ResultSet rs = stm.executeQuery(sql);
             while(rs.next()){
                 rankColor = rs.getString(3);
