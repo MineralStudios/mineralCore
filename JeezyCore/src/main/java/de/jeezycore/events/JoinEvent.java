@@ -22,6 +22,7 @@ import java.util.*;
 
 public class JoinEvent implements Listener {
 
+
     JeezySQL givePermsOnJoin = new JeezySQL();
     BanSQL check_if_banned = new BanSQL();
     FakePlayerChecker fakePlayerChecker = new FakePlayerChecker();
@@ -30,6 +31,35 @@ public class JoinEvent implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
+        e.getPlayer().sendMessage(new String[] {
+                " §9§lMineral Network §7§l(§6§lSeason §f§l1§7§l)\n",
+                "\n",
+                " §9§l♦ §f§lWebsite: §9§lmineral.gg\n",
+                "\n",
+                " §9§l♦ §f§lStore: §9§lstore.mineral.gg\n",
+                "\n",
+                " §9§l♦ §f§lDiscord: §9§ldiscord.mineral.gg\n",
+                "\n",
+                " §9§l♦ §f§lTwitter: §9§ltwitter.com/MineralServer\n",
+                });
+
+        e.getPlayer().sendMessage(new String[]{
+                "\n",
+                "\n",
+                "\n",
+                " §9§lMineral §f§lPractice",
+                "\n",
+                " §71v1s, 2v2s, PvPBots, Duels, Parties, Events",
+                "\n",
+                " §9§l♦ §fTo play,§9§l right click with your sword",
+                "\n",
+                " §9§l♦ §fTo duel someone,§9§l /duel [player]",
+                "\n",
+                " §9§l♦ §fTo edit your kit,§9§l right click with your book",
+                "\n",
+                " §9§lThanks §f§lfor §9§ljoining §f§lour network§9§l! §9§l❤"
+        });
+
         if (fakePlayerChecker.isFakePlayer(e.getPlayer())) {
             return;
         }
