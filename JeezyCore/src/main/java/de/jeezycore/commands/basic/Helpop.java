@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Helpop implements CommandExecutor {
+    StaffChat staffChat = new StaffChat();
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -21,7 +22,7 @@ public class Helpop implements CommandExecutor {
         if (cmd.getName().equalsIgnoreCase("helpop") && args.length >= 1) {
 
             if (p.hasPermission("jeezy.core.staff.helpop")) {
-                StaffChat staffChat = new StaffChat();
+
 
                 List<String> ls = new ArrayList<String>(Arrays.asList(args));
                 String input = Joiner.on(" ")

@@ -73,6 +73,7 @@ public class StaffChat {
             StaffSQL.staffRank = false;
             StaffSQL.staffPlayerNames = null;
             StaffSQL.staff.clear();
+            StaffSQL.staffRankNamesArray.clear();
 
         }
     }
@@ -99,5 +100,6 @@ public class StaffChat {
         StaffSQL.staffRank = false;
         StaffSQL.staffPlayerNames = null;
         StaffSQL.staff.clear();
+        StaffSQL.staffRankNamesArray.clear();
     }
 }
