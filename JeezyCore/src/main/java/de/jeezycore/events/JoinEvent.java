@@ -32,6 +32,7 @@ public class JoinEvent implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         e.getPlayer().sendMessage(new String[] {
+                "\n",
                 " §9§lMineral Network §7§l(§6§lSeason §f§l1§7§l)\n",
                 "\n",
                 " §9§l♦ §f§lWebsite: §9§lmineral.gg\n",
@@ -44,7 +45,6 @@ public class JoinEvent implements Listener {
                 });
 
         e.getPlayer().sendMessage(new String[]{
-                "\n",
                 "\n",
                 "\n",
                 " §9§lMineral §f§lPractice",
