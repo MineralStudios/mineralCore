@@ -15,23 +15,24 @@ import java.util.List;
 import static de.jeezycore.db.TagsSQL.tag_in_chat;
 
 public class ChatEvent implements Listener {
-    private String chatFormatMessage;
+
+    TagsSQL tagsSQL = new TagsSQL();
+    JeezySQL display = new JeezySQL();
+
+    RealtimeChat rmc = new RealtimeChat();
+    MuteSQL check_if_banned = new MuteSQL();
 
     @EventHandler
     public void onPlayerChat1(AsyncPlayerChatEvent e) {
         StaffChat staffChat = new StaffChat();
         staffChat.chat(e);
-        JeezySQL display = new JeezySQL();
-        String sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ e.getPlayer().getUniqueId().toString() +"%'";
+
+        display.getPlayerInformation(e.getPlayer());
+        String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
         display.displayChatRank(sql);
-        System.out.println(display.rank);
-        System.out.println(display.rankRGB);
-        System.out.println(e.getPlayer().getUniqueId());
-        TagsSQL tagsSQL = new TagsSQL();
+
         tagsSQL.tagChat(e.getPlayer().getUniqueId());
 
-        RealtimeChat rmc = new RealtimeChat();
-        MuteSQL check_if_banned = new MuteSQL();
         check_if_banned.muteData(e.getPlayer().getUniqueId());
         MuteSQL.punishment_UUID = null;
         if (MuteSQL.mute_forever) {
