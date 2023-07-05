@@ -32,7 +32,6 @@ public class GrantInventory {
             executePermissions(e);
 
             e.getWhoClicked().closeInventory();
-            e.getWhoClicked().sendMessage("You §b§lsuccessfully§f granted §l§7" + ArrayStorage.grant_array_names.get(e.getWhoClicked().getUniqueId()) + "§f the §l" + e.getCurrentItem().getItemMeta().getDisplayName() + " §frank.");
 
             executeDiscord(e);
             e.setCancelled(true);
@@ -110,7 +109,7 @@ public class GrantInventory {
     private void executeMYSQL(org.bukkit.event.inventory.InventoryClickEvent e) {
         JeezySQL mysql = new JeezySQL();
         String get_rank = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
-        mysql.grantPlayer(get_rank, e.getWhoClicked().getUniqueId());
+        mysql.grantPlayer(get_rank, UUID.fromString(UUIDChecker.uuid), e.getWhoClicked());
         mysql.onGrantingPerms(e.getWhoClicked());
     }
 

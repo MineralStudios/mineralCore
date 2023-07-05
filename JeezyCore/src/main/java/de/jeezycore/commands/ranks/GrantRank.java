@@ -40,7 +40,7 @@ public class GrantRank implements CommandExecutor {
 
             if (p.hasPermission("jeezy.core.rank.grant")) {
                 if (cmd.getName().equalsIgnoreCase("grant") && args.length == 0) {
-                    p.sendMessage("grant <player> | grant <rank> <player>");
+                    p.sendMessage("Usage: /grant <player> | /grant <rank> <player>");
                     return true;
                 }
                 if (cmd.getName().equalsIgnoreCase("grant") && args.length == 1) {
