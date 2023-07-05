@@ -1,8 +1,8 @@
 package de.jeezycore.events.chat;
 
-import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.db.StaffSQL;
+import de.jeezycore.utils.ArrayStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -10,22 +10,24 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import java.util.UUID;
 
 public class StaffChat {
-
+    JeezySQL display = new JeezySQL();
+    StaffSQL staffSQL = new StaffSQL();
+    JeezySQL playerInfo = new JeezySQL();
     public void chat(AsyncPlayerChatEvent e) {
         String chat_message = e.getMessage();
         String firstChar = String.valueOf(chat_message.charAt(0));
         String expectedOutput = "@";
 
-        StaffSQL staffSQL = new StaffSQL();
-        staffSQL.checkIfStaff(UUID.fromString(e.getPlayer().getUniqueId().toString()));
+
+        playerInfo.getPlayerInformation(e.getPlayer());
+        staffSQL.checkIfStaff(playerInfo.rankNameInformation, UUID.fromString(e.getPlayer().getUniqueId().toString()));
+
 
         if (StaffSQL.staffRank && firstChar.equalsIgnoreCase(expectedOutput)) {
-            staffSQL.getStaff();
-
-                JeezySQL display = new JeezySQL();
-                String sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ e.getPlayer().getUniqueId().toString() +"%'";
+                staffSQL.getStaff();
+                display.getPlayerInformation(e.getPlayer());
+                String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
                 display.displayChatRank(sql);
-
 
                     for (int i = 0; i < StaffSQL.staff.size(); i++) {
                         String new_message = e.getMessage().replace("@", "").trim();
@@ -41,18 +43,19 @@ public class StaffChat {
                     StaffSQL.staffRank = false;
                     StaffSQL.staffPlayerNames = null;
                     StaffSQL.staff.clear();
+                    StaffSQL.staffRankNamesArray.clear();
         }
     }
 
     public void helpopChat(Player p, String message) {
-        StaffSQL staffSQL = new StaffSQL();
-        staffSQL.checkIfStaff(UUID.fromString(p.getPlayer().getUniqueId().toString()));
+        playerInfo.getPlayerInformation(p.getPlayer());
+        staffSQL.checkIfStaff(playerInfo.rankNameInformation, UUID.fromString(p.getPlayer().getUniqueId().toString()));
 
         if (StaffSQL.staffRank) {
             staffSQL.getStaff();
 
-            JeezySQL display = new JeezySQL();
-            String sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
+            display.getPlayerInformation(p.getPlayer());
+            String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
             display.displayChatRank(sql);
 
 
@@ -70,15 +73,15 @@ public class StaffChat {
             StaffSQL.staffRank = false;
             StaffSQL.staffPlayerNames = null;
             StaffSQL.staff.clear();
+
         }
     }
 
     public void reportChat(Player p, String message) {
-        StaffSQL staffSQL = new StaffSQL();
         staffSQL.getStaff();
 
-        JeezySQL display = new JeezySQL();
-        String sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
+        display.getPlayerInformation(p.getPlayer());
+        String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
         display.displayChatRank(sql);
 
 

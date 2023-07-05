@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class StaffRankDisable implements CommandExecutor {
+    StaffSQL execute = new StaffSQL();
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -15,7 +16,6 @@ public class StaffRankDisable implements CommandExecutor {
 
             if (cmd.getName().equalsIgnoreCase("staffrank-disable") && args.length == 1) {
                 if (p.hasPermission("jeezy.core.staff.disable")) {
-                    StaffSQL execute = new StaffSQL();
                     execute.removeFromStaff(args[0], p);
                 } else {
                     p.sendMessage("No permission.");
