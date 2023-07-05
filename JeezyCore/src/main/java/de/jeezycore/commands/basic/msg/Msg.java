@@ -14,6 +14,7 @@ import java.util.*;
 import static de.jeezycore.utils.ArrayStorage.*;
 
 public class Msg implements CommandExecutor {
+    JeezySQL display = new JeezySQL();
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -43,8 +44,9 @@ public class Msg implements CommandExecutor {
                         .skipNulls()
                         .join(ls).replace(args[0], "").replaceAll("\\s+", " ").trim();
 
-                JeezySQL display = new JeezySQL();
-                String sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
+
+                display.getPlayerInformation(p.getPlayer());
+                String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
                 display.displayChatRank(sql);
 
 

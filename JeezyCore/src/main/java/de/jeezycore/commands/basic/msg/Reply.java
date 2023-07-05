@@ -16,6 +16,7 @@ import static de.jeezycore.utils.ArrayStorage.msg_ignore_list;
 import static de.jeezycore.utils.ArrayStorage.reply_array;
 
 public class Reply implements CommandExecutor {
+    JeezySQL display = new JeezySQL();
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -41,8 +42,9 @@ public class Reply implements CommandExecutor {
                 String input = Joiner.on(" ")
                         .skipNulls()
                         .join(ls);
-                JeezySQL display = new JeezySQL();
-                String sql = "SELECT * FROM jeezycore WHERE playerUUID LIKE '%"+ p.getPlayer().getUniqueId().toString() +"%'";
+
+                display.getPlayerInformation(p.getPlayer());
+                String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
                 display.displayChatRank(sql);
 
                 Bukkit.getPlayer(result).sendMessage("§8§l(§4§lmsg§8§l) "+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§7: "+input);
