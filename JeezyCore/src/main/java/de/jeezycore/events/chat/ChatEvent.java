@@ -9,9 +9,7 @@ import org.bukkit.configuration.MemorySection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-
 import java.util.List;
-
 import static de.jeezycore.db.TagsSQL.tag_in_chat;
 
 public class ChatEvent implements Listener {
@@ -22,9 +20,10 @@ public class ChatEvent implements Listener {
     RealtimeChat rmc = new RealtimeChat();
     MuteSQL check_if_banned = new MuteSQL();
 
+    StaffChat staffChat = new StaffChat();
+
     @EventHandler
     public void onPlayerChat1(AsyncPlayerChatEvent e) {
-        StaffChat staffChat = new StaffChat();
         staffChat.chat(e);
 
         display.getPlayerInformation(e.getPlayer());
@@ -69,6 +68,7 @@ public class ChatEvent implements Listener {
                 e.setFormat(chat_format_rep.replace("%", "%%"));
             }
         tag_in_chat = null;
+        display.rank = null;
 
         try {
             MemorySection mc = (MemorySection) JeezyConfig.config_defaults.get("chat");
@@ -84,15 +84,8 @@ public class ChatEvent implements Listener {
                 e.getPlayer().sendMessage("§4§lChat has been disabled.");
                 e.setCancelled(true);
             }
-
-
         } catch (Exception f) {
             f.printStackTrace();
         }
-
-
-
-
     }
-
 }
