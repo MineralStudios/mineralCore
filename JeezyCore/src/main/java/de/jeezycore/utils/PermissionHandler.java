@@ -18,20 +18,18 @@ public class PermissionHandler {
 
 
     public void onAddPerms(Player p, String perm) {
-        if (JeezySQL.permPlayerUUID == null) return;
-        String[] uuidStrings = JeezySQL.permPlayerUUID.replace("[", "").replace("]", "").
-                replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
+        if (JeezySQL.permPlayerUUIDArray.size() == 0) return;
 
-        for (int i = 0; i < uuidStrings.length; i++) {
-            System.out.println(Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])));
-            if (Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])) == null) {
+        for (int i = 0; i < JeezySQL.permPlayerUUIDArray.size(); i++) {
+            System.out.println(Bukkit.getServer().getPlayer(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i))));
+            if (Bukkit.getServer().getPlayer(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i))) == null) {
                 continue;
             }
-             attachment = Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])).addAttachment(Main.getPlugin(Main.class));
+             attachment = Bukkit.getServer().getPlayer(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i))).addAttachment(Main.getPlugin(Main.class));
 
-            perms.put(UUID.fromString(uuidStrings[i]), attachment);
+            perms.put(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i)), attachment);
 
-            attachment = perms.get(UUID.fromString(uuidStrings[i]));
+            attachment = perms.get(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i)));
             System.out.println(attachment);
             if (attachment == null) {
                 return;
@@ -39,33 +37,31 @@ public class PermissionHandler {
             attachment.setPermission(perm, true);
 
         }
+        JeezySQL.permPlayerUUIDArray.clear();
 
     }
 
     public void onRemovePerms(Player p, String perm) {
-        if (JeezySQL.permPlayerUUID == null) return;
-        String[] uuidStrings = JeezySQL.permPlayerUUID.replace("[", "").replace("]", "").
-                replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
+        if (JeezySQL.permPlayerUUIDArray.size() == 0) return;
 
-        for (int i = 0; i < uuidStrings.length; i++) {
-            System.out.println(Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])));
-            if (Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])) == null) {
+        for (int i = 0; i < JeezySQL.permPlayerUUIDArray.size(); i++) {
+            System.out.println(Bukkit.getServer().getPlayer(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i))));
+            if (Bukkit.getServer().getPlayer(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i))) == null) {
                 continue;
             }
-            attachment = Bukkit.getServer().getPlayer(UUID.fromString(uuidStrings[i])).addAttachment(Main.getPlugin(Main.class));
+            attachment = Bukkit.getServer().getPlayer(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i))).addAttachment(Main.getPlugin(Main.class));
 
-            perms.put(UUID.fromString(uuidStrings[i]), attachment);
+            perms.put(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i)), attachment);
 
-            attachment = perms.get(UUID.fromString(uuidStrings[i]));
+            attachment = perms.get(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i)));
             System.out.println(attachment);
             if (attachment == null) {
                 return;
             }
             attachment.setPermission(perm, false);
 
-
-
         }
+        JeezySQL.permPlayerUUIDArray.clear();
 
     }
 

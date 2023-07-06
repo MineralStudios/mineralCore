@@ -26,6 +26,8 @@ public class JeezySQL  {
 
     public String rankNameInformation;
 
+    public String allPlayerInformationUUID;
+
     public String rankColor_second;
     public String grantPlayerUUID;
 
@@ -64,8 +66,6 @@ public class JeezySQL  {
 
     public static String permPlayerRankColor;
 
-    public static String permPlayerUUID;
-
     public static String permRankPerms;
 
     public static String joinPermRanks;
@@ -80,6 +80,8 @@ public class JeezySQL  {
 
     public static String [] removeRankGui_arr;
     public static String [] removeRankGui_arr_names;
+
+    public static ArrayList<String> permPlayerUUIDArray = new ArrayList<String>();
 
     public static ArrayList<String> removeRankGui_list = new ArrayList<String>();
 
@@ -343,6 +345,29 @@ public class JeezySQL  {
         }
     }
 
+    public void getAllPlayerInformation(Player p, String rankName) {
+
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+
+            String sql = "SELECT * FROM players WHERE rank = '"+rankName+"'";
+
+            ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                allPlayerInformationUUID = rs.getString(2);
+
+                permPlayerUUIDArray.add(allPlayerInformationUUID);
+
+            }
+
+            con.close();
+        }catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
     public void displayChatRank(String sql) {
         try {
             this.createConnection();
@@ -399,7 +424,6 @@ public class JeezySQL  {
             while (rs.next()) {
                 permPlayerRankName = rs.getString(1);
                 permPlayerRankColor = rs.getString(3);
-                permPlayerUUID = rs.getString(6);
                 permRankPerms = rs.getString(5);
             }
             con.close();
@@ -442,10 +466,12 @@ public class JeezySQL  {
             p.sendMessage("§fSuccessfully added the perm: §l§b"+perm+" §ffor the rank: §l"+show_color+rank+"§f.");
            stm.executeUpdate(sql);
            rankPerms.clear();
-       con.close();
-       this.getRankData(rank, p);
+
+            this.getRankData(rank, p);
             PermissionHandler ph = new PermissionHandler();
             ph.onAddPerms(p, perm);
+
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
