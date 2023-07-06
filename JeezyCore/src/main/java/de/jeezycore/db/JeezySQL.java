@@ -35,9 +35,6 @@ public class JeezySQL  {
 
     public String grantPlayer_2;
 
-    public String alreadyGranted;
-
-    public String alreadyGranted_2;
 
     public static String [] grant_new_player;
     public static String [] grant_new_player_2;
@@ -78,14 +75,10 @@ public class JeezySQL  {
 
     String removeRankGui_result_names;
 
-    public static String [] removeRankGui_arr;
-    public static String [] removeRankGui_arr_names;
-
     public static ArrayList<String> permPlayerUUIDArray = new ArrayList<String>();
 
-    public static ArrayList<String> removeRankGui_list = new ArrayList<String>();
+    public static String getPlayerUUID;
 
-    public static ArrayList<String> removeRankGui_list_names = new ArrayList<String>();
 
     private void createConnection() {
 
@@ -227,6 +220,7 @@ public class JeezySQL  {
     public void grantPlayer(String rankName, UUID getPlayerToGrant, HumanEntity player) {
         try {
             this.createConnection();
+            this.onUnGrantingPerms(player);
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
             String sql2 = "SELECT playerUUID, rank FROM players WHERE playerUUID = '"+getPlayerToGrant+"'";
@@ -332,7 +326,7 @@ public class JeezySQL  {
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
 
-            String sql = "SELECT rank FROM players WHERE playerUUID ="+"'"+p.getPlayer().getUniqueId()+"'";
+            String sql = "SELECT rank FROM players WHERE playerUUID = '"+p.getPlayer().getUniqueId()+"'";
 
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
@@ -368,13 +362,33 @@ public class JeezySQL  {
         }
     }
 
-    public void displayChatRank(String sql) {
+    public void getPlayer(Player p) {
+
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
 
+            String sql = "SELECT rank FROM players WHERE playerUUID= '"+ArrayStorage.grant_array.get(p.getPlayer().getUniqueId())+"'";
+
             ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                getPlayerUUID = rs.getString(1);
+            }
+
+            con.close();
+        }catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public void displayChatRank(String sql) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery(sql);
+
             while (rs.next()) {
                 rank = rs.getString(1);
                 rankRGB = rs.getString(2);
@@ -387,6 +401,7 @@ public class JeezySQL  {
             }
         con.close();
         }catch (SQLException e) {
+            System.out.println("HERE ERROR");
             System.out.println(e);
         }
     }
@@ -556,12 +571,13 @@ public class JeezySQL  {
         }
     }
 
-    public void onGrantingPerms(HumanEntity p) {
+    public void onGrantingPerms(HumanEntity p, String rank) {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String select_sql = "SELECT rankPerms FROM ranks WHERE playerUUID LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()).toString() +"%'";
+            this.getPlayerInformation((Player) p);
+            String select_sql = "SELECT rankPerms FROM ranks WHERE rankName = '"+rank+"'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
                 grantingPermRanks = rs.getString(1);
@@ -582,7 +598,8 @@ public class JeezySQL  {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String select_sql = "SELECT rankPerms FROM ranks WHERE playerUUID LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()).toString() +"%'";
+            this.getPlayer((Player) p);
+            String select_sql = "SELECT rankPerms FROM ranks WHERE rankName = '"+getPlayerUUID+"'";
 
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
@@ -595,6 +612,7 @@ public class JeezySQL  {
             rs.close();
             con.close();
             unGrantingPermRanks = null;
+            getPlayerUUID = null;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -607,7 +625,7 @@ public class JeezySQL  {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String select_sql = "SELECT playerUUID, playerName FROM ranks WHERE playerUUID LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()) +"%'";
+            String select_sql = "SELECT playerUUID, playerName FROM players WHERE playerUUID = '"+ArrayStorage.grant_array.get(p.getUniqueId())+"'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
                 removeRankGui_result = rs.getString(1);
@@ -615,25 +633,10 @@ public class JeezySQL  {
             }
 
             if (removeRankGui_result != null) {
-                removeRankGui_arr = removeRankGui_result.replace("[", "").replace("]", "").split(", ");
-                removeRankGui_list.addAll(Arrays.asList(removeRankGui_arr));
-                removeRankGui_arr_names = removeRankGui_result_names.replace("[", "").replace("]", "").split(", ");
-                removeRankGui_list_names.addAll(Arrays.asList(removeRankGui_arr_names));
+                sql = "UPDATE players " +
+                        "SET rank = "+null+
+                        " WHERE playerUUID = '"+ArrayStorage.grant_array.get(p.getUniqueId())+"'";
 
-
-            removeRankGui_list.remove(ArrayStorage.grant_array.get(p.getUniqueId()).toString());
-            removeRankGui_list_names.remove(ArrayStorage.grant_array_names.get(p.getUniqueId()));
-            if (removeRankGui_arr.length == 1) {
-                sql = "UPDATE ranks " +
-                        "SET playerUUID = "+null+
-                        ", playerName = "+null +
-                        " WHERE playerUUID LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()) +"%'";
-            } else {
-                sql = "UPDATE ranks " +
-                        "SET playerUUID = '"+removeRankGui_list+
-                        "', playerName = '"+removeRankGui_list_names+
-                        "' WHERE playerUUID LIKE '%"+ ArrayStorage.grant_array.get(p.getUniqueId()) +"%'";
-            }
                 stm.executeUpdate(sql);
                 RealtimeGrant unGrant_discord = new RealtimeGrant();
                 unGrant_discord.realtimeChatOnUnGranting(ArrayStorage.grant_array.get(p.getUniqueId()), ArrayStorage.grant_array_names.get(p.getUniqueId()), p.getDisplayName());
@@ -641,9 +644,8 @@ public class JeezySQL  {
             } else {
                 p.sendMessage("§4§lThis player doesn't have a rank!");
             }
-            con.close();
-            removeRankGui_list.clear();
             ArrayStorage.grant_array.remove(p.getPlayer().getUniqueId());
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

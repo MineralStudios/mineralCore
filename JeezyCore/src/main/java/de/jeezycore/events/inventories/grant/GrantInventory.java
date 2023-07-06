@@ -110,7 +110,7 @@ public class GrantInventory {
         JeezySQL mysql = new JeezySQL();
         String get_rank = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
         mysql.grantPlayer(get_rank, UUID.fromString(UUIDChecker.uuid), e.getWhoClicked());
-        mysql.onGrantingPerms(e.getWhoClicked());
+        mysql.onGrantingPerms(e.getWhoClicked(), get_rank);
     }
 
 

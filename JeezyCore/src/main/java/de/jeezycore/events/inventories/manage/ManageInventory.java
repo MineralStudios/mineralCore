@@ -105,5 +105,6 @@ public class ManageInventory {
         JeezySQL removeRank = new JeezySQL();
         removeRank.onUnGrantingPerms(e.getWhoClicked());
         removeRank.removeRankGui((Player) e.getWhoClicked());
+
     }
 }
