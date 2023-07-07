@@ -83,6 +83,7 @@ public class MuteSQL {
             }
             ArrayStorage.mute_logs.clear();
             discord.realtimeChatOnMute(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName(), input);
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -118,7 +119,7 @@ public class MuteSQL {
             stm.close();
 
             mute_logsUpdate(username);
-
+            con.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -176,6 +177,7 @@ public class MuteSQL {
 
             stm.executeUpdate(sql);
             stm.close();
+            con.close();
         } catch (Exception e) {
         }
     }
@@ -223,6 +225,7 @@ public class MuteSQL {
             }
             ArrayStorage.mute_logs.clear();
             discord.realtimeChatOnTempMute(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName(), mute_end, reason);
+            con.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -259,7 +262,7 @@ public class MuteSQL {
             stm.close();
 
             mute_logsUpdate(username);
-
+            con.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -290,6 +293,7 @@ public class MuteSQL {
             stm.executeUpdate(sql);
             stm.close();
             discord.realtimeChatOnUnMute(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName());
+            con.close();
         } catch (Exception e) {
         }
     }
@@ -355,6 +359,7 @@ public class MuteSQL {
                     " WHERE UUID = '"+UUIDChecker.uuid+"'";
             stm.executeUpdate(sql);
             stm.close();
+            con.close();
             mute_logsArray.clear();
         } catch (Exception e) {
             e.printStackTrace();

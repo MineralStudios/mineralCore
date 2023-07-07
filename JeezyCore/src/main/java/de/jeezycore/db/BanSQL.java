@@ -100,6 +100,7 @@ public class BanSQL {
             }
             ArrayStorage.ban_logs.clear();
             discord.realtimeChatOnBan(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName(), input);
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -143,6 +144,7 @@ public class BanSQL {
             }
             ArrayStorage.ban_logs.clear();
             discord.realtimeChatOnBan(UUID.fromString(UUIDChecker.uuid), username, "Console", input);
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -179,7 +181,7 @@ public class BanSQL {
             stm.close();
 
             ban_logsUpdate(username);
-
+            con.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -216,7 +218,7 @@ public class BanSQL {
             stm.close();
 
             ban_logsUpdate(username);
-
+            con.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -275,6 +277,7 @@ public class BanSQL {
 
             stm.executeUpdate(sql);
             stm.close();
+            con.close();
         } catch (Exception e) {
         }
     }
@@ -332,6 +335,7 @@ public class BanSQL {
             }
             ArrayStorage.ban_logs.clear();
             discord.realtimeChatOnTempBan(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName(), ban_end, reason);
+            con.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -368,7 +372,7 @@ public class BanSQL {
             stm.close();
 
             ban_logsUpdate(username);
-
+            con.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -399,6 +403,7 @@ public class BanSQL {
             stm.executeUpdate(sql);
             stm.close();
             discord.realtimeChatOnUnban(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName());
+            con.close();
         } catch (Exception e) {
         }
     }
@@ -465,6 +470,7 @@ public class BanSQL {
             stm.executeUpdate(sql);
             stm.close();
             ban_logsArray.clear();
+            con.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
