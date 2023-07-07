@@ -157,8 +157,8 @@ public class MuteSQL {
             return;
         }
 
-        p.sendMessage("§4You are currently muted.\n"+
-                "§cMute duration: " + "§cDay(s): §7[§b"+days+"§7] | "+"§cHour(s): §7[§b"+hours+"§7] | "+"§cMinutes: §7[§b"+minutes+"§7] | " +"§cSeconds: §7[§b"+seconds+"§7];");
+        p.sendMessage("§7You are §4temporarily §7muted.\n"+
+                "§7Mute duration: " + "§cDay(s): §7[§9"+days+"§7] | "+"§cHour(s): §7[§9"+hours+"§7] | "+"§cMinutes: §7[§9"+minutes+"§7] | " +"§cSeconds: §7[§9"+seconds+"§7];");
     }
 
     private void tempMuteAutomaticUnban(Player p) {

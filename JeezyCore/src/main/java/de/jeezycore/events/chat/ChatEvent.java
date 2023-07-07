@@ -35,8 +35,8 @@ public class ChatEvent implements Listener {
         check_if_banned.muteData(e.getPlayer().getUniqueId());
         MuteSQL.punishment_UUID = null;
         if (MuteSQL.mute_forever) {
-            e.getPlayer().sendMessage("§cYou are currently muted.\n " +
-                    "§bDuration: §4forever.");
+            e.getPlayer().sendMessage("§7You are §4permanently §7muted.\n " +
+                    "§7Duration: §9forever§7.");
             MuteSQL.mute_forever = false;
             e.setCancelled(true);
             return;
