@@ -31,6 +31,20 @@ public class JoinEvent implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
+
+        check_if_banned.banData(e.getPlayer().getUniqueId());
+        BanSQL.punishment_UUID = null;
+        if (BanSQL.ban_forever) {
+            e.getPlayer().kickPlayer("§7You are §4permanently §7banned from §9MineralPractice§7.\n\n" +
+                    "§7If you feel this ban has been unjustified, appeal on our §9discord §7at\n §9discord.mineral.gg§7.");
+            BanSQL.ban_forever = false;
+            return;
+        } else if (check_if_banned.ban_end != null) {
+            check_if_banned.tempBanDurationCalculate(e.getPlayer());
+            return;
+        }
+
+
         e.getPlayer().sendMessage(new String[] {
                 "\n",
                 " §9§lMineral Network §7§l(§6§lSeason §f§l1§7§l)\n",
@@ -67,15 +81,7 @@ public class JoinEvent implements Listener {
         statusSQL.checkIfUsernameChanged(e);
         nameTag.giveTagOnJoin(e.getPlayer());
         e.setJoinMessage("");
-        check_if_banned.banData(e.getPlayer().getUniqueId());
-        BanSQL.punishment_UUID = null;
-        if (BanSQL.ban_forever) {
-            e.getPlayer().kickPlayer("§4You are permanently banned from §bJeezyDevelopment.\n" +
-                    "§7If you feel this ban is unjustified, appeal on our discord at\n §bjeezydevelopment.com§7.");
-            BanSQL.ban_forever = false;
-        } else if (check_if_banned.ban_end != null) {
-            check_if_banned.tempBanDurationCalculate(e.getPlayer());
-        }
+
 
     try {
         givePermsOnJoin.getPlayerInformation(e.getPlayer());

@@ -80,9 +80,9 @@ public class BanSQL {
             ArrayStorage.ban_logs.add(json_o);
 
             try {
-                Bukkit.getServer().getPlayer(UUID.fromString(UUIDChecker.uuid)).kickPlayer("§4You are permanently banned from JeezyDevelopment.\n\n" +
-                        "§6Reason: §c" + input + "\n\n" +
-                        "§7If you feel this ban has been unjustified, appeal on our discord at\n §bjeezydevelopment.com§7.");
+                Bukkit.getServer().getPlayer(UUID.fromString(UUIDChecker.uuid)).kickPlayer("§7You are §4permanently §7banned from §9MineralPractice§7.\n\n" +
+                        "§7Reason: §c" + input + "\n\n" +
+                        "§7If you feel this ban has been unjustified, appeal on our §9discord §7at\n §9discord.mineral.gg§7.");
             } catch (Exception e) {
 
             }
@@ -123,9 +123,9 @@ public class BanSQL {
             ArrayStorage.ban_logs.add(json_o);
 
             try {
-                Bukkit.getServer().getPlayer(UUID.fromString(UUIDChecker.uuid)).kickPlayer("§4You are permanently banned from JeezyDevelopment.\n\n" +
-                        "§6Reason: §c" + input + "\n\n" +
-                        "§7If you feel this ban has been unjustified, appeal on our discord at\n §bjeezydevelopment.com§7.");
+                Bukkit.getServer().getPlayer(UUID.fromString(UUIDChecker.uuid)).kickPlayer("§7You are §4permanently §7banned from §9MineralPractice§7.\n\n" +
+                        "§7Reason: §c" + input + "\n\n" +
+                        "§7If you feel this ban has been unjustified, appeal on our §9discord §7at\n §9discord.mineral.gg§7.");
             } catch (Exception e) {
 
             }
@@ -255,9 +255,9 @@ public class BanSQL {
             return;
         }
 
-        p.kickPlayer("§4You are temporarily banned from §bJeezyDevelopment.\n\n" +
-                "§cBan duration: " + "§cDay(s): §7[§b"+days+"§7] | "+"§cHour(s): §7[§b"+hours+"§7] | "+"§cMinutes: §7[§b"+minutes+"§7] | " +"§cSeconds: §7[§b"+seconds+"§7];\n\n" +
-                "§7If you feel this ban is unjustified, appeal on our discord at\n §bjeezydevelopment.com§7.");
+        p.kickPlayer("§7You are §4temporarily §7banned from §9MineralPractice§7.\n\n" +
+                "§cBan duration: " + "§cDay(s): §7[§9"+days+"§7] | "+"§cHour(s): §7[§9"+hours+"§7] | "+"§cMinutes: §7[§9"+minutes+"§7] | " +"§cSeconds: §7[§9"+seconds+"§7];\n\n" +
+                "§7If you feel this ban has been unjustified, appeal on our §9discord §7at\n §9discord.mineral.gg§7.");
     }
 
     private void tempBanAutomaticUnban(Player p) {
@@ -311,10 +311,10 @@ public class BanSQL {
             ArrayStorage.ban_logs.add(json_o);
 
             try {
-                Bukkit.getServer().getPlayer(UUID.fromString(UUIDChecker.uuid)).kickPlayer("§4You are temporarily banned from §bJeezyDevelopment.\n\n" +
-                        "§aBan time: §4"+time+"\n\n" +
-                        "§6Reason: §c" +reason+"\n\n"+
-                        "§7If you feel this ban has been unjustified, appeal on our discord at\n §bjeezydevelopment.com§7.");
+                Bukkit.getServer().getPlayer(UUID.fromString(UUIDChecker.uuid)).kickPlayer("§7You are §4temporarily §7banned from §9MineralPractice§7.\n\n" +
+                        "§7Duration: §c"+time+"\n\n" +
+                        "§7Reason: §c" +reason+"\n\n"+
+                        "§7If you feel this ban has been unjustified, appeal on our §9discord §7at\n §9discord.mineral.gg§7.");
             } catch (Exception e) {
 
             }
