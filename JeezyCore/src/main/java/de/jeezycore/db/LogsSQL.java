@@ -1,16 +1,8 @@
 package de.jeezycore.db;
 
-import com.google.gson.JsonArray;
 import de.jeezycore.config.JeezyConfig;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.entity.Player;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.UUID;
 
 public class LogsSQL {
@@ -39,8 +31,8 @@ public class LogsSQL {
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" +userUUID+"'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
-                ban_log = rs.getString(10);
-                mute_log = rs.getString(11);
+                ban_log = rs.getString(11);
+                mute_log = rs.getString(12);
             }
             rs.close();
             con.close();

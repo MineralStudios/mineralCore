@@ -5,11 +5,9 @@ import de.jeezycore.discord.messages.grant.RealtimeGrant;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.PermissionHandler;
 import de.jeezycore.utils.UUIDChecker;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 // SQL imports
 import java.sql.*;
 import java.util.*;
@@ -141,7 +139,8 @@ public class JeezySQL  {
                     " PRIMARY KEY ( playerUUID ))";
 
             String punishments_table = "CREATE TABLE IF NOT EXISTS punishments " +
-                    " (UUID VARCHAR(255), " +
+                    " (playerName VARCHAR(255), " +
+                    " UUID VARCHAR(255), " +
                     " banned_forever boolean, " +
                     " mute_forever boolean, " +
                     " ban_start longtext, " +

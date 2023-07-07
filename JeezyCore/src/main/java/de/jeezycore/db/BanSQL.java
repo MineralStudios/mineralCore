@@ -7,24 +7,13 @@ import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
-
-import java.io.File;
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.UUID;
 
 public class BanSQL {
@@ -88,9 +77,9 @@ public class BanSQL {
             }
 
             String sql = "INSERT INTO punishments " +
-                    "(UUID, banned_forever, ban_start, ban_end, ban_status, ban_logs) " +
+                    "(playerName, UUID, banned_forever, ban_start, ban_end, ban_status, ban_logs) " +
                     "VALUES " +
-                    "('" + UUIDChecker.uuid + "', true, " + "NULL, NULL, true, '" + ArrayStorage.ban_logs + "')";
+                    "('"+ UUIDChecker.uuidName + "'," +" '" + UUIDChecker.uuid + "', true, " + "NULL, NULL, true, '" + ArrayStorage.ban_logs + "')";
 
             System.out.println(sql);
             if (punishment_UUID == null && ban_logs == null) {
@@ -132,9 +121,9 @@ public class BanSQL {
             }
 
             String sql = "INSERT INTO punishments " +
-                    "(UUID, banned_forever, ban_start, ban_end, ban_status, ban_logs) " +
+                    "(playerName, UUID, banned_forever, ban_start, ban_end, ban_status, ban_logs) " +
                     "VALUES " +
-                    "('" + UUIDChecker.uuid + "', true, " + "NULL, NULL, true, '" + ArrayStorage.ban_logs + "')";
+                    "('"+ UUIDChecker.uuidName + "'," +" '" + UUIDChecker.uuid + "', true, " + "NULL, NULL, true, '" + ArrayStorage.ban_logs + "')";
 
             System.out.println(sql);
             if (punishment_UUID == null && ban_logs == null) {
@@ -323,9 +312,9 @@ public class BanSQL {
             }
 
             String sql = "INSERT INTO punishments " +
-                    "(UUID, banned_forever, ban_start, ban_end, ban_status, ban_logs) " +
+                    "(playerName, UUID, banned_forever, ban_start, ban_end, ban_status, ban_logs) " +
                     "VALUES " +
-                    "('"+UUIDChecker.uuid+"', false,'"+currentTime.format(formatter)+"', '"+updatedTime.format(formatter)+"', false, "+"'"+ArrayStorage.ban_logs+"')";
+                    "('"+UUIDChecker.uuidName + "', '"+UUIDChecker.uuid+"', false,'"+currentTime.format(formatter)+"', '"+updatedTime.format(formatter)+"', false, "+"'"+ArrayStorage.ban_logs+"')";
 
             if (punishment_UUID == null && ban_logs == null) {
                 stm.executeUpdate(sql);
@@ -416,12 +405,12 @@ public class BanSQL {
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" +get_UUID.toString()+"'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
-                punishment_UUID = rs.getString(1);
-                ban_forever = rs.getBoolean(2);
-                ban_start = rs.getString(4);
-                ban_end = rs.getString(5);
-                ban_status = rs.getBoolean(6);
-                ban_logs = rs.getString(10);
+                punishment_UUID = rs.getString(2);
+                ban_forever = rs.getBoolean(3);
+                ban_start = rs.getString(5);
+                ban_end = rs.getString(6);
+                ban_status = rs.getBoolean(7);
+                ban_logs = rs.getString(11);
             }
             con.close();
         } catch (SQLException e) {
@@ -437,9 +426,9 @@ public class BanSQL {
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" + get_UUID.toString() + "'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
-                punishment_UUID = rs.getString(1);
-                ban_forever = rs.getBoolean(2);
-                ban_status = rs.getBoolean(6);
+                punishment_UUID = rs.getString(2);
+                ban_forever = rs.getBoolean(3);
+                ban_status = rs.getBoolean(7);
             }
             con.close();
         } catch (SQLException e) {
@@ -471,6 +460,7 @@ public class BanSQL {
             stm.close();
             ban_logsArray.clear();
             con.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

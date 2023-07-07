@@ -2,7 +2,6 @@ package de.jeezycore.db;
 
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.discord.messages.mute.RealtimeMute;
-import de.jeezycore.discord.messages.realtime.RealtimeChat;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.configuration.MemorySection;
@@ -70,9 +69,9 @@ public class MuteSQL {
             ArrayStorage.mute_logs.add(json_o);
 
             String sql = "INSERT INTO punishments " +
-                    "(UUID, mute_forever, mute_start, mute_end, mute_status, mute_logs) " +
+                    "(playerName, UUID, mute_forever, mute_start, mute_end, mute_status, mute_logs) " +
                     "VALUES " +
-                    "('" + UUIDChecker.uuid + "', true, " + "NULL, NULL, true, '"+ArrayStorage.mute_logs + "')";
+                    "('"+UUIDChecker.uuidName + "', '" + UUIDChecker.uuid + "', true, " + "NULL, NULL, true, '"+ArrayStorage.mute_logs + "')";
 
             System.out.println(sql);
             if (punishment_UUID == null && mute_logs == null) {
@@ -213,9 +212,9 @@ public class MuteSQL {
             ArrayStorage.mute_logs.add(json_o);
 
             String sql = "INSERT INTO punishments " +
-                    "(UUID, mute_forever, mute_start, mute_end, mute_status, mute_logs) " +
+                    "(playerName, UUID, mute_forever, mute_start, mute_end, mute_status, mute_logs) " +
                     "VALUES " +
-                    "('"+UUIDChecker.uuid+"', false,'"+currentTime.format(formatter)+"', '"+updatedTime.format(formatter)+"', true, "+"'"+ArrayStorage.mute_logs+"')";
+                    "('"+UUIDChecker.uuidName + "', '"+UUIDChecker.uuid+"', false,'"+currentTime.format(formatter)+"', '"+updatedTime.format(formatter)+"', true, "+"'"+ArrayStorage.mute_logs+"')";
 
             if (punishment_UUID == null && mute_logs == null) {
                 stm.executeUpdate(sql);
@@ -306,12 +305,12 @@ public class MuteSQL {
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" +get_UUID.toString()+"'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
-                punishment_UUID = rs.getString(1);
-                mute_forever = rs.getBoolean(3);
-                mute_start = rs.getString(7);
-                mute_end = rs.getString(8);
-                mute_status = rs.getBoolean(9);
-                mute_logs = rs.getString(11);
+                punishment_UUID = rs.getString(2);
+                mute_forever = rs.getBoolean(4);
+                mute_start = rs.getString(8);
+                mute_end = rs.getString(9);
+                mute_status = rs.getBoolean(10);
+                mute_logs = rs.getString(12);
             }
             con.close();
         } catch (SQLException e) {
@@ -327,9 +326,9 @@ public class MuteSQL {
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" + get_UUID.toString() + "'";
             ResultSet rs = stm.executeQuery(select_sql);
             while (rs.next()) {
-                punishment_UUID = rs.getString(1);
-                mute_forever = rs.getBoolean(3);
-                mute_status = rs.getBoolean(9);
+                punishment_UUID = rs.getString(2);
+                mute_forever = rs.getBoolean(4);
+                mute_status = rs.getBoolean(10);
             }
             con.close();
         } catch (SQLException e) {
