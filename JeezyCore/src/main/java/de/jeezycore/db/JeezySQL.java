@@ -158,8 +158,6 @@ public class JeezySQL  {
                     " tagCategory VARCHAR(255), " +
                     " tagDesign VARCHAR(255), " +
                     " tagPriority INT(3), " +
-                    " playerName longtext, " +
-                    " currentTag longtext, " +
                     " PRIMARY KEY ( tagName ))";
 
             String reward_table = "CREATE TABLE IF NOT EXISTS rewards " +
