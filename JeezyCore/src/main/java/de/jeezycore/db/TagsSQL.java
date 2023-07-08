@@ -1,6 +1,7 @@
 package de.jeezycore.db;
 
 import de.jeezycore.config.JeezyConfig;
+import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
@@ -19,7 +20,7 @@ public class TagsSQL {
     public String user;
     public String password;
 
-    String grant;
+    String tagNameTags;
 
     String tagName;
 
@@ -29,8 +30,9 @@ public class TagsSQL {
     String tagDesign;
 
 
-    String tag_players;
+    String ownedTags;
 
+    String ownedItemsPlayerUUID;
     String current_tag;
 
     public static String tag_in_chat;
@@ -38,13 +40,17 @@ public class TagsSQL {
     public static String tag_exist_format;
     public static String tag_exist_name;
 
+    public static String playerTag;
+
     public static String [] grant_new_tag;
 
     public static String [] already_set_tag;
 
     public ArrayList<String> arrayList = new ArrayList<>();
 
-    public static ArrayList<String> player_name_tags_array = new ArrayList<String>();
+    public ArrayList<String> tagNameList = new ArrayList<>();
+
+    public static ArrayList<String> tag_name_array = new ArrayList<String>();
 
     public LinkedHashMap<String, String> tagDataFullSize = new LinkedHashMap<String, String>();
 
@@ -103,15 +109,16 @@ public class TagsSQL {
     public void getOwnershipData(Player p) {
         try {
             this.createConnection();
+            this.getPlayerTag(p);
             Connection con = DriverManager.getConnection(url, user, password);
 
             Statement stm = con.createStatement();
-            String sql = "SELECT * FROM tags WHERE playerName LIKE '%"+p.getPlayer().getUniqueId()+"%'";
+            String sql = "SELECT ownedTags FROM items WHERE playerUUID = '"+p.getPlayer().getUniqueId()+"'";
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
                 ownerTagName = rs.getString(1);
                 if (ownerTagName != null) {
-                    String[] get_owned_tags = ownerTagName.split(", ");
+                    String[] get_owned_tags = ownerTagName.replace("[", "").replace("]", "").split(", ");
                     tags_in_ownership_array.addAll(Arrays.asList(get_owned_tags));
 
                 }
@@ -122,79 +129,79 @@ public class TagsSQL {
         }
     }
 
-    private void alreadySetCurrentTag(String tagName, UUID get_uuid) {
+    public void getPlayerTag(Player p) {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
 
             Statement stm = con.createStatement();
-            String sql_already_g = "SELECT * FROM tags WHERE currentTag LIKE '%"+get_uuid+"%'";
-            ResultSet rs = stm.executeQuery(sql_already_g);
-            while (rs.next()) {
-                tagName = rs.getString(1);
-                current_tag = rs.getString(6);
+            String sql = "SELECT tag FROM players WHERE playerUUID = '"+p.getUniqueId()+"'";
+            ResultSet rs = stm.executeQuery(sql);
+            if (!rs.next()) {
+               playerTag = null;
+            } else {
+                do {
+                   playerTag = rs.getString(1);
+                } while (rs.next());
             }
-            if (current_tag != null) {
-
-
-                    already_set_tag = current_tag.replace("]", "").replace("[", "").split(", ");
-
-                    set_current_tag_array.addAll(Arrays.asList(already_set_tag));
-
-                    set_current_tag_array.remove(get_uuid.toString());
-
-
-
-                    String sql_already_g2;
-                    if (set_current_tag_array.size() == 0) {
-                        sql_already_g2 = "UPDATE tags " +
-                                "SET currentTag = NULL" +
-                                " WHERE tagName = '"+tagName+"'";
-                    } else {
-                        sql_already_g2 = "UPDATE tags " +
-                                "SET currentTag = '" + set_current_tag_array +
-                                "' WHERE tagName = '"+tagName+"'";
-                    }
-
-                    stm.executeUpdate(sql_already_g2);
-                    set_current_tag_array.clear();
-                }
 
             con.close();
-        }catch (SQLException e) {
-            System.out.println(e);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
     }
-    public void setCurrentTag(String tagName, UUID get_uuid) {
+
+    public void getPlayerOwnedTags(String playerName) {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
+            UUIDChecker uc = new UUIDChecker();
+            uc.check(playerName);
+            Statement stm = con.createStatement();
 
-            this.alreadySetCurrentTag(tagName, get_uuid);
+            String sql_items = "SELECT * FROM items WHERE playerUUID = '"+UUIDChecker.uuid+"'";
+
+            ResultSet rs = stm.executeQuery(sql_items);
+
+            if (!rs.next()) {
+                ownedItemsPlayerUUID = null;
+                ownedTags = null;
+            } else {
+                do {
+                    ownedItemsPlayerUUID = rs.getString(2);
+                    ownedTags = rs.getString(3);
+                } while (rs.next());
+            }
+            stm.close();
+            rs.close();
+            con.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public void setCurrentTag(String tagName, Player player) {
+        try {
+            this.createConnection();
+
+            Connection con = DriverManager.getConnection(url, user, password);
 
             Statement stm = con.createStatement();
-            String sql2 = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
+            String sql2 = "SELECT * FROM items WHERE playerUUID = '"+player.getUniqueId()+"'";
             ResultSet rs = stm.executeQuery(sql2);
-            while (rs.next()) {
-                current_tag = rs.getString(6);
+
+            if (!rs.next()) {
+                current_tag = null;
+            } else {
+                do {
+                    current_tag = rs.getString(3);
+                } while (rs.next());
             }
 
-            if (current_tag != null) {
-                if (current_tag.contains(get_uuid.toString())) return;
-
-                grant_new_tag = current_tag.replace("]", "").replace("[", "").split(", ");
-
-                set_current_tag_array.addAll(Arrays.asList(grant_new_tag));
-
-            }
-            set_current_tag_array.add(String.valueOf(get_uuid));
-
-            String sql = "UPDATE tags " +
-                    "SET currentTag = '"+set_current_tag_array +
-                    "' WHERE tagName = '"+tagName+"'";
-
-            stm.executeUpdate(sql);
+            String sql_2 = "UPDATE players " +
+                    "SET tag = '"+tagName +
+                    "' WHERE playerUUID = '"+player.getUniqueId()+"'";
+            stm.executeUpdate(sql_2);
             set_current_tag_array.clear();
             con.close();
         } catch (SQLException e) {
@@ -216,6 +223,7 @@ public class TagsSQL {
                 tagDesign = rs.getString(3);
 
                 arrayList.add(Arrays.asList(tagName, tagCategory, tagDesign).toString());
+                tagNameList.add(tagName);
 
             }
             con.close();
@@ -224,53 +232,56 @@ public class TagsSQL {
         }
     }
 
+
     public void grantTag(Player p, String tagName, String playerName) {
         try {
             this.createConnection();
+            this.getPlayerOwnedTags(playerName);
             Connection con = DriverManager.getConnection(url, user, password);
-
             UUIDChecker uc = new UUIDChecker();
             uc.check(playerName);
-
             Statement stm = con.createStatement();
-            String sql = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
-            ResultSet rs = stm.executeQuery(sql);
+            String sql_tags = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
+
+            ResultSet rs = stm.executeQuery(sql_tags);
+
             while (rs.next()) {
-                grant = rs.getString(1);
-                tag_players = rs.getString(5);
+                tagNameTags = rs.getString(1);
             }
 
 
-            if (grant == null) {
+            if (tagNameTags == null) {
                 p.sendMessage("§4This rank hasn't been created yet.");
                 return;
             }
 
-            if (tag_players != null) {
+            if (ownedTags != null) {
 
-                grant_new_tag = tag_players.replace("]", "").replace("[", "").split(", ");
+                grant_new_tag = ownedTags.replace("]", "").replace("[", "").split(", ");
 
-                player_name_tags_array.addAll(Arrays.asList(grant_new_tag));
+                tag_name_array.addAll(Arrays.asList(grant_new_tag));
 
             }
 
-
-
-            if (player_name_tags_array.contains(UUIDChecker.uuid)) {
+            if (tag_name_array.contains(tagName)) {
                 p.sendMessage("§7Tag has been §calready §7unlocked for §b"+playerName+"§7.");
             } else {
-                player_name_tags_array.add(UUIDChecker.uuid);
+                tag_name_array.add(tagName);
                 p.sendMessage("§2Successfully §7unlocked the §b"+tagName+" §7tag for §9"+playerName+"§7.");
             }
 
-                String sql2 = "UPDATE tags " +
-                        "SET playerName = '"+player_name_tags_array +
-                        "' WHERE tagName = '"+tagName+"'";
-
-                stm.executeUpdate(sql2);
-                player_name_tags_array.clear();
-
-
+            if (ownedItemsPlayerUUID == null) {
+                String sql_insert_items = "INSERT INTO items" +
+                        "(playerName, playerUUID, ownedTags, ownedChatColors)" +
+                        "VALUES ('"+UUIDChecker.uuidName+"', '"+UUIDChecker.uuid+"', '"+tag_name_array+"', '"+null+"')";
+                stm.executeUpdate(sql_insert_items);
+            } else {
+                String sql_push_items = "UPDATE items " +
+                        "SET ownedTags = '"+ tag_name_array +
+                        "' WHERE playerUUID = '"+UUIDChecker.uuid+"'";
+                stm.executeUpdate(sql_push_items);
+            }
+                tag_name_array.clear();
             con.close();
         } catch (SQLException e) {
             System.out.println(e);
@@ -281,50 +292,52 @@ public class TagsSQL {
     public void grantTagConsole(CommandSender sender, String tagName, String playerName) {
         try {
             this.createConnection();
+            this.getPlayerOwnedTags(playerName);
             Connection con = DriverManager.getConnection(url, user, password);
-
             UUIDChecker uc = new UUIDChecker();
             uc.check(playerName);
-
             Statement stm = con.createStatement();
-            String sql = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
-            ResultSet rs = stm.executeQuery(sql);
+            String sql_tags = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
+
+            ResultSet rs = stm.executeQuery(sql_tags);
+
             while (rs.next()) {
-                grant = rs.getString(1);
-                tag_players = rs.getString(5);
+                tagNameTags = rs.getString(1);
             }
 
 
-            if (grant == null) {
+            if (tagNameTags == null) {
                 sender.sendMessage("§4This rank hasn't been created yet.");
                 return;
             }
 
-            if (tag_players != null) {
+            if (ownedTags != null) {
 
-                grant_new_tag = tag_players.replace("]", "").replace("[", "").split(", ");
+                grant_new_tag = ownedTags.replace("]", "").replace("[", "").split(", ");
 
-                player_name_tags_array.addAll(Arrays.asList(grant_new_tag));
+                tag_name_array.addAll(Arrays.asList(grant_new_tag));
 
             }
 
-
-
-            if (player_name_tags_array.contains(UUIDChecker.uuid)) {
+            if (tag_name_array.contains(tagName)) {
                 sender.sendMessage("§7Tag has been §calready §7unlocked for §b"+playerName+"§7.");
             } else {
-                player_name_tags_array.add(UUIDChecker.uuid);
+                tag_name_array.add(tagName);
                 sender.sendMessage("§2Successfully §7unlocked the §b"+tagName+" §7tag for §9"+playerName+"§7.");
             }
 
-            String sql2 = "UPDATE tags " +
-                    "SET playerName = '"+player_name_tags_array +
-                    "' WHERE tagName = '"+tagName+"'";
-
-            stm.executeUpdate(sql2);
-            player_name_tags_array.clear();
-
-
+            if (ownedItemsPlayerUUID == null) {
+                String sql_insert_items = "INSERT INTO items" +
+                        "(playerName, playerUUID, ownedTags, ownedChatColors)" +
+                        "VALUES ('"+UUIDChecker.uuidName+"', '"+UUIDChecker.uuid+"', '"+tag_name_array+"', '"+null+"')";
+                stm.executeUpdate(sql_insert_items);
+            } else {
+                String sql_push_items = "UPDATE items " +
+                        "SET ownedTags = '"+ tag_name_array +
+                        "' WHERE playerUUID = '"+UUIDChecker.uuid+"'";
+                stm.executeUpdate(sql_push_items);
+            }
+            tag_name_array.clear();
             con.close();
         } catch (SQLException e) {
             System.out.println(e);
@@ -336,52 +349,39 @@ public class TagsSQL {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
-
             UUIDChecker uc = new UUIDChecker();
             uc.check(playerName);
-
+            this.getPlayerOwnedTags(playerName);
             Statement stm = con.createStatement();
-            String sql = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
-            ResultSet rs = stm.executeQuery(sql);
-            while (rs.next()) {
-                grant = rs.getString(1);
-                tag_players = rs.getString(5);
+
+            if (ownedTags != null) {
+
+                grant_new_tag = ownedTags.replace("]", "").replace("[", "").split(", ");
+
+                tag_name_array.addAll(Arrays.asList(grant_new_tag));
             }
 
-            if (grant == null) {
-                p.sendMessage("§7This tag doesn't §4exit§7.");
-                return;
-            }
-
-            if (tag_players != null) {
-
-                grant_new_tag = tag_players.replace("]", "").replace("[", "").split(", ");
-
-                player_name_tags_array.addAll(Arrays.asList(grant_new_tag));
-            }
-
-            if (!player_name_tags_array.contains(UUIDChecker.uuid)) {
+            if (!tag_name_array.contains(tagName)) {
                 p.sendMessage("§7This player doesn't §4own §7that tag.");
                 return;
             } else {
-                player_name_tags_array.remove(UUIDChecker.uuid);
+                tag_name_array.remove(tagName);
                 p.sendMessage("§2Successfully §7removed the §b"+tagName+" §7tag for §9"+playerName+"§7.");
             }
-
-            String sql2;
-            if (player_name_tags_array.size() == 0) {
-                sql2 = "UPDATE tags " +
-                        "SET playerName = NULL" +
-                        " WHERE tagName = '"+tagName+"'";
+            String sql;
+            if (tag_name_array.size() == 0) {
+                System.out.println("I am getting here");
+                sql = "UPDATE items " +
+                        "SET ownedTags = NULL" +
+                        " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
             } else {
-                sql2 = "UPDATE tags " +
-                        "SET playerName = '"+player_name_tags_array +
-                        "' WHERE tagName = '"+tagName+"'";
+                sql = "UPDATE items " +
+                        "SET ownedTags = '"+ tag_name_array +
+                        "' WHERE playerUUID = '"+UUIDChecker.uuid+"'";
             }
 
-            stm.executeUpdate(sql2);
-            player_name_tags_array.clear();
-
+            stm.executeUpdate(sql);
+            tag_name_array.clear();
             con.close();
         } catch (SQLException e) {
         e.printStackTrace();
@@ -395,48 +395,38 @@ public class TagsSQL {
 
             UUIDChecker uc = new UUIDChecker();
             uc.check(playerName);
+            this.getPlayerOwnedTags(playerName);
 
             Statement stm = con.createStatement();
-            String sql = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
-            ResultSet rs = stm.executeQuery(sql);
-            while (rs.next()) {
-                grant = rs.getString(1);
-                tag_players = rs.getString(5);
+
+            if (ownedTags != null) {
+
+                grant_new_tag = ownedTags.replace("]", "").replace("[", "").split(", ");
+
+                tag_name_array.addAll(Arrays.asList(grant_new_tag));
             }
 
-            if (grant == null) {
-                sender.sendMessage("§7This tag doesn't §4exit§7.");
-                return;
-            }
-
-            if (tag_players != null) {
-
-                grant_new_tag = tag_players.replace("]", "").replace("[", "").split(", ");
-
-                player_name_tags_array.addAll(Arrays.asList(grant_new_tag));
-            }
-
-            if (!player_name_tags_array.contains(UUIDChecker.uuid)) {
+            if (!tag_name_array.contains(tagName)) {
                 sender.sendMessage("§7This player doesn't §4own §7that tag.");
                 return;
             } else {
-                player_name_tags_array.remove(UUIDChecker.uuid);
+                tag_name_array.remove(tagName);
                 sender.sendMessage("§2Successfully §7removed the §b"+tagName+" §7tag for §9"+playerName+"§7.");
             }
-
             String sql2;
-            if (player_name_tags_array.size() == 0) {
-                sql2 = "UPDATE tags " +
-                        "SET playerName = NULL" +
-                        " WHERE tagName = '"+tagName+"'";
+            if (tag_name_array.size() == 0) {
+                System.out.println("I am getting here");
+                sql2 = "UPDATE items " +
+                        "SET ownedTags = NULL" +
+                        " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
             } else {
-                sql2 = "UPDATE tags " +
-                        "SET playerName = '"+player_name_tags_array +
-                        "' WHERE tagName = '"+tagName+"'";
+                sql2 = "UPDATE items " +
+                        "SET ownedTags = '"+ tag_name_array +
+                        "' WHERE playerUUID = '"+UUIDChecker.uuid+"'";
             }
 
             stm.executeUpdate(sql2);
-            player_name_tags_array.clear();
+            tag_name_array.clear();
 
             con.close();
         } catch (SQLException e) {
@@ -460,13 +450,14 @@ public class TagsSQL {
         }
     }
 
-    public void tagChat(UUID get_uuid) {
+    public void tagChat(Player player) {
         try {
             this.createConnection();
+            this.getPlayerTag(player);
             Connection con = DriverManager.getConnection(url, user, password);
 
             Statement stm = con.createStatement();
-            String sql = "SELECT * FROM tags WHERE currentTag LIKE '%"+get_uuid+"%'";
+            String sql = "SELECT * FROM tags WHERE tagName = '"+playerTag+"'";
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
                 tag_in_chat = rs.getString(3);
@@ -480,10 +471,11 @@ public class TagsSQL {
     public void check(Player p) {
         try {
             this.createConnection();
+            getPlayerTag(p);
             Connection con = DriverManager.getConnection(url, user, password);
 
             Statement stm = con.createStatement();
-            String sql = "SELECT * FROM tags WHERE currentTag LIKE '%"+p.getUniqueId()+"%'";
+            String sql = "SELECT * FROM tags WHERE tagName = '"+playerTag+"'";
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
                 tag_exist_name = rs.getString(1);
@@ -503,47 +495,20 @@ public class TagsSQL {
 
             UUIDChecker uc = new UUIDChecker();
             uc.check(playerName);
-
             Statement stm = con.createStatement();
-            String sql = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
+            String sql = "SELECT * FROM items WHERE playerUUID = '"+p.getUniqueId()+"'";
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
-                grant = rs.getString(1);
-                current_tag = rs.getString(6);
+                current_tag = rs.getString(3);
             }
 
-            if (grant == null) {
-                p.sendMessage("§7This tag doesn't §4exit§7.");
-                return;
-            }
-
-            if (current_tag != null) {
-
-                grant_new_tag = current_tag.replace("]", "").replace("[", "").split(", ");
-
-                player_name_tags_array.addAll(Arrays.asList(grant_new_tag));
-            }
-
-            if (!player_name_tags_array.contains(UUIDChecker.uuid)) {
-                p.sendMessage("§7This player doesn't §4own §7that tag.");
-                return;
-            } else {
-                player_name_tags_array.remove(UUIDChecker.uuid);
-            }
-
-            String sql2;
-            if (player_name_tags_array.size() == 0) {
-                sql2 = "UPDATE tags " +
-                        "SET currentTag = NULL" +
-                        " WHERE tagName = '"+tagName+"'";
-            } else {
-                sql2 = "UPDATE tags " +
-                        "SET currentTag = '"+player_name_tags_array +
-                        "' WHERE tagName = '"+tagName+"'";
-            }
+            String sql2 = "UPDATE players " +
+                    "SET tag = "+null+
+                    " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
 
             stm.executeUpdate(sql2);
-            player_name_tags_array.clear();
+            tag_name_array.clear();
+            ArrayStorage.tagsCheckStatus.remove(p.getPlayer().getUniqueId());
 
             con.close();
         } catch (SQLException e) {
@@ -558,47 +523,20 @@ public class TagsSQL {
 
             UUIDChecker uc = new UUIDChecker();
             uc.check(playerName);
-
             Statement stm = con.createStatement();
-            String sql = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
+            String sql = "SELECT * FROM items WHERE playerUUID = '"+UUIDChecker.uuid+"'";
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
-                grant = rs.getString(1);
-                current_tag = rs.getString(6);
+                current_tag = rs.getString(3);
             }
 
-            if (grant == null) {
-                sender.sendMessage("§7This tag doesn't §4exit§7.");
-                return;
-            }
-
-            if (current_tag != null) {
-
-                grant_new_tag = current_tag.replace("]", "").replace("[", "").split(", ");
-
-                player_name_tags_array.addAll(Arrays.asList(grant_new_tag));
-            }
-
-            if (!player_name_tags_array.contains(UUIDChecker.uuid)) {
-                sender.sendMessage("§7This player doesn't §4own §7that tag.");
-                return;
-            } else {
-                player_name_tags_array.remove(UUIDChecker.uuid);
-            }
-
-            String sql2;
-            if (player_name_tags_array.size() == 0) {
-                sql2 = "UPDATE tags " +
-                        "SET currentTag = NULL" +
-                        " WHERE tagName = '"+tagName+"'";
-            } else {
-                sql2 = "UPDATE tags " +
-                        "SET currentTag = '"+player_name_tags_array +
-                        "' WHERE tagName = '"+tagName+"'";
-            }
+            String sql2 = "UPDATE players " +
+                    "SET tag = "+null+
+                    " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
 
             stm.executeUpdate(sql2);
-            player_name_tags_array.clear();
+            tag_name_array.clear();
+            ArrayStorage.tagsCheckStatus.remove(UUID.fromString(UUIDChecker.uuid));
 
             con.close();
         } catch (SQLException e) {

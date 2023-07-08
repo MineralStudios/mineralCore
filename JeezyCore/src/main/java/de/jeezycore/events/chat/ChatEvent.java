@@ -30,7 +30,7 @@ public class ChatEvent implements Listener {
         String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
         display.displayChatRank(sql);
 
-        tagsSQL.tagChat(e.getPlayer().getUniqueId());
+        tagsSQL.tagChat(e.getPlayer());
 
         check_if_banned.muteData(e.getPlayer().getUniqueId());
         MuteSQL.punishment_UUID = null;

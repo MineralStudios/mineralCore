@@ -19,11 +19,6 @@ public class GrantTag implements CommandExecutor {
             if (cmd.getName().equalsIgnoreCase("grant-tag") && args.length == 2) {
                 if (p.hasPermission("jeezy.core.tags.grant")) {
 
-                    String input = "INSERT INTO tags " +
-                            "(tagName, tagDesign, tagPriority) " +
-                            "VALUES " +
-                            "(?, ?, ?)";
-
                     mySQL.grantTag(p, args[0], args[1]);
                 } else {
                     p.sendMessage("No permission.");

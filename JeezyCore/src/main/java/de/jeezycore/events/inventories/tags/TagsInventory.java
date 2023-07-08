@@ -9,12 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-
 import static de.jeezycore.utils.ArrayStorage.tags_in_ownership_array;
 import static de.jeezycore.utils.ArrayStorage.tags_inv_array;
 
@@ -35,7 +32,7 @@ public class TagsInventory {
                 }
                 e.getWhoClicked().sendMessage("§7You §2§lsuccessfully §7gave yourself the §9§l"+e.getCurrentItem().getItemMeta().getDisplayName()+ " §7tag§7.");
                 e.getWhoClicked().closeInventory();
-                executeMYSQL(e.getCurrentItem().getItemMeta().getDisplayName().substring(4), e.getWhoClicked().getUniqueId());
+                executeMYSQL(e.getCurrentItem().getItemMeta().getDisplayName().substring(4), (Player) e.getWhoClicked());
             } else if (e.getCurrentItem().getData().toString().equalsIgnoreCase("NAME_TAG(0)") && e.getCurrentItem().getItemMeta().getLore().get(5).equalsIgnoreCase("§4§lYou don't own this tag yet§7§l.")) {
                 e.getWhoClicked().sendMessage("§4§lYou don't own this tag.");
             }
@@ -56,7 +53,6 @@ public class TagsInventory {
                 display.resetTag(e.getCurrentItem().getItemMeta().getLore().get(1).replace("§9§l", ""), e.getWhoClicked().getName(), (Player) e.getWhoClicked());
                 e.getWhoClicked().sendMessage("§7You §2successfully §creset §7your tag.");
                 e.getWhoClicked().closeInventory();
-                ArrayStorage.tagsCheckStatus.remove(e.getWhoClicked().getUniqueId());
             }
 
             e.setCancelled(true);
@@ -74,8 +70,8 @@ public class TagsInventory {
         display.getOwnershipData(p);
         rewardSQL.checkIfClaimed(p);
 
-        if (TagsSQL.tag_exist_name != null) {
-            ArrayStorage.tagsCheckStatus.put(p.getPlayer().getUniqueId(), TagsSQL.tag_exist_name);
+        if (TagsSQL.playerTag != null) {
+            ArrayStorage.tagsCheckStatus.put(p.getPlayer().getUniqueId(), TagsSQL.playerTag);
         }
 
         int pageEnd = (int) Math.ceil((double)display.tagDataFullSize.size() / 21);
@@ -106,12 +102,12 @@ public class TagsInventory {
                 tag_inv.setItem(8, pages);
             }
 
-            if (TagsSQL.tag_exist_name != null) {
+            if (TagsSQL.playerTag != null) {
                 ItemStack removeTagViaGui = new ItemStack(Material.TORCH, 1);
                 ItemMeta removeTagViaGuiMeta = removeTagViaGui.getItemMeta();
                 ArrayList<String> reset_tag_desc = new ArrayList<>();
                 reset_tag_desc.add(0, "§8§m-----------------------------------");
-                reset_tag_desc.add(1, "§9§l"+TagsSQL.tag_exist_name);
+                reset_tag_desc.add(1, "§9§l"+TagsSQL.playerTag);
                 reset_tag_desc.add(2, "§7Current tag display: §2"+p.getDisplayName()+ " §9§l" + TagsSQL.tag_exist_format.replace("&", "§")+ "§7§l.");
                 reset_tag_desc.add(3, "§8§m-----------------------------------");
                 reset_tag_desc.add(4, "§eClick to reset your tag§7.");
@@ -119,7 +115,6 @@ public class TagsInventory {
                 removeTagViaGuiMeta.setLore(reset_tag_desc);
                 removeTagViaGui.setItemMeta(removeTagViaGuiMeta);
                 tag_inv.setItem(4, removeTagViaGui);
-                TagsSQL.tag_exist_name = null;
             }
 
         }
@@ -153,14 +148,17 @@ public class TagsInventory {
                 }
 
 
+                /*
                 if (display.arrayList.get(i).equalsIgnoreCase(RewardSQL.rewardPrice)) {
                     desc.remove(3);
                     desc.add(3, "§a§lYou own this tag§7§l.");
                 }
 
+                 */
+
                 if (tags_in_ownership_array.size() != 0) {
                     for (int x = 0; x < tags_in_ownership_array.size(); x++) {
-                        if (display.arrayList.get(i).contains(tags_in_ownership_array.get(x))) {
+                        if (display.tagNameList.get(i).equalsIgnoreCase(tags_in_ownership_array.get(x))) {
                             desc.remove(5);
                             desc.add(5, "§a§lYou own this tag§7§l.");
                             break;
@@ -179,7 +177,7 @@ public class TagsInventory {
         RewardSQL.rewardPrice = null;
     }
 
-    public void executeMYSQL(String tagName, UUID p) {
-        display.setCurrentTag(tagName, p);
+    public void executeMYSQL(String tagName, Player player) {
+        display.setCurrentTag(tagName, player);
     }
 }
