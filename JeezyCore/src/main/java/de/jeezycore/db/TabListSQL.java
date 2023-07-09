@@ -1,9 +1,13 @@
 package de.jeezycore.db;
 
 import de.jeezycore.config.JeezyConfig;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.configuration.MemorySection;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.Field;
 import java.sql.*;
 
 import static de.jeezycore.utils.ArrayStorage.tab_name_list_array;
@@ -21,6 +25,24 @@ public class TabListSQL {
         url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
         user = (String) mc.get("user");
         password = (String) mc.get("password");
+    }
+
+
+    public void setTabList1_8(Player p, String Title, String subTitle) {
+        IChatBaseComponent tabTitle = IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + Title+ "\"}");
+        IChatBaseComponent tabSubTitle = IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + subTitle + "\"}");
+
+        PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter(tabTitle);
+
+        try {
+            Field field = packet.getClass().getDeclaredField("b");
+            field.setAccessible(true);
+            field.set(packet, tabSubTitle);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ((CraftPlayer)p).getHandle().playerConnection.sendPacket(packet);
+        }
     }
 
 

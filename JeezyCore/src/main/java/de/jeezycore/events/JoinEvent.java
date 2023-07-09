@@ -6,17 +6,23 @@ import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.BanSQL;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.db.StatusSQL;
+import de.jeezycore.db.TabListSQL;
 import de.jeezycore.utils.FakePlayerChecker;
 import de.jeezycore.utils.NameTag;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.*;
 
 
@@ -27,11 +33,14 @@ public class JoinEvent implements Listener {
     BanSQL check_if_banned = new BanSQL();
     FakePlayerChecker fakePlayerChecker = new FakePlayerChecker();
     NameTag nameTag = new NameTag();
+
+    TabListSQL tabList = new TabListSQL();
     StatusSQL statusSQL = new StatusSQL();
+
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-
+        tabList.setTabList1_8(e.getPlayer(), "§7You're are connected to §9§lmineral.gg", "§7Purchase ranks and more at: §9§lstore.mineral.gg");
         check_if_banned.banData(e.getPlayer().getUniqueId());
         BanSQL.punishment_UUID = null;
         if (BanSQL.ban_forever) {
