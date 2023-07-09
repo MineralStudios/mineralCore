@@ -40,7 +40,7 @@ public class JoinEvent implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        tabList.setTabList1_8(e.getPlayer(), "§7You're are connected to §9§lmineral.gg", "§7Purchase ranks and more at: §9§lstore.mineral.gg");
+        tabList.setTabList1_8(e.getPlayer(), "§7You're connected to §9§lmineral.gg", "§7Purchase ranks and more at: §9§lstore.mineral.gg");
         check_if_banned.banData(e.getPlayer().getUniqueId());
         BanSQL.punishment_UUID = null;
         if (BanSQL.ban_forever) {
