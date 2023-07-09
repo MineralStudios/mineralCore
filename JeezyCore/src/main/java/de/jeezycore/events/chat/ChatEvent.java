@@ -64,7 +64,7 @@ public class ChatEvent implements Listener {
                 System.out.println(show_color);
                 rmc.realtimeMcChat("["+display.rank+"]"+" "+e.getPlayer().getDisplayName()+": "+e.getMessage());
                 MemorySection cf = (MemorySection) JeezyConfig.config_defaults.get("chat");
-                String chat_format_rep = cf.getString("chat_format").replace("[rank]", "§7["+show_color+""+display.rank+"§7§l]§f").replace("&", "§").replace("[player]", "§f"+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat.replace("&", "§"));
+                String chat_format_rep = cf.getString("chat_format").replace("[rank]", "§7["+show_color+""+display.rank+"§7]§f").replace("&", "§").replace("[player]", "§f"+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat.replace("&", "§"));
                 e.setFormat(chat_format_rep.replace("%", "%%"));
             }
         tag_in_chat = null;
