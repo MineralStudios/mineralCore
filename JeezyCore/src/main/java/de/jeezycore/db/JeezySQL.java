@@ -173,6 +173,13 @@ public class JeezySQL  {
                     " minerals_data longtext, " +
                     " PRIMARY KEY ( ServerName ))";
 
+            String settings_table = "CREATE TABLE IF NOT EXISTS settings " +
+                    " (playerName VARCHAR(255), " +
+                    " playerUUID VARCHAR(255), " +
+                    " ignoredPlayerList longtext, " +
+                    " msg boolean, " +
+                    " PRIMARY KEY ( playerUUID ))";
+
             stm.executeUpdate(ranks_table);
             stm.executeUpdate(players_table);
             stm.executeUpdate(items_table);
@@ -180,6 +187,7 @@ public class JeezySQL  {
             stm.executeUpdate(tags_table);
             stm.executeUpdate(reward_table);
             stm.executeUpdate(minerals_table);
+            stm.executeUpdate(settings_table);
 
             stm.close();
             if (con.isValid(20)) {
