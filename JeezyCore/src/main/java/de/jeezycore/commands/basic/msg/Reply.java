@@ -2,6 +2,8 @@ package de.jeezycore.commands.basic.msg;
 
 import com.google.common.base.Joiner;
 import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.SettingsSQL;
+import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,12 +13,16 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static de.jeezycore.utils.ArrayStorage.msg_ignore_list;
 import static de.jeezycore.utils.ArrayStorage.reply_array;
 
 public class Reply implements CommandExecutor {
     JeezySQL display = new JeezySQL();
+    SettingsSQL settingsSQL = new SettingsSQL();
+
+    UUIDChecker uc = new UUIDChecker();
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -29,6 +35,14 @@ public class Reply implements CommandExecutor {
                 System.out.println(result);
                 if (result == null || Bukkit.getServer().getPlayerExact(result) == null) {
                     p.sendMessage("§cThere is nobody to reply to.");
+                    return true;
+                }
+
+                uc.check(result);
+                settingsSQL.getSettingsData(p, UUID.fromString(UUIDChecker.uuid));
+
+                if (settingsSQL.settingsMsg) {
+                    p.sendMessage("§9"+result+" §7has turned off his §9private §7messages.");
                     return true;
                 }
 
