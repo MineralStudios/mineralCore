@@ -26,8 +26,6 @@ public class Msg implements CommandExecutor {
             Player p = (Player) sender;
 
             List<String> ls = new ArrayList<String>(Arrays.asList(args));
-            uc.check(args[0]);
-            settingsSQL.getSettingsData(p, UUID.fromString(UUIDChecker.uuid));
 
             if (cmd.getName().equalsIgnoreCase("msg") && args.length >= 2) {
                 if (Bukkit.getServer().getPlayerExact(args[0]) == null) {
@@ -38,6 +36,9 @@ public class Msg implements CommandExecutor {
                     p.sendMessage("§4You can't message yourself.");
                     return true;
                 }
+
+                uc.check(args[0]);
+                settingsSQL.getSettingsData(UUID.fromString(UUIDChecker.uuid));
 
                 if (settingsSQL.settingsMsg) {
                     p.sendMessage("§9"+args[0]+" §7has turned off his §9private §7messages.");
@@ -51,23 +52,31 @@ public class Msg implements CommandExecutor {
                     }
                 }
 
-                String input = Joiner.on(" ")
-                        .skipNulls()
-                        .join(ls).replace(args[0], "").replaceAll("\\s+", " ").trim();
+            String input = Joiner.on(" ")
+                    .skipNulls()
+                    .join(ls).replace(args[0], "").replaceAll("\\s+", " ").trim();
 
+            uc.check(args[0]);
+            display.getColorsForMessages(UUID.fromString(UUIDChecker.uuid));
+            String sql = "SELECT * FROM ranks WHERE rankName = '"+display.privateMessageColors+"'";
+            display.displayChatRank(sql);
+            p.sendMessage("§9To§7 ("+display.rankColor.replace("&", "§")+args[0]+"§7)"+"§7 "+input);
 
-                display.getPlayerInformation(p.getPlayer());
-                String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
+                display.rankColor = null;
+                uc.check(p.getDisplayName());
+                display.getColorsForMessages(UUID.fromString(UUIDChecker.uuid));
+                sql = "SELECT * FROM ranks WHERE rankName = '"+display.privateMessageColors+"'";
                 display.displayChatRank(sql);
 
+            Bukkit.getPlayer(args[0]).sendMessage("§9From§7 ("+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§7)"+"§7 "+input);
+            reply_array.remove(p.getPlayer().getDisplayName());
+            reply_array.put(args[0], p.getPlayer().getDisplayName());
+            System.out.println(reply_array);
 
-                p.sendMessage("§8§l(§4§lmsg§8§l) "+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§7: "+input);
-                Bukkit.getPlayer(args[0]).sendMessage("§8§l(§4§lmsg§8§l) "+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§7: "+input);
-                reply_array.remove(p.getPlayer().getDisplayName());
-                reply_array.put(args[0], p.getPlayer().getDisplayName());
-                System.out.println(reply_array);
-            } else if (cmd.getName().equalsIgnoreCase("msg") && args.length < 2) {
+
+            } else {
                 p.sendMessage("Usage /msg <player> <message>");
+                return true;
             }
         }
         return true;

@@ -39,7 +39,7 @@ public class Reply implements CommandExecutor {
                 }
 
                 uc.check(result);
-                settingsSQL.getSettingsData(p, UUID.fromString(UUIDChecker.uuid));
+                settingsSQL.getSettingsData(UUID.fromString(UUIDChecker.uuid));
 
                 if (settingsSQL.settingsMsg) {
                     p.sendMessage("§9"+result+" §7has turned off his §9private §7messages.");
@@ -57,15 +57,24 @@ public class Reply implements CommandExecutor {
                         .skipNulls()
                         .join(ls);
 
-                display.getPlayerInformation(p.getPlayer());
-                String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
+                uc.check(p.getDisplayName());
+                display.getColorsForMessages(UUID.fromString(UUIDChecker.uuid));
+                String sql = "SELECT * FROM ranks WHERE rankName = '"+display.privateMessageColors+"'";
                 display.displayChatRank(sql);
 
-                Bukkit.getPlayer(result).sendMessage("§8§l(§4§lmsg§8§l) "+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§7: "+input);
+                Bukkit.getPlayer(result).sendMessage("§9From§7 ("+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§7)"+"§7 "+input);
                 reply_array.put(result, p.getPlayer().getDisplayName());
-                p.sendMessage("§8§l(§4§lreplied§8§l) "+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§7: "+input);
 
-            } else if (cmd.getName().equalsIgnoreCase("r") && args.length == 0) {
+
+                display.rankColor = null;
+                uc.check(result);
+                display.getColorsForMessages(UUID.fromString(UUIDChecker.uuid));
+                sql = "SELECT * FROM ranks WHERE rankName = '"+display.privateMessageColors+"'";
+                display.displayChatRank(sql);
+
+                p.sendMessage("§9To§7 ("+display.rankColor.replace("&", "§")+result+"§7)"+"§7 "+input);
+
+            } else {
                 p.sendMessage("Usage /r <message>");
             }
         }

@@ -24,6 +24,8 @@ public class JeezySQL  {
 
     public String rankNameInformation;
 
+    public String privateMessageColors;
+
     public String allPlayerInformationUUID;
 
     public String rankColor_second;
@@ -336,6 +338,25 @@ public class JeezySQL  {
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
                 rankNameInformation = rs.getString(1);
+            }
+
+            con.close();
+        }catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public void getColorsForMessages(UUID uuid) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+
+            String sql = "SELECT rank FROM players WHERE playerUUID = '"+uuid+"'";
+
+            ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                privateMessageColors = rs.getString(1);
             }
 
             con.close();

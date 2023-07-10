@@ -53,7 +53,7 @@ public class SettingsSQL {
         }
     }
 
-    public void getSettingsData(Player p, UUID receiver) {
+    public void getSettingsData(UUID receiver) {
         try {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
