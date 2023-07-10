@@ -23,7 +23,7 @@ public class BansInventory {
         if(e.getClickedInventory().getName().contains("Punishments") && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§4§lBans")) {
             displayBanPunishments(e);
         } else if(e.getClickedInventory().getName().contains("Bans") && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§cBack")) {
-            e.getWhoClicked().openInventory(ArrayStorage.punishments_menu_inv_array.get(e.getWhoClicked().getName()));
+            e.getWhoClicked().openInventory(ArrayStorage.punishments_menu_inv_array.get(e.getWhoClicked().getUniqueId()));
             e.setCancelled(true);
         } else if (e.getClickedInventory().getName().contains("Bans") && e.getCurrentItem().getData().toString().contains("PAPER")) {
             e.setCancelled(true);

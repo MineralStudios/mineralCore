@@ -24,7 +24,7 @@ public class MutesInventory {
         if(e.getClickedInventory().getName().contains("Punishments") && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§9§lMutes")) {
             displayMutePunishments(e);
         } else if(e.getClickedInventory().getName().contains("Mutes") && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§cBack")) {
-            e.getWhoClicked().openInventory(ArrayStorage.punishments_menu_inv_array.get(e.getWhoClicked().getName()));
+            e.getWhoClicked().openInventory(ArrayStorage.punishments_menu_inv_array.get(e.getWhoClicked().getUniqueId()));
             e.setCancelled(true);
         } else if (e.getClickedInventory().getName().contains("Mutes") && e.getCurrentItem().getData().toString().contains("PAPER")) {
             e.setCancelled(true);

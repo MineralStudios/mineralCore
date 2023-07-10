@@ -4,6 +4,7 @@ import de.jeezycore.commands.basic.msg.Ignore;
 import de.jeezycore.commands.basic.msg.Msg;
 import de.jeezycore.commands.basic.msg.Reply;
 import de.jeezycore.commands.basic.msg.UnIgnore;
+import de.jeezycore.commands.staff.Logs;
 import de.jeezycore.disguise.manger.DisguiseManager;
 import de.jeezycore.colors.Color;
 import de.jeezycore.commands.basic.*;
@@ -80,6 +81,7 @@ public class Main extends JavaPlugin {
         this.getCommand("wipebans").setExecutor(new WipeBans());
         this.getCommand("wipemutes").setExecutor(new WipeMutes());
         this.getCommand("wipeall").setExecutor(new WipeAll());
+        this.getCommand("logs").setExecutor(new Logs());
         this.getCommand("staffrank-enable").setExecutor(new StaffRankEnable());
         this.getCommand("staffrank-disable").setExecutor(new StaffRankDisable());
         this.getCommand("helpop").setExecutor(new Helpop());

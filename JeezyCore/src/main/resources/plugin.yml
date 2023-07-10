@@ -84,6 +84,9 @@ commands:
   wipeall:
     description: Wipes all the punishments from all the players that got banned or muted.
     usage: /wipeall
+  logs:
+    description: Gets all punishment logs of a player.
+    usage: /logs
   staffrank-enable:
     usage: /staffrank-enable <rankName>
     description: Elevates a normal rank to a staff rank.

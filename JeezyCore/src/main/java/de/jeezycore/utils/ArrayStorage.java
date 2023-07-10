@@ -35,7 +35,7 @@ public class ArrayStorage {
     public static HashMap<String, Inventory> manage_menu_inv_array = new HashMap<>();
 
     // punishments_menu array
-    public static HashMap<String, Inventory> punishments_menu_inv_array = new HashMap<>();
+    public static HashMap<UUID, Inventory> punishments_menu_inv_array = new HashMap<>();
 
     // ban_logs array
     public static ArrayList<JSONObject> ban_logs = new ArrayList<>();

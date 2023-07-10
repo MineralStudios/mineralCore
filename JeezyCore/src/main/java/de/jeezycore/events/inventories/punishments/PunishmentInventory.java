@@ -3,6 +3,7 @@ package de.jeezycore.events.inventories.punishments;
 import de.jeezycore.utils.ArrayStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -24,6 +25,23 @@ public class PunishmentInventory {
             e.getWhoClicked().openInventory(ArrayStorage.profile_inv_array.get(e.getWhoClicked().getName()));
             e.setCancelled(true);
         }
+    }
+
+    public void logsMenu(Player p, String playerName) {
+        ArrayStorage.grant_array_names.put(p.getUniqueId(), playerName);
+        punishment_inventory = Bukkit.createInventory(null, 27,"§8Punishments: §f§l"+ ArrayStorage.grant_array_names.get(p.getUniqueId()));
+        ArrayStorage.punishments_menu_inv_array.put(p.getUniqueId(), punishment_inventory);
+        ItemStack bans = new ItemStack(Material.WOOL, 1, (short) 14);
+        ItemStack mutes = new ItemStack(Material.WOOL, 1, (short) 11);
+        ItemMeta bansm = bans.getItemMeta();
+        ItemMeta mutesm = mutes.getItemMeta();
+        bansm.setDisplayName("§4§lBans");
+        mutesm.setDisplayName("§9§lMutes");
+        bans.setItemMeta(bansm);
+        mutes.setItemMeta(mutesm);
+        punishment_inventory.setItem(12, bans);
+        punishment_inventory.setItem(14, mutes);
+        p.openInventory(ArrayStorage.punishments_menu_inv_array.get(p.getUniqueId()));
     }
 
     private void createPunishmentsMenuItems(org.bukkit.event.inventory.InventoryClickEvent e) {
@@ -53,6 +71,6 @@ public class PunishmentInventory {
     }
 
     private void putArray(org.bukkit.event.inventory.InventoryClickEvent e) {
-        ArrayStorage.punishments_menu_inv_array.put(e.getWhoClicked().getName(), punishment_inventory);
+        ArrayStorage.punishments_menu_inv_array.put(e.getWhoClicked().getUniqueId(), punishment_inventory);
     }
 }
