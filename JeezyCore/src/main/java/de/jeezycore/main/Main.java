@@ -1,9 +1,6 @@
 package de.jeezycore.main;
 
-import de.jeezycore.commands.basic.msg.Ignore;
-import de.jeezycore.commands.basic.msg.Msg;
-import de.jeezycore.commands.basic.msg.Reply;
-import de.jeezycore.commands.basic.msg.UnIgnore;
+import de.jeezycore.commands.basic.msg.*;
 import de.jeezycore.commands.staff.Logs;
 import de.jeezycore.disguise.manger.DisguiseManager;
 import de.jeezycore.colors.Color;
@@ -62,6 +59,7 @@ public class Main extends JavaPlugin {
         this.getCommand("spawn").setExecutor(new Spawn());
         this.getCommand("ping").setExecutor(new Ping());
         this.getCommand("msg").setExecutor(new Msg());
+        this.getCommand("tpm").setExecutor(new ControlMsg());
         this.getCommand("r").setExecutor(new Reply());
         this.getCommand("ignore").setExecutor(new Ignore());
         this.getCommand("unignore").setExecutor(new UnIgnore());

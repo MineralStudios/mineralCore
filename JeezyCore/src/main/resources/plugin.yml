@@ -36,6 +36,9 @@ commands:
   r:
     description: Replies to messages.
     usage: /r
+  tpm:
+    description: Disables private message.
+    usage: /tpm
   ignore:
     description: Ignores a certain player.
     usage: /ignore <player>
