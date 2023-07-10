@@ -2,6 +2,7 @@ package de.jeezycore.commands.basic.msg;
 
 import com.google.common.base.Joiner;
 import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.SettingsSQL;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -15,6 +16,9 @@ import static de.jeezycore.utils.ArrayStorage.*;
 
 public class Msg implements CommandExecutor {
     JeezySQL display = new JeezySQL();
+    SettingsSQL settingsSQL = new SettingsSQL();
+
+    UUIDChecker uc = new UUIDChecker();
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -22,6 +26,8 @@ public class Msg implements CommandExecutor {
             Player p = (Player) sender;
 
             List<String> ls = new ArrayList<String>(Arrays.asList(args));
+            uc.check(args[0]);
+            settingsSQL.getSettingsData(p, UUID.fromString(UUIDChecker.uuid));
 
             if (cmd.getName().equalsIgnoreCase("msg") && args.length >= 2) {
                 if (Bukkit.getServer().getPlayerExact(args[0]) == null) {
@@ -30,6 +36,11 @@ public class Msg implements CommandExecutor {
                 }
                 if (p.getPlayer().getDisplayName().equals(args[0])) {
                     p.sendMessage("§4You can't message yourself.");
+                    return true;
+                }
+
+                if (settingsSQL.settingsMsg) {
+                    p.sendMessage("§9"+args[0]+" §7has turned off his §9private §7messages.");
                     return true;
                 }
 
