@@ -17,6 +17,8 @@ public class ArrayStorage {
 
     public static HashMap<UUID, String> msg_ignore_list = new HashMap<UUID, String>();
 
+    public static ArrayList<String> msg_ignore_array = new ArrayList<>();
+
     // fly command array
     public  static ArrayList<String> fly_array = new ArrayList<String>();
 
