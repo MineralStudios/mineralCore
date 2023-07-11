@@ -44,13 +44,11 @@ public class Msg implements CommandExecutor {
                     p.sendMessage("§9"+args[0]+" §7has turned off his §9private §7messages.");
                     return true;
                 }
-
-                if (msg_ignore_list.get(Bukkit.getPlayer(args[0]).getUniqueId()) != null) {
-                    if (msg_ignore_list.get(Bukkit.getPlayer(args[0]).getUniqueId()).contains(p.getPlayer().getUniqueId().toString())) {
+                    if (msg_ignore_array.contains(p.getUniqueId().toString())) {
                         p.sendMessage("§9"+args[0]+" §7has ignored you.");
+                        msg_ignore_array.clear();
                         return true;
                     }
-                }
 
             String input = Joiner.on(" ")
                     .skipNulls()

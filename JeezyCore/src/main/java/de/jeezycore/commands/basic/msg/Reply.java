@@ -15,8 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static de.jeezycore.utils.ArrayStorage.msg_ignore_list;
-import static de.jeezycore.utils.ArrayStorage.reply_array;
+import static de.jeezycore.utils.ArrayStorage.*;
+import static de.jeezycore.utils.ArrayStorage.msg_ignore_array;
 
 public class Reply implements CommandExecutor {
     JeezySQL display = new JeezySQL();
@@ -46,11 +46,10 @@ public class Reply implements CommandExecutor {
                     return true;
                 }
 
-                if (msg_ignore_list.get(Bukkit.getPlayer(result).getUniqueId()) != null) {
-                    if (msg_ignore_list.get(Bukkit.getPlayer(result).getUniqueId()).contains(p.getPlayer().getUniqueId().toString())) {
-                        p.sendMessage("§9"+result+" §7has ignored you.");
-                        return true;
-                    }
+                if (msg_ignore_array.contains(p.getUniqueId().toString())) {
+                    p.sendMessage("§9"+result+" §7has ignored you.");
+                    msg_ignore_array.clear();
+                    return true;
                 }
 
                 String input = Joiner.on(" ")
