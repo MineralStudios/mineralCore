@@ -60,7 +60,6 @@ public class Msg implements CommandExecutor {
             display.displayChatRank(sql);
             p.sendMessage("§9To§7 ("+display.rankColor.replace("&", "§")+args[0]+"§7)"+"§7 "+input);
 
-                display.rankColor = null;
                 uc.check(p.getDisplayName());
                 display.getColorsForMessages(UUID.fromString(UUIDChecker.uuid));
                 sql = "SELECT * FROM ranks WHERE rankName = '"+display.privateMessageColors+"'";

@@ -459,9 +459,21 @@ public class TagsSQL {
             Statement stm = con.createStatement();
             String sql = "SELECT * FROM tags WHERE tagName = '"+playerTag+"'";
             ResultSet rs = stm.executeQuery(sql);
-            while (rs.next()) {
-                tag_in_chat = rs.getString(3);
+
+            if (!rs.next()) {
+                tag_in_chat = null;
+            } else {
+                do {
+                    tag_in_chat = rs.getString(3);
+                } while (rs.next());
             }
+
+            if (tag_in_chat == null) {
+                tag_in_chat = "";
+            } else {
+                tag_in_chat = " "+tag_in_chat;
+            }
+
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();

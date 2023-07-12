@@ -65,7 +65,6 @@ public class Reply implements CommandExecutor {
                 reply_array.put(result, p.getPlayer().getDisplayName());
 
 
-                display.rankColor = null;
                 uc.check(result);
                 display.getColorsForMessages(UUID.fromString(UUIDChecker.uuid));
                 sql = "SELECT * FROM ranks WHERE rankName = '"+display.privateMessageColors+"'";

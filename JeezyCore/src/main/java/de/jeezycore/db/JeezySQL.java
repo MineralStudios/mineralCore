@@ -313,12 +313,21 @@ public class JeezySQL  {
             Statement stm = con.createStatement();
             String sql = "SELECT * FROM ranks ORDER BY rankPriority DESC";
             ResultSet rs = stm.executeQuery(sql);
-            while(rs.next()){
-                rank = rs.getString(1);
-                rankRGB = rs.getString(2);
-                rankColor = rs.getString(3);
-                rankData.put(rank, rankRGB);
-                rankColorData.add(rankColor);
+
+            if (!rs.next()) {
+                rank = null;
+                rankRGB = null;
+                rankColor = null;
+                rankData.clear();
+                rankColorData.clear();
+            } else {
+                do {
+                    rank = rs.getString(1);
+                    rankRGB = rs.getString(2);
+                    rankColor = rs.getString(3);
+                    rankData.put(rank, rankRGB);
+                    rankColorData.add(rankColor);
+                }while(rs.next());
             }
             con.close();
         } catch (SQLException e) {
@@ -336,10 +345,14 @@ public class JeezySQL  {
             String sql = "SELECT rank FROM players WHERE playerUUID = '"+p.getPlayer().getUniqueId()+"'";
 
             ResultSet rs = stm.executeQuery(sql);
-            while (rs.next()) {
-                rankNameInformation = rs.getString(1);
-            }
 
+            if (!rs.next()) {
+                rankNameInformation = null;
+            } else {
+                do {
+                    rankNameInformation = rs.getString(1);
+                } while (rs.next());
+            }
             con.close();
         }catch (SQLException e) {
             System.out.println(e);
@@ -415,13 +428,21 @@ public class JeezySQL  {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery(sql);
 
-            while (rs.next()) {
-                rank = rs.getString(1);
-                rankRGB = rs.getString(2);
-                rankColor_second = rs.getString(3);
-                rankColor = rs.getString(3);
+            if (!rs.next()) {
+                rank = null;
+                rankRGB = null;
+                rankColor_second = null;
+                rankColor = null;
+            } else {
+                do {
+                    rank = rs.getString(1);
+                    rankRGB = rs.getString(2);
+                    rankColor_second = rs.getString(3);
+                    rankColor = rs.getString(3);
+                }while (rs.next());
             }
-            if (rankColor == null || rankColor_second == null) {
+            if (rank == null || rankColor == null || rankColor_second == null) {
+                rank = "";
                 rankColor_second = "§2";
                 rankColor = "§2";
             }

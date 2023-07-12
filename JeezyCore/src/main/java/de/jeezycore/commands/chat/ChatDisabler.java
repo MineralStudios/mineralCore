@@ -31,7 +31,7 @@ public class ChatDisabler implements CommandExecutor {
                 p.sendMessage("Usage: /chat-disable or enable");
             } else if (cmd.getName().equalsIgnoreCase("chat-disable") && args.length == 0) {
                 if (p.hasPermission("jeezy.core.chat.disable")) {
-                    p.sendMessage("§2You successfully disabled the chat §b§l" + p.getDisplayName());
+                    p.sendMessage("§7You §2successfully §cdisabled §7the chat §9§l" + p.getDisplayName());
                 } else {
                     p.sendMessage("No permission.");
                 }
@@ -49,7 +49,7 @@ public class ChatDisabler implements CommandExecutor {
                 p.sendMessage("Usage: /chat-enable or disable");
             } else if (cmd.getName().equalsIgnoreCase("chat-enable") && args.length == 0) {
                 if (p.hasPermission("jeezy.core.chat.enable")) {
-                    p.sendMessage("§2You successfully enabled the chat §b§l" + p.getDisplayName());
+                    p.sendMessage("§7You §2successfully §7enabled the chat §9§l" + p.getDisplayName());
                 } else {
                     p.sendMessage("No permission.");
                 }
