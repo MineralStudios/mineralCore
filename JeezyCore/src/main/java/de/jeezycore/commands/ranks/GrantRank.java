@@ -1,34 +1,26 @@
 package de.jeezycore.commands.ranks;
 
-import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.discord.messages.grant.RealtimeGrant;
 import de.jeezycore.events.inventories.grant.GrantInventory;
-import de.jeezycore.utils.ArrayStorage;
+import de.jeezycore.utils.PermissionHandler;
 import de.jeezycore.utils.UUIDChecker;
-import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.material.Wool;
-import org.json.simple.parser.ParseException;
 
-import java.io.IOException;
 import java.util.*;
 
 public class GrantRank implements CommandExecutor {
-    public static Inventory grant_inv;
 
     JeezySQL mysql = new JeezySQL();
 
     UUIDChecker uc = new UUIDChecker();
     GrantInventory grantInventory = new GrantInventory();
     RealtimeGrant grant_discord = new RealtimeGrant();
+
+    PermissionHandler permissionHandler = new PermissionHandler();
 
 
     @Override
@@ -46,23 +38,18 @@ public class GrantRank implements CommandExecutor {
                 if (cmd.getName().equalsIgnoreCase("grant") && args.length == 1) {
                     grantInventory.grant_menu(p, args[0]);
                 } else {
-                    uc.check(args[1]);
-                    mysql.colorPerms(args[0]);
-                    ArrayStorage.grant_array_names.put(p.getUniqueId(), args[1]);
-                    ArrayStorage.grant_array.put(p.getUniqueId(), UUID.fromString(UUIDChecker.uuid));
-                    mysql.grantPlayerNoGui(args[0], p.getUniqueId());
-                    System.out.println(UUIDChecker.uuid);
-                    mysql.onGrantingPerms(p, args[0]);
-                    grant_discord.realtimeChatOnGranting(ArrayStorage.grant_array.get(p.getUniqueId()), ArrayStorage.grant_array_names.get(p.getUniqueId()), p.getDisplayName(), args[0]);
-                    p.sendMessage("You §b§lsuccessfully§f granted §l§7" + ArrayStorage.grant_array_names.get(p.getUniqueId()) + "§f the §l" + mysql.rankColorPerms.replace("&", "§") + args[0] + " §frank.");
-                    ArrayStorage.grant_array.clear();
-                    ArrayStorage.grant_array_names.clear();
+                 p.sendMessage("Usage: /grant <playerName>");
                 }
             } else {
                 p.sendMessage("No permission");
             }
+        } else {
+            uc.check(args[1]);
+            mysql.colorPerms(args[0]);
+            mysql.grantPlayerConsole(sender, args[0], UUID.fromString(UUIDChecker.uuid));
+            mysql.onGrantingPermsConsole(UUID.fromString(UUIDChecker.uuid),args[0]);
+            grant_discord.realtimeChatOnGranting(UUID.fromString(UUIDChecker.uuid), UUIDChecker.uuidName, "Console", args[0]);
         }
-
         return true;
     }
 }

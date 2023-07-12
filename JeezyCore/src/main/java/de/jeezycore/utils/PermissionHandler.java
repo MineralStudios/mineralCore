@@ -121,7 +121,36 @@ public class PermissionHandler {
     } catch (Exception e) {
 
     }
-
     }
 
+    public void onGrantingConsole(UUID uuid) {
+        Player ps = Bukkit.getPlayer(uuid);
+        if (JeezySQL.grantingPermRanks == null || ps == null) return;
+        String[] uuidStrings = JeezySQL.grantingPermRanks.replace("[", "").replace("]", "").
+                replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
+
+        try {
+            attachment = Bukkit.getServer().getPlayer(uuid).addAttachment(Main.getPlugin(Main.class));
+            for (int i = 0; i < uuidStrings.length; i++) {
+                attachment.setPermission(uuidStrings[i], true);
+            }
+        }catch (Exception e) {
+        }
+    }
+
+    public void onUnGrantingConsole(UUID uuid) {
+        Player ps = Bukkit.getPlayer(uuid);
+        if (JeezySQL.unGrantingPermRanks == null || ps == null) return;
+        String[] uuidStrings = JeezySQL.unGrantingPermRanks.replace("[", "").replace("]", "").
+                replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
+
+        try {
+            attachment = Bukkit.getServer().getPlayer(uuid).addAttachment(Main.getPlugin(Main.class));
+            for (int i = 0; i < uuidStrings.length; i++) {
+                attachment.setPermission(uuidStrings[i], false);
+            }
+        } catch (Exception e) {
+
+        }
+    }
 }
