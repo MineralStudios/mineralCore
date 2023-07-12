@@ -15,6 +15,9 @@ commands:
   grant:
     description: Grants selected player a rank.
     usage: /grant <player>
+  ungrant:
+    description: Ungrants selected player.
+    usage: /ungrant <player>
   chat-disable:
     description: Disables chat.
     usage: /chat-disable

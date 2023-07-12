@@ -1,6 +1,7 @@
 package de.jeezycore.main;
 
 import de.jeezycore.commands.basic.msg.*;
+import de.jeezycore.commands.ranks.UnGrantRank;
 import de.jeezycore.commands.staff.Logs;
 import de.jeezycore.disguise.manger.DisguiseManager;
 import de.jeezycore.colors.Color;
@@ -53,6 +54,7 @@ public class Main extends JavaPlugin {
         // Register Commands
         this.getCommand("create-rank").setExecutor(new CreateRank());
         this.getCommand("grant").setExecutor(new GrantRank());
+        this.getCommand("ungrant").setExecutor(new UnGrantRank());
         this.getCommand("chat-disable").setExecutor(new ChatDisabler());
         this.getCommand("chat-enable").setExecutor(new ChatDisabler());
         this.getCommand("spawnSet").setExecutor(new SetSpawn());
