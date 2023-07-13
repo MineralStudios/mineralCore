@@ -5,24 +5,18 @@ package de.jeezycore.events;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.BanSQL;
 import de.jeezycore.db.JeezySQL;
-import de.jeezycore.db.StatusSQL;
+import de.jeezycore.db.PlayersSQL;
 import de.jeezycore.db.TabListSQL;
 import de.jeezycore.utils.FakePlayerChecker;
 import de.jeezycore.utils.NameTag;
-import net.minecraft.server.v1_8_R3.IChatBaseComponent;
-import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 
-import java.io.File;
-import java.lang.reflect.Field;
 import java.util.*;
 
 
@@ -35,7 +29,7 @@ public class JoinEvent implements Listener {
     NameTag nameTag = new NameTag();
 
     TabListSQL tabList = new TabListSQL();
-    StatusSQL statusSQL = new StatusSQL();
+    PlayersSQL playersSQL = new PlayersSQL();
 
 
     @EventHandler
@@ -86,8 +80,8 @@ public class JoinEvent implements Listener {
         if (fakePlayerChecker.isFakePlayer(e.getPlayer())) {
             return;
         }
-        statusSQL.firstJoined(e);
-        statusSQL.checkIfUsernameChanged(e);
+        playersSQL.firstJoined(e);
+        playersSQL.checkIfUsernameChanged(e);
         nameTag.giveTagOnJoin(e.getPlayer());
         e.setJoinMessage("");
 

@@ -5,17 +5,13 @@ import org.bukkit.configuration.MemorySection;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 
-public class StatusSQL {
+
+public class PlayersSQL {
 
     public String url;
     public String user;
     public String password;
-
-    ArrayList<String> player_rank_usernames = new ArrayList<String>();
-    ArrayList<String> player_rank_uuids = new ArrayList<String>();
 
     private void createConnection() {
 
