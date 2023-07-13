@@ -137,6 +137,9 @@ public class JeezySQL  {
             String items_table = "CREATE TABLE IF NOT EXISTS items " +
                     " (playerName VARCHAR(255), " +
                     " playerUUID VARCHAR(255), " +
+                    " rankForever boolean, " +
+                    " rankStart VARCHAR(255), " +
+                    " rankEnd VARCHAR(255), " +
                     " ownedTags longtext, " +
                     " ownedChatColors VARCHAR(255), " +
                     " PRIMARY KEY ( playerUUID ))";

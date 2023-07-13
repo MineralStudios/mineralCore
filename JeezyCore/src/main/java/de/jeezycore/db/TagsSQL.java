@@ -169,7 +169,7 @@ public class TagsSQL {
             } else {
                 do {
                     ownedItemsPlayerUUID = rs.getString(2);
-                    ownedTags = rs.getString(3);
+                    ownedTags = rs.getString(6);
                 } while (rs.next());
             }
             stm.close();
@@ -194,7 +194,7 @@ public class TagsSQL {
                 current_tag = null;
             } else {
                 do {
-                    current_tag = rs.getString(3);
+                    current_tag = rs.getString(6);
                 } while (rs.next());
             }
 
@@ -511,7 +511,7 @@ public class TagsSQL {
             String sql = "SELECT * FROM items WHERE playerUUID = '"+p.getUniqueId()+"'";
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
-                current_tag = rs.getString(3);
+                current_tag = rs.getString(6);
             }
 
             String sql2 = "UPDATE players " +
@@ -539,7 +539,7 @@ public class TagsSQL {
             String sql = "SELECT * FROM items WHERE playerUUID = '"+UUIDChecker.uuid+"'";
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
-                current_tag = rs.getString(3);
+                current_tag = rs.getString(6);
             }
 
             String sql2 = "UPDATE players " +
