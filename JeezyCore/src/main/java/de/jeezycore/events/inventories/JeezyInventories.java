@@ -41,6 +41,9 @@ public class JeezyInventories implements Listener {
         TagsInventory tagsInventory = new TagsInventory();
         tagsInventory.run(e);
 
+        ChatColorsInventory chatColorsInventory = new ChatColorsInventory();
+        chatColorsInventory.run(e);
+
         RewardsInventory rewardsInventory = new RewardsInventory();
         rewardsInventory.run(e);
 

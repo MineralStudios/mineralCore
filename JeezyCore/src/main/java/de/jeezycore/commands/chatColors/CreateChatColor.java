@@ -1,7 +1,6 @@
 package de.jeezycore.commands.chatColors;
 
 import de.jeezycore.db.ChatColorSQL;
-import de.jeezycore.db.JeezySQL;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
