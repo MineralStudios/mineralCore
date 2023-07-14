@@ -23,7 +23,7 @@ public class ChatColorsInventory {
 
     public void run(org.bukkit.event.inventory.InventoryClickEvent e) {
         if (e.getInventory().getTitle().contains("§9§lChat§f§lColors")) {
-            if (e.getCurrentItem().getData().toString().equalsIgnoreCase("LEATHER_CHESTPLATE(0)") && e.getCurrentItem().getItemMeta().getLore().get(5).equalsIgnoreCase("§a§lYou own this chatColor§7§l.")) {
+            if (e.getCurrentItem().getData().toString().equalsIgnoreCase("LEATHER_CHESTPLATE(0)") && e.getCurrentItem().getItemMeta().getLore().get(5).equalsIgnoreCase("§a§lYou own this chat color§7§l.")) {
                 if (e.getCurrentItem().getItemMeta().getDisplayName().substring(2).equalsIgnoreCase(ChatColorSQL.currentChatColorName)) {
                     e.getWhoClicked().sendMessage("§7You have §c§lalready §7selected that chat color.");
                     e.getWhoClicked().closeInventory();
@@ -32,10 +32,9 @@ public class ChatColorsInventory {
                 e.getWhoClicked().sendMessage("§7You §2§lsuccessfully §7gave yourself the §9§l"+e.getCurrentItem().getItemMeta().getDisplayName()+ " §7chat color§7.");
                 e.getWhoClicked().closeInventory();
                  executeMYSQL(e);
-            } else if (e.getCurrentItem().getData().toString().equalsIgnoreCase("NAME_TAG(0)") && e.getCurrentItem().getItemMeta().getLore().get(5).equalsIgnoreCase("§a§lYou own this chatColor§7§l.")) {
-                e.getWhoClicked().sendMessage("§a§lYou own this chatColor§7§l.");
+            } else if (e.getCurrentItem().getData().toString().equalsIgnoreCase("LEATHER_CHESTPLATE(0)") && e.getCurrentItem().getItemMeta().getLore().get(5).equalsIgnoreCase("§4§lYou don't own this chat color yet§7§l.")) {
+                e.getWhoClicked().sendMessage("§4§lYou don't own this chat color yet§7§l.");
             }
-
             if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§cReset chat color")) {
                 chatColorSQL.resetChatColor(e);
                 e.getWhoClicked().sendMessage("§7You §2successfully §creset §7your chatcolor.");
@@ -106,9 +105,9 @@ public class ChatColorsInventory {
             placeColorsDesc.add(3, "");
             placeColorsDesc.add(4, "§8§m-----------------------------------");
             if (p.hasPermission("jeezy.core.chatColors.all")) {
-                placeColorsDesc.add(5, "§a§lYou own this chatColor§7§l.");
+                placeColorsDesc.add(5, "§a§lYou own this chat color§7§l.");
             } else {
-                placeColorsDesc.add(5, "§4§lYou don't own this chatColor yet§7§l.");
+                placeColorsDesc.add(5, "§4§lYou don't own this chat color yet§7§l.");
             }
             if (i == 7 || i == 14) {
                 addUp += 2;
