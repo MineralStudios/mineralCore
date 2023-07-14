@@ -36,11 +36,9 @@ public class JoinEvent implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         tabList.setTabList1_8(e.getPlayer(), "§7You're connected to §9§lmineral.gg", "§7Purchase ranks and more at: §9§lstore.mineral.gg");
         check_if_banned.banData(e.getPlayer().getUniqueId());
-        BanSQL.punishment_UUID = null;
         if (BanSQL.ban_forever) {
             e.getPlayer().kickPlayer("§7You are §4permanently §7banned from §9MineralPractice§7.\n\n" +
                     "§7If you feel this ban has been unjustified, appeal on our §9discord §7at\n §9discord.mineral.gg§7.");
-            BanSQL.ban_forever = false;
             return;
         } else if (check_if_banned.ban_end != null) {
             check_if_banned.tempBanDurationCalculate(e.getPlayer());

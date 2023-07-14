@@ -404,13 +404,23 @@ public class BanSQL {
             Statement stm = con.createStatement();
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" +get_UUID.toString()+"'";
             ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                punishment_UUID = rs.getString(2);
-                ban_forever = rs.getBoolean(3);
-                ban_start = rs.getString(5);
-                ban_end = rs.getString(6);
-                ban_status = rs.getBoolean(7);
-                ban_logs = rs.getString(11);
+
+            if (!rs.next()) {
+                punishment_UUID = null;
+                ban_forever = false;
+                ban_start = null;
+                ban_end = null;
+                ban_status = false;
+                ban_logs = null;
+            } else {
+                do {
+                    punishment_UUID = rs.getString(2);
+                    ban_forever = rs.getBoolean(3);
+                    ban_start = rs.getString(5);
+                    ban_end = rs.getString(6);
+                    ban_status = rs.getBoolean(7);
+                    ban_logs = rs.getString(11);
+                } while (rs.next());
             }
             con.close();
         } catch (SQLException e) {
@@ -425,10 +435,17 @@ public class BanSQL {
             Statement stm = con.createStatement();
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" + get_UUID.toString() + "'";
             ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                punishment_UUID = rs.getString(2);
-                ban_forever = rs.getBoolean(3);
-                ban_status = rs.getBoolean(7);
+
+            if (!rs.next()) {
+                punishment_UUID = null;
+                ban_forever = false;
+                ban_status = false;
+            } else {
+                do {
+                    punishment_UUID = rs.getString(2);
+                    ban_forever = rs.getBoolean(3);
+                    ban_status = rs.getBoolean(7);
+                } while (rs.next());
             }
             con.close();
         } catch (SQLException e) {
