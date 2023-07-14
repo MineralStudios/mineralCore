@@ -1,5 +1,6 @@
 package de.jeezycore.events;
 
+import de.jeezycore.db.JeezySQL;
 import de.jeezycore.db.PlayersSQL;
 import de.jeezycore.disguise.manger.DisguiseManager;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +12,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class QuitEvent implements Listener {
   private final DisguiseManager disguiseManager;
   PlayersSQL playersSQL = new PlayersSQL();
+  JeezySQL jeezySQL = new JeezySQL();
 
   @EventHandler
   private void onQuit(PlayerQuitEvent event) {
     playersSQL.lastSeen(event);
     disguiseManager.deleteDisguise(event.getPlayer());
+    jeezySQL.rankMonthlyDurationCalculator(event.getPlayer());
   }
 }

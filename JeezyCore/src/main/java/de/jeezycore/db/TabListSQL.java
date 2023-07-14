@@ -54,8 +54,13 @@ public class TabListSQL {
             jeezySQL.getPlayerInformation(p);
             String sql = "SELECT * FROM ranks WHERE rankName = '"+jeezySQL.rankNameInformation+"'";
             ResultSet rs = stm.executeQuery(sql);
-            while(rs.next()){
-                rankColor = rs.getString(3);
+
+            if (!rs.next()) {
+                rankColor = null;
+            } else {
+                do {
+                    rankColor = rs.getString(3);
+                } while(rs.next());
 
                 if (rankColor == null) {
                 return;

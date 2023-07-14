@@ -82,9 +82,8 @@ public class JoinEvent implements Listener {
         }
         playersSQL.firstJoined(e);
         playersSQL.checkIfUsernameChanged(e);
+        givePermsOnJoin.rankMonthlyDurationCalculator(e.getPlayer());
         nameTag.giveTagOnJoin(e.getPlayer());
-        e.setJoinMessage("");
-
 
     try {
         givePermsOnJoin.getPlayerInformation(e.getPlayer());
