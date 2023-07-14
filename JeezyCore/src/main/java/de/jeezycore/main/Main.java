@@ -1,6 +1,7 @@
 package de.jeezycore.main;
 
 import de.jeezycore.commands.basic.msg.*;
+import de.jeezycore.commands.chatColors.CreateChatColor;
 import de.jeezycore.commands.ranks.UnGrantRank;
 import de.jeezycore.commands.staff.Logs;
 import de.jeezycore.disguise.manger.DisguiseManager;
@@ -90,6 +91,7 @@ public class Main extends JavaPlugin {
         this.getCommand("ungrant-tag").setExecutor(new UnGrantTag());
         this.getCommand("delete-tag").setExecutor(new DeleteTag());
         this.getCommand("tags").setExecutor(new Tags());
+        this.getCommand("create-chatColor").setExecutor(new CreateChatColor());
         //this.getCommand("minerals").setExecutor(new Minerals());
         //this.getCommand("addminerals").setExecutor(new addMinerals());
         //this.getCommand("removeminerals").setExecutor(new removeMinerals());

@@ -117,6 +117,9 @@ commands:
   tags:
     usage: /tags
     description: Opens tags inventory.
+  create-chatColor:
+    usage: /create-chatColor <colorName> <color> <colorRGB> <colorPriority>
+    description: Creates chatColor.
   minerals:
     usage: /minerals
     description: Shows current minerals balance.
