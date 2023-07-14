@@ -180,6 +180,13 @@ public class JeezySQL  {
                     " tagPriority INT(3), " +
                     " PRIMARY KEY ( tagName ))";
 
+            String chatColors_table = "CREATE TABLE IF NOT EXISTS chatColors " +
+                    " (colorName VARCHAR(255), " +
+                    " color VARCHAR(50), " +
+                    " colorRGB VARCHAR(50), " +
+                    " colorPriority INT(3), " +
+                    " PRIMARY KEY ( colorName ))";
+
             /*
             String reward_table = "CREATE TABLE IF NOT EXISTS rewards " +
                     " (UUID VARCHAR(255), " +
@@ -189,11 +196,14 @@ public class JeezySQL  {
                     " price VARCHAR(255), " +
                     " PRIMARY KEY ( UUID ))";
              */
+
+            /*
             String minerals_table = "CREATE TABLE IF NOT EXISTS minerals " +
                     " (ServerName VARCHAR(255), " +
                     " minerals_data longtext, " +
                     " PRIMARY KEY ( ServerName ))";
 
+             */
             String settings_table = "CREATE TABLE IF NOT EXISTS settings " +
                     " (playerName VARCHAR(255), " +
                     " playerUUID VARCHAR(255), " +
@@ -206,8 +216,9 @@ public class JeezySQL  {
             stm.executeUpdate(items_table);
             stm.executeUpdate(punishments_table);
             stm.executeUpdate(tags_table);
+            stm.executeUpdate(chatColors_table);
             // stm.executeUpdate(reward_table);
-            stm.executeUpdate(minerals_table);
+            //stm.executeUpdate(minerals_table);
             stm.executeUpdate(settings_table);
 
             stm.close();
