@@ -17,7 +17,7 @@ import static de.jeezycore.utils.ArrayStorage.tags_inv_array;
 
 public class TagsInventory {
     Inventory tag_inv;
-    RewardSQL rewardSQL = new RewardSQL();
+    //RewardSQL rewardSQL = new RewardSQL();
     private int addUp = 10;
 
     private final TagsSQL display = new TagsSQL();
@@ -68,7 +68,7 @@ public class TagsInventory {
         display.check(p);
         display.getFullDataSize();
         display.getOwnershipData(p);
-        rewardSQL.checkIfClaimed(p);
+        //rewardSQL.checkIfClaimed(p);
 
         if (TagsSQL.playerTag != null) {
             ArrayStorage.tagsCheckStatus.put(p.getPlayer().getUniqueId(), TagsSQL.playerTag);
