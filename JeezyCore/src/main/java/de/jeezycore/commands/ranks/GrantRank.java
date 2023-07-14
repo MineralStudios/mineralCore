@@ -44,11 +44,16 @@ public class GrantRank implements CommandExecutor {
                 p.sendMessage("No permission");
             }
         } else {
-            uc.check(args[1]);
-            mysql.colorPerms(args[0]);
-            mysql.grantPlayerConsole(sender, args[0], UUID.fromString(UUIDChecker.uuid));
-            mysql.onGrantingPermsConsole(UUID.fromString(UUIDChecker.uuid),args[0]);
-            grant_discord.realtimeChatOnGranting(UUID.fromString(UUIDChecker.uuid), UUIDChecker.uuidName, "Console", args[0]);
+             if (cmd.getName().equalsIgnoreCase("grant") && args.length == 3) {
+                 uc.check(args[1]);
+                 mysql.setRankDuration(sender, UUIDChecker.uuidName, args[2], UUID.fromString(UUIDChecker.uuid));
+                 mysql.colorPerms(args[0]);
+                 mysql.grantPlayerConsole(sender, args[0], UUID.fromString(UUIDChecker.uuid));
+                 mysql.onGrantingPermsConsole(UUID.fromString(UUIDChecker.uuid), args[0]);
+                 grant_discord.realtimeChatOnGranting(UUID.fromString(UUIDChecker.uuid), UUIDChecker.uuidName, "Console", args[0]);
+             } else {
+                 sender.sendMessage("Usage: /grant <rankName> <player> <time>");
+             }
         }
         return true;
     }

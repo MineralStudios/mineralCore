@@ -11,6 +11,9 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 // SQL imports
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class JeezySQL  {
@@ -79,6 +82,15 @@ public class JeezySQL  {
     public static ArrayList<String> permPlayerUUIDArray = new ArrayList<String>();
 
     public static String getPlayerUUID;
+
+    public String ban_start;
+    public String ban_end;
+
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    private final LocalDateTime currentTime = LocalDateTime.now();;
+
+    private LocalDateTime updatedTime;
 
 
     private void createConnection() {
@@ -284,7 +296,7 @@ public class JeezySQL  {
             this.onGrantingPermsConsole(uuid, rankName);
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            String sql2 = "SELECT playerUUID, rank FROM players WHERE playerUUID = '"+UUIDChecker.uuid+"'";
+            String sql2 = "SELECT playerUUID, rank FROM players WHERE playerUUID = '"+uuid+"'";
             ResultSet rs = stm.executeQuery(sql2);
 
             if (!rs.next()) {
@@ -658,6 +670,8 @@ public class JeezySQL  {
                     grantingPermRanks = rs.getString(1);
                 } while (rs.next());
             }
+            System.out.println("HEEEEEEEEEEEEEEEERRRRRRRRREEEE");
+            System.out.println(grantingPermRanks);
             PermissionHandler onGrant = new PermissionHandler();
             onGrant.onGranting(p);
             rs.close();
@@ -672,7 +686,7 @@ public class JeezySQL  {
             this.createConnection();
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
-            this.getPlayer(p.getUniqueId());
+            this.getPlayer(ArrayStorage.grant_array.get(p.getUniqueId()));
             String select_sql = "SELECT rankPerms FROM ranks WHERE rankName = '"+getPlayerUUID+"'";
 
             ResultSet rs = stm.executeQuery(select_sql);
@@ -798,7 +812,13 @@ public class JeezySQL  {
                         "SET rank = "+null+
                         " WHERE playerUUID = '"+uuid+"'";
 
+               String sql_reset_rank_time = "UPDATE items " +
+                        "SET rankStart = "+null+
+                        " , rankEnd = "+null+
+                        " WHERE playerUUID = '"+uuid+"'";
+
                 stm.executeUpdate(sql);
+                stm.executeUpdate(sql_reset_rank_time);
                 sender.sendMessage("§aSuccessfully§7 removed the rank from player §9§l" + playerName);
             } else {
                 sender.sendMessage("§4§lThis player doesn't have a rank!");
@@ -809,5 +829,107 @@ public class JeezySQL  {
         }
     }
 
+    public void setRankDuration(CommandSender sender, String username, String time, UUID uuid) {
+        try {
+            this.createConnection();
+            this.rankMonthlyDurationTimeCheck(time);
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
 
+            String sql = "UPDATE items " +
+                    "SET rankStart = '" + currentTime.format(formatter) + "', rankEnd = '" + updatedTime.format(formatter) + "'" +
+                    " WHERE playerUUID = '" + uuid + "'";
+            stm.executeUpdate(sql);
+            sender.sendMessage("§7You §asuccessfully §7granted " + username + " §7for §9§l" + time + "§7.");
+            stm.close();
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void rankRemoveAutomatically(Player p) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+
+            String sql_reset_item_duration = "UPDATE items " +
+                    "SET rankStart = NULL, rankEnd = NULL" +
+                    " WHERE playerUUID = '" + p.getUniqueId() + "'";
+
+            String sql_reset_rank = "UPDATE players "+
+                    "SET rank = NULL"+
+                    " WHERE playerUUID = '"+p.getUniqueId()+"'";
+
+            stm.executeUpdate(sql_reset_item_duration);
+            stm.executeUpdate(sql_reset_rank);
+            stm.close();
+            con.close();
+        } catch (Exception e) {
+        }
+    }
+
+
+    public void rankMonthlyDurationTimeCheck(String time) {
+        if (time.contains("d")) {
+            updatedTime = currentTime.plusDays(Integer.parseInt(time.replace("d", "")));
+        } else if (time.contains("h")) {
+            updatedTime = currentTime.plusHours(Integer.parseInt(time.replace("h", "")));
+        } else if (time.contains("m")) {
+            updatedTime = currentTime.plusMinutes(Integer.parseInt(time.replace("m", "")));
+        } else if (time.contains("s")) {
+            updatedTime = currentTime.plusSeconds(Integer.parseInt(time.replace("s", "")));
+        }
+    }
+
+    public void rankMonthlyDurationCalculator(Player p) {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String select_sql = "SELECT * FROM items WHERE playerUUID = '"+p.getUniqueId()+"'";
+            ResultSet rs = stm.executeQuery(select_sql);
+
+            if (!rs.next()) {
+                ban_end = null;
+            } else {
+                do {
+                    ban_end = rs.getString(5);
+                } while (rs.next());
+            }
+
+            if (ban_end == null) return;
+
+        LocalDateTime dateTime_start = LocalDateTime.parse(LocalDateTime.now().format(formatter), formatter);
+        LocalDateTime dateTime_end = LocalDateTime.parse(ban_end, formatter);
+
+        LocalDateTime fromTemp = LocalDateTime.from(dateTime_start);
+        long years = fromTemp.until(dateTime_end, ChronoUnit.YEARS);
+        fromTemp = fromTemp.plusYears(years);
+
+        long months = fromTemp.until(dateTime_end, ChronoUnit.MONTHS);
+        fromTemp = fromTemp.plusMonths(months);
+
+        long days = fromTemp.until(dateTime_end, ChronoUnit.DAYS);
+        fromTemp = fromTemp.plusDays(days);
+
+        long hours = fromTemp.until(dateTime_end, ChronoUnit.HOURS);
+        fromTemp = fromTemp.plusHours(hours);
+
+        long minutes = fromTemp.until(dateTime_end, ChronoUnit.MINUTES);
+        fromTemp = fromTemp.plusMinutes(minutes);
+
+        long seconds = fromTemp.until(dateTime_end, ChronoUnit.SECONDS);
+        fromTemp = fromTemp.plusSeconds(seconds);
+
+        long millis = fromTemp.until(dateTime_end, ChronoUnit.MILLIS);
+
+        if (seconds < 0) {
+            rankRemoveAutomatically(p.getPlayer());
+        }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
