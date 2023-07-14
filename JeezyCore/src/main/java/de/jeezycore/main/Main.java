@@ -90,12 +90,12 @@ public class Main extends JavaPlugin {
         this.getCommand("ungrant-tag").setExecutor(new UnGrantTag());
         this.getCommand("delete-tag").setExecutor(new DeleteTag());
         this.getCommand("tags").setExecutor(new Tags());
-        this.getCommand("minerals").setExecutor(new Minerals());
-        this.getCommand("addminerals").setExecutor(new addMinerals());
-        this.getCommand("removeminerals").setExecutor(new removeMinerals());
-        this.getCommand("coins").setExecutor(new Minerals());
-        this.getCommand("daily-reward").setExecutor(new DailyReward());
-        this.getCommand("store").setExecutor(new Store());
+        //this.getCommand("minerals").setExecutor(new Minerals());
+        //this.getCommand("addminerals").setExecutor(new addMinerals());
+        //this.getCommand("removeminerals").setExecutor(new removeMinerals());
+        //this.getCommand("coins").setExecutor(new Minerals());
+        //this.getCommand("daily-reward").setExecutor(new DailyReward());
+        //this.getCommand("store").setExecutor(new Store());
         this.getCommand("disguise").setExecutor(new DisguiseCommand(disguiseManager));
         this.getCommand("brodcast").setExecutor(new Brodcast());
 
@@ -116,12 +116,12 @@ public class Main extends JavaPlugin {
        JeezyBot bot = new JeezyBot();
        bot.start();
 
-       MineralsSQL mineralsSQL = new MineralsSQL();
-       mineralsSQL.start();
+      // MineralsSQL mineralsSQL = new MineralsSQL();
+      // mineralsSQL.start();
 
         // Get rewards ready at server start
-        RewardSQL rewardSQL = new RewardSQL();
-        rewardSQL.tagData();
+       // RewardSQL rewardSQL = new RewardSQL();
+       // rewardSQL.tagData();
 
     }
 
