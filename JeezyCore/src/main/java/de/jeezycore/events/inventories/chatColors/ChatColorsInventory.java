@@ -86,7 +86,7 @@ public class ChatColorsInventory {
             List<String> customChatColorText = new ArrayList<>();
             customChatColorMeta.setDisplayName("§9§lCustom §f§lchatColor");
             customChatColorText.add(0, "§8§m-----------------------------------");
-            customChatColorText.add(1, "§9§lCreate your own custom chat color");
+            customChatColorText.add(1, "§f§lCreate your §9§lown custom §f§lchat color");
             customChatColorText.add(2, "§8§m-----------------------------------");
             customChatColorText.add(3, "§cLeft click to create your own.");
             customChatColorMeta.setLore(customChatColorText);
