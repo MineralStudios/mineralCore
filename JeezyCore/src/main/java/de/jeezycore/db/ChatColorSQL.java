@@ -2,6 +2,7 @@ package de.jeezycore.db;
 
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.utils.UUIDChecker;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 
@@ -273,6 +274,50 @@ public class ChatColorSQL {
         }
     }
 
+    public void grantChatColorConsole(CommandSender sender, String playerName, String chatColor) {
+        try {
+            uc.check(playerName);
+            this.setup();
+            this.getChatColorsGrantedBefore();
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String sql_select = "SELECT * FROM chatColors WHERE colorName = '"+chatColor+"'";
+            ResultSet rs = stm.executeQuery(sql_select);
+            if (!rs.next()) {
+                chatColorExisting = null;
+            } else {
+                do {
+                    chatColorExisting = rs.getString(1);
+                    chatColorExistingColor = rs.getString(2);
+                } while (rs.next());
+            }
+
+            if (itemsAlreadyGranted != null){
+                if (itemsAlreadyGranted.contains(chatColor)) {
+                    sender.sendMessage("§9§l"+UUIDChecker.uuidName+" §7has been already §9granted §7the chat color "+chatColorExistingColor+chatColor+"§7.");
+                    return;
+                }
+            }
+            if (chatColorExisting != null) {
+                grantChatColorArray.add(chatColor);
+                System.out.println(grantChatColorArray.size());
+                sender.sendMessage("§7You §2successfully §7granted §9"+playerName+" §7the "+chatColorExistingColor+chatColor+" §7chat color.");
+            } else {
+                sender.sendMessage("§7The chat color §9"+chatColor+" §7doesn't exist.");
+            }
+
+
+            String updateChatColor = "UPDATE items " +
+                    "SET ownedChatColors = '"+grantChatColorArray+"'" +
+                    " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
+            stm.executeUpdate(updateChatColor);
+            grantChatColorArray.clear();
+        } catch (SQLException f) {
+            f.printStackTrace();
+        }
+    }
+
     public void unGrantChatColor(Player p, String playerName, String chatColorName) {
         try {
             uc.check(playerName);
@@ -315,6 +360,53 @@ public class ChatColorSQL {
             this.resetChatColor(UUID.fromString(UUIDChecker.uuid));
             grantChatColorArray.clear();
             p.sendMessage("§7You §2successfully §7ungranted §7the chat color "+currentChatColor+chatColorName+" §7from §9"+UUIDChecker.uuidName+"§7.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void unGrantChatColorConsole(CommandSender sender, String playerName, String chatColorName) {
+        try {
+            uc.check(playerName);
+            this.getPlayerChatColorOnUngrant(chatColorName);
+            this.getChatColorsGrantedBefore();
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String sql_select = "SELECT * FROM items WHERE playerUUID = '"+UUIDChecker.uuid+"'";
+            String update_ungrant = null;
+            ResultSet rs = stm.executeQuery(sql_select);
+            if (!rs.next()) {
+                itemsAlreadyGranted = null;
+            } else {
+                do {
+                    itemsAlreadyGranted = rs.getString(7);
+                } while (rs.next());
+            }
+
+            if (grantChatColorArray.size() == 0) {
+                sender.sendMessage("§7This player doesn't have any §9chat §7colors §cgranted §7to them yet.");
+                return;
+            } else if (!grantChatColorArray.contains(chatColorName)) {
+                sender.sendMessage("§7The §9"+chatColorName+" §7chat color §7couldn't be §cfound §7in player chat color list.");
+                return;
+            }
+
+            grantChatColorArray.remove(chatColorName);
+
+            if (grantChatColorArray.size() < 1) {
+                update_ungrant = "UPDATE items " +
+                        "SET ownedChatColors = NULL" +
+                        " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
+            } else {
+                update_ungrant = "UPDATE items " +
+                        "SET ownedChatColors = '"+grantChatColorArray+"'" +
+                        " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
+            }
+            stm.executeUpdate(update_ungrant);
+            this.resetChatColor(UUID.fromString(UUIDChecker.uuid));
+            grantChatColorArray.clear();
+            sender.sendMessage("§7You §2successfully §7ungranted §7the chat color "+currentChatColor+chatColorName+" §7from §9"+UUIDChecker.uuidName+"§7.");
         } catch (SQLException e) {
             e.printStackTrace();
         }

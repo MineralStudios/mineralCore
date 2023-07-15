@@ -23,6 +23,13 @@ public class GrantChatColor implements CommandExecutor {
             } else {
                 p.sendMessage("No permission");
             }
+        } else {
+            if (cmd.getName().equalsIgnoreCase("grant-chatColor") && args.length == 2) {
+                chatColorSQL.grantChatColorConsole(sender, args[0], args[1]);
+            } else {
+                sender.sendMessage("Usage: /grant-chatColor <playerName> <chatColor>");
+            }
+
         }
         return true;
     }

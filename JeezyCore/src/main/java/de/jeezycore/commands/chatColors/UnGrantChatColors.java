@@ -23,6 +23,12 @@ public class UnGrantChatColors implements CommandExecutor {
             } else {
                 p.sendMessage("No permission");
             }
+        } else {
+            if (cmd.getName().equalsIgnoreCase("ungrant-chatColor") && args.length == 2) {
+                chatColorSQL.unGrantChatColorConsole(sender, args[0], args[1]);
+            } else {
+                sender.sendMessage("Usage: /ungrant-chatColor <playerName> <chatColor>");
+            }
         }
         return true;
     }
