@@ -365,6 +365,22 @@ public class ChatColorSQL {
         }
     }
 
+    public void resetChatColorsOnUnGrantingRank() {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String sql2 = "UPDATE players " +
+                    "SET chatColor = NULL"+
+                    " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
+
+            stm.executeUpdate(sql2);
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void unGrantChatColorConsole(CommandSender sender, String playerName, String chatColorName) {
         try {
             uc.check(playerName);
