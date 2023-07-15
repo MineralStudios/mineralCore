@@ -123,6 +123,9 @@ commands:
   grant-chatColor:
     usage: /grant-chatColor <playerName> <chatColor>
     description: Grants a player a certain chatColor.
+  ungrant-chatColor:
+    usage: /ungrant-chatColor <playerName> <chatColor>
+    description: Removes a certain chatColor from a player.
   chatColors:
     usage: /chatColors
     description: Opens ChatColors Inventory.

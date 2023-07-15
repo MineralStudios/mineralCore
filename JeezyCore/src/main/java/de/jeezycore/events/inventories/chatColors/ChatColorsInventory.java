@@ -10,11 +10,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static de.jeezycore.utils.ArrayStorage.tags_in_ownership_array;
+import java.util.UUID;
 
 public class ChatColorsInventory {
 
@@ -40,7 +38,8 @@ public class ChatColorsInventory {
                 e.getWhoClicked().sendMessage("§4§lYou don't own this chat color yet§7§l.");
             }
             if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§cReset chat color")) {
-                chatColorSQL.resetChatColor(e);
+                uc.check(e.getWhoClicked().getName());
+                chatColorSQL.resetChatColor(UUID.fromString(UUIDChecker.uuid));
                 e.getWhoClicked().sendMessage("§7You §2successfully §creset §7your chatcolor.");
                 e.getWhoClicked().closeInventory();
             }
@@ -54,7 +53,7 @@ public class ChatColorsInventory {
         chatColorSQL.getChatColorsData();
         chatColorSQL.getPlayerChatName(p);
         uc.check(p.getDisplayName());
-        chatColorSQL.getChatColorsGrantedBefore(p);
+        chatColorSQL.getChatColorsGrantedBefore();
 
         chatColorsInv = Bukkit.createInventory(null, 45,"§9§lChat§f§lColors");
 

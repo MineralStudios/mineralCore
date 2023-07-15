@@ -4,6 +4,7 @@ import de.jeezycore.commands.basic.msg.*;
 import de.jeezycore.commands.chatColors.ChatColors;
 import de.jeezycore.commands.chatColors.CreateChatColor;
 import de.jeezycore.commands.chatColors.GrantChatColor;
+import de.jeezycore.commands.chatColors.UnGrantChatColors;
 import de.jeezycore.commands.ranks.UnGrantRank;
 import de.jeezycore.commands.staff.Logs;
 import de.jeezycore.disguise.manger.DisguiseManager;
@@ -96,6 +97,7 @@ public class Main extends JavaPlugin {
         this.getCommand("create-chatColor").setExecutor(new CreateChatColor());
         this.getCommand("chatColors").setExecutor(new ChatColors());
         this.getCommand("grant-chatColor").setExecutor(new GrantChatColor());
+        this.getCommand("ungrant-chatColor").setExecutor(new UnGrantChatColors());
         //this.getCommand("minerals").setExecutor(new Minerals());
         //this.getCommand("addminerals").setExecutor(new addMinerals());
         //this.getCommand("removeminerals").setExecutor(new removeMinerals());
