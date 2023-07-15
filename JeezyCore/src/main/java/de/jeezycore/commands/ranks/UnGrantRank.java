@@ -1,6 +1,8 @@
 package de.jeezycore.commands.ranks;
 
+import de.jeezycore.db.ChatColorSQL;
 import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.TagsSQL;
 import de.jeezycore.discord.messages.grant.RealtimeGrant;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.command.Command;
@@ -14,6 +16,8 @@ public class UnGrantRank implements CommandExecutor {
 
     UUIDChecker uc = new UUIDChecker();
     JeezySQL grant = new JeezySQL();
+    TagsSQL tagsSQL = new TagsSQL();
+    ChatColorSQL chatColorSQL = new ChatColorSQL();
     RealtimeGrant discord = new RealtimeGrant();
 
     @Override
@@ -31,6 +35,8 @@ public class UnGrantRank implements CommandExecutor {
         } else {
         uc.check(args[0]);
         grant.removeRankConsole(sender, UUIDChecker.uuidName, UUID.fromString(UUIDChecker.uuid));
+        tagsSQL.resetTagOnUnGrantingRank();
+        chatColorSQL.resetChatColorsOnUnGrantingRank();
         discord.realtimeChatOnUnGranting(UUID.fromString(UUIDChecker.uuid), UUIDChecker.uuidName, "Console");
         }
 
