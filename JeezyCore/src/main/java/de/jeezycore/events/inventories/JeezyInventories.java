@@ -1,5 +1,6 @@
 package de.jeezycore.events.inventories;
 
+import de.jeezycore.events.inventories.chatColors.ChatColorsInventory;
 import de.jeezycore.events.inventories.grant.GrantInventory;
 import de.jeezycore.events.inventories.manage.ManageInventory;
 import de.jeezycore.events.inventories.profiles.ProfileInventory;

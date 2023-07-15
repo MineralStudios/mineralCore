@@ -1,4 +1,4 @@
-package de.jeezycore.events.inventories;
+package de.jeezycore.events.inventories.chatColors;
 
 import de.jeezycore.db.ChatColorSQL;
 import de.jeezycore.utils.UUIDChecker;

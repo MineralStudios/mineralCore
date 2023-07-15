@@ -1,6 +1,6 @@
 package de.jeezycore.commands.chatColors;
 
-import de.jeezycore.events.inventories.ChatColorsInventory;
+import de.jeezycore.events.inventories.chatColors.ChatColorsInventory;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
