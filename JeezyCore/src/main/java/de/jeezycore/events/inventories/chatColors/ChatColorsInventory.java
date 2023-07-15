@@ -115,12 +115,13 @@ public class ChatColorsInventory {
             } else {
                 placeColorsDesc.add(5, "§4§lYou don't own this chat color yet§7§l.");
             }
-            if (i == 7 || i == 14) {
+            if (i == 7) {
                 addUp += 2;
+            } else if (i == 14) {
+                addUp += 4;
             } else if (i >= 21) {
                 break;
             }
-
             if (chatColorSQL.grantChatColorArray.size() != 0) {
                 for (int x = 0; x < chatColorSQL.grantChatColorArray.size(); x++) {
                     if (chatColorSQL.grantChatColorArray.get(x).equalsIgnoreCase(colorName)) {
