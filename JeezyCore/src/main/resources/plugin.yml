@@ -120,6 +120,9 @@ commands:
   create-chatColor:
     usage: /create-chatColor <colorName> <color> <colorRGB> <colorPriority>
     description: Creates chatColor.
+  grant-chatColor:
+    usage: /grant-chatColor <playerName> <chatColor>
+    description: Grants a player a certain chatColor.
   chatColors:
     usage: /chatColors
     description: Opens ChatColors Inventory.

@@ -1,6 +1,7 @@
 package de.jeezycore.events.inventories;
 
 import de.jeezycore.db.ChatColorSQL;
+import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -13,8 +14,11 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.jeezycore.utils.ArrayStorage.tags_in_ownership_array;
+
 public class ChatColorsInventory {
 
+    UUIDChecker uc = new UUIDChecker();
     Inventory chatColorsInv;
 
    int addUp = 10;
@@ -46,8 +50,11 @@ public class ChatColorsInventory {
 
     public void chatColorsMenu(Player p) {
         chatColorSQL.chatColorArray.clear();
+        chatColorSQL.grantChatColorArray.clear();
         chatColorSQL.getChatColorsData();
         chatColorSQL.getPlayerChatName(p);
+        uc.check(p.getDisplayName());
+        chatColorSQL.getChatColorsGrantedBefore(p);
 
         chatColorsInv = Bukkit.createInventory(null, 45,"§9§lChat§f§lColors");
 
@@ -114,6 +121,17 @@ public class ChatColorsInventory {
             } else if (i >= 21) {
                 break;
             }
+
+            if (chatColorSQL.grantChatColorArray.size() != 0) {
+                for (int x = 0; x < chatColorSQL.grantChatColorArray.size(); x++) {
+                    if (chatColorSQL.grantChatColorArray.get(x).equalsIgnoreCase(colorName)) {
+                        placeColorsDesc.remove(5);
+                        placeColorsDesc.add(5, "§a§lYou own this chat color§7§l.");
+                        break;
+                    }
+                }
+            }
+
             placeColorsMeta.setColor((Color.fromRGB(Integer.parseInt(red), Integer.parseInt(green), Integer.parseInt(blue))));
             placeColorsMeta.setDisplayName(color+colorName);
             placeColorsMeta.setLore(placeColorsDesc);
@@ -125,6 +143,6 @@ public class ChatColorsInventory {
     }
 
     private void executeMYSQL(org.bukkit.event.inventory.InventoryClickEvent e) {
-        chatColorSQL.Granting(e);
+        chatColorSQL.setChatColor(e);
     }
 }
