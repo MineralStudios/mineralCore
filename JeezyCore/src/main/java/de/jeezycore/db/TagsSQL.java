@@ -528,6 +528,22 @@ public class TagsSQL {
         }
     }
 
+    public void resetTagOnUnGrantingRank() {
+        try {
+            this.createConnection();
+            Connection con = DriverManager.getConnection(url, user, password);
+            Statement stm = con.createStatement();
+            String sql2 = "UPDATE players " +
+                    "SET tag = "+null+
+                    " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
+
+            stm.executeUpdate(sql2);
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void resetTagConsole(String tagName, String playerName, CommandSender sender) {
         try {
             this.createConnection();
@@ -543,7 +559,7 @@ public class TagsSQL {
             }
 
             String sql2 = "UPDATE players " +
-                    "SET tag = "+null+
+                    "SET tag = NULL"+
                     " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
 
             stm.executeUpdate(sql2);
