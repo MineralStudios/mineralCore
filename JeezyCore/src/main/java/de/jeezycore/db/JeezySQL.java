@@ -94,6 +94,8 @@ public class JeezySQL  {
 
     private LocalDateTime updatedTime;
 
+    String getItemPlayerUUID;
+
 
     private void createConnection() {
 
@@ -819,9 +821,15 @@ public class JeezySQL  {
             Statement stm = con.createStatement();
             String select_sql = "SELECT playerUUID, playerName FROM players WHERE playerUUID = '"+uuid+"'";
             ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                removeRankGui_result = rs.getString(1);
-                removeRankGui_result_names = rs.getString(2);
+
+            if (!rs.next()) {
+                removeRankGui_result = null;
+                removeRankGui_result_names = null;
+            } else {
+                do {
+                    removeRankGui_result = rs.getString(1);
+                    removeRankGui_result_names = rs.getString(2);
+                } while (rs.next());
             }
 
             if (removeRankGui_result != null) {
@@ -853,10 +861,28 @@ public class JeezySQL  {
             this.rankMonthlyDurationTimeCheck(time);
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
+            String sql = null;
+            String sql_select = "SELECT playerUUID FROM items WHERE playerUUID = '"+uuid+"'";
 
-            String sql = "UPDATE items " +
-                    "SET rankStart = '" + currentTime.format(formatter) + "', rankEnd = '" + updatedTime.format(formatter) + "'" +
-                    " WHERE playerUUID = '" + uuid + "'";
+            ResultSet rs = stm.executeQuery(sql_select);
+
+            if (!rs.next()) {
+                getItemPlayerUUID = null;
+            } else {
+                do {
+                    getItemPlayerUUID = rs.getString(1);
+                } while (rs.next());
+            }
+            if (getItemPlayerUUID != null) {
+                sql = "UPDATE items " +
+                        "SET rankStart = '" + currentTime.format(formatter) + "', rankEnd = '" + updatedTime.format(formatter) + "'" +
+                        " WHERE playerUUID = '" + uuid + "'";
+            } else {
+                sql = "INSERT INTO items " +
+                        "(playerName, playerUUID, rankForever, rankStart, rankEnd) " +
+                        "VALUES ('"+UUIDChecker.uuidName+"', '"+UUIDChecker.uuid+"', NULL, '"+currentTime.format(formatter)+"', '"+updatedTime.format(formatter)+"')";
+            }
+            System.out.println(sql);
             stm.executeUpdate(sql);
             sender.sendMessage("§7You §asuccessfully §7granted " + username + " §7for §9§l" + time + "§7.");
             stm.close();
