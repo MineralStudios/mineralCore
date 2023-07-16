@@ -33,11 +33,16 @@ public class UnGrantRank implements CommandExecutor {
                 }
             }
         } else {
-        uc.check(args[0]);
-        grant.removeRankConsole(sender, UUIDChecker.uuidName, UUID.fromString(UUIDChecker.uuid));
-        tagsSQL.resetTagOnUnGrantingRank();
-        chatColorSQL.resetChatColorsOnUnGrantingRank();
-        discord.realtimeChatOnUnGranting(UUID.fromString(UUIDChecker.uuid), UUIDChecker.uuidName, "Console");
+        if (cmd.getName().equalsIgnoreCase("ungrant") && args.length == 2) {
+            uc.check(args[0]);
+            grant.removeRankConsole(sender, UUIDChecker.uuidName, UUID.fromString(UUIDChecker.uuid));
+            tagsSQL.resetTagOnUnGrantingRank();
+            chatColorSQL.resetChatColorsOnUnGrantingRank();
+            discord.realtimeChatOnUnGranting(UUID.fromString(UUIDChecker.uuid), UUIDChecker.uuidName, "Console");
+        } else {
+         sender.sendMessage("ungrant <playerName> <rankName>");
+        }
+
         }
 
         return true;
