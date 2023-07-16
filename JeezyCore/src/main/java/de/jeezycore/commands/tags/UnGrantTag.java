@@ -29,8 +29,13 @@ public class UnGrantTag implements CommandExecutor {
                 p.sendMessage("Usage: /ungrant-tag <tagName><player>");
             }
         } else {
-            tag.unGrantTagConsole(args[0], args[1], sender);
-            tag.resetTagConsole(args[0], args[1], sender);
+            if (cmd.getName().equalsIgnoreCase("ungrant-tag") && args.length == 2) {
+                tag.unGrantTagConsole(args[0], args[1], sender);
+                tag.resetTagConsole(args[0], args[1], sender);
+            } else {
+                sender.sendMessage("Usage: /ungrant-tag <tagName> <playerName>");
+            }
+
         }
         return true;
     }

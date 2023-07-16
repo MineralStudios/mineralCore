@@ -27,7 +27,12 @@ public class GrantTag implements CommandExecutor {
                 p.sendMessage("Usage: /grant-tag (tagName) (playerName)");
             }
         } else {
-            mySQL.grantTagConsole(sender, args[0], args[1]);
+            if (cmd.getName().equalsIgnoreCase("grant-tag") && args.length == 2) {
+                mySQL.grantTagConsole(sender, args[0], args[1]);
+            } else {
+                sender.sendMessage("Usage: /grant-tag <tagName> <playerName>");
+            }
+
         }
         return true;
     }
