@@ -165,8 +165,12 @@ public class StaffSQL {
             Statement stm = con.createStatement();
             String select_sql = "SELECT * FROM ranks WHERE rankName = '"+rankName+"'";
             ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                staffRank = rs.getBoolean(6);
+            if (!rs.next()) {
+                staffRank = false;
+            } else {
+                do {
+                    staffRank = rs.getBoolean(6);
+                } while (rs.next());
             }
             con.close();
         } catch (SQLException e) {
