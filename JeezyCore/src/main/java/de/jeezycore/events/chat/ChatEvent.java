@@ -27,8 +27,11 @@ public class ChatEvent implements Listener {
 
     ChatColorSQL chatColorSQL = new ChatColorSQL();
 
+    AntiSpam antiSpam = new AntiSpam();
+
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
+        antiSpam.AntiSpamChat(e);
         staffChat.chat(e);
         display.getPlayerInformation(e.getPlayer());
         String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
@@ -37,7 +40,6 @@ public class ChatEvent implements Listener {
         banChat.onPlayerChatBan(e);
         ignoreChat.PlayerIgnoreChat(e);
         chatColorSQL.getPlayerChatName(e.getPlayer());
-
         if (ChatColorSQL.currentChatColor == null) {
             ChatColorSQL.currentChatColor = "§2";
         }
