@@ -1,0 +1,155 @@
+name: JeezyCore
+main: de.jeezycore.main.Main
+author: JeezyDevelopment
+version: 1.0.0
+commands:
+  create-rank:
+    description: Creates rank.
+    usage: /create-rank <player>
+  permissionAdd:
+    description: Gives a certain rank permission.
+    usage: /permissionadd <perm><rankName>
+  permissionRemove:
+      description: Removes a certain rank permission.
+      usage: /permissionremove <perm><rankName>
+  grant:
+    description: Grants selected player a rank.
+    usage: /grant <player>
+  ungrant:
+    description: Ungrants selected player.
+    usage: /ungrant <player>
+  chat-disable:
+    description: Disables chat.
+    usage: /chat-disable
+  chat-enable:
+    description: Enables chat.
+    usage: /chat-enable
+  spawnSet:
+    description: Sets entry point when joining.
+    usage: /spawnSet
+  spawn:
+    description: Teleports you back to spawn.
+    usage: /spawn
+  ping:
+    description: Shows player ping.
+    usage: /ping or /ping <player>
+  msg:
+    description: Message other people.
+    usage: /msg <player>
+  r:
+    description: Replies to messages.
+    usage: /r
+  tpm:
+    description: Disables private message.
+    usage: /tpm
+  ignore:
+    description: Ignores a certain player.
+    usage: /ignore <player>
+  unignore:
+    description: UnIgnores a certain player.
+    usage: /unignore <player>
+  day:
+    description: Changes player time to day.
+    usage: /day
+  night:
+    description: Changes player time to night.
+    usage: /night
+  fly:
+    description: Makes you fly.
+    usage: /fly
+  report:
+    description: Reports a player.
+    usage: /report <player><message>
+  core:
+      description: Author of the core and version.
+      usage: /core
+  ban:
+    description: Bans a player.
+    usage: /ban <player>
+  tempban:
+    description: Bans a player for a certain time.
+    usage: /tempban <player><time><reason> (days = d, hours = h, minutes = m, seconds = s)
+  unban:
+    description: Unbans a player.
+    usage: /unban <player>
+  mute:
+    description: Mutes player.
+    usage: /mute <player>
+  tempmute:
+    description: Mutes a player for a certain time.
+    usage: /tempmute <player><time><reason> (days = d, hours = h, minutes = m, seconds = s)
+  unmute:
+    description: Unmutes a player.
+    /usage: /unmute <player>
+  wipebans:
+    description: Wipes a certain players bans.
+    usage: /wipebans <player>
+  wipemutes:
+    description: Wipes a certain players mutes.
+    usage: /wipemutes <player>
+  wipeall:
+    description: Wipes all the punishments from all the players that got banned or muted.
+    usage: /wipeall
+  logs:
+    description: Gets all punishment logs of a player.
+    usage: /logs
+  staffrank-enable:
+    usage: /staffrank-enable <rankName>
+    description: Elevates a normal rank to a staff rank.
+  staffrank-disable:
+    usage: /staffrank-disable <rankName>
+    description: Delevates a normal rank to a staff rank.
+  helpop:
+    usage: /helpop <message>
+    description: Sends a message to all the staffs.
+  create-tag:
+    usage: /create-tag <tagName><tagDesign><tagPriority>
+    description: Creates a tag.
+  grant-tag:
+    usage: /grant-tag <tagName><playerName>
+    description: Unlocks tag for player.
+  ungrant-tag:
+    usage: /ungrant-tag <tagName><playerName>
+    description: Removes tag from player.
+  delete-tag:
+    usage: /delete-tag <tagName>
+    description: Deletes tag from system.
+  tags:
+    usage: /tags
+    description: Opens tags inventory.
+  create-chatColor:
+    usage: /create-chatColor <colorName> <color> <colorRGB> <colorPriority>
+    description: Creates chatColor.
+  grant-chatColor:
+    usage: /grant-chatColor <playerName> <chatColor>
+    description: Grants a player a certain chatColor.
+  ungrant-chatColor:
+    usage: /ungrant-chatColor <playerName> <chatColor>
+    description: Removes a certain chatColor from a player.
+  chatColors:
+    usage: /chatColors
+    description: Opens ChatColors Inventory.
+  minerals:
+    usage: /minerals
+    description: Shows current minerals balance.
+  addminerals:
+    usage: /addminerals <player> <amount>
+    description: Adds coins to specific player.
+  removeminerals:
+    usage: /removeminerals <player> <amount>
+    description: Removes coins from specific player.
+  coins:
+    usage: /coins
+    description: Shows current coin balance.
+  daily-reward:
+    description: Opens Inventory that gives player gift every 24 hours.
+    usage: /daily-reward
+  store:
+    description: Opens store where Players can buy stuff with minerals / coins.
+    usage: /store
+  disguise:
+    description: Disguises player to another player.
+    usage: /disguise <player> |
+  brodcast:
+    usage: Brodcast a message to all online players.
+    description: /brodcast <message>
