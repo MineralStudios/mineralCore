@@ -12,7 +12,7 @@ public class AntiSpam implements Listener {
     HashMap<UUID, Integer> messageCounterList  = new HashMap<>();
     HashMap<UUID, Integer> kickCounterList = new HashMap<>();
 
-    int messageCounter = 3;
+    int messageCounter = 5;
     int kickCounter = 0;
 
     @EventHandler
@@ -26,7 +26,7 @@ public class AntiSpam implements Listener {
             int updateKickCounter = kickCounterList.get(e.getPlayer().getUniqueId());
             kickCounterList.put(e.getPlayer().getUniqueId(), updateKickCounter + 1);
             if (kickCounterList.get(e.getPlayer().getUniqueId()) == 4) {
-                e.getPlayer().kickPlayer("§cdisconnect.spam");
+               // e.getPlayer().kickPlayer("§cdisconnect.spam");
                 kickCounterList.put(e.getPlayer().getUniqueId(), 0);
             }
             if (messageCounterList.get(e.getPlayer().getUniqueId()) > 1) {
@@ -36,8 +36,9 @@ public class AntiSpam implements Listener {
         } else {
             messageCounterList.put(e.getPlayer().getUniqueId(), messageCounter);
             kickCounterList.put(e.getPlayer().getUniqueId(), kickCounter);
+            timeRemover(e);
         }
-        timeRemover(e);
+
     }
 
     public void timeRemover(AsyncPlayerChatEvent e) {
@@ -52,6 +53,6 @@ public class AntiSpam implements Listener {
                 time.cancel();
             }
         };
-        time.schedule(AntiSpamTask, 3000);
+        time.schedule(AntiSpamTask, 5000);
     }
     }
