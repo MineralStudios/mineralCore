@@ -65,8 +65,6 @@ public class StaffSQL {
             con.close();
         } catch (SQLException e) {
         }
-        JeezySQL.permPlayerRankName = null;
-        staffRank = false;
     }
 
     public void removeFromStaff(String rankName, Player p) {
@@ -98,8 +96,6 @@ public class StaffSQL {
         } catch (SQLException e) {
             System.out.println(e);
         }
-        JeezySQL.permPlayerRankName = null;
-        staffRank = false;
     }
 
     public void getStaffRank(String rankName) {
@@ -109,8 +105,13 @@ public class StaffSQL {
             Statement stm = con.createStatement();
             String select_sql = "SELECT staffRank FROM ranks WHERE staffRank = true AND rankName = '"+rankName+"'";
             ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                staffRank = rs.getBoolean(1);
+
+            if (!rs.next()) {
+                staffRank = false;
+            } else {
+                do {
+                    staffRank = rs.getBoolean(1);
+                } while (rs.next());
             }
             con.close();
         } catch (SQLException e) {
@@ -124,10 +125,17 @@ public class StaffSQL {
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
             String select_sql = "SELECT rankName FROM ranks WHERE staffRank = true";
+            String rankNames;
             ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                String rankNames = rs.getString(1);
-                staffRankNamesArray.add(rankNames);
+
+            if (!rs.next()) {
+                rankNames = null;
+                staffRankNamesArray.clear();
+            } else {
+                do {
+                    rankNames = rs.getString(1);
+                    staffRankNamesArray.add(rankNames);
+                } while (rs.next());
             }
             con.close();
         } catch (SQLException f) {
@@ -144,14 +152,19 @@ public class StaffSQL {
             for (String ranks : staffRankNamesArray) {
                 String select_sql = "SELECT playerUUID FROM players WHERE rank = '" + ranks + "'";
                 ResultSet rs = stm.executeQuery(select_sql);
-                while (rs.next()) {
-                    staffPlayerNames = rs.getString(1);
 
-                    staff_array = staffPlayerNames.replace("]", "").replace("[", "").split(", ");
-
-                    staff.addAll(Arrays.asList(staff_array));
+                if (!rs.next()) {
+                    staffPlayerNames = null;
+                } else {
+                    do {
+                        staffPlayerNames = rs.getString(1);
+                        staff_array = staffPlayerNames.replace("]", "").replace("[", "").split(", ");
+                        staff.addAll(Arrays.asList(staff_array));
+                    } while (rs.next());
                 }
+                rs.close();
             }
+            stm.close();
             con.close();
         } catch (SQLException f) {
             f.printStackTrace();
@@ -172,6 +185,8 @@ public class StaffSQL {
                     staffRank = rs.getBoolean(6);
                 } while (rs.next());
             }
+            stm.close();
+            rs.close();
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();

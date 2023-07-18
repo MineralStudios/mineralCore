@@ -404,6 +404,8 @@ public class JeezySQL  {
                     rankNameInformation = rs.getString(1);
                 } while (rs.next());
             }
+            stm.close();
+            rs.close();
             con.close();
         }catch (SQLException e) {
             System.out.println(e);
@@ -501,6 +503,8 @@ public class JeezySQL  {
                 rankColor_second = "§2";
                 rankColor = "§2";
             }
+        stm.close();
+        rs.close();
         con.close();
         }catch (SQLException e) {
             System.out.println("HERE ERROR");
@@ -538,10 +542,17 @@ public class JeezySQL  {
             Statement stm = con.createStatement();
             String select_sql = "SELECT * FROM ranks WHERE rankName = '" +rank+"'";
             ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                permPlayerRankName = rs.getString(1);
-                permPlayerRankColor = rs.getString(3);
-                permRankPerms = rs.getString(5);
+
+            if (!rs.next()) {
+                permPlayerRankName = null;
+                permPlayerRankColor = null;
+                permRankPerms = null;
+            } else {
+                do {
+                    permPlayerRankName = rs.getString(1);
+                    permPlayerRankColor = rs.getString(3);
+                    permRankPerms = rs.getString(5);
+                } while (rs.next());
             }
             con.close();
         } catch (SQLException e) {

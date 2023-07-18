@@ -304,14 +304,26 @@ public class MuteSQL {
             Statement stm = con.createStatement();
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" +get_UUID.toString()+"'";
             ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                punishment_UUID = rs.getString(2);
-                mute_forever = rs.getBoolean(4);
-                mute_start = rs.getString(8);
-                mute_end = rs.getString(9);
-                mute_status = rs.getBoolean(10);
-                mute_logs = rs.getString(12);
+
+            if (!rs.next()) {
+                punishment_UUID = null;
+                mute_forever = false;
+                mute_start = null;
+                mute_end = null;
+                mute_status = false;
+                mute_logs = null;
+            } else {
+                do {
+                    punishment_UUID = rs.getString(2);
+                    mute_forever = rs.getBoolean(4);
+                    mute_start = rs.getString(8);
+                    mute_end = rs.getString(9);
+                    mute_status = rs.getBoolean(10);
+                    mute_logs = rs.getString(12);
+                } while (rs.next());
             }
+            stm.close();
+            rs.close();
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -325,11 +337,19 @@ public class MuteSQL {
             Statement stm = con.createStatement();
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" + get_UUID.toString() + "'";
             ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                punishment_UUID = rs.getString(2);
-                mute_forever = rs.getBoolean(4);
-                mute_status = rs.getBoolean(10);
+            if (!rs.next()) {
+                punishment_UUID = null;
+                mute_forever = false;
+                mute_status = false;
+            } else {
+                do {
+                    punishment_UUID = rs.getString(2);
+                    mute_forever = rs.getBoolean(4);
+                    mute_status = rs.getBoolean(10);
+                } while (rs.next());
             }
+            stm.close();
+            rs.close();
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();

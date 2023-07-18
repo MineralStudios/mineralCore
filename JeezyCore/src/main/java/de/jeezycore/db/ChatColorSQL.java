@@ -146,6 +146,9 @@ public class ChatColorSQL {
                 } while (rs.next());
             }
             this.getPlayerChatColor(p);
+            stm.close();
+            rs.close();
+            con.close();
         } catch (SQLException f) {
             f.printStackTrace();
         }
@@ -159,12 +162,15 @@ public class ChatColorSQL {
             String sql_select = "SELECT * FROM chatColors WHERE colorName = '"+currentChatColorName+"'";
             ResultSet rs = stm.executeQuery(sql_select);
             if (!rs.next()) {
-                currentChatColor = null;
+                currentChatColor = "§2";
             } else {
                 do {
                     currentChatColor = rs.getString(2);
                 } while (rs.next());
             }
+            stm.close();
+            rs.close();
+            con.close();
         } catch (SQLException f) {
             f.printStackTrace();
         }

@@ -40,9 +40,7 @@ public class ChatEvent implements Listener {
         banChat.onPlayerChatBan(e);
         ignoreChat.PlayerIgnoreChat(e);
         chatColorSQL.getPlayerChatName(e.getPlayer());
-        if (ChatColorSQL.currentChatColor == null) {
-            ChatColorSQL.currentChatColor = "§2";
-        }
+
             if (display.rankNameInformation == null || display.rank == null) {
                 String chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("&", "§").replace("[player]", ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat).replace("&", "§");
                 e.setFormat(chat_format_rep.replace("%", "%%").trim());

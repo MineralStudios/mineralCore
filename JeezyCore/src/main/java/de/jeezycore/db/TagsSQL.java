@@ -473,7 +473,8 @@ public class TagsSQL {
             } else {
                 tag_in_chat = " "+tag_in_chat;
             }
-
+            stm.close();
+            rs.close();
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();
