@@ -13,7 +13,6 @@ import java.util.UUID;
 
 import static de.jeezycore.utils.ArrayStorage.mineralsStorage;
 
-
 public class MineralsSQL {
 
     public String url;
@@ -21,12 +20,10 @@ public class MineralsSQL {
     public String password;
     public String mineralsData;
 
-    FakePlayerChecker fakePlayerChecker = new FakePlayerChecker();
-
     private void createConnection() {
         MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
 
-        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
+        url = "jdbc:mysql://" + mc.get("ip") + ":" + mc.get("mysql-port") + "/" + mc.get("database");
         user = (String) mc.get("user");
         password = (String) mc.get("password");
     }
@@ -80,13 +77,13 @@ public class MineralsSQL {
     public String minerals(String uuid) {
         mineralsData();
         String getCurrentMinerals;
-        if(mineralsStorage.containsKey(UUID.fromString(uuid).toString())) {
+        if (mineralsStorage.containsKey(UUID.fromString(uuid).toString())) {
             getCurrentMinerals = mineralsStorage.get(UUID.fromString(uuid).toString());
         } else {
             getCurrentMinerals = String.valueOf(0);
         }
 
-       return getCurrentMinerals;
+        return getCurrentMinerals;
     }
 
     public void updateMineralsData() {
@@ -95,10 +92,10 @@ public class MineralsSQL {
             Connection con = DriverManager.getConnection(url, user, password);
             Statement stm = con.createStatement();
 
-                String sql = "UPDATE minerals " +
-                        "SET minerals_data = '"+ ArrayStorage.mineralsStorage +"'"+
-                        " WHERE serverName = 'mineral'";
-                stm.executeUpdate(sql);
+            String sql = "UPDATE minerals " +
+                    "SET minerals_data = '" + ArrayStorage.mineralsStorage + "'" +
+                    " WHERE serverName = 'mineral'";
+            stm.executeUpdate(sql);
 
             stm.close();
             con.close();
@@ -108,15 +105,15 @@ public class MineralsSQL {
     }
 
     public void addMinerals(Player player, String uuid, int amount, String message) {
-        if (fakePlayerChecker.isFakePlayer(player)) {
+        if (FakePlayerChecker.isFakePlayer(player))
             return;
-        }
+
         if (UUIDChecker.uuid == null) {
             player.sendMessage("§7This player doesn't §4exist§7.");
             return;
         }
         mineralsData();
-        if(mineralsStorage.containsKey(UUID.fromString(uuid).toString())) {
+        if (mineralsStorage.containsKey(UUID.fromString(uuid).toString())) {
             String getCurrentMinerals = mineralsStorage.get(UUID.fromString(uuid).toString());
             int count = Integer.parseInt(getCurrentMinerals) + amount;
             mineralsStorage.put(UUID.fromString(uuid).toString(), String.valueOf(count));
@@ -124,10 +121,10 @@ public class MineralsSQL {
             mineralsStorage.put(UUID.fromString(uuid).toString(), String.valueOf(amount));
         }
 
-            player.sendMessage(message.replace("&", "§"));
+        player.sendMessage(message.replace("&", "§"));
 
-            updateMineralsData();
-            ArrayStorage.mineralsStorage.clear();
+        updateMineralsData();
+        ArrayStorage.mineralsStorage.clear();
     }
 
     public void removeMinerals(Player player, String p, int amount) {
@@ -136,7 +133,7 @@ public class MineralsSQL {
             return;
         }
         mineralsData();
-        if(mineralsStorage.containsKey(UUID.fromString(p).toString())) {
+        if (mineralsStorage.containsKey(UUID.fromString(p).toString())) {
             String getCurrentMinerals = mineralsStorage.get(UUID.fromString(p).toString());
             int count = Integer.parseInt(getCurrentMinerals) - amount;
             if (count < 0) {
@@ -147,7 +144,8 @@ public class MineralsSQL {
             mineralsStorage.put(UUID.fromString(p).toString(), String.valueOf(0));
         }
 
-        player.sendMessage("§7You §2successfully §7removed §9"+amount+" §fminerals §7from §9§l"+ UUIDChecker.uuidName+"§7.");
+        player.sendMessage("§7You §2successfully §7removed §9" + amount + " §fminerals §7from §9§l"
+                + UUIDChecker.uuidName + "§7.");
 
         updateMineralsData();
         ArrayStorage.mineralsStorage.clear();
@@ -156,20 +154,22 @@ public class MineralsSQL {
     public void mineralsBalance(Player p) {
         try {
             ArrayStorage.mineralsStorage.clear();
-             mineralsData();
+            mineralsData();
 
-             String message;
+            String message;
 
-                if (ArrayStorage.mineralsStorage.get(p.getPlayer().getUniqueId().toString()) != null) {
-                    message = "§9§lYou §7§lhave: §f§l"+ArrayStorage.mineralsStorage.get(p.getPlayer().getUniqueId().toString())+" §9§lminerals§7§l.";
-                } else {
-                    message = "§9§lYou §7§lhave: §f§l0 §9§lminerals§7§l.";
-                }
-             System.out.println(ArrayStorage.mineralsStorage);
-             p.sendMessage(message);
+            if (ArrayStorage.mineralsStorage.get(p.getPlayer().getUniqueId().toString()) != null) {
+                message = "§9§lYou §7§lhave: §f§l"
+                        + ArrayStorage.mineralsStorage.get(p.getPlayer().getUniqueId().toString())
+                        + " §9§lminerals§7§l.";
+            } else {
+                message = "§9§lYou §7§lhave: §f§l0 §9§lminerals§7§l.";
+            }
+            System.out.println(ArrayStorage.mineralsStorage);
+            p.sendMessage(message);
             mineralsData = null;
         } catch (Exception e) {
-        e.printStackTrace();
+            e.printStackTrace();
         }
 
     }

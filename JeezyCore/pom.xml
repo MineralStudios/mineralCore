@@ -17,13 +17,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.11.0</version>
@@ -67,16 +60,13 @@
             <artifactId>json</artifactId>
             <version>20201115</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.spigotmc/spigot -->
         <dependency>
-            <groupId>org.spigotmc</groupId>
+            <groupId>gg.mineral</groupId>
             <artifactId>spigot</artifactId>
             <version>1.8.8</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/spigot.jar</systemPath>
         </dependency>
-
-
     </dependencies>
 
     <build>
