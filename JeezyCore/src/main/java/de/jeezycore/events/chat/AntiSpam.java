@@ -26,7 +26,7 @@ public class AntiSpam implements Listener {
             int updateKickCounter = kickCounterList.get(e.getPlayer().getUniqueId());
             kickCounterList.put(e.getPlayer().getUniqueId(), updateKickCounter + 1);
             if (kickCounterList.get(e.getPlayer().getUniqueId()) == 4) {
-               // e.getPlayer().kickPlayer("§cdisconnect.spam");
+                e.getPlayer().kickPlayer("§cdisconnect.spam");
                 kickCounterList.put(e.getPlayer().getUniqueId(), 0);
             }
             if (messageCounterList.get(e.getPlayer().getUniqueId()) > 1) {
