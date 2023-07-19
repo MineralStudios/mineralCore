@@ -67,6 +67,11 @@
             <scope>system</scope>
             <systemPath>${basedir}/lib/spigot.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>4.3.1</version>
+        </dependency>
     </dependencies>
 
     <build>

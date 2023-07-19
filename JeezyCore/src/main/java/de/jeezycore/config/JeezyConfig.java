@@ -10,9 +10,11 @@ public class JeezyConfig {
      private final File folder = new File("plugins/JeezyCore");
      public static File config = new File("plugins/JeezyCore/config.yml");
      public static File database = new File("plugins/JeezyCore/database.yml");
+    public static File redis = new File("plugins/JeezyCore/redis.yml");
      public static File discord = new File("plugins/JeezyCore/discord.yml");
      public static YamlConfiguration config_defaults = YamlConfiguration.loadConfiguration(config);
      public static YamlConfiguration database_defaults = YamlConfiguration.loadConfiguration(database);
+    public static YamlConfiguration redis_defaults = YamlConfiguration.loadConfiguration(redis);
      public static YamlConfiguration discord_defaults = YamlConfiguration.loadConfiguration(discord);
 
 
@@ -80,6 +82,26 @@ public class JeezyConfig {
         }
     }
 
+    public void create_redis_defaults() {
+        try {
+            redis.createNewFile();
+            String path_redis_1 = "REDIS.ip";
+            String path_redis_2 = "REDIS.port";
+            String path_redis_3 = "REDIS.user";
+            String path_redis_4 = "REDIS.password";
+            redis_defaults.addDefault(path_redis_1, "localhost");
+            redis_defaults.addDefault(path_redis_2, 6379);
+            redis_defaults.addDefault(path_redis_3, "");
+            redis_defaults.addDefault(path_redis_4, "");
+
+            redis_defaults.options().copyDefaults(true);
+            redis_defaults.save(redis);
+        } catch (Exception e) {
+
+        }
+
+    }
+
     public void create_discord_defaults() {
         try {
             discord.createNewFile();
@@ -141,6 +163,7 @@ public class JeezyConfig {
     }
         create_config_defaults();
         create_database_defaults();
+        create_redis_defaults();
         create_discord_defaults();
     }
 }
