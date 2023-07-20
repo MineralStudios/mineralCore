@@ -4,6 +4,7 @@ import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.ChatColorSQL;
 import de.jeezycore.db.JeezySQL;
 import de.jeezycore.db.TagsSQL;
+import de.jeezycore.db.redis.LanguagesRedis;
 import de.jeezycore.discord.messages.realtime.RealtimeChat;
 import de.jeezycore.utils.LanguagesAPI;
 import org.bukkit.Bukkit;
@@ -34,6 +35,10 @@ public class ChatEvent implements Listener {
 
     LanguagesAPI languagesAPI = new LanguagesAPI();
 
+    LanguagesRedis languagesRedis = new LanguagesRedis();
+
+    String chat_format_rep;
+
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
         antiSpam.AntiSpamChat(e);
@@ -47,18 +52,17 @@ public class ChatEvent implements Listener {
         chatColorSQL.getPlayerChatName(e.getPlayer());
 
             if (display.rankNameInformation == null || display.rank == null) {
-                String chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("&", "§").replace("[player]", ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat).replace("&", "§");
+                 chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("&", "§").replace("[player]", ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat).replace("&", "§");
                 e.setFormat(chat_format_rep.replace("%", "%%").trim());
                 rmc.realtimeMcChat( e.getPlayer().getDisplayName()+": "+e.getMessage());
             } else {
-                String chat_format_rep;
                 for (Player ps : Bukkit.getOnlinePlayers()) {
-                    if (ps.getPlayer().isOp() && e.getPlayer().getUniqueId() != ps.getPlayer().getUniqueId()) {
-                       chat_format_rep = cf.getString("chat_format").replace("[rank]", "§7["+display.rankColor+""+display.rank+"§7]§f").replace("&", "§").replace("[player]", ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", languagesAPI.translate("de", e.getMessage())).replace("[tag]", tag_in_chat.replace("&", "§"));
+                    if (e.getPlayer().getUniqueId() != ps.getPlayer().getUniqueId()) {
+                       chat_format_rep = cf.getString("chat_format").replace("[rank]", "§7["+display.rankColor+""+display.rank+"§7]§f").replace("&", "§").replace("[player]", ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", languagesAPI.translate(languagesRedis.getLanguage(ps), e.getMessage())).replace("[tag]", tag_in_chat.replace("&", "§"));
                     } else {
                         chat_format_rep = cf.getString("chat_format").replace("[rank]", "§7["+display.rankColor+""+display.rank+"§7]§f").replace("&", "§").replace("[player]", ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat.replace("&", "§"));
                     }
-                    ps.sendMessage(chat_format_rep);
+                    ps.sendMessage(chat_format_rep.replace("%", "%%").trim());
                 }
                 e.setCancelled(true);
                 rmc.realtimeMcChat("["+display.rank+"]"+" "+e.getPlayer().getDisplayName()+": "+e.getMessage());
