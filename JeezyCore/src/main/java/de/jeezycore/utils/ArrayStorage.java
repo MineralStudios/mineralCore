@@ -1,5 +1,6 @@
 package de.jeezycore.utils;
 
+import net.suuft.libretranslate.Language;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -7,7 +8,6 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.UUID;
 
 public class ArrayStorage {
@@ -65,5 +65,7 @@ public class ArrayStorage {
     public static HashMap<String, String> mineralsStorage = new HashMap<String, String>();
 
     public static HashMap<UUID, String> tagsCheckStatus = new HashMap<>();
+
+   public static HashMap<String, Language> languageMap = new HashMap<>();
 
 }
