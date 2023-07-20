@@ -91,7 +91,7 @@ public class JeezyConfig {
             String path_redis_4 = "REDIS.password";
             redis_defaults.addDefault(path_redis_1, "localhost");
             redis_defaults.addDefault(path_redis_2, 6379);
-            redis_defaults.addDefault(path_redis_3, "");
+            redis_defaults.addDefault(path_redis_3, "default");
             redis_defaults.addDefault(path_redis_4, "");
 
             redis_defaults.options().copyDefaults(true);
