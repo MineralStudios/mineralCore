@@ -2,6 +2,7 @@ package de.jeezycore.events.inventories;
 
 import de.jeezycore.events.inventories.chatColors.ChatColorsInventory;
 import de.jeezycore.events.inventories.grant.GrantInventory;
+import de.jeezycore.events.inventories.languages.LanguagesInventory;
 import de.jeezycore.events.inventories.manage.ManageInventory;
 import de.jeezycore.events.inventories.profiles.ProfileInventory;
 import de.jeezycore.events.inventories.punishments.bans.BansInventory;
@@ -50,5 +51,8 @@ public class JeezyInventories implements Listener {
 
         StoreInventory storeInventory = new StoreInventory();
         storeInventory.run(e);
+
+        LanguagesInventory languagesInventory = new LanguagesInventory();
+        languagesInventory.run(e);
     }
 }
