@@ -5,6 +5,7 @@ import de.jeezycore.commands.chatColors.ChatColors;
 import de.jeezycore.commands.chatColors.CreateChatColor;
 import de.jeezycore.commands.chatColors.GrantChatColor;
 import de.jeezycore.commands.chatColors.UnGrantChatColors;
+import de.jeezycore.commands.languages.Lang;
 import de.jeezycore.commands.languages.Languages;
 import de.jeezycore.commands.ranks.UnGrantRank;
 import de.jeezycore.commands.staff.Logs;
@@ -102,6 +103,7 @@ public class Main extends JavaPlugin {
         this.getCommand("disguise").setExecutor(new DisguiseCommand(disguiseManager));
         this.getCommand("brodcast").setExecutor(new Brodcast());
         this.getCommand("languages").setExecutor(new Languages());
+        this.getCommand("lang").setExecutor(new Lang());
 
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);

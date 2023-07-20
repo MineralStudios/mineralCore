@@ -156,3 +156,6 @@ commands:
   languages:
     usage: Shows all available languages.
     description: /languages
+  lang:
+    usage: Opens language inventory.
+    description: /lang
