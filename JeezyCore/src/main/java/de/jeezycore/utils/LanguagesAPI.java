@@ -7,7 +7,7 @@ public class LanguagesAPI {
 
 
     public void setTranslateUrl() {
-        Translator.setUrlApi("https://translate.argosopentech.com/translate");
+        Translator.setUrlApi("http://localhost:5000/translate");
     }
 
     public void setLanguages() {
