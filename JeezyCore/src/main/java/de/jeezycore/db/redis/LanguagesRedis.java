@@ -18,7 +18,6 @@ public class LanguagesRedis {
 
     public void establishRedisPool() {
         pool = new JedisPool((String) config.get("ip"), (Integer) config.get("port"), (String) config.get("user"), (String) config.get("password"));
-
     }
 
     public void setLanguage(org.bukkit.event.inventory.InventoryClickEvent e, String language) {
@@ -48,6 +47,7 @@ public class LanguagesRedis {
             if (lang == null) {
                 lang = "none";
             }
+            pool.close();
         }
         return lang;
     }
