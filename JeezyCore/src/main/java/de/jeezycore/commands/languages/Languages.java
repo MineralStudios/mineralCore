@@ -18,6 +18,9 @@ public class Languages implements CommandExecutor {
                 p.sendMessage(" §7Here are all §9§lavailable§7 languages: ");
                 p.sendMessage("                                             ");
                 for (Language i : ArrayStorage.languageMap.values()) {
+                    if (i.toString().equalsIgnoreCase("NONE")) {
+                        continue;
+                    }
                     p.sendMessage(" §9§l"+i);
                     p.sendMessage("                                             ");
                 }
