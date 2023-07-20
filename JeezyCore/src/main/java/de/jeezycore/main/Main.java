@@ -5,6 +5,7 @@ import de.jeezycore.commands.chatColors.ChatColors;
 import de.jeezycore.commands.chatColors.CreateChatColor;
 import de.jeezycore.commands.chatColors.GrantChatColor;
 import de.jeezycore.commands.chatColors.UnGrantChatColors;
+import de.jeezycore.commands.languages.Languages;
 import de.jeezycore.commands.ranks.UnGrantRank;
 import de.jeezycore.commands.staff.Logs;
 import de.jeezycore.disguise.manger.DisguiseManager;
@@ -12,9 +13,6 @@ import de.jeezycore.colors.Color;
 import de.jeezycore.commands.basic.*;
 import de.jeezycore.commands.chat.ChatDisabler;
 import de.jeezycore.commands.disguise.DisguiseCommand;
-import de.jeezycore.commands.minerals.Minerals;
-import de.jeezycore.commands.minerals.addMinerals;
-import de.jeezycore.commands.minerals.removeMinerals;
 import de.jeezycore.commands.permissions.PermissionAdd;
 import de.jeezycore.commands.permissions.PermissionRemove;
 import de.jeezycore.commands.punishments.ban.Ban;
@@ -28,22 +26,19 @@ import de.jeezycore.commands.punishments.wipe.WipeBans;
 import de.jeezycore.commands.punishments.wipe.WipeMutes;
 import de.jeezycore.commands.ranks.CreateRank;
 import de.jeezycore.commands.ranks.GrantRank;
-import de.jeezycore.commands.rewards.DailyReward;
 import de.jeezycore.commands.spawn.SetSpawn;
 import de.jeezycore.commands.spawn.Spawn;
 import de.jeezycore.commands.staff.StaffRankDisable;
 import de.jeezycore.commands.staff.StaffRankEnable;
-import de.jeezycore.commands.store.Store;
 import de.jeezycore.commands.tags.*;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.JeezySQL;
-import de.jeezycore.db.MineralsSQL;
-import de.jeezycore.db.RewardSQL;
 import de.jeezycore.discord.JeezyBot;
 import de.jeezycore.events.*;
 import de.jeezycore.events.chat.ChatEvent;
 import de.jeezycore.events.inventories.JeezyInventories;
 import de.jeezycore.utils.HTTPUtility;
+import de.jeezycore.utils.LanguagesAPI;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -106,6 +101,7 @@ public class Main extends JavaPlugin {
         //this.getCommand("store").setExecutor(new Store());
         this.getCommand("disguise").setExecutor(new DisguiseCommand(disguiseManager));
         this.getCommand("brodcast").setExecutor(new Brodcast());
+        this.getCommand("languages").setExecutor(new Languages());
 
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
@@ -123,6 +119,10 @@ public class Main extends JavaPlugin {
         // Launching discord bot
        JeezyBot bot = new JeezyBot();
        bot.start();
+       // Putting in the Languages
+        LanguagesAPI languagesAPI = new LanguagesAPI();
+        languagesAPI.setTranslateUrl();
+        languagesAPI.setLanguages();
 
       // MineralsSQL mineralsSQL = new MineralsSQL();
       // mineralsSQL.start();

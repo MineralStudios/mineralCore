@@ -153,3 +153,6 @@ commands:
   brodcast:
     usage: Brodcast a message to all online players.
     description: /brodcast <message>
+  languages:
+    usage: Shows all available languages.
+    description: /languages
