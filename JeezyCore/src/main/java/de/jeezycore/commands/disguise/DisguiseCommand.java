@@ -19,8 +19,14 @@ public class DisguiseCommand implements CommandExecutor {
     if (!(commandSender instanceof Player)) return true;
     if (command.getName().equalsIgnoreCase("disguise")) {
       Player player = (Player) commandSender;
+
+      if (!player.hasPermission("jeezy.core.disguise")) {
+        player.sendMessage("No Permission.");
+        return true;
+      }
+
       if (args.length == 0) {
-        player.sendMessage("/disguise <user> / <clear>");
+        player.sendMessage("Usage: /disguise <user> / <clear>");
         return true;
       }
 

@@ -20,10 +20,8 @@ public class TempBan implements CommandExecutor {
 
         if (sender instanceof Player) {
             Player p = (Player) sender;
-
+            if (p.hasPermission("jeezy.core.punishments.tempban")) {
             if (cmd.getName().equalsIgnoreCase("tempban") && args.length >= 3) {
-                if (p.hasPermission("jeezy.core.punishments.tempban")) {
-
                     List<String> ls = new ArrayList<String>(Arrays.asList(args));
                     String input = Joiner.on(" ")
                             .skipNulls()

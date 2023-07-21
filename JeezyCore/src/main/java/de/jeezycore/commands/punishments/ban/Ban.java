@@ -16,9 +16,8 @@ public class Ban implements CommandExecutor {
 
         if (sender instanceof Player) {
             Player p = (Player) sender;
-
+            if (p.hasPermission("jeezy.core.punishments.ban")) {
             if (cmd.getName().equalsIgnoreCase("ban") && args.length > 1) {
-                if (p.hasPermission("jeezy.core.punishments.ban")) {
                     List<String> ls = new ArrayList<String>(Arrays.asList(args));
                     String input = Joiner.on(" ")
                             .skipNulls()
