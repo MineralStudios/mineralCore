@@ -14,9 +14,8 @@ public class TempMute implements CommandExecutor {
 
         if (sender instanceof Player) {
             Player p = (Player) sender;
-
+            if (p.hasPermission("jeezy.core.punishments.tempmute")) {
             if (cmd.getName().equalsIgnoreCase("tempmute") && args.length >= 3) {
-                if (p.hasPermission("jeezy.core.punishments.tempmute")) {
                     MuteSQL execute = new MuteSQL();
 
                     execute.tempMute(args[0], args[1], args[2], p);

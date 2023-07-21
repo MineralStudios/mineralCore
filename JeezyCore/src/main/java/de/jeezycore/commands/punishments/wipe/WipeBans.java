@@ -13,9 +13,8 @@ public class WipeBans implements CommandExecutor {
         if (sender instanceof Player) {
 
             Player p = (Player) sender;
-
+            if (p.hasPermission("jeezy.core.punishments.wipe.bans")) {
             if (cmd.getName().equalsIgnoreCase("wipebans") && args.length == 1) {
-                if (p.hasPermission("jeezy.core.punishments.wipe.bans")) {
                     WipeSQL execute = new WipeSQL();
                     execute.wipeBans(args[0], p);
                 } else {

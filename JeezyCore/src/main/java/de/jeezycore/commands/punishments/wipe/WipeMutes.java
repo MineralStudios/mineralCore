@@ -13,9 +13,8 @@ public class WipeMutes implements CommandExecutor {
         if (sender instanceof Player) {
 
             Player p = (Player) sender;
-
+            if (p.hasPermission("jeezy.core.punishments.wipe.mutes")) {
             if (cmd.getName().equalsIgnoreCase("wipemutes") && args.length == 1) {
-                if (p.hasPermission("jeezy.core.punishments.wipe.mutes")) {
                     WipeSQL execute = new WipeSQL();
                     execute.wipeMutes(args[0], p);
                 } else {

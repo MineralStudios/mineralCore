@@ -14,9 +14,8 @@ public class UnMute implements CommandExecutor {
 
         if (sender instanceof Player) {
             Player p = (Player) sender;
-
+            if (p.hasPermission("jeezy.core.punishments.unmute")) {
             if (cmd.getName().equalsIgnoreCase("unmute") && args.length > 0) {
-                if (p.hasPermission("jeezy.core.punishments.unmute")) {
                     MuteSQL execute = new MuteSQL();
                     execute.unMute(args[0], p.getPlayer());
                 } else {

@@ -18,9 +18,8 @@ public class Mute implements CommandExecutor {
 
         if (sender instanceof Player) {
             Player p = (Player) sender;
-
+            if (p.hasPermission("jeezy.core.punishments.mute")) {
             if (cmd.getName().equalsIgnoreCase("mute") && args.length > 1) {
-                if (p.hasPermission("jeezy.core.punishments.mute")) {
                     List<String> ls = new ArrayList<String>(Arrays.asList(args));
                     String input = Joiner.on("")
                             .skipNulls()

@@ -13,10 +13,8 @@ public class WipeAll implements CommandExecutor {
         if (sender instanceof Player) {
 
             Player p = (Player) sender;
-
+            if (p.hasPermission("jeezy.core.punishments.wipe.all")) {
             if (cmd.getName().equalsIgnoreCase("wipeall") && args.length == 0) {
-
-                if (p.hasPermission("jeezy.core.punishments.wipe.all")) {
                     WipeSQL execute = new WipeSQL();
                     execute.wipeAll(p);
                 } else {
