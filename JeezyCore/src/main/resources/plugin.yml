@@ -129,33 +129,33 @@ commands:
   chatColors:
     usage: /chatColors
     description: Opens ChatColors Inventory.
-  minerals:
-    usage: /minerals
-    description: Shows current minerals balance.
-  addminerals:
-    usage: /addminerals <player> <amount>
-    description: Adds coins to specific player.
-  removeminerals:
-    usage: /removeminerals <player> <amount>
-    description: Removes coins from specific player.
-  coins:
-    usage: /coins
-    description: Shows current coin balance.
-  daily-reward:
-    description: Opens Inventory that gives player gift every 24 hours.
-    usage: /daily-reward
-  store:
-    description: Opens store where Players can buy stuff with minerals / coins.
-    usage: /store
+ # minerals:
+   # usage: /minerals
+   # description: Shows current minerals balance.
+ # addminerals:
+  #  usage: /addminerals <player> <amount>
+   # description: Adds coins to specific player.
+  #removeminerals:
+  #  usage: /removeminerals <player> <amount>
+  #  description: Removes coins from specific player.
+  #coins:
+  #  usage: /coins
+   # description: Shows current coin balance.
+ # daily-reward:
+  #  description: Opens Inventory that gives player gift every 24 hours.
+  #  usage: /daily-reward
+ #store:
+   # description: Opens store where Players can buy stuff with minerals / coins.
+  #  usage: /store
   disguise:
     description: Disguises player to another player.
     usage: /disguise <player> |
   brodcast:
     usage: Brodcast a message to all online players.
     description: /brodcast <message>
-  languages:
-    usage: Shows all available languages.
-    description: /languages
-  lang:
-    usage: Opens language inventory.
-    description: /lang
+  #languages:
+   # usage: Shows all available languages.
+    #description: /languages
+  #lang:
+   # usage: Opens language inventory.
+    #description: /lang

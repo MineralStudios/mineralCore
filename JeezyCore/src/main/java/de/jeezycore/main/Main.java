@@ -102,8 +102,8 @@ public class Main extends JavaPlugin {
         //this.getCommand("store").setExecutor(new Store());
         this.getCommand("disguise").setExecutor(new DisguiseCommand(disguiseManager));
         this.getCommand("brodcast").setExecutor(new Brodcast());
-        this.getCommand("languages").setExecutor(new Languages());
-        this.getCommand("lang").setExecutor(new Lang());
+        //this.getCommand("languages").setExecutor(new Languages());
+        //this.getCommand("lang").setExecutor(new Lang());
 
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
