@@ -5,8 +5,6 @@ import de.jeezycore.commands.chatColors.ChatColors;
 import de.jeezycore.commands.chatColors.CreateChatColor;
 import de.jeezycore.commands.chatColors.GrantChatColor;
 import de.jeezycore.commands.chatColors.UnGrantChatColors;
-import de.jeezycore.commands.languages.Lang;
-import de.jeezycore.commands.languages.Languages;
 import de.jeezycore.commands.ranks.UnGrantRank;
 import de.jeezycore.commands.staff.Logs;
 import de.jeezycore.disguise.manger.DisguiseManager;
@@ -122,9 +120,11 @@ public class Main extends JavaPlugin {
        JeezyBot bot = new JeezyBot();
        bot.start();
        // Putting in the Languages
+        /*
         LanguagesAPI languagesAPI = new LanguagesAPI();
         languagesAPI.setTranslateUrl();
         languagesAPI.setLanguages();
+         */
 
       // MineralsSQL mineralsSQL = new MineralsSQL();
       // mineralsSQL.start();
