@@ -46,11 +46,11 @@ public class ChatEvent implements Listener {
 
             if (display.rankNameInformation == null || display.rank == null) {
                  chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("&", "§").replace("[player]", ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat).replace("&", "§");
-                e.setFormat(chat_format_rep.replace("%", "%%").trim());
                 rmc.realtimeMcChat( e.getPlayer().getDisplayName()+": "+e.getMessage());
             } else {
                 chat_format_rep = cf.getString("chat_format").replace("[rank]", "§7["+display.rankColor+""+display.rank+"§7]§f").replace("&", "§").replace("[player]", ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat.replace("&", "§"));
                 rmc.realtimeMcChat("["+display.rank+"]"+" "+e.getPlayer().getDisplayName()+": "+e.getMessage());
             }
+            e.setFormat(chat_format_rep.replace("%", "%%").trim());
     }
 }
