@@ -7,7 +7,7 @@ public class PlayerCommandPreprocessEvent implements Listener {
 
     @EventHandler
     public void onCommandExecute(org.bukkit.event.player.PlayerCommandPreprocessEvent e) {
-       if (e.getMessage().equalsIgnoreCase("/help")) {
+       if (e.getMessage().contains("/help")) {
            e.setCancelled(true);
            e.getPlayer().sendMessage(new String[] {
                    "\n",
@@ -24,5 +24,4 @@ public class PlayerCommandPreprocessEvent implements Listener {
            });
        }
     }
-
 }
