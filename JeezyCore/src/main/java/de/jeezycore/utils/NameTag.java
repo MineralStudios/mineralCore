@@ -38,6 +38,11 @@ public class NameTag {
         }
     }
 
+    public void giveMatchNameTags(Player player1, Player player2) {
+        NametagEdit.getApi().setPrefix(player1, "§a");
+        NametagEdit.getApi().setPrefix(player2, "§c");
+    }
+
     public void clearTagOnMatchStart(Player player1, Player player2) {
         NametagEdit.getApi().clearNametag(player1);
         NametagEdit.getApi().clearNametag(player2);
