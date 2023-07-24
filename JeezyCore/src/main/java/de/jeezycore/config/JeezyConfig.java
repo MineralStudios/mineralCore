@@ -10,11 +10,13 @@ public class JeezyConfig {
      private final File folder = new File("plugins/JeezyCore");
      public static File config = new File("plugins/JeezyCore/config.yml");
      public static File database = new File("plugins/JeezyCore/database.yml");
-    public static File redis = new File("plugins/JeezyCore/redis.yml");
+    public static File tips = new File("plugins/JeezyCore/tips.yml");
+     public static File redis = new File("plugins/JeezyCore/redis.yml");
      public static File discord = new File("plugins/JeezyCore/discord.yml");
      public static YamlConfiguration config_defaults = YamlConfiguration.loadConfiguration(config);
      public static YamlConfiguration database_defaults = YamlConfiguration.loadConfiguration(database);
-    public static YamlConfiguration redis_defaults = YamlConfiguration.loadConfiguration(redis);
+     public static YamlConfiguration tips_defaults = YamlConfiguration.loadConfiguration(tips);
+     public static YamlConfiguration redis_defaults = YamlConfiguration.loadConfiguration(redis);
      public static YamlConfiguration discord_defaults = YamlConfiguration.loadConfiguration(discord);
 
 
@@ -102,6 +104,41 @@ public class JeezyConfig {
 
     }
 
+    public void create_tips_defaults() {
+        try {
+            tips.createNewFile();
+            String path_tips_status = "TIP.status";
+            String path_tips_delayAfterStartup = "TIP.delay";
+            String path_tips_delay = "TIP.period";
+            String path_tips_1 = "TIP.one";
+            String path_tips_2 = "TIP.two";
+            String path_tips_3 = "TIP.three";
+            String path_tips_4 = "TIP.four";
+            String path_tips_5 = "TIP.five";
+            List<Object> list_1 = new ArrayList<>();
+            List<Object> list_2 = new ArrayList<>();
+            List<Object> list_3 = new ArrayList<>();
+            List<Object> list_4 = new ArrayList<>();
+            List<Object> list_5 = new ArrayList<>();
+            tips_defaults.addDefault(path_tips_status, false);
+            tips_defaults.addDefault(path_tips_delayAfterStartup, 300000);
+            tips_defaults.addDefault(path_tips_delay, 300000);
+            tips_defaults.addDefault(path_tips_1, list_1);
+            tips_defaults.addDefault(path_tips_2, list_2);
+            tips_defaults.addDefault(path_tips_3, list_3);
+            tips_defaults.addDefault(path_tips_4, list_4);
+            tips_defaults.addDefault(path_tips_5, list_5);
+
+            tips_defaults.options().copyDefaults(true);
+            tips_defaults.save(tips);
+
+
+        } catch (Exception e) {
+
+        }
+
+    }
+
     public void create_discord_defaults() {
         try {
             discord.createNewFile();
@@ -164,6 +201,7 @@ public class JeezyConfig {
         create_config_defaults();
         create_database_defaults();
         create_redis_defaults();
+        create_tips_defaults();
         create_discord_defaults();
     }
 }
