@@ -119,6 +119,11 @@ public class Main extends JavaPlugin {
         // Launching discord bot
        JeezyBot bot = new JeezyBot();
        bot.start();
+
+       // Schedule Tips
+        Tips tips = new Tips();
+        tips.scheduleTips();
+
        // Putting in the Languages
         /*
         LanguagesAPI languagesAPI = new LanguagesAPI();
