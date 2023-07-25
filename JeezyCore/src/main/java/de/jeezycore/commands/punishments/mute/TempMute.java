@@ -19,11 +19,11 @@ public class TempMute implements CommandExecutor {
                     MuteSQL execute = new MuteSQL();
 
                     execute.tempMute(args[0], args[1], args[2], p);
-                } else {
-                    p.sendMessage("No permission.");
-                }
             } else {
                 p.sendMessage("Usage: /tempmute <player><time><reason>");
+            }
+            } else {
+                p.sendMessage("No permission.");
             }
         }
         return true;

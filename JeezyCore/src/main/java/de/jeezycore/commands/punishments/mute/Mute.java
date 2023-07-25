@@ -27,11 +27,11 @@ public class Mute implements CommandExecutor {
 
                     MuteSQL execute = new MuteSQL();
                     execute.mute(args[0], input, p.getPlayer());
-                } else {
-                    p.sendMessage("No permission.");
-                }
             } else {
                 p.sendMessage("Usage: /mute <player><reason>.");
+            }
+            } else {
+                p.sendMessage("No permission.");
             }
         }
         return true;

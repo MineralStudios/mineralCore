@@ -18,11 +18,11 @@ public class UnMute implements CommandExecutor {
             if (cmd.getName().equalsIgnoreCase("unmute") && args.length > 0) {
                     MuteSQL execute = new MuteSQL();
                     execute.unMute(args[0], p.getPlayer());
-                } else {
-                    p.sendMessage("No permission.");
-                }
             } else {
                 p.sendMessage("Usage: /unmute <player>.");
+            }
+            } else {
+                p.sendMessage("No permission.");
             }
         }
         return true;
