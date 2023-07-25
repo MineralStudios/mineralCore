@@ -25,11 +25,11 @@ public class Ban implements CommandExecutor {
 
 
                     execute.ban(args[0], input, p.getPlayer());
-                } else {
-                    p.sendMessage("No permission.");
-                }
             } else {
                 p.sendMessage("Usage: /ban <player><reason>.");
+            }
+            } else {
+                p.sendMessage("No permission.");
             }
         } else {
             List<String> lsConsole = new ArrayList<String>(Arrays.asList(args));

@@ -32,11 +32,11 @@ public class TempBan implements CommandExecutor {
                     execute.tempBan(args[0], args[1], input, p);
                     System.out.println(input);
                     System.out.println(ls);
-                } else {
-                    p.sendMessage("No permission.");
-                }
             } else {
                 p.sendMessage("Usage: /tempban <player><time><reason>");
+            }
+            } else {
+                p.sendMessage("No permission.");
             }
         }
         return true;
