@@ -17,11 +17,11 @@ public class WipeAll implements CommandExecutor {
             if (cmd.getName().equalsIgnoreCase("wipeall") && args.length == 0) {
                     WipeSQL execute = new WipeSQL();
                     execute.wipeAll(p);
-                } else {
-                    p.sendMessage("No permission.");
-                }
             } else {
                 p.sendMessage("Usage: /wipeall");
+            }
+            } else {
+                p.sendMessage("No permission.");
             }
         }
         return true;

@@ -17,11 +17,11 @@ public class WipeMutes implements CommandExecutor {
             if (cmd.getName().equalsIgnoreCase("wipemutes") && args.length == 1) {
                     WipeSQL execute = new WipeSQL();
                     execute.wipeMutes(args[0], p);
-                } else {
-                    p.sendMessage("No permission");
-                }
             } else {
                 p.sendMessage("Usage: /wipemutes <player>");
+            }
+            } else {
+                p.sendMessage("No permission");
             }
         }
         return true;

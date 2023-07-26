@@ -17,11 +17,11 @@ public class WipeBans implements CommandExecutor {
             if (cmd.getName().equalsIgnoreCase("wipebans") && args.length == 1) {
                     WipeSQL execute = new WipeSQL();
                     execute.wipeBans(args[0], p);
-                } else {
-                    p.sendMessage("No permission.");
-                }
             } else {
                 p.sendMessage("Usage: /wipebans <player>");
+            }
+            } else {
+                p.sendMessage("No permission.");
             }
         }
         return true;
