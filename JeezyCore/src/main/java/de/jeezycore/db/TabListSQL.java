@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.Field;
 import java.sql.*;
 
+import static de.jeezycore.db.hikari.HikariCP.dataSource;
 import static de.jeezycore.utils.ArrayStorage.tab_name_list_array;
 
 public class TabListSQL {
@@ -19,15 +20,8 @@ public class TabListSQL {
     String rankColor;
 
     JeezySQL jeezySQL = new JeezySQL();
-
-    private void createConnection() {
-        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
-        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
-        user = (String) mc.get("user");
-        password = (String) mc.get("password");
-    }
-
-
+    
+    
     public void setTabList1_8(Player p, String Title, String subTitle) {
         IChatBaseComponent tabTitle = IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + Title+ "\"}");
         IChatBaseComponent tabSubTitle = IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + subTitle + "\"}");
@@ -47,20 +41,22 @@ public class TabListSQL {
 
 
     public void getTabListData(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             jeezySQL.getPlayerInformation(p);
             String sql = "SELECT * FROM ranks WHERE rankName = '"+jeezySQL.rankNameInformation+"'";
-            ResultSet rs = stm.executeQuery(sql);
+            resultSet = statement.executeQuery(sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 rankColor = null;
             } else {
                 do {
-                    rankColor = rs.getString(3);
-                } while(rs.next());
+                    rankColor = resultSet.getString(3);
+                } while(resultSet.next());
 
                 if (rankColor == null) {
                 return;
@@ -68,11 +64,16 @@ public class TabListSQL {
 
                 tab_name_list_array.put(p, rankColor);
             }
-            con.close();
         } catch (SQLException e) {
             System.out.println(e);
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
-
-
 }

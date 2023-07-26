@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.UUID;
+
+import static de.jeezycore.db.hikari.HikariCP.dataSource;
 import static de.jeezycore.utils.ArrayStorage.set_current_tag_array;
 import static de.jeezycore.utils.ArrayStorage.tags_in_ownership_array;
 
@@ -43,9 +45,7 @@ public class TagsSQL {
     public static String playerTag;
 
     public static String [] grant_new_tag;
-
-    public static String [] already_set_tag;
-
+    
     public ArrayList<String> arrayList = new ArrayList<>();
 
     public ArrayList<String> tagNameList = new ArrayList<>();
@@ -54,22 +54,15 @@ public class TagsSQL {
 
     public LinkedHashMap<String, String> tagDataFullSize = new LinkedHashMap<String, String>();
 
-
-    private void createConnection() {
-
-        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
-
-        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
-        user = (String) mc.get("user");
-        password = (String) mc.get("password");
-    }
-
+    
     public void pushData(String sql, Player p, String tagName, String tagCategory, String tagDesign, String tagPriority) {
-        this.createConnection();
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet resultSet = null;
         try {
-            Connection con = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
 
-            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, tagName);
             pstmt.setString(2, tagCategory);
             pstmt.setString(3, tagDesign);
@@ -78,175 +71,230 @@ public class TagsSQL {
             pstmt.executeUpdate();
 
             p.sendMessage("§2Successfully §7created the tag §b§l"+tagName+".");
-
-            con.close();
         } catch (SQLException e) {
             p.sendMessage("§7The tag §b§l"+tagName+"§7 has been §calready §7created!");
             System.out.println(e);
+        } finally {
+            try {
+                pstmt.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void getFullDataSize() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
 
-            Statement stm = con.createStatement();
+            statement = connection.createStatement();
             String sql = "SELECT * FROM tags ORDER BY tagPriority DESC";
-            ResultSet rs = stm.executeQuery(sql);
-            while (rs.next()) {
-                tagName = rs.getString(1);
-                tagDesign = rs.getString(3);
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                tagName = resultSet.getString(1);
+                tagDesign = resultSet.getString(3);
 
                 tagDataFullSize.put(tagName, tagDesign);
             }
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void getOwnershipData(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
             this.getPlayerTag(p);
-            Connection con = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
 
-            Statement stm = con.createStatement();
+            statement = connection.createStatement();
             String sql = "SELECT ownedTags FROM items WHERE playerUUID = '"+p.getPlayer().getUniqueId()+"'";
-            ResultSet rs = stm.executeQuery(sql);
-            while (rs.next()) {
-                ownerTagName = rs.getString(1);
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                ownerTagName = resultSet.getString(1);
                 if (ownerTagName != null) {
                     String[] get_owned_tags = ownerTagName.replace("[", "").replace("]", "").split(", ");
                     tags_in_ownership_array.addAll(Arrays.asList(get_owned_tags));
-
                 }
             }
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void getPlayerTag(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
 
-            Statement stm = con.createStatement();
+            statement = connection.createStatement();
             String sql = "SELECT tag FROM players WHERE playerUUID = '"+p.getUniqueId()+"'";
-            ResultSet rs = stm.executeQuery(sql);
-            if (!rs.next()) {
+            resultSet = statement.executeQuery(sql);
+            if (!resultSet.next()) {
                playerTag = null;
             } else {
                 do {
-                   playerTag = rs.getString(1);
-                } while (rs.next());
+                   playerTag = resultSet.getString(1);
+                } while (resultSet.next());
             }
-
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void getPlayerOwnedTags(String playerName) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
             UUIDChecker uc = new UUIDChecker();
             uc.check(playerName);
-            Statement stm = con.createStatement();
+            statement = connection.createStatement();
 
             String sql_items = "SELECT * FROM items WHERE playerUUID = '"+UUIDChecker.uuid+"'";
 
-            ResultSet rs = stm.executeQuery(sql_items);
+            resultSet = statement.executeQuery(sql_items);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 ownedItemsPlayerUUID = null;
                 ownedTags = null;
             } else {
                 do {
-                    ownedItemsPlayerUUID = rs.getString(2);
-                    ownedTags = rs.getString(6);
-                } while (rs.next());
+                    ownedItemsPlayerUUID = resultSet.getString(2);
+                    ownedTags = resultSet.getString(6);
+                } while (resultSet.next());
             }
-            stm.close();
-            rs.close();
-            con.close();
         } catch (SQLException e) {
             System.out.println(e);
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void setCurrentTag(String tagName, Player player) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
+            connection = dataSource.getConnection();
 
-            Connection con = DriverManager.getConnection(url, user, password);
-
-            Statement stm = con.createStatement();
+            statement = connection.createStatement();
             String sql2 = "SELECT * FROM items WHERE playerUUID = '"+player.getUniqueId()+"'";
-            ResultSet rs = stm.executeQuery(sql2);
+            resultSet = statement.executeQuery(sql2);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 current_tag = null;
             } else {
                 do {
-                    current_tag = rs.getString(6);
-                } while (rs.next());
+                    current_tag = resultSet.getString(6);
+                } while (resultSet.next());
             }
 
             String sql_2 = "UPDATE players " +
                     "SET tag = '"+tagName +
                     "' WHERE playerUUID = '"+player.getUniqueId()+"'";
-            stm.executeUpdate(sql_2);
+            statement.executeUpdate(sql_2);
             set_current_tag_array.clear();
-            con.close();
         } catch (SQLException e) {
             System.out.println(e);
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void getData(int startCount) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
 
-            Statement stm = con.createStatement();
+            statement = connection.createStatement();
             String sql = "SELECT * FROM tags ORDER BY tagPriority DESC LIMIT "+startCount+","+1844674407;
-            ResultSet rs = stm.executeQuery(sql);
-            while (rs.next()) {
-                tagName = rs.getString(1);
-                tagCategory = rs.getString(2);
-                tagDesign = rs.getString(3);
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                tagName = resultSet.getString(1);
+                tagCategory = resultSet.getString(2);
+                tagDesign = resultSet.getString(3);
 
                 arrayList.add(Arrays.asList(tagName, tagCategory, tagDesign).toString());
                 tagNameList.add(tagName);
-
             }
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
     public void grantTag(Player p, String tagName, String playerName) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
             this.getPlayerOwnedTags(playerName);
-            Connection con = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
             UUIDChecker uc = new UUIDChecker();
             uc.check(playerName);
-            Statement stm = con.createStatement();
+            statement = connection.createStatement();
             String sql_tags = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
 
-            ResultSet rs = stm.executeQuery(sql_tags);
+            resultSet = statement.executeQuery(sql_tags);
 
-            while (rs.next()) {
-                tagNameTags = rs.getString(1);
+            while (resultSet.next()) {
+                tagNameTags = resultSet.getString(1);
             }
 
 
@@ -274,35 +322,44 @@ public class TagsSQL {
                 String sql_insert_items = "INSERT INTO items" +
                         "(playerName, playerUUID, ownedTags, ownedChatColors)" +
                         "VALUES ('"+UUIDChecker.uuidName+"', '"+UUIDChecker.uuid+"', '"+tag_name_array+"', '"+null+"')";
-                stm.executeUpdate(sql_insert_items);
+                statement.executeUpdate(sql_insert_items);
             } else {
                 String sql_push_items = "UPDATE items " +
                         "SET ownedTags = '"+ tag_name_array +
                         "' WHERE playerUUID = '"+UUIDChecker.uuid+"'";
-                stm.executeUpdate(sql_push_items);
+                statement.executeUpdate(sql_push_items);
             }
                 tag_name_array.clear();
-            con.close();
         } catch (SQLException e) {
             System.out.println(e);
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
     public void grantTagConsole(CommandSender sender, String tagName, String playerName) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
             this.getPlayerOwnedTags(playerName);
-            Connection con = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
             UUIDChecker uc = new UUIDChecker();
             uc.check(playerName);
-            Statement stm = con.createStatement();
+            statement = connection.createStatement();
             String sql_tags = "SELECT * FROM tags WHERE tagName = '"+tagName+"'";
 
-            ResultSet rs = stm.executeQuery(sql_tags);
+            resultSet = statement.executeQuery(sql_tags);
 
-            while (rs.next()) {
-                tagNameTags = rs.getString(1);
+            while (resultSet.next()) {
+                tagNameTags = resultSet.getString(1);
             }
 
 
@@ -330,29 +387,38 @@ public class TagsSQL {
                 String sql_insert_items = "INSERT INTO items" +
                         "(playerName, playerUUID, ownedTags, ownedChatColors)" +
                         "VALUES ('"+UUIDChecker.uuidName+"', '"+UUIDChecker.uuid+"', '"+tag_name_array+"', '"+null+"')";
-                stm.executeUpdate(sql_insert_items);
+                statement.executeUpdate(sql_insert_items);
             } else {
                 String sql_push_items = "UPDATE items " +
                         "SET ownedTags = '"+ tag_name_array +
                         "' WHERE playerUUID = '"+UUIDChecker.uuid+"'";
-                stm.executeUpdate(sql_push_items);
+                statement.executeUpdate(sql_push_items);
             }
             tag_name_array.clear();
-            con.close();
         } catch (SQLException e) {
             System.out.println(e);
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
     public void unGrantTag(String tagName, String playerName, Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
             UUIDChecker uc = new UUIDChecker();
             uc.check(playerName);
             this.getPlayerOwnedTags(playerName);
-            Statement stm = con.createStatement();
+            statement = connection.createStatement();
 
             if (ownedTags != null) {
 
@@ -380,24 +446,32 @@ public class TagsSQL {
                         "' WHERE playerUUID = '"+UUIDChecker.uuid+"'";
             }
 
-            stm.executeUpdate(sql);
+            statement.executeUpdate(sql);
             tag_name_array.clear();
-            con.close();
         } catch (SQLException e) {
         e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void unGrantTagConsole(String tagName, String playerName, CommandSender sender) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
 
             UUIDChecker uc = new UUIDChecker();
             uc.check(playerName);
             this.getPlayerOwnedTags(playerName);
 
-            Statement stm = con.createStatement();
+            statement = connection.createStatement();
 
             if (ownedTags != null) {
 
@@ -425,47 +499,62 @@ public class TagsSQL {
                         "' WHERE playerUUID = '"+UUIDChecker.uuid+"'";
             }
 
-            stm.executeUpdate(sql2);
+            statement.executeUpdate(sql2);
             tag_name_array.clear();
-
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void deleteTag(String tag, Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
 
-            Statement stm = con.createStatement();
+            statement = connection.createStatement();
             String sql = "DELETE FROM tags WHERE tagName = '"+tag+"'";
-            stm.executeUpdate(sql);
+            statement.executeUpdate(sql);
             p.sendMessage("§2Successfully §7deleted the §9"+tag+" §7tag.");
-            con.close();
         } catch (SQLException e) {
             p.sendMessage("§7This tag doesn't §cexist§7.");
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void tagChat(Player player) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
             this.getPlayerTag(player);
-            Connection con = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
 
-            Statement stm = con.createStatement();
+            statement = connection.createStatement();
             String sql = "SELECT * FROM tags WHERE tagName = '"+playerTag+"'";
-            ResultSet rs = stm.executeQuery(sql);
+            resultSet = statement.executeQuery(sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 tag_in_chat = null;
             } else {
                 do {
-                    tag_in_chat = rs.getString(3);
-                } while (rs.next());
+                    tag_in_chat = resultSet.getString(3);
+                } while (resultSet.next());
             }
 
             if (tag_in_chat == null) {
@@ -473,103 +562,140 @@ public class TagsSQL {
             } else {
                 tag_in_chat = " "+tag_in_chat;
             }
-            stm.close();
-            rs.close();
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void check(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
             getPlayerTag(p);
-            Connection con = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
 
-            Statement stm = con.createStatement();
+            statement = connection.createStatement();
             String sql = "SELECT * FROM tags WHERE tagName = '"+playerTag+"'";
-            ResultSet rs = stm.executeQuery(sql);
-            while (rs.next()) {
-                tag_exist_name = rs.getString(1);
-                tag_exist_format = rs.getString(3);
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                tag_exist_name = resultSet.getString(1);
+                tag_exist_format = resultSet.getString(3);
             }
-
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void resetTag(String tagName, String playerName, Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
 
             UUIDChecker uc = new UUIDChecker();
             uc.check(playerName);
-            Statement stm = con.createStatement();
+            statement = connection.createStatement();
             String sql = "SELECT * FROM items WHERE playerUUID = '"+p.getUniqueId()+"'";
-            ResultSet rs = stm.executeQuery(sql);
-            while (rs.next()) {
-                current_tag = rs.getString(6);
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                current_tag = resultSet.getString(6);
             }
 
             String sql2 = "UPDATE players " +
                     "SET tag = "+null+
                     " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
 
-            stm.executeUpdate(sql2);
+            statement.executeUpdate(sql2);
             tag_name_array.clear();
             ArrayStorage.tagsCheckStatus.remove(p.getPlayer().getUniqueId());
-
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void resetTagOnUnGrantingRank() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql2 = "UPDATE players " +
                     "SET tag = "+null+
                     " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
 
-            stm.executeUpdate(sql2);
-            con.close();
+            statement.executeUpdate(sql2);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void resetTagConsole(String tagName, String playerName, CommandSender sender) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
 
             UUIDChecker uc = new UUIDChecker();
             uc.check(playerName);
-            Statement stm = con.createStatement();
+            statement = connection.createStatement();
             String sql = "SELECT * FROM items WHERE playerUUID = '"+UUIDChecker.uuid+"'";
-            ResultSet rs = stm.executeQuery(sql);
-            while (rs.next()) {
-                current_tag = rs.getString(6);
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                current_tag = resultSet.getString(6);
             }
 
             String sql2 = "UPDATE players " +
                     "SET tag = NULL"+
                     " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
 
-            stm.executeUpdate(sql2);
+            statement.executeUpdate(sql2);
             tag_name_array.clear();
             ArrayStorage.tagsCheckStatus.remove(UUID.fromString(UUIDChecker.uuid));
-
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

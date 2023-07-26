@@ -1,10 +1,10 @@
 package de.jeezycore.db;
 
-import de.jeezycore.config.JeezyConfig;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import java.sql.*;
+
+import static de.jeezycore.db.hikari.HikariCP.dataSource;
 
 
 public class PlayersSQL {
@@ -13,43 +13,38 @@ public class PlayersSQL {
     public String user;
     public String password;
 
-    private void createConnection() {
-
-        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
-
-        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
-        user = (String) mc.get("user");
-        password = (String) mc.get("password");
-    }
-
-    private void createConnectionPractice() {
-        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
-
-        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+"practice";
-        user = (String) mc.get("user");
-        password = (String) mc.get("password");
-    }
 
     public void alreadyJoined(PlayerJoinEvent join) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             String select_sql ="UPDATE players " +
                     "SET online = true" +
                     " WHERE playerUUID = '"+ join.getPlayer().getUniqueId() + "'";;
-            stm.executeUpdate(select_sql);
-            con.close();
+            statement.executeUpdate(select_sql);
         } catch (SQLException ignored) {
+            ignored.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void firstJoined(PlayerJoinEvent join) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
@@ -57,88 +52,127 @@ public class PlayersSQL {
                     "(playerName, playerUUID, firstJoined, online) " +
                     "VALUES ('"+ join.getPlayer().getDisplayName() + "', '"+ join.getPlayer().getUniqueId() +"', "+
                     "'"+ timestamp + "', true)";
-            stm.executeUpdate(select_sql);
-            con.close();
+            statement.executeUpdate(select_sql);
         } catch (SQLException e) {
             alreadyJoined(join);
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
    public void lastSeen(PlayerQuitEvent quit) {
+       Connection connection = null;
+       Statement statement = null;
+       ResultSet resultSet = null;
        try {
-           this.createConnection();
-           Connection con = DriverManager.getConnection(url, user, password);
-           Statement stm = con.createStatement();
+           connection = dataSource.getConnection();
+           statement = connection.createStatement();
 
            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
            String select_sql ="UPDATE players " +
                    "SET lastSeen = '"+ timestamp + "', online = false" +
                    " WHERE playerUUID = '"+ quit.getPlayer().getUniqueId() + "'";;
-           stm.executeUpdate(select_sql);
-           con.close();
+           statement.executeUpdate(select_sql);
        } catch (SQLException e) {
            e.printStackTrace();
+       } finally {
+           try {
+               statement.close();
+               connection.close();
+           } catch (SQLException e) {
+               e.printStackTrace();
+           }
        }
    }
 
    public void checkIfUsernameChanged(PlayerJoinEvent p) {
+       Connection connection = null;
+       Statement statement = null;
+       ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String playerName;
 
             String select_sql = "SELECT playerName FROM players WHERE playerUUID = '"+p.getPlayer().getUniqueId()+"'";
 
-            ResultSet rs = stm.executeQuery(select_sql);
+            resultSet = statement.executeQuery(select_sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 playerName = null;
             }  else {
            do {
-               playerName = rs.getString(1);
-           } while (rs.next());
+               playerName = resultSet.getString(1);
+           } while (resultSet.next());
             }
             if (!p.getPlayer().getDisplayName().equalsIgnoreCase(playerName)) {
                 updateIfUsernameChanged(p);
                 updateEloTable(p);
             }
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
    }
 
    private void updateEloTable(PlayerJoinEvent p) {
+       Connection connection = null;
+       Statement statement = null;
+       ResultSet resultSet = null;
        try {
-           this.createConnectionPractice();
-           Connection con = DriverManager.getConnection(url, user, password);
-           Statement stm = con.createStatement();
+           connection = dataSource.getConnection();
+           statement = connection.createStatement();
 
-           String select_sql ="UPDATE elo " +
+           String select_sql ="UPDATE practice.elo " +
                    "SET PLAYER = '"+ p.getPlayer().getDisplayName() + "'"+
                    " WHERE UUID = '"+ p.getPlayer().getUniqueId() + "'";;
-           stm.executeUpdate(select_sql);
-           con.close();
+           statement.executeUpdate(select_sql);
        } catch (SQLException e) {
            e.printStackTrace();
+       } finally {
+           try {
+               statement.close();
+               connection.close();
+           } catch (SQLException e) {
+               e.printStackTrace();
+           }
        }
    }
 
    public void updateIfUsernameChanged(PlayerJoinEvent p) {
+       Connection connection = null;
+       Statement statement = null;
+       ResultSet resultSet = null;
        try {
-           this.createConnection();
-           Connection con = DriverManager.getConnection(url, user, password);
-           Statement stm = con.createStatement();
+           connection = dataSource.getConnection();
+           statement = connection.createStatement();
 
            String select_sql ="UPDATE players " +
                    "SET playerName = '"+ p.getPlayer().getDisplayName() + "'"+
                    " WHERE playerUUID = '"+ p.getPlayer().getUniqueId() + "'";;
-           stm.executeUpdate(select_sql);
-           con.close();
+           statement.executeUpdate(select_sql);
        } catch (SQLException e) {
            e.printStackTrace();
+       } finally {
+           try {
+               statement.close();
+               connection.close();
+           } catch (SQLException e) {
+               e.printStackTrace();
+           }
        }
    }
 }

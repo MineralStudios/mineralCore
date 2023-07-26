@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
+import static de.jeezycore.db.hikari.HikariCP.dataSource;
+
 
 public class ChatColorSQL {
 
@@ -43,57 +45,62 @@ public class ChatColorSQL {
     UUIDChecker uc = new UUIDChecker();
 
 
-    private void createConnection() {
-
-        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
-
-        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
-        user = (String) mc.get("user");
-        password = (String) mc.get("password");
-    }
+    
 
     private void setup() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql_select = "SELECT * FROM items WHERE playerUUID = '"+UUIDChecker.uuid+"'";
-            ResultSet rs = stm.executeQuery(sql_select);
-            if (!rs.next()) {
+            resultSet = statement.executeQuery(sql_select);
+            if (!resultSet.next()) {
                 itemsAvailable = null;
                 itemsAlreadyGranted = null;
             } else {
                 do {
-                    itemsAvailable = rs.getString(2);
-                    itemsAlreadyGranted = rs.getString(7);
-                } while (rs.next());
+                    itemsAvailable = resultSet.getString(2);
+                    itemsAlreadyGranted = resultSet.getString(7);
+                } while (resultSet.next());
             }
             if (itemsAvailable == null) {
                 String sql_settings_available ="INSERT INTO items" +
                         "(playerName, playerUUID) " +
                         "VALUES ('"+UUIDChecker.uuidName+"', '"+UUIDChecker.uuid+"')";
-                stm.executeUpdate(sql_settings_available);
+                statement.executeUpdate(sql_settings_available);
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
     public void create(Player p, String colorName, String color, String colorRGB, int colorPriority) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql_select = "SELECT * FROM chatColors WHERE colorName = '"+colorName+"'";
-            ResultSet rs = stm.executeQuery(sql_select);
+            resultSet = statement.executeQuery(sql_select);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 chatColorName = null;
             } else {
                 do {
-                    chatColorName = rs.getString(1);
-                } while (rs.next());
+                    chatColorName = resultSet.getString(1);
+                } while (resultSet.next());
             }
 
             if (chatColorName == null) {
@@ -101,130 +108,183 @@ public class ChatColorSQL {
                         "(colorName, color, colorRGB, colorPriority) " +
                         "VALUES ('"+colorName+"', '"+color+"', " +
                         "'"+colorRGB+"', '"+colorPriority+"')";
-                stm.executeUpdate(sql_chatColor_insert);
+                statement.executeUpdate(sql_chatColor_insert);
                 p.sendMessage("§7You §2successfully §7created the chatColor "+color+colorName+"§7.");
             } else {
                 p.sendMessage("§7The chatColor "+color+colorName+" §calready §7exists.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void getChatColorsData() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql_select = "SELECT * FROM chatColors ORDER BY colorPriority DESC";
-            ResultSet rs = stm.executeQuery(sql_select);
+            resultSet = statement.executeQuery(sql_select);
 
-            while (rs.next()) {
-                colorName = rs.getString(1);
-                color = rs.getString(2);
-                colorRGB = rs.getString(3);
+            while (resultSet.next()) {
+                colorName = resultSet.getString(1);
+                color = resultSet.getString(2);
+                colorRGB = resultSet.getString(3);
 
                 chatColorArray.add(Arrays.asList(colorName, color, colorRGB).toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void getPlayerChatName(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql_select = "SELECT chatColor FROM players WHERE playerUUID = '"+p.getUniqueId()+"'";
-            ResultSet rs = stm.executeQuery(sql_select);
-            if (!rs.next()) {
+            resultSet = statement.executeQuery(sql_select);
+            if (!resultSet.next()) {
                 currentChatColorName = null;
             } else {
                 do {
-                    currentChatColorName = rs.getString(1);
-                } while (rs.next());
+                    currentChatColorName = resultSet.getString(1);
+                } while (resultSet.next());
             }
             this.getPlayerChatColor(p);
-            stm.close();
-            rs.close();
-            con.close();
         } catch (SQLException f) {
             f.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void getPlayerChatColor(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql_select = "SELECT * FROM chatColors WHERE colorName = '"+currentChatColorName+"'";
-            ResultSet rs = stm.executeQuery(sql_select);
-            if (!rs.next()) {
+            resultSet = statement.executeQuery(sql_select);
+            if (!resultSet.next()) {
                 currentChatColor = "§2";
             } else {
                 do {
-                    currentChatColor = rs.getString(2);
-                } while (rs.next());
+                    currentChatColor = resultSet.getString(2);
+                } while (resultSet.next());
             }
-            stm.close();
-            rs.close();
-            con.close();
         } catch (SQLException f) {
             f.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
         public void getPlayerChatColorOnUngrant(String chatColorName) {
+            Connection connection = null;
+            Statement statement = null;
+            ResultSet resultSet = null;
             try {
-                this.createConnection();
-                Connection con = DriverManager.getConnection(url, user, password);
-                Statement stm = con.createStatement();
+                connection = dataSource.getConnection();
+                statement = connection.createStatement();
                 String sql_select = "SELECT * FROM chatColors WHERE colorName = '" + chatColorName + "'";
-                ResultSet rs = stm.executeQuery(sql_select);
-                if (!rs.next()) {
+                resultSet = statement.executeQuery(sql_select);
+                if (!resultSet.next()) {
                     currentChatColor = null;
                 } else {
                     do {
-                        currentChatColor = rs.getString(2);
-                    } while (rs.next());
+                        currentChatColor = resultSet.getString(2);
+                    } while (resultSet.next());
                 }
             } catch (SQLException f) {
                 f.printStackTrace();
+            } finally {
+                try {
+                    resultSet.close();
+                    statement.close();
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
 
 
     public void setChatColor(org.bukkit.event.inventory.InventoryClickEvent e) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
                 String updateChatColor = "UPDATE players " +
                         "SET chatColor = '"+e.getCurrentItem().getItemMeta().getDisplayName().substring(2)+"'" +
                         " WHERE playerUUID = '"+e.getWhoClicked().getUniqueId()+"'";
-                stm.executeUpdate(updateChatColor);
+            statement.executeUpdate(updateChatColor);
         } catch (SQLException f) {
             f.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException f) {
+                f.printStackTrace();
+            }
         }
     }
 
     public void getChatColorsGrantedBefore() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql_select = "SELECT * FROM items WHERE playerUUID = '"+UUIDChecker.uuid+"'";
-            ResultSet rs = stm.executeQuery(sql_select);
-            if (!rs.next()) {
+            resultSet = statement.executeQuery(sql_select);
+            if (!resultSet.next()) {
                 itemsAlreadyGranted = null;
             } else {
                 do {
-                    itemsAlreadyGranted = rs.getString(7);
-                } while (rs.next());
+                    itemsAlreadyGranted = resultSet.getString(7);
+                } while (resultSet.next());
             }
 
             if (itemsAlreadyGranted != null) {
@@ -233,26 +293,37 @@ public class ChatColorSQL {
             }
         } catch (SQLException f) {
             f.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException f) {
+                f.printStackTrace();
+            }
         }
     }
 
     public void grantChatColor(Player p, String playerName, String chatColor) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
             uc.check(playerName);
             this.setup();
             this.getChatColorsGrantedBefore();
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql_select = "SELECT * FROM chatColors WHERE colorName = '"+chatColor+"'";
-            ResultSet rs = stm.executeQuery(sql_select);
-            if (!rs.next()) {
+            resultSet = statement.executeQuery(sql_select);
+            if (!resultSet.next()) {
                 chatColorExisting = null;
             } else {
                 do {
-                    chatColorExisting = rs.getString(1);
-                    chatColorExistingColor = rs.getString(2);
-                } while (rs.next());
+                    chatColorExisting = resultSet.getString(1);
+                    chatColorExistingColor = resultSet.getString(2);
+                } while (resultSet.next());
             }
 
             if (itemsAlreadyGranted != null){
@@ -273,30 +344,41 @@ public class ChatColorSQL {
             String updateChatColor = "UPDATE items " +
                     "SET ownedChatColors = '"+grantChatColorArray+"'" +
                     " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
-            stm.executeUpdate(updateChatColor);
+            statement.executeUpdate(updateChatColor);
             grantChatColorArray.clear();
         } catch (SQLException f) {
             f.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException f) {
+                f.printStackTrace();
+            }
         }
     }
 
     public void grantChatColorConsole(CommandSender sender, String playerName, String chatColor) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
             uc.check(playerName);
             this.setup();
             this.getChatColorsGrantedBefore();
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql_select = "SELECT * FROM chatColors WHERE colorName = '"+chatColor+"'";
-            ResultSet rs = stm.executeQuery(sql_select);
-            if (!rs.next()) {
+            resultSet = statement.executeQuery(sql_select);
+            if (!resultSet.next()) {
                 chatColorExisting = null;
             } else {
                 do {
-                    chatColorExisting = rs.getString(1);
-                    chatColorExistingColor = rs.getString(2);
-                } while (rs.next());
+                    chatColorExisting = resultSet.getString(1);
+                    chatColorExistingColor = resultSet.getString(2);
+                } while (resultSet.next());
             }
 
             if (itemsAlreadyGranted != null){
@@ -317,30 +399,41 @@ public class ChatColorSQL {
             String updateChatColor = "UPDATE items " +
                     "SET ownedChatColors = '"+grantChatColorArray+"'" +
                     " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
-            stm.executeUpdate(updateChatColor);
+            statement.executeUpdate(updateChatColor);
             grantChatColorArray.clear();
         } catch (SQLException f) {
             f.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException f) {
+                f.printStackTrace();
+            }
         }
     }
 
     public void unGrantChatColor(Player p, String playerName, String chatColorName) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
             uc.check(playerName);
             this.getPlayerChatColorOnUngrant(chatColorName);
             this.getChatColorsGrantedBefore();
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql_select = "SELECT * FROM items WHERE playerUUID = '"+UUIDChecker.uuid+"'";
             String update_ungrant = null;
-            ResultSet rs = stm.executeQuery(sql_select);
-            if (!rs.next()) {
+            resultSet = statement.executeQuery(sql_select);
+            if (!resultSet.next()) {
                 itemsAlreadyGranted = null;
             } else {
                 do {
-                    itemsAlreadyGranted = rs.getString(7);
-                } while (rs.next());
+                    itemsAlreadyGranted = resultSet.getString(7);
+                } while (resultSet.next());
             }
 
             if (grantChatColorArray.size() == 0) {
@@ -362,48 +455,68 @@ public class ChatColorSQL {
                         "SET ownedChatColors = '"+grantChatColorArray+"'" +
                         " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
             }
-            stm.executeUpdate(update_ungrant);
+            statement.executeUpdate(update_ungrant);
             this.resetChatColor(UUID.fromString(UUIDChecker.uuid));
             grantChatColorArray.clear();
             p.sendMessage("§7You §2successfully §7ungranted §7the chat color "+currentChatColor+chatColorName+" §7from §9"+UUIDChecker.uuidName+"§7.");
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException f) {
+                f.printStackTrace();
+            }
         }
     }
 
     public void resetChatColorsOnUnGrantingRank() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql2 = "UPDATE players " +
                     "SET chatColor = NULL"+
                     " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
 
-            stm.executeUpdate(sql2);
-            con.close();
+            statement.executeUpdate(sql2);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException f) {
+                f.printStackTrace();
+            }
         }
     }
 
     public void unGrantChatColorConsole(CommandSender sender, String playerName, String chatColorName) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
             uc.check(playerName);
             this.getPlayerChatColorOnUngrant(chatColorName);
             this.getChatColorsGrantedBefore();
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql_select = "SELECT * FROM items WHERE playerUUID = '"+UUIDChecker.uuid+"'";
             String update_ungrant = null;
-            ResultSet rs = stm.executeQuery(sql_select);
-            if (!rs.next()) {
+            resultSet = statement.executeQuery(sql_select);
+            if (!resultSet.next()) {
                 itemsAlreadyGranted = null;
             } else {
                 do {
-                    itemsAlreadyGranted = rs.getString(7);
-                } while (rs.next());
+                    itemsAlreadyGranted = resultSet.getString(7);
+                } while (resultSet.next());
             }
 
             if (grantChatColorArray.size() == 0) {
@@ -425,26 +538,43 @@ public class ChatColorSQL {
                         "SET ownedChatColors = '"+grantChatColorArray+"'" +
                         " WHERE playerUUID = '"+UUIDChecker.uuid+"'";
             }
-            stm.executeUpdate(update_ungrant);
+            statement.executeUpdate(update_ungrant);
             this.resetChatColor(UUID.fromString(UUIDChecker.uuid));
             grantChatColorArray.clear();
             sender.sendMessage("§7You §2successfully §7ungranted §7the chat color "+currentChatColor+chatColorName+" §7from §9"+UUIDChecker.uuidName+"§7.");
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException f) {
+                f.printStackTrace();
+            }
         }
     }
 
     public void resetChatColor(UUID uuid) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String updateChatColor = "UPDATE players " +
                     "SET chatColor = NULL" +
                     " WHERE playerUUID = '"+uuid+"'";
-            stm.executeUpdate(updateChatColor);
+            statement.executeUpdate(updateChatColor);
         } catch (SQLException f) {
             f.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException f) {
+                f.printStackTrace();
+            }
         }
     }
 }

@@ -81,6 +81,11 @@
             <artifactId>libretranslate-java</artifactId>
             <version>1.0.5</version>
         </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>3.4.5</version>
+        </dependency>
     </dependencies>
 
     <build>

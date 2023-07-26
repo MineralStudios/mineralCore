@@ -16,6 +16,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static de.jeezycore.db.hikari.HikariCP.dataSource;
+
 public class BanSQL {
     public String url;
     public String user;
@@ -42,20 +44,15 @@ public class BanSQL {
 
     private JSONObject json_o = new JSONObject();
 
-    private void createConnection() {
-
-        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
-
-        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
-        user = (String) mc.get("user");
-        password = (String) mc.get("password");
-    }
+    
 
     public void ban(String username, String input, Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             RealtimeBan discord = new RealtimeBan();
             UUIDChecker uc = new UUIDChecker();
@@ -83,23 +80,31 @@ public class BanSQL {
 
             System.out.println(sql);
             if (punishment_UUID == null && ban_logs == null) {
-                stm.executeUpdate(sql);
+                statement.executeUpdate(sql);
             } else {
                 banUpdate(username, input, p);
             }
             ArrayStorage.ban_logs.clear();
             discord.realtimeChatOnBan(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName(), input);
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void banConsole(String username, String input, CommandSender sender) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             RealtimeBan discord = new RealtimeBan();
             UUIDChecker uc = new UUIDChecker();
@@ -127,23 +132,31 @@ public class BanSQL {
 
             System.out.println(sql);
             if (punishment_UUID == null && ban_logs == null) {
-                stm.executeUpdate(sql);
+                statement.executeUpdate(sql);
             } else {
                 banUpdateConsole(username, input, sender);
             }
             ArrayStorage.ban_logs.clear();
             discord.realtimeChatOnBan(UUID.fromString(UUIDChecker.uuid), username, "Console", input);
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private void banUpdateConsole(String username, String input, CommandSender sender) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             UUIDChecker check_UUID = new UUIDChecker();
             check_UUID.check(username);
@@ -166,21 +179,28 @@ public class BanSQL {
             String sql = "UPDATE punishments " +
                     "SET banned_forever = true, ban_status = true" +
                     " WHERE UUID = '" + UUIDChecker.uuid + "'";
-            stm.executeUpdate(sql);
-            stm.close();
+            statement.executeUpdate(sql);
 
             ban_logsUpdate(username);
-            con.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private void banUpdate(String username, String input, Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             UUIDChecker check_UUID = new UUIDChecker();
             check_UUID.check(username);
@@ -203,13 +223,18 @@ public class BanSQL {
             String sql = "UPDATE punishments " +
                     "SET banned_forever = true, ban_status = true" +
                     " WHERE UUID = '" + UUIDChecker.uuid + "'";
-            stm.executeUpdate(sql);
-            stm.close();
+            statement.executeUpdate(sql);
 
             ban_logsUpdate(username);
-            con.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -252,10 +277,12 @@ public class BanSQL {
     }
 
     private void tempBanAutomaticUnban(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             UUIDChecker check_UUID = new UUIDChecker();
             check_UUID.check(p.getPlayer().getDisplayName());
@@ -264,10 +291,16 @@ public class BanSQL {
                     "SET banned_forever = false, ban_start = NULL, ban_end = NULL, ban_status = false"+
                     " WHERE UUID = '"+UUIDChecker.uuid+"'";
 
-            stm.executeUpdate(sql);
-            stm.close();
-            con.close();
+            statement.executeUpdate(sql);
         } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -285,10 +318,12 @@ public class BanSQL {
     }
 
     public void tempBan(String username, String time, String reason , Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             RealtimeBan discord = new RealtimeBan();
             UUIDChecker uc = new UUIDChecker();
@@ -317,24 +352,32 @@ public class BanSQL {
                     "('"+UUIDChecker.uuidName + "', '"+UUIDChecker.uuid+"', false,'"+currentTime.format(formatter)+"', '"+updatedTime.format(formatter)+"', false, "+"'"+ArrayStorage.ban_logs+"')";
 
             if (punishment_UUID == null && ban_logs == null) {
-                stm.executeUpdate(sql);
+                statement.executeUpdate(sql);
                 p.sendMessage("§7You §asuccessfully §7banned §b"+username+" §7for §c"+time+"§7.");
             } else {
                 tempBanUpdate(username, time, reason, p);
             }
             ArrayStorage.ban_logs.clear();
             discord.realtimeChatOnTempBan(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName(), ban_end, reason);
-            con.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private void tempBanUpdate(String username, String time, String reason , Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             UUIDChecker check_UUID = new UUIDChecker();
             check_UUID.check(username);
@@ -357,22 +400,28 @@ public class BanSQL {
             String sql = "UPDATE punishments " +
                     "SET banned_forever = false, ban_start = '"+currentTime.format(formatter)+"', ban_end = '"+updatedTime.format(formatter)+"', ban_status = true"+
                     " WHERE UUID = '"+UUIDChecker.uuid+"'";
-            stm.executeUpdate(sql);
-            stm.close();
-
+            statement.executeUpdate(sql);
             ban_logsUpdate(username);
-            con.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
     public void unban(String username, Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             RealtimeBan discord = new RealtimeBan();
             UUIDChecker check_UUID = new UUIDChecker();
@@ -389,23 +438,31 @@ public class BanSQL {
             String sql = "UPDATE punishments " +
                     "SET banned_forever = false, ban_start = NULL, ban_end = NULL, ban_status = false"+
                     " WHERE UUID = '"+UUIDChecker.uuid+"'";
-            stm.executeUpdate(sql);
-            stm.close();
+            statement.executeUpdate(sql);
             discord.realtimeChatOnUnban(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName());
-            con.close();
         } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void banData(UUID get_UUID) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" +get_UUID.toString()+"'";
-            ResultSet rs = stm.executeQuery(select_sql);
+            resultSet = statement.executeQuery(select_sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 punishment_UUID = null;
                 ban_forever = false;
                 ban_start = null;
@@ -414,49 +471,68 @@ public class BanSQL {
                 ban_logs = null;
             } else {
                 do {
-                    punishment_UUID = rs.getString(2);
-                    ban_forever = rs.getBoolean(3);
-                    ban_start = rs.getString(5);
-                    ban_end = rs.getString(6);
-                    ban_status = rs.getBoolean(7);
-                    ban_logs = rs.getString(11);
-                } while (rs.next());
+                    punishment_UUID = resultSet.getString(2);
+                    ban_forever = resultSet.getBoolean(3);
+                    ban_start = resultSet.getString(5);
+                    ban_end = resultSet.getString(6);
+                    ban_status = resultSet.getBoolean(7);
+                    ban_logs = resultSet.getString(11);
+                } while (resultSet.next());
             }
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void unbanData(UUID get_UUID) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" + get_UUID.toString() + "'";
-            ResultSet rs = stm.executeQuery(select_sql);
+            resultSet = statement.executeQuery(select_sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 punishment_UUID = null;
                 ban_forever = false;
                 ban_status = false;
             } else {
                 do {
-                    punishment_UUID = rs.getString(2);
-                    ban_forever = rs.getBoolean(3);
-                    ban_status = rs.getBoolean(7);
-                } while (rs.next());
+                    punishment_UUID = resultSet.getString(2);
+                    ban_forever = resultSet.getBoolean(3);
+                    ban_status = resultSet.getBoolean(7);
+                } while (resultSet.next());
             }
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void ban_logsUpdate(String username) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             UUIDChecker check_UUID = new UUIDChecker();
             check_UUID.check(username);
@@ -473,13 +549,17 @@ public class BanSQL {
             String sql = "UPDATE punishments " +
                     "SET ban_logs = '"+ban_logsArray+"'"+
                     " WHERE UUID = '"+UUIDChecker.uuid+"'";
-            stm.executeUpdate(sql);
-            stm.close();
+            statement.executeUpdate(sql);
             ban_logsArray.clear();
-            con.close();
-
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

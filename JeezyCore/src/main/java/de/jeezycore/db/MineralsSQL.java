@@ -1,16 +1,15 @@
 package de.jeezycore.db;
 
 import com.google.common.base.Splitter;
-import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.FakePlayerChecker;
 import de.jeezycore.utils.UUIDChecker;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import java.sql.*;
 import java.util.Map;
 import java.util.UUID;
 
+import static de.jeezycore.db.hikari.HikariCP.dataSource;
 import static de.jeezycore.utils.ArrayStorage.mineralsStorage;
 
 public class MineralsSQL {
@@ -20,40 +19,44 @@ public class MineralsSQL {
     public String password;
     public String mineralsData;
 
-    private void createConnection() {
-        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
-
-        url = "jdbc:mysql://" + mc.get("ip") + ":" + mc.get("mysql-port") + "/" + mc.get("database");
-        user = (String) mc.get("user");
-        password = (String) mc.get("password");
-    }
-
+    
     public void start() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             String sql = "INSERT INTO minerals " +
                     "(serverName, minerals_data) " +
                     "VALUES " +
                     "('mineral', null)";
 
-            stm.executeUpdate(sql);
-            con.close();
+            statement.executeUpdate(sql);
         } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void mineralsData() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_sql = "SELECT * FROM minerals WHERE serverName = 'mineral'";
-            ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                mineralsData = rs.getString(2);
+            resultSet = statement.executeQuery(select_sql);
+            while (resultSet.next()) {
+                mineralsData = resultSet.getString(2);
 
                 if (mineralsData != null) {
                     String replacedMineralsData = mineralsData.replace("{", "").replace("}", "");
@@ -66,11 +69,16 @@ public class MineralsSQL {
                     ArrayStorage.mineralsStorage.putAll(properties);
                 }
             }
-            rs.close();
-            stm.close();
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -87,20 +95,26 @@ public class MineralsSQL {
     }
 
     public void updateMineralsData() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             String sql = "UPDATE minerals " +
                     "SET minerals_data = '" + ArrayStorage.mineralsStorage + "'" +
                     " WHERE serverName = 'mineral'";
-            stm.executeUpdate(sql);
-
-            stm.close();
-            con.close();
+            statement.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

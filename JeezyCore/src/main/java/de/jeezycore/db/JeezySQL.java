@@ -18,6 +18,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import static de.jeezycore.db.hikari.HikariCP.dataSource;
+
 public class JeezySQL  {
     public String url;
     public String user;
@@ -38,21 +40,11 @@ public class JeezySQL  {
     public String grantPlayerUUID;
 
     public String grantPlayerRank;
-
-    public String grantPlayer_2;
-
-
-    public static String [] grant_new_player;
-    public static String [] grant_new_player_2;
-
+    
     public static String [] new_perms;
 
     public String createRankMsg;
-
-    public static ArrayList<String> player_name_array = new ArrayList<String>();
-
-    public static ArrayList<String> player_name_array_2 = new ArrayList<String>();
-
+    
     public static HashSet<String> rankPerms = new HashSet<String>();
 
     public LinkedHashMap<String, String> rankData = new LinkedHashMap<String, String>();
@@ -84,8 +76,7 @@ public class JeezySQL  {
     public static ArrayList<String> permPlayerUUIDArray = new ArrayList<String>();
 
     public static String getPlayerUUID;
-
-    public String ban_start;
+    
     public String ban_end;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -97,38 +88,39 @@ public class JeezySQL  {
     String getItemPlayerUUID;
 
 
-    private void createConnection() {
-
-
-        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
-
-        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
-        user = (String) mc.get("user");
-        password = (String) mc.get("password");
+    public void start() {
+        createDB();
+        createTable();
     }
 
     private void createDB() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-
-            MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
-
-            Connection con = DriverManager.getConnection("jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/", (String) mc.get("user"), (String) mc.get("password"));
-            Statement stm = con.createStatement();
-            String jeezyDB = "CREATE DATABASE IF NOT EXISTS jeezydevelopment";
-            stm.executeUpdate(jeezyDB);
-            con.close();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String createDB = "CREATE DATABASE IF NOT EXISTS jeezydevelopment";
+            statement.executeUpdate(createDB);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void createTable() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            createDB();
-            this.createConnection();
-
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String ranks_table = "CREATE TABLE IF NOT EXISTS ranks " +
                     " (rankName VARCHAR(255), " +
                     " rankRGB VARCHAR(50), " +
@@ -213,35 +205,41 @@ public class JeezySQL  {
                     " msg boolean, " +
                     " PRIMARY KEY ( playerUUID ))";
 
-            stm.executeUpdate(ranks_table);
-            stm.executeUpdate(players_table);
-            stm.executeUpdate(items_table);
-            stm.executeUpdate(punishments_table);
-            stm.executeUpdate(tags_table);
-            stm.executeUpdate(chatColors_table);
+            statement.executeUpdate(ranks_table);
+            statement.executeUpdate(players_table);
+            statement.executeUpdate(items_table);
+            statement.executeUpdate(punishments_table);
+            statement.executeUpdate(tags_table);
+            statement.executeUpdate(chatColors_table);
             // stm.executeUpdate(reward_table);
             //stm.executeUpdate(minerals_table);
-            stm.executeUpdate(settings_table);
+            statement.executeUpdate(settings_table);
 
-            stm.close();
-            if (con.isValid(20)) {
+            if (connection.isValid(20)) {
                 System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" connected to database."+Color.RESET);
                 System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" created"+Color.YELLOW_BOLD+" DB & Tables"+Color.CYAN+"."+Color.RESET);
             }
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.RED_BOLD+" Something went wrong when tried to connect to your database."+Color.RESET);
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void pushData(String sql, String rankName, String rankRGB, String rankColor, String rankPriority)  {
-        this.createConnection();
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet resultSet = null;
         try {
-            System.out.println(sql);
-            Connection con = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
 
-            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, rankName);
             pstmt.setString(2, rankRGB);
             pstmt.setString(3, rankColor);
@@ -249,37 +247,44 @@ public class JeezySQL  {
 
             pstmt.executeUpdate();
             createRankMsg = "§bSuccessfully§f created §l{colorID}{rank}§f rank.";
-            con.close();
         } catch (SQLException e) {
             createRankMsg = "§7Rank §l{colorID}{rank}§4 §7already §4exist§7.";
             System.out.println(e);
+        } finally {
+            try {
+                pstmt.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void grantPlayer(String rankName, UUID getPlayerToGrant, HumanEntity player) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
             this.onUnGrantingPerms(player);
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql2 = "SELECT playerUUID, rank FROM players WHERE playerUUID = '"+getPlayerToGrant+"'";
-            ResultSet rs = stm.executeQuery(sql2);
+            resultSet = statement.executeQuery(sql2);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 grantPlayerUUID = null;
                 grantPlayerRank = null;
             } else {
                 do {
-                    grantPlayerUUID = rs.getString(1);
-                    grantPlayerRank = rs.getString(2);
-                } while (rs.next());
+                    grantPlayerUUID = resultSet.getString(1);
+                    grantPlayerRank = resultSet.getString(2);
+                } while (resultSet.next());
             }
 
             colorPerms(rankName);
 
             if (grantPlayerRank != null && grantPlayerRank.equalsIgnoreCase(rankName)) {
                 player.sendMessage("§7The "+rankColorPerms.replace("&", "§")+rankName+"§7 rank has been §4already §7granted to the player.");
-                con.close();
                 return;
             }
 
@@ -288,7 +293,7 @@ public class JeezySQL  {
                         "SET rank = '"+rankName +
                         "' WHERE playerUUID = '"+getPlayerToGrant+"'";
 
-                stm.executeUpdate(sql);
+                statement.executeUpdate(sql);
             } else {
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
@@ -296,41 +301,49 @@ public class JeezySQL  {
                         "(playerName, playerUUID, rank, firstJoined, lastSeen, online) " +
                         "VALUES ('"+ UUIDChecker.uuidName + "', '"+ UUIDChecker.uuid +"', '"+
                         rankName+ "','"+ timestamp + "',"+"'"+timestamp+"', false)";
-                stm.executeUpdate(select_sql);
+                statement.executeUpdate(select_sql);
             }
             player.sendMessage("You §b§lsuccessfully§f granted §l§7" + UUIDChecker.uuidName + "§f the §l" +rankColorPerms.replace("&", "§")+rankName + " §frank.");
             NametagEdit.getApi().setPrefix(UUIDChecker.uuidName, rankColorPerms.replace("&", "§"));
-            con.close();
         } catch (SQLException e) {
             System.out.println(e);
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
     public void grantPlayerConsole(CommandSender sender, String rankName, UUID uuid) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
             this.onGrantingPermsConsole(uuid, rankName);
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql2 = "SELECT playerUUID, rank FROM players WHERE playerUUID = '"+uuid+"'";
-            ResultSet rs = stm.executeQuery(sql2);
+            resultSet = statement.executeQuery(sql2);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 grantPlayerUUID = null;
                 grantPlayerRank = null;
             } else {
                 do {
-                    grantPlayerUUID = rs.getString(1);
-                    grantPlayerRank = rs.getString(2);
-                } while (rs.next());
+                    grantPlayerUUID = resultSet.getString(1);
+                    grantPlayerRank = resultSet.getString(2);
+                } while (resultSet.next());
             }
 
             colorPerms(rankName);
 
             if (grantPlayerRank != null && grantPlayerRank.equalsIgnoreCase(rankName)) {
                 sender.sendMessage("§7The "+rankColorPerms.replace("&", "§")+rankName+"§7 rank has been §4already §7granted to the player.");
-                con.close();
                 return;
             }
 
@@ -339,7 +352,7 @@ public class JeezySQL  {
                         "SET rank = '"+rankName +
                         "' WHERE playerUUID = '"+UUIDChecker.uuid+"'";
 
-                stm.executeUpdate(sql);
+                statement.executeUpdate(sql);
             } else {
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
@@ -347,25 +360,34 @@ public class JeezySQL  {
                         "(playerName, playerUUID, rank, firstJoined, lastSeen, online) " +
                         "VALUES ('"+ UUIDChecker.uuidName + "', '"+ UUIDChecker.uuid +"', '"+
                         rankName+ "','"+ timestamp + "',"+"'"+timestamp+"', false)";
-                stm.executeUpdate(select_sql);
+                statement.executeUpdate(select_sql);
             }
             sender.sendMessage("You §b§lsuccessfully§f granted §l§7" + UUIDChecker.uuidName + "§f the §l" +rankColorPerms.replace("&", "§")+rankName + " §frank.");
             NametagEdit.getApi().setPrefix(UUIDChecker.uuidName, rankColorPerms.replace("&", "§"));
-            con.close();
         } catch (SQLException e) {
             System.out.println(e);
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void displayData() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql = "SELECT * FROM ranks ORDER BY rankPriority DESC";
-            ResultSet rs = stm.executeQuery(sql);
+            resultSet = statement.executeQuery(sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 rank = null;
                 rankRGB = null;
                 rankColor = null;
@@ -373,204 +395,259 @@ public class JeezySQL  {
                 rankColorData.clear();
             } else {
                 do {
-                    rank = rs.getString(1);
-                    rankRGB = rs.getString(2);
-                    rankColor = rs.getString(3);
+                    rank = resultSet.getString(1);
+                    rankRGB = resultSet.getString(2);
+                    rankColor = resultSet.getString(3);
                     rankData.put(rank, rankRGB);
                     rankColorData.add(rankColor);
-                }while(rs.next());
+                }while(resultSet.next());
             }
-            con.close();
         } catch (SQLException e) {
             System.out.println(e);
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void getPlayerInformation(Player p) {
-
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             String sql = "SELECT rank FROM players WHERE playerUUID = '"+p.getPlayer().getUniqueId()+"'";
 
-            ResultSet rs = stm.executeQuery(sql);
+            resultSet = statement.executeQuery(sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 rankNameInformation = null;
             } else {
                 do {
-                    rankNameInformation = rs.getString(1);
-                } while (rs.next());
+                    rankNameInformation = resultSet.getString(1);
+                } while (resultSet.next());
             }
-            stm.close();
-            rs.close();
-            con.close();
         }catch (SQLException e) {
             System.out.println(e);
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void getColorsForMessages(UUID uuid) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             String sql = "SELECT rank FROM players WHERE playerUUID = '"+uuid+"'";
 
-            ResultSet rs = stm.executeQuery(sql);
-            while (rs.next()) {
-                privateMessageColors = rs.getString(1);
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                privateMessageColors = resultSet.getString(1);
             }
-
-            con.close();
         }catch (SQLException e) {
             System.out.println(e);
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void getAllPlayerInformation(Player p, String rankName) {
-
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             String sql = "SELECT * FROM players WHERE rank = '"+rankName+"'";
 
-            ResultSet rs = stm.executeQuery(sql);
-            while (rs.next()) {
-                allPlayerInformationUUID = rs.getString(2);
-
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                allPlayerInformationUUID = resultSet.getString(2);
                 permPlayerUUIDArray.add(allPlayerInformationUUID);
-
             }
-
-            con.close();
         }catch (SQLException e) {
             System.out.println(e);
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void getPlayer(UUID uuid) {
-
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             String sql = "SELECT rank FROM players WHERE playerUUID= '"+uuid+"'";
 
-            ResultSet rs = stm.executeQuery(sql);
+            resultSet = statement.executeQuery(sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 getPlayerUUID = null;
             } else {
                 do {
-                    getPlayerUUID = rs.getString(1);
-                } while (rs.next());
+                    getPlayerUUID = resultSet.getString(1);
+                } while (resultSet.next());
             }
-            con.close();
         }catch (SQLException e) {
             System.out.println(e);
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void displayChatRank(String sql) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery(sql);
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 rank = null;
                 rankRGB = null;
                 rankColor_second = null;
                 rankColor = null;
             } else {
                 do {
-                    rank = rs.getString(1);
-                    rankRGB = rs.getString(2);
-                    rankColor_second = rs.getString(3);
-                    rankColor = rs.getString(3);
-                }while (rs.next());
+                    rank = resultSet.getString(1);
+                    rankRGB = resultSet.getString(2);
+                    rankColor_second = resultSet.getString(3);
+                    rankColor = resultSet.getString(3);
+                }while (resultSet.next());
             }
             if (rank == null || rankColor == null || rankColor_second == null) {
                 rank = "";
                 rankColor_second = "§2";
                 rankColor = "§2";
             }
-        stm.close();
-        rs.close();
-        con.close();
         }catch (SQLException e) {
-            System.out.println("HERE ERROR");
-            System.out.println(e);
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void colorPerms(String rank) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_color = "SELECT rankColor FROM ranks WHERE rankName = '" +rank+"'";
-            ResultSet rs = stm.executeQuery(select_color);
-            while (rs.next()) {
-                rankColorPerms = rs.getString(1);
+            resultSet = statement.executeQuery(select_color);
+            while (resultSet.next()) {
+                rankColorPerms = resultSet.getString(1);
             }
-            System.out.println(select_color);
-            System.out.println(rankColorPerms);
             if (rankColorPerms != null) {
                 show_color = rankColorPerms.replace("&", "§");
             }
-
-            con.close();
         }catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
     }
 
     public void getRankData(String rank, Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_sql = "SELECT * FROM ranks WHERE rankName = '" +rank+"'";
-            ResultSet rs = stm.executeQuery(select_sql);
+            resultSet = statement.executeQuery(select_sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 permPlayerRankName = null;
                 permPlayerRankColor = null;
                 permRankPerms = null;
             } else {
                 do {
-                    permPlayerRankName = rs.getString(1);
-                    permPlayerRankColor = rs.getString(3);
-                    permRankPerms = rs.getString(5);
-                } while (rs.next());
+                    permPlayerRankName = resultSet.getString(1);
+                    permPlayerRankColor = resultSet.getString(3);
+                    permRankPerms = resultSet.getString(5);
+                } while (resultSet.next());
             }
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
     }
 
     public void addPerms(String perm, String rank, Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             this.colorPerms(rank);
             String select_sql = "SELECT rankPerms FROM ranks WHERE rankName = '" +rank+"'";
-            ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                getRankPerms = rs.getString(1);
+            resultSet = statement.executeQuery(select_sql);
+            while (resultSet.next()) {
+                getRankPerms = resultSet.getString(1);
             }
 
             if (rankColorPerms == null) {
@@ -592,31 +669,39 @@ public class JeezySQL  {
                    "SET rankPerms = '"+rankPerms +
                    "' WHERE rankName = '"+rank+"'";
             p.sendMessage("§fSuccessfully added the perm: §l§b"+perm+" §ffor the rank: §l"+show_color+rank+"§f.");
-           stm.executeUpdate(sql);
+           statement.executeUpdate(sql);
            rankPerms.clear();
 
             this.getRankData(rank, p);
             PermissionHandler ph = new PermissionHandler();
             ph.onAddPerms(p, perm);
-
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
     public void removePerms(String perm, String rank, Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         String sql;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             this.colorPerms(rank);
             String select_sql = "SELECT rankPerms FROM ranks WHERE rankName = '" +rank+"'";
-            ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                getRankPerms = rs.getString(1);
+            resultSet = statement.executeQuery(select_sql);
+            while (resultSet.next()) {
+                getRankPerms = resultSet.getString(1);
             }
             if (rankColorPerms == null) {
                 p.sendMessage("§fThe rank: §b§l" + rank + " §fdoesn't exist.");
@@ -648,8 +733,7 @@ public class JeezySQL  {
                         "' WHERE rankName = '"+rank+"'";
             }
 
-            stm.executeUpdate(sql);
-            con.close();
+            statement.executeUpdate(sql);
             this.getRankData(rank, p);
             PermissionHandler ph = new PermissionHandler();
             ph.onRemovePerms(p, perm);
@@ -657,18 +741,28 @@ public class JeezySQL  {
             getRankPerms = null;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void onJoinPerms(String rankName, UUID u) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_sql = "SELECT rankPerms FROM ranks WHERE rankName = '"+rankName+"'";
-            ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                joinPermRanks = rs.getString(1);
+            resultSet = statement.executeQuery(select_sql);
+            while (resultSet.next()) {
+                joinPermRanks = resultSet.getString(1);
             }
             System.out.println(select_sql);
             System.out.println(u);
@@ -676,131 +770,167 @@ public class JeezySQL  {
 
             PermissionHandler join = new PermissionHandler();
             join.onJoin(u);
-            rs.close();
-            con.close();
             joinPermRanks = null;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void onGrantingPerms(HumanEntity p, String rank) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_sql = "SELECT rankPerms FROM ranks WHERE rankName = '"+rank+"'";
-            ResultSet rs = stm.executeQuery(select_sql);
+            resultSet = statement.executeQuery(select_sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 grantingPermRanks = null;
             } else {
                 do {
-                    grantingPermRanks = rs.getString(1);
-                } while (rs.next());
+                    grantingPermRanks = resultSet.getString(1);
+                } while (resultSet.next());
             }
-            System.out.println("HEEEEEEEEEEEEEEEERRRRRRRRREEEE");
-            System.out.println(grantingPermRanks);
             PermissionHandler onGrant = new PermissionHandler();
             onGrant.onGranting(p);
-            rs.close();
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void onUnGrantingPerms(HumanEntity p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             this.getPlayer(ArrayStorage.grant_array.get(p.getUniqueId()));
             String select_sql = "SELECT rankPerms FROM ranks WHERE rankName = '"+getPlayerUUID+"'";
 
-            ResultSet rs = stm.executeQuery(select_sql);
+            resultSet = statement.executeQuery(select_sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 unGrantingPermRanks = null;
             } else {
                 do {
-                    unGrantingPermRanks = rs.getString(1);
-                } while (rs.next());
+                    unGrantingPermRanks = resultSet.getString(1);
+                } while (resultSet.next());
             }
             PermissionHandler onUnGrant = new PermissionHandler();
             onUnGrant.onUnGranting(p);
-            rs.close();
-            con.close();
-
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void onGrantingPermsConsole(UUID uuid, String rank) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_sql = "SELECT rankPerms FROM ranks WHERE rankName = '"+rank+"'";
-            ResultSet rs = stm.executeQuery(select_sql);
+            resultSet = statement.executeQuery(select_sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 grantingPermRanks = null;
             } else {
                 do {
-                    grantingPermRanks = rs.getString(1);
-                } while (rs.next());
+                    grantingPermRanks = resultSet.getString(1);
+                } while (resultSet.next());
             }
             PermissionHandler onGrant = new PermissionHandler();
             onGrant.onGrantingConsole(uuid);
-            rs.close();
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void onUnGrantingPermsConsole(UUID uuid) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             this.getPlayer(uuid);
             String select_sql = "SELECT rankPerms FROM ranks WHERE rankName = '"+getPlayerUUID+"'";
 
-            ResultSet rs = stm.executeQuery(select_sql);
+            resultSet = statement.executeQuery(select_sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 unGrantingPermRanks = null;
             } else {
                 do {
-                    unGrantingPermRanks = rs.getString(1);
-                } while (rs.next());
+                    unGrantingPermRanks = resultSet.getString(1);
+                } while (resultSet.next());
 
             }
             PermissionHandler onUnGrant = new PermissionHandler();
             onUnGrant.onUnGrantingConsole(uuid);
-            rs.close();
-            con.close();
-
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
     public void removeRankGui(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         String sql;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_sql = "SELECT playerUUID, playerName FROM players WHERE playerUUID = '"+ArrayStorage.grant_array.get(p.getUniqueId())+"'";
-            ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                removeRankGui_result = rs.getString(1);
-                removeRankGui_result_names = rs.getString(2);
+            resultSet = statement.executeQuery(select_sql);
+            while (resultSet.next()) {
+                removeRankGui_result = resultSet.getString(1);
+                removeRankGui_result_names = resultSet.getString(2);
             }
 
             if (removeRankGui_result != null) {
@@ -808,7 +938,7 @@ public class JeezySQL  {
                         "SET rank = "+null+
                         " WHERE playerUUID = '"+ArrayStorage.grant_array.get(p.getUniqueId())+"'";
 
-                stm.executeUpdate(sql);
+                statement.executeUpdate(sql);
                 RealtimeGrant unGrant_discord = new RealtimeGrant();
                 unGrant_discord.realtimeChatOnUnGranting(ArrayStorage.grant_array.get(p.getUniqueId()), ArrayStorage.grant_array_names.get(p.getUniqueId()), p.getDisplayName());
             p.sendMessage("§aSuccessfully§f removed the rank from player §b§l" + ArrayStorage.grant_array_names.get(p.getUniqueId()));
@@ -817,30 +947,39 @@ public class JeezySQL  {
                 p.sendMessage("§4§lThis player doesn't have a rank!");
             }
             ArrayStorage.grant_array.remove(p.getPlayer().getUniqueId());
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void removeRankConsole(CommandSender sender, String playerName, UUID uuid) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         String sql;
         try {
-            this.createConnection();
             this.onUnGrantingPermsConsole(UUID.fromString(UUIDChecker.uuid));
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_sql = "SELECT playerUUID, playerName FROM players WHERE playerUUID = '"+uuid+"'";
-            ResultSet rs = stm.executeQuery(select_sql);
+            resultSet = statement.executeQuery(select_sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 removeRankGui_result = null;
                 removeRankGui_result_names = null;
             } else {
                 do {
-                    removeRankGui_result = rs.getString(1);
-                    removeRankGui_result_names = rs.getString(2);
-                } while (rs.next());
+                    removeRankGui_result = resultSet.getString(1);
+                    removeRankGui_result_names = resultSet.getString(2);
+                } while (resultSet.next());
             }
 
             if (removeRankGui_result != null) {
@@ -853,36 +992,45 @@ public class JeezySQL  {
                         " , rankEnd = "+null+
                         " WHERE playerUUID = '"+uuid+"'";
 
-                stm.executeUpdate(sql);
-                stm.executeUpdate(sql_reset_rank_time);
+                statement.executeUpdate(sql);
+                statement.executeUpdate(sql_reset_rank_time);
                 sender.sendMessage("§aSuccessfully§7 removed the rank from player §9§l" + playerName);
                 NametagEdit.getApi().setPrefix(UUIDChecker.uuidName, "§2");
             } else {
                 sender.sendMessage("§4§lThis player doesn't have a rank!");
             }
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void setRankDuration(CommandSender sender, String username, String time, UUID uuid) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
             this.rankMonthlyDurationTimeCheck(time);
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql = null;
             String sql_select = "SELECT playerUUID FROM items WHERE playerUUID = '"+uuid+"'";
 
-            ResultSet rs = stm.executeQuery(sql_select);
+            resultSet = statement.executeQuery(sql_select);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 getItemPlayerUUID = null;
             } else {
                 do {
-                    getItemPlayerUUID = rs.getString(1);
-                } while (rs.next());
+                    getItemPlayerUUID = resultSet.getString(1);
+                } while (resultSet.next());
             }
             if (getItemPlayerUUID != null) {
                 sql = "UPDATE items " +
@@ -894,20 +1042,28 @@ public class JeezySQL  {
                         "VALUES ('"+UUIDChecker.uuidName+"', '"+UUIDChecker.uuid+"', NULL, '"+currentTime.format(formatter)+"', '"+updatedTime.format(formatter)+"')";
             }
             System.out.println(sql);
-            stm.executeUpdate(sql);
+            statement.executeUpdate(sql);
             sender.sendMessage("§7You §asuccessfully §7granted " + username + " §7for §9§l" + time + "§7.");
-            stm.close();
-            con.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private void rankRemoveAutomatically(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             String sql_reset_item_duration = "UPDATE items " +
                     "SET rankStart = NULL, rankEnd = NULL" +
@@ -917,11 +1073,18 @@ public class JeezySQL  {
                     "SET rank = NULL"+
                     " WHERE playerUUID = '"+p.getUniqueId()+"'";
 
-            stm.executeUpdate(sql_reset_item_duration);
-            stm.executeUpdate(sql_reset_rank);
-            stm.close();
-            con.close();
+            statement.executeUpdate(sql_reset_item_duration);
+            statement.executeUpdate(sql_reset_rank);
         } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -939,19 +1102,21 @@ public class JeezySQL  {
     }
 
     public void rankMonthlyDurationCalculator(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_sql = "SELECT * FROM items WHERE playerUUID = '"+p.getUniqueId()+"'";
-            ResultSet rs = stm.executeQuery(select_sql);
+            resultSet = statement.executeQuery(select_sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 ban_end = null;
             } else {
                 do {
-                    ban_end = rs.getString(5);
-                } while (rs.next());
+                    ban_end = resultSet.getString(5);
+                } while (resultSet.next());
             }
 
             if (ban_end == null) return;
@@ -985,6 +1150,14 @@ public class JeezySQL  {
         }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

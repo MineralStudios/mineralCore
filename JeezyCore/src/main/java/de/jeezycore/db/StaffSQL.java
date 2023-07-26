@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
+import static de.jeezycore.db.hikari.HikariCP.dataSource;
+
 public class StaffSQL {
 
     public String url;
@@ -28,25 +30,18 @@ public class StaffSQL {
 
     public static String [] staff_array;
 
-    private void createConnection() {
-
-        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
-
-        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
-        user = (String) mc.get("user");
-        password = (String) mc.get("password");
-    }
-
+    
     public void addToStaff(String rankName, Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
             jeezySQL.getRankData(rankName, p);
 
-            this.createConnection();
-
             getStaffRank(rankName);
 
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             if (JeezySQL.permPlayerRankName == null) {
                 p.sendMessage("§4This rank hasn't been created yet.");
@@ -59,24 +54,32 @@ public class StaffSQL {
             String sql = "UPDATE ranks " +
                     "SET staffRank = true WHERE rankName = '"+rankName+"'";
 
-            stm.executeUpdate(sql);
+            statement.executeUpdate(sql);
 
             p.sendMessage("§bSuccessfully§7 changed the "+JeezySQL.permPlayerRankColor.replace("&","§")+JeezySQL.permPlayerRankName+" §7rank to a staff rank.");
-            con.close();
         } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void removeFromStaff(String rankName, Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
             jeezySQL.getRankData(rankName, p);
 
-            this.createConnection();
-
             getStaffRank(rankName);
 
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             if (JeezySQL.permPlayerRankName == null) {
                 p.sendMessage("§4This rank hasn't been setuped yet.");
@@ -89,107 +92,145 @@ public class StaffSQL {
             String sql = "UPDATE ranks " +
                     "SET staffRank = false WHERE rankName = '"+rankName+"'";
 
-            stm.executeUpdate(sql);
+            statement.executeUpdate(sql);
 
             p.sendMessage("§bSuccessfully§7 removed the "+JeezySQL.permPlayerRankColor.replace("&","§")+JeezySQL.permPlayerRankName+" §7rank from the staff ranks.");
-            con.close();
         } catch (SQLException e) {
             System.out.println(e);
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void getStaffRank(String rankName) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_sql = "SELECT staffRank FROM ranks WHERE staffRank = true AND rankName = '"+rankName+"'";
-            ResultSet rs = stm.executeQuery(select_sql);
+            resultSet = statement.executeQuery(select_sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 staffRank = false;
             } else {
                 do {
-                    staffRank = rs.getBoolean(1);
-                } while (rs.next());
+                    staffRank = resultSet.getBoolean(1);
+                } while (resultSet.next());
             }
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void getStaffRanksInfo() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_sql = "SELECT rankName FROM ranks WHERE staffRank = true";
             String rankNames;
-            ResultSet rs = stm.executeQuery(select_sql);
+            resultSet = statement.executeQuery(select_sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 rankNames = null;
                 staffRankNamesArray.clear();
             } else {
                 do {
-                    rankNames = rs.getString(1);
+                    rankNames = resultSet.getString(1);
                     staffRankNamesArray.add(rankNames);
-                } while (rs.next());
+                } while (resultSet.next());
             }
-            con.close();
         } catch (SQLException f) {
             f.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void getStaff() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
             this.getStaffRanksInfo();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             for (String ranks : staffRankNamesArray) {
                 String select_sql = "SELECT playerUUID FROM players WHERE rank = '" + ranks + "'";
-                ResultSet rs = stm.executeQuery(select_sql);
+                resultSet = statement.executeQuery(select_sql);
 
-                if (!rs.next()) {
+                if (!resultSet.next()) {
                     staffPlayerNames = null;
                 } else {
                     do {
-                        staffPlayerNames = rs.getString(1);
+                        staffPlayerNames = resultSet.getString(1);
                         staff_array = staffPlayerNames.replace("]", "").replace("[", "").split(", ");
                         staff.addAll(Arrays.asList(staff_array));
-                    } while (rs.next());
+                    } while (resultSet.next());
                 }
-                rs.close();
-            }
-            stm.close();
-            con.close();
+            };
         } catch (SQLException f) {
             f.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void checkIfStaff(String rankName, UUID get_UUID) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_sql = "SELECT * FROM ranks WHERE rankName = '"+rankName+"'";
-            ResultSet rs = stm.executeQuery(select_sql);
-            if (!rs.next()) {
+            resultSet = statement.executeQuery(select_sql);
+            if (!resultSet.next()) {
                 staffRank = false;
             } else {
                 do {
-                    staffRank = rs.getBoolean(6);
-                } while (rs.next());
+                    staffRank = resultSet.getBoolean(6);
+                } while (resultSet.next());
             }
-            stm.close();
-            rs.close();
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

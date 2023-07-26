@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 
+import static de.jeezycore.db.hikari.HikariCP.dataSource;
 import static de.jeezycore.utils.ArrayStorage.tagItems;
 
 public class RewardSQL {
@@ -23,68 +24,85 @@ public class RewardSQL {
     public static String rewardPrice;
 
     public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-    private void createConnection() {
-
-        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
-
-        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
-        user = (String) mc.get("user");
-        password = (String) mc.get("password");
-    }
+    
 
     public void tagData() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_sql = "SELECT * FROM tags";
-            ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                tagNameData = rs.getString(1);
+            resultSet = statement.executeQuery(select_sql);
+            while (resultSet.next()) {
+                tagNameData = resultSet.getString(1);
                 tagItems.add(tagNameData);
             }
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void rewardClaimed(Player p, String price) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             String sql = "INSERT INTO rewards " +
                     "(UUID, playerName, claimed, time, price) " +
                     "VALUES " +
                     "('" + p.getPlayer().getUniqueId() + "', '"+p.getPlayer().getDisplayName()+"', " + "true,'" + finalTime.format(formatter) + "', '"+ price +"')";
 
-            stm.executeUpdate(sql);
-            con.close();
-
+            statement.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void checkIfClaimed(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql = "SELECT * FROM rewards WHERE UUID = '"+p.getPlayer().getUniqueId()+"'";
 
-            ResultSet rs = stm.executeQuery(sql);
-            while (rs.next()) {
-                alreadyClaimedReward = rs.getBoolean(3);
-                waitDuration = rs.getString(4);
-                rewardPrice = rs.getString(5);
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                alreadyClaimedReward = resultSet.getBoolean(3);
+                waitDuration = resultSet.getString(4);
+                rewardPrice = resultSet.getString(5);
             }
-        con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -121,18 +139,25 @@ public class RewardSQL {
     }
 
     public void removeReward(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             String sql = "DELETE FROM rewards WHERE UUID = '"+p.getPlayer().getUniqueId()+"'";
 
-            stm.executeUpdate(sql);
-            con.close();
-
+            statement.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

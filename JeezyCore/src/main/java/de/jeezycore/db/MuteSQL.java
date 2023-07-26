@@ -15,6 +15,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static de.jeezycore.db.hikari.HikariCP.dataSource;
+
 public class MuteSQL {
 
     public String url;
@@ -42,19 +44,14 @@ public class MuteSQL {
 
     private JSONObject json_o = new JSONObject();
 
-    private void createConnection() {
-        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
-
-        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
-        user = (String) mc.get("user");
-        password = (String) mc.get("password");
-    }
-
+    
     public void mute(String username, String input, Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             UUIDChecker uc = new UUIDChecker();
             uc.check(username);
@@ -75,24 +72,32 @@ public class MuteSQL {
 
             System.out.println(sql);
             if (punishment_UUID == null && mute_logs == null) {
-                stm.executeUpdate(sql);
+                statement.executeUpdate(sql);
                 p.sendMessage("§7You §asuccessfully §7muted §b" + username + "§7.");
             } else {
                 muteUpdate(username, input, p);
             }
             ArrayStorage.mute_logs.clear();
             discord.realtimeChatOnMute(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName(), input);
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private void muteUpdate(String username, String input, Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             UUIDChecker check_UUID = new UUIDChecker();
             check_UUID.check(username);
@@ -114,13 +119,17 @@ public class MuteSQL {
             String sql = "UPDATE punishments " +
                     "SET mute_forever = true, mute_status = true" +
                     " WHERE UUID = '" + UUIDChecker.uuid + "'";
-            stm.executeUpdate(sql);
-            stm.close();
-
+            statement.executeUpdate(sql);
             mute_logsUpdate(username);
-            con.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -162,10 +171,12 @@ public class MuteSQL {
     }
 
     private void tempMuteAutomaticUnban(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             UUIDChecker check_UUID = new UUIDChecker();
             check_UUID.check(p.getPlayer().getDisplayName());
@@ -174,10 +185,16 @@ public class MuteSQL {
                     "SET mute_forever = false, mute_start = NULL, mute_end = NULL, mute_status = false"+
                     " WHERE UUID = '"+UUIDChecker.uuid+"'";
 
-            stm.executeUpdate(sql);
-            stm.close();
-            con.close();
+            statement.executeUpdate(sql);
         } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -195,10 +212,12 @@ public class MuteSQL {
     }
 
     public void tempMute(String username, String time, String reason , Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             RealtimeMute discord = new RealtimeMute();
             UUIDChecker uc = new UUIDChecker();
             uc.check(username);
@@ -217,24 +236,32 @@ public class MuteSQL {
                     "('"+UUIDChecker.uuidName + "', '"+UUIDChecker.uuid+"', false,'"+currentTime.format(formatter)+"', '"+updatedTime.format(formatter)+"', true, "+"'"+ArrayStorage.mute_logs+"')";
 
             if (punishment_UUID == null && mute_logs == null) {
-                stm.executeUpdate(sql);
+                statement.executeUpdate(sql);
                 p.sendMessage("§7You §asuccessfully §7muted §b"+username+" §7for §c"+time+"§7.");
             } else {
                 tempMuteUpdate(username, time, reason, p);
             }
             ArrayStorage.mute_logs.clear();
             discord.realtimeChatOnTempMute(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName(), mute_end, reason);
-            con.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private void tempMuteUpdate(String username, String time, String reason , Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             UUIDChecker check_UUID = new UUIDChecker();
             check_UUID.check(username);
@@ -257,22 +284,29 @@ public class MuteSQL {
             String sql = "UPDATE punishments " +
                     "SET mute_forever = false, mute_start = '"+currentTime.format(formatter)+"', mute_end = '"+updatedTime.format(formatter)+"', mute_status = true"+
                     " WHERE UUID = '"+UUIDChecker.uuid+"'";
-            stm.executeUpdate(sql);
-            stm.close();
+            statement.executeUpdate(sql);
 
             mute_logsUpdate(username);
-            con.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
     public void unMute(String username, Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             RealtimeMute discord = new RealtimeMute();
             UUIDChecker check_UUID = new UUIDChecker();
@@ -289,23 +323,31 @@ public class MuteSQL {
             String sql = "UPDATE punishments " +
                     "SET mute_forever = false, mute_start = NULL, mute_end = NULL, mute_status = false"+
                     " WHERE UUID = '"+UUIDChecker.uuid+"'";
-            stm.executeUpdate(sql);
-            stm.close();
+            statement.executeUpdate(sql);
             discord.realtimeChatOnUnMute(UUID.fromString(UUIDChecker.uuid), username, p.getDisplayName());
-            con.close();
         } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void muteData(UUID get_UUID) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" +get_UUID.toString()+"'";
-            ResultSet rs = stm.executeQuery(select_sql);
+            resultSet = statement.executeQuery(select_sql);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 punishment_UUID = null;
                 mute_forever = false;
                 mute_start = null;
@@ -314,52 +356,67 @@ public class MuteSQL {
                 mute_logs = null;
             } else {
                 do {
-                    punishment_UUID = rs.getString(2);
-                    mute_forever = rs.getBoolean(4);
-                    mute_start = rs.getString(8);
-                    mute_end = rs.getString(9);
-                    mute_status = rs.getBoolean(10);
-                    mute_logs = rs.getString(12);
-                } while (rs.next());
+                    punishment_UUID = resultSet.getString(2);
+                    mute_forever = resultSet.getBoolean(4);
+                    mute_start = resultSet.getString(8);
+                    mute_end = resultSet.getString(9);
+                    mute_status = resultSet.getBoolean(10);
+                    mute_logs = resultSet.getString(12);
+                } while (resultSet.next());
             }
-            stm.close();
-            rs.close();
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void unMuteData(UUID get_UUID) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" + get_UUID.toString() + "'";
-            ResultSet rs = stm.executeQuery(select_sql);
-            if (!rs.next()) {
+            resultSet = statement.executeQuery(select_sql);
+            if (!resultSet.next()) {
                 punishment_UUID = null;
                 mute_forever = false;
                 mute_status = false;
             } else {
                 do {
-                    punishment_UUID = rs.getString(2);
-                    mute_forever = rs.getBoolean(4);
-                    mute_status = rs.getBoolean(10);
-                } while (rs.next());
+                    punishment_UUID = resultSet.getString(2);
+                    mute_forever = resultSet.getBoolean(4);
+                    mute_status = resultSet.getBoolean(10);
+                } while (resultSet.next());
             }
-            stm.close();
-            rs.close();
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void mute_logsUpdate(String username) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
             UUIDChecker check_UUID = new UUIDChecker();
             check_UUID.check(username);
@@ -376,13 +433,17 @@ public class MuteSQL {
             String sql = "UPDATE punishments " +
                     "SET mute_logs = '"+mute_logsArray+"'"+
                     " WHERE UUID = '"+UUIDChecker.uuid+"'";
-            stm.executeUpdate(sql);
-            stm.close();
-            con.close();
+            statement.executeUpdate(sql);
             mute_logsArray.clear();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
-
 }

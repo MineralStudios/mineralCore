@@ -9,6 +9,7 @@ import java.sql.*;
 import java.util.Arrays;
 import java.util.UUID;
 
+import static de.jeezycore.db.hikari.HikariCP.dataSource;
 import static de.jeezycore.utils.ArrayStorage.*;
 
 public class SettingsSQL {
@@ -21,58 +22,62 @@ public class SettingsSQL {
 
     public String settingsIgnoredList;
     public boolean settingsMsg;
-
-    private void createConnection() {
-
-        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
-
-        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
-        user = (String) mc.get("user");
-        password = (String) mc.get("password");
-    }
+    
 
     private void setup(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql_select = "SELECT * FROM settings WHERE playerUUID = '"+p.getPlayer().getUniqueId()+"'";
-            ResultSet rs = stm.executeQuery(sql_select);
-            if (!rs.next()) {
+            resultSet = statement.executeQuery(sql_select);
+            if (!resultSet.next()) {
                 settingsAvailable = null;
             } else {
                 do {
-                    settingsAvailable = rs.getString(2);
-                } while (rs.next());
+                    settingsAvailable = resultSet.getString(2);
+                } while (resultSet.next());
             }
             if (settingsAvailable == null) {
                 String sql_settings_available ="INSERT INTO settings" +
                         "(playerName, playerUUID, ignoredPlayerList, msg) " +
                         "VALUES ('"+p.getDisplayName()+"', '"+p.getUniqueId()+"', " +
                         "NULL, false)";
-                stm.executeUpdate(sql_settings_available);
+                statement.executeUpdate(sql_settings_available);
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void getSettingsData(UUID receiver) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sql_select = "SELECT * FROM settings WHERE playerUUID = '"+receiver+"'";
-            ResultSet rs = stm.executeQuery(sql_select);
+            resultSet = statement.executeQuery(sql_select);
 
-            if (!rs.next()) {
+            if (!resultSet.next()) {
                 settingsIgnoredList = null;
                 settingsMsg = false;
             } else {
                 do {
-                    settingsIgnoredList = rs.getString(3);
-                    settingsMsg = rs.getBoolean(4);
-                } while (rs.next());
+                    settingsIgnoredList = resultSet.getString(3);
+                    settingsMsg = resultSet.getBoolean(4);
+                } while (resultSet.next());
             }
 
             if (settingsIgnoredList != null) {
@@ -82,47 +87,76 @@ public class SettingsSQL {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
     public void disableMsg(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
             this.setup(p);
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sqlUpdateMsg = "UPDATE settings " +
                     "SET msg = false"+
                     " WHERE playerUUID = '"+p.getUniqueId()+"'";
-            stm.executeUpdate(sqlUpdateMsg);
+            statement.executeUpdate(sqlUpdateMsg);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void enableMsg(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
             this.setup(p);
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String sqlUpdateMsg = "UPDATE settings " +
                     "SET msg = true"+
                     " WHERE playerUUID = '"+p.getUniqueId()+"'";
-            stm.executeUpdate(sqlUpdateMsg);
+            statement.executeUpdate(sqlUpdateMsg);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void addIgnore(Player p, String playerToAdd) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
             this.setup(p);
             this.getSettingsData(p.getUniqueId());
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String update_sql;
             Player ps = Bukkit.getPlayer(playerToAdd);
 
@@ -156,20 +190,30 @@ public class SettingsSQL {
                         " WHERE playerUUID = '" + p.getUniqueId() +"'";
             }
             p.sendMessage("§7You §2successfully §7ignored §9" + playerToAdd + "§7.");
-            stm.executeUpdate(update_sql);
+            statement.executeUpdate(update_sql);
             msg_ignore_array.clear();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void removeIgnore(Player p, String playerToRemove) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
             this.setup(p);
             this.getSettingsData(p.getUniqueId());
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement();
+
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
             String update_sql;
 
             if (p.getDisplayName().equalsIgnoreCase(playerToRemove)) {
@@ -199,16 +243,22 @@ public class SettingsSQL {
                         " WHERE playerUUID = '" + p.getUniqueId() +"'";
                 p.sendMessage("§7You have §2successfully §7removed §9"+playerToRemove+" §7from the ignore list.");
             }
-            stm.executeUpdate(update_sql);
+            statement.executeUpdate(update_sql);
             msg_ignore_array.clear();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void showIgnoreList(Player p) {
         try {
-            this.createConnection();
             this.getSettingsData(p.getUniqueId());
 
             if (msg_ignore_array.size() == 0) {
@@ -232,5 +282,4 @@ public class SettingsSQL {
             e.printStackTrace();
         }
     }
-
 }

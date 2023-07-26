@@ -5,6 +5,8 @@ import org.bukkit.configuration.MemorySection;
 import java.sql.*;
 import java.util.UUID;
 
+import static de.jeezycore.db.hikari.HikariCP.dataSource;
+
 public class LogsSQL {
 
     public String url;
@@ -13,31 +15,31 @@ public class LogsSQL {
 
     public static String ban_log;
     public static String mute_log;
-
-    private void createConnection() {
-
-        MemorySection mc = (MemorySection) JeezyConfig.database_defaults.get("MYSQL");
-
-        url = "jdbc:mysql://"+mc.get("ip")+":"+mc.get("mysql-port")+"/"+mc.get("database");
-        user = (String) mc.get("user");
-        password = (String) mc.get("password");
-    }
+    
 
     public void punishment_log(UUID userUUID) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            this.createConnection();
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stm = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            connection = dataSource.getConnection();
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             String select_sql = "SELECT * FROM punishments WHERE UUID = '" +userUUID+"'";
-            ResultSet rs = stm.executeQuery(select_sql);
-            while (rs.next()) {
-                ban_log = rs.getString(11);
-                mute_log = rs.getString(12);
+            resultSet = statement.executeQuery(select_sql);
+            while (resultSet.next()) {
+                ban_log = resultSet.getString(11);
+                mute_log = resultSet.getString(12);
             }
-            rs.close();
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
