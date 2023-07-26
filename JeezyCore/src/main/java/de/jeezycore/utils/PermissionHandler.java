@@ -1,7 +1,7 @@
 package de.jeezycore.utils;
 
 
-import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.RanksSQL;
 import de.jeezycore.main.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
@@ -18,18 +18,18 @@ public class PermissionHandler {
 
 
     public void onAddPerms(Player p, String perm) {
-        if (JeezySQL.permPlayerUUIDArray.size() == 0) return;
+        if (RanksSQL.permPlayerUUIDArray.size() == 0) return;
 
-        for (int i = 0; i < JeezySQL.permPlayerUUIDArray.size(); i++) {
-            System.out.println(Bukkit.getServer().getPlayer(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i))));
-            if (Bukkit.getServer().getPlayer(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i))) == null) {
+        for (int i = 0; i < RanksSQL.permPlayerUUIDArray.size(); i++) {
+            System.out.println(Bukkit.getServer().getPlayer(UUID.fromString(RanksSQL.permPlayerUUIDArray.get(i))));
+            if (Bukkit.getServer().getPlayer(UUID.fromString(RanksSQL.permPlayerUUIDArray.get(i))) == null) {
                 continue;
             }
-             attachment = Bukkit.getServer().getPlayer(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i))).addAttachment(Main.getPlugin(Main.class));
+             attachment = Bukkit.getServer().getPlayer(UUID.fromString(RanksSQL.permPlayerUUIDArray.get(i))).addAttachment(Main.getPlugin(Main.class));
 
-            perms.put(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i)), attachment);
+            perms.put(UUID.fromString(RanksSQL.permPlayerUUIDArray.get(i)), attachment);
 
-            attachment = perms.get(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i)));
+            attachment = perms.get(UUID.fromString(RanksSQL.permPlayerUUIDArray.get(i)));
             System.out.println(attachment);
             if (attachment == null) {
                 return;
@@ -37,23 +37,23 @@ public class PermissionHandler {
             attachment.setPermission(perm, true);
 
         }
-        JeezySQL.permPlayerUUIDArray.clear();
+        RanksSQL.permPlayerUUIDArray.clear();
 
     }
 
     public void onRemovePerms(Player p, String perm) {
-        if (JeezySQL.permPlayerUUIDArray.size() == 0) return;
+        if (RanksSQL.permPlayerUUIDArray.size() == 0) return;
 
-        for (int i = 0; i < JeezySQL.permPlayerUUIDArray.size(); i++) {
-            System.out.println(Bukkit.getServer().getPlayer(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i))));
-            if (Bukkit.getServer().getPlayer(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i))) == null) {
+        for (int i = 0; i < RanksSQL.permPlayerUUIDArray.size(); i++) {
+            System.out.println(Bukkit.getServer().getPlayer(UUID.fromString(RanksSQL.permPlayerUUIDArray.get(i))));
+            if (Bukkit.getServer().getPlayer(UUID.fromString(RanksSQL.permPlayerUUIDArray.get(i))) == null) {
                 continue;
             }
-            attachment = Bukkit.getServer().getPlayer(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i))).addAttachment(Main.getPlugin(Main.class));
+            attachment = Bukkit.getServer().getPlayer(UUID.fromString(RanksSQL.permPlayerUUIDArray.get(i))).addAttachment(Main.getPlugin(Main.class));
 
-            perms.put(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i)), attachment);
+            perms.put(UUID.fromString(RanksSQL.permPlayerUUIDArray.get(i)), attachment);
 
-            attachment = perms.get(UUID.fromString(JeezySQL.permPlayerUUIDArray.get(i)));
+            attachment = perms.get(UUID.fromString(RanksSQL.permPlayerUUIDArray.get(i)));
             System.out.println(attachment);
             if (attachment == null) {
                 return;
@@ -61,13 +61,13 @@ public class PermissionHandler {
             attachment.setPermission(perm, false);
 
         }
-        JeezySQL.permPlayerUUIDArray.clear();
+        RanksSQL.permPlayerUUIDArray.clear();
 
     }
 
     public void onJoin(UUID u) {
-        if (JeezySQL.joinPermRanks == null) return;
-        String[] uuidStrings = JeezySQL.joinPermRanks.replace("[", "").replace("]", "").
+        if (RanksSQL.joinPermRanks == null) return;
+        String[] uuidStrings = RanksSQL.joinPermRanks.replace("[", "").replace("]", "").
                 replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
 
 
@@ -83,8 +83,8 @@ public class PermissionHandler {
     }
 
     public void onGranting(HumanEntity p) {
-        if (JeezySQL.grantingPermRanks == null) return;
-        String[] uuidStrings = JeezySQL.grantingPermRanks.replace("[", "").replace("]", "").
+        if (RanksSQL.grantingPermRanks == null) return;
+        String[] uuidStrings = RanksSQL.grantingPermRanks.replace("[", "").replace("]", "").
                 replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
 
         try {
@@ -104,8 +104,8 @@ public class PermissionHandler {
     }
 
     public void onUnGranting(HumanEntity p) {
-        if (JeezySQL.unGrantingPermRanks == null) return;
-        String[] uuidStrings = JeezySQL.unGrantingPermRanks.replace("[", "").replace("]", "").
+        if (RanksSQL.unGrantingPermRanks == null) return;
+        String[] uuidStrings = RanksSQL.unGrantingPermRanks.replace("[", "").replace("]", "").
                 replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
 
     try {
@@ -125,8 +125,8 @@ public class PermissionHandler {
 
     public void onGrantingConsole(UUID uuid) {
         Player ps = Bukkit.getPlayer(uuid);
-        if (JeezySQL.grantingPermRanks == null || ps == null) return;
-        String[] uuidStrings = JeezySQL.grantingPermRanks.replace("[", "").replace("]", "").
+        if (RanksSQL.grantingPermRanks == null || ps == null) return;
+        String[] uuidStrings = RanksSQL.grantingPermRanks.replace("[", "").replace("]", "").
                 replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
 
         try {
@@ -140,8 +140,8 @@ public class PermissionHandler {
 
     public void onUnGrantingConsole(UUID uuid) {
         Player ps = Bukkit.getPlayer(uuid);
-        if (JeezySQL.unGrantingPermRanks == null || ps == null) return;
-        String[] uuidStrings = JeezySQL.unGrantingPermRanks.replace("[", "").replace("]", "").
+        if (RanksSQL.unGrantingPermRanks == null || ps == null) return;
+        String[] uuidStrings = RanksSQL.unGrantingPermRanks.replace("[", "").replace("]", "").
                 replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
 
         try {

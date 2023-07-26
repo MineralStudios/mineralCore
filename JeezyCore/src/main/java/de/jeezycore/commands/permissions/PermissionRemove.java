@@ -1,6 +1,6 @@
 package de.jeezycore.commands.permissions;
 
-import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.RanksSQL;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,7 +15,7 @@ public class PermissionRemove implements CommandExecutor {
             if (cmd.getName().equalsIgnoreCase("permissionRemove") && args.length == 2) {
                 if (p.hasPermission("jeezy.core.permission.remove")) {
                     System.out.println(args.length);
-                    JeezySQL perms = new JeezySQL();
+                    RanksSQL perms = new RanksSQL();
 
                     perms.getAllPlayerInformation(p, args[1]);
                     perms.removePerms(args[0], args[1], p);

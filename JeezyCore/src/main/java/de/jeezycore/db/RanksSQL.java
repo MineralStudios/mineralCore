@@ -1,14 +1,11 @@
 package de.jeezycore.db;
 import com.nametagedit.plugin.NametagEdit;
 import de.jeezycore.colors.Color;
-import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.discord.messages.grant.RealtimeGrant;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.PermissionHandler;
 import de.jeezycore.utils.UUIDChecker;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 // SQL imports
@@ -20,7 +17,7 @@ import java.util.*;
 
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
 
-public class JeezySQL  {
+public class RanksSQL {
     public String url;
     public String user;
     public String password;

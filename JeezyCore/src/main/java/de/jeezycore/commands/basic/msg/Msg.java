@@ -1,7 +1,7 @@
 package de.jeezycore.commands.basic.msg;
 
 import com.google.common.base.Joiner;
-import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.RanksSQL;
 import de.jeezycore.db.SettingsSQL;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.Bukkit;
@@ -15,7 +15,7 @@ import java.util.*;
 import static de.jeezycore.utils.ArrayStorage.*;
 
 public class Msg implements CommandExecutor {
-    JeezySQL display = new JeezySQL();
+    RanksSQL display = new RanksSQL();
     SettingsSQL settingsSQL = new SettingsSQL();
 
     UUIDChecker uc = new UUIDChecker();

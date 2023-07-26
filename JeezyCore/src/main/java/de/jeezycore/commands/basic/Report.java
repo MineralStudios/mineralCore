@@ -1,8 +1,7 @@
 package de.jeezycore.commands.basic;
 
 import com.google.common.base.Joiner;
-import de.jeezycore.colors.ColorTranslator;
-import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.RanksSQL;
 import de.jeezycore.events.chat.StaffChat;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.command.Command;
@@ -15,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Report implements CommandExecutor {
-    JeezySQL display = new JeezySQL();
+    RanksSQL display = new RanksSQL();
     StaffChat staffChat = new StaffChat();
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

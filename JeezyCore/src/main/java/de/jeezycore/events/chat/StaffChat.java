@@ -1,8 +1,7 @@
 package de.jeezycore.events.chat;
 
-import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.RanksSQL;
 import de.jeezycore.db.StaffSQL;
-import de.jeezycore.utils.ArrayStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -10,9 +9,9 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import java.util.UUID;
 
 public class StaffChat {
-    JeezySQL display = new JeezySQL();
+    RanksSQL display = new RanksSQL();
     StaffSQL staffSQL = new StaffSQL();
-    JeezySQL playerInfo = new JeezySQL();
+    RanksSQL playerInfo = new RanksSQL();
     public void chat(AsyncPlayerChatEvent e) {
         String chat_message = e.getMessage();
         String firstChar = String.valueOf(chat_message.charAt(0));

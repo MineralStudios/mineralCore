@@ -1,9 +1,7 @@
 package de.jeezycore.db;
 
-import de.jeezycore.config.JeezyConfig;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -19,7 +17,7 @@ public class TabListSQL {
     public String password;
     String rankColor;
 
-    JeezySQL jeezySQL = new JeezySQL();
+    RanksSQL ranksSQL = new RanksSQL();
     
     
     public void setTabList1_8(Player p, String Title, String subTitle) {
@@ -47,8 +45,8 @@ public class TabListSQL {
         try {
             connection = dataSource.getConnection();
             statement = connection.createStatement();
-            jeezySQL.getPlayerInformation(p);
-            String sql = "SELECT * FROM ranks WHERE rankName = '"+jeezySQL.rankNameInformation+"'";
+            ranksSQL.getPlayerInformation(p);
+            String sql = "SELECT * FROM ranks WHERE rankName = '"+ ranksSQL.rankNameInformation+"'";
             resultSet = statement.executeQuery(sql);
 
             if (!resultSet.next()) {

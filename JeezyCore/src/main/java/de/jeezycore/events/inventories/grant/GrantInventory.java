@@ -1,7 +1,6 @@
 package de.jeezycore.events.inventories.grant;
 
-import de.jeezycore.colors.ColorTranslator;
-import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.RanksSQL;
 import de.jeezycore.discord.messages.grant.RealtimeGrant;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.PermissionHandler;
@@ -12,7 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -40,7 +38,7 @@ public class GrantInventory {
 
     public void grant_menu(Player p, String username) {
         grant_inv = Bukkit.createInventory(null, 27,"§8Grant Menu");
-        JeezySQL display = new JeezySQL();
+        RanksSQL display = new RanksSQL();
         display.displayData();
 
         ArrayStorage.grant_inv_array.put(p.getPlayer().getDisplayName(), grant_inv);
@@ -72,7 +70,7 @@ public class GrantInventory {
             int i = 0;
             for (Map.Entry<String, String> entry : display.rankData.entrySet()) {
                 ItemStack rank = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
-                String show_color = JeezySQL.rankColorData.get(i).replace("&", "§");
+                String show_color = RanksSQL.rankColorData.get(i).replace("&", "§");
                 String displayName = entry.getKey();
                 LeatherArmorMeta rankMeta = (LeatherArmorMeta) rank.getItemMeta();
 
@@ -107,7 +105,7 @@ public class GrantInventory {
 
 
     private void executeMYSQL(org.bukkit.event.inventory.InventoryClickEvent e) {
-        JeezySQL mysql = new JeezySQL();
+        RanksSQL mysql = new RanksSQL();
         String get_rank = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
         mysql.grantPlayer(get_rank, UUID.fromString(UUIDChecker.uuid), e.getWhoClicked());
         mysql.onGrantingPerms(e.getWhoClicked(), get_rank);

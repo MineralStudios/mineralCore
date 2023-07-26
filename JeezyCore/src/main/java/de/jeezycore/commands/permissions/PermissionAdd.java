@@ -1,7 +1,6 @@
 package de.jeezycore.commands.permissions;
 
-import de.jeezycore.db.JeezySQL;
-import de.jeezycore.utils.PermissionHandler;
+import de.jeezycore.db.RanksSQL;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,7 +16,7 @@ public class PermissionAdd implements CommandExecutor {
             if (cmd.getName().equalsIgnoreCase("permissionAdd") && args.length == 2) {
                 if (p.hasPermission("jeezy.core.permission.add")) {
                     System.out.println(args.length);
-                    JeezySQL perms = new JeezySQL();
+                    RanksSQL perms = new RanksSQL();
 
                     perms.getAllPlayerInformation(p, args[1]);
                     perms.addPerms(args[0], args[1], p);

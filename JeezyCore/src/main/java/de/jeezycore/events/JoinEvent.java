@@ -2,7 +2,7 @@ package de.jeezycore.events;
 
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.BanSQL;
-import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.RanksSQL;
 import de.jeezycore.db.PlayersSQL;
 import de.jeezycore.db.TabListSQL;
 import de.jeezycore.utils.FakePlayerChecker;
@@ -18,7 +18,7 @@ import java.util.*;
 
 public class JoinEvent implements Listener {
 
-    JeezySQL givePermsOnJoin = new JeezySQL();
+    RanksSQL givePermsOnJoin = new RanksSQL();
     BanSQL check_if_banned = new BanSQL();
     NameTag nameTag = new NameTag();
 

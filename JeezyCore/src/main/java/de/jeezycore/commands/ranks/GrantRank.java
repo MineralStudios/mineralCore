@@ -1,6 +1,6 @@
 package de.jeezycore.commands.ranks;
 
-import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.RanksSQL;
 import de.jeezycore.discord.messages.grant.RealtimeGrant;
 import de.jeezycore.events.inventories.grant.GrantInventory;
 import de.jeezycore.utils.PermissionHandler;
@@ -14,7 +14,7 @@ import java.util.*;
 
 public class GrantRank implements CommandExecutor {
 
-    JeezySQL mysql = new JeezySQL();
+    RanksSQL mysql = new RanksSQL();
 
     UUIDChecker uc = new UUIDChecker();
     GrantInventory grantInventory = new GrantInventory();

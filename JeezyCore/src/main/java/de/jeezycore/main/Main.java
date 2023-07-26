@@ -31,13 +31,12 @@ import de.jeezycore.commands.staff.StaffRankDisable;
 import de.jeezycore.commands.staff.StaffRankEnable;
 import de.jeezycore.commands.tags.*;
 import de.jeezycore.config.JeezyConfig;
-import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.RanksSQL;
 import de.jeezycore.discord.JeezyBot;
 import de.jeezycore.events.*;
 import de.jeezycore.events.chat.ChatEvent;
 import de.jeezycore.events.inventories.JeezyInventories;
 import de.jeezycore.utils.HTTPUtility;
-import de.jeezycore.utils.LanguagesAPI;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -115,8 +114,8 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerCommandPreprocessEvent(), this);
 
         // Setups Databases + Tables
-        JeezySQL jeezySQL = new JeezySQL();
-        jeezySQL.start();
+        RanksSQL ranksSQL = new RanksSQL();
+        ranksSQL.start();
         // Launching discord bot
        JeezyBot bot = new JeezyBot();
        bot.start();

@@ -1,7 +1,7 @@
 package de.jeezycore.events.chat;
 
 import de.jeezycore.config.JeezyConfig;
-import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.RanksSQL;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,7 +10,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import java.util.List;
 
 public class IgnoreChat implements Listener {
-    JeezySQL display = new JeezySQL();
+    RanksSQL display = new RanksSQL();
     @EventHandler
     public void PlayerIgnoreChat(AsyncPlayerChatEvent e) {
         try {

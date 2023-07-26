@@ -1,7 +1,7 @@
 package de.jeezycore.commands.ranks;
 
 import de.jeezycore.db.ChatColorSQL;
-import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.RanksSQL;
 import de.jeezycore.db.TagsSQL;
 import de.jeezycore.discord.messages.grant.RealtimeGrant;
 import de.jeezycore.utils.UUIDChecker;
@@ -15,7 +15,7 @@ import java.util.UUID;
 public class UnGrantRank implements CommandExecutor {
 
     UUIDChecker uc = new UUIDChecker();
-    JeezySQL grant = new JeezySQL();
+    RanksSQL grant = new RanksSQL();
     TagsSQL tagsSQL = new TagsSQL();
     ChatColorSQL chatColorSQL = new ChatColorSQL();
     RealtimeGrant discord = new RealtimeGrant();

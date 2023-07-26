@@ -1,6 +1,6 @@
 package de.jeezycore.commands.ranks;
 
-import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.RanksSQL;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,7 +17,7 @@ public class CreateRank implements CommandExecutor {
               p.sendMessage("Usage: /create-rank (name) (rankRGB) (rankColor) (priority)");
            } else {
                if (p.hasPermission("jeezy.core.rank.create")) {
-                   JeezySQL mySQL = new JeezySQL();
+                   RanksSQL mySQL = new RanksSQL();
                    String input = "INSERT INTO ranks " +
                            "(rankName, rankRGB, rankColor, rankPriority) " +
                            "VALUES " +

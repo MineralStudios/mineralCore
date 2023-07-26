@@ -2,7 +2,7 @@ package de.jeezycore.events.chat;
 
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.ChatColorSQL;
-import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.RanksSQL;
 import de.jeezycore.db.TagsSQL;
 import de.jeezycore.discord.messages.realtime.RealtimeChat;
 import org.bukkit.configuration.MemorySection;
@@ -16,7 +16,7 @@ public class ChatEvent implements Listener {
 
     MemorySection cf = (MemorySection) JeezyConfig.config_defaults.get("chat");
     TagsSQL tagsSQL = new TagsSQL();
-    JeezySQL display = new JeezySQL();
+    RanksSQL display = new RanksSQL();
 
     RealtimeChat rmc = new RealtimeChat();
 

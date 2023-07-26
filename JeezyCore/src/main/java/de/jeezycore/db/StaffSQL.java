@@ -1,11 +1,6 @@
 package de.jeezycore.db;
 
-import de.jeezycore.colors.ColorTranslator;
-import de.jeezycore.config.JeezyConfig;
-import de.jeezycore.utils.ArrayStorage;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,7 +15,7 @@ public class StaffSQL {
     public String user;
     public String password;
 
-    JeezySQL jeezySQL = new JeezySQL();
+    RanksSQL ranksSQL = new RanksSQL();
     public static String staffPlayerNames;
     public static boolean staffRank;
 
@@ -36,18 +31,18 @@ public class StaffSQL {
         Statement statement = null;
         ResultSet resultSet = null;
         try {
-            jeezySQL.getRankData(rankName, p);
+            ranksSQL.getRankData(rankName, p);
 
             getStaffRank(rankName);
 
             connection = dataSource.getConnection();
             statement = connection.createStatement();
 
-            if (JeezySQL.permPlayerRankName == null) {
+            if (RanksSQL.permPlayerRankName == null) {
                 p.sendMessage("§4This rank hasn't been created yet.");
                 return;
             } else if (staffRank) {
-                p.sendMessage("§7The "+JeezySQL.permPlayerRankColor.replace("&","§")+JeezySQL.permPlayerRankName+" §7rank is §calready §7a staff rank.");
+                p.sendMessage("§7The "+ RanksSQL.permPlayerRankColor.replace("&","§")+ RanksSQL.permPlayerRankName+" §7rank is §calready §7a staff rank.");
                 return;
             }
 
@@ -56,7 +51,7 @@ public class StaffSQL {
 
             statement.executeUpdate(sql);
 
-            p.sendMessage("§bSuccessfully§7 changed the "+JeezySQL.permPlayerRankColor.replace("&","§")+JeezySQL.permPlayerRankName+" §7rank to a staff rank.");
+            p.sendMessage("§bSuccessfully§7 changed the "+ RanksSQL.permPlayerRankColor.replace("&","§")+ RanksSQL.permPlayerRankName+" §7rank to a staff rank.");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -74,18 +69,18 @@ public class StaffSQL {
         Statement statement = null;
         ResultSet resultSet = null;
         try {
-            jeezySQL.getRankData(rankName, p);
+            ranksSQL.getRankData(rankName, p);
 
             getStaffRank(rankName);
 
             connection = dataSource.getConnection();
             statement = connection.createStatement();
 
-            if (JeezySQL.permPlayerRankName == null) {
+            if (RanksSQL.permPlayerRankName == null) {
                 p.sendMessage("§4This rank hasn't been setuped yet.");
                 return;
             } else if (!staffRank) {
-                p.sendMessage("§7The "+JeezySQL.permPlayerRankColor.replace("&","§")+JeezySQL.permPlayerRankName+" §7rank has been §calready §7removed from the staff ranks.");
+                p.sendMessage("§7The "+ RanksSQL.permPlayerRankColor.replace("&","§")+ RanksSQL.permPlayerRankName+" §7rank has been §calready §7removed from the staff ranks.");
                 return;
             }
 
@@ -94,7 +89,7 @@ public class StaffSQL {
 
             statement.executeUpdate(sql);
 
-            p.sendMessage("§bSuccessfully§7 removed the "+JeezySQL.permPlayerRankColor.replace("&","§")+JeezySQL.permPlayerRankName+" §7rank from the staff ranks.");
+            p.sendMessage("§bSuccessfully§7 removed the "+ RanksSQL.permPlayerRankColor.replace("&","§")+ RanksSQL.permPlayerRankName+" §7rank from the staff ranks.");
         } catch (SQLException e) {
             System.out.println(e);
         } finally {

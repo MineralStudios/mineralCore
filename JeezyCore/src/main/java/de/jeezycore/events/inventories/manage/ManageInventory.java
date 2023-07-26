@@ -1,9 +1,8 @@
 package de.jeezycore.events.inventories.manage;
 
 import de.jeezycore.db.ChatColorSQL;
-import de.jeezycore.db.JeezySQL;
+import de.jeezycore.db.RanksSQL;
 import de.jeezycore.db.TagsSQL;
-import de.jeezycore.discord.messages.grant.RealtimeGrant;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.PermissionHandler;
 import org.bukkit.Bukkit;
@@ -104,7 +103,7 @@ public class ManageInventory {
 
 
     private void executeMYSQL(org.bukkit.event.inventory.InventoryClickEvent e) {
-        JeezySQL removeRank = new JeezySQL();
+        RanksSQL removeRank = new RanksSQL();
         TagsSQL tagsSQL = new TagsSQL();
         ChatColorSQL chatColorSQL = new ChatColorSQL();
         removeRank.onUnGrantingPerms(e.getWhoClicked());

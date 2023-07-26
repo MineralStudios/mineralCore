@@ -2,7 +2,6 @@ package de.jeezycore.commands.punishments.ban;
 
 import com.google.common.base.Joiner;
 import de.jeezycore.db.BanSQL;
-import de.jeezycore.db.JeezySQL;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
