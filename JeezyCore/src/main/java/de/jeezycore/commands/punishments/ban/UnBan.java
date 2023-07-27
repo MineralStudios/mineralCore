@@ -7,6 +7,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class UnBan implements CommandExecutor {
+
+    BanSQL execute = new BanSQL();
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -14,7 +17,6 @@ public class UnBan implements CommandExecutor {
             Player p = (Player) sender;
             if (p.hasPermission("jeezy.core.punishments.unban")) {
             if (cmd.getName().equalsIgnoreCase("unban") && args.length > 0) {
-                    BanSQL execute = new BanSQL();
                     execute.unban(args[0], p.getPlayer());
             } else {
                 p.sendMessage("Usage: /unban <player>.");
