@@ -14,6 +14,8 @@ import java.util.List;
 
 public class TempBan implements CommandExecutor {
 
+    BanSQL execute = new BanSQL();
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -25,17 +27,24 @@ public class TempBan implements CommandExecutor {
                     String input = Joiner.on(" ")
                             .skipNulls()
                             .join(ls).replace(args[0], "").replace(args[1], "").replaceAll("\\s+", " ").trim();
-
-                    BanSQL execute = new BanSQL();
-
                     execute.tempBan(args[0], args[1], input, p);
-                    System.out.println(input);
-                    System.out.println(ls);
             } else {
                 p.sendMessage("Usage: /tempban <player><time><reason>");
             }
             } else {
                 p.sendMessage("No permission.");
+            }
+        } else {
+            if (cmd.getName().equalsIgnoreCase("tempban") && args.length >= 3) {
+
+                List<String> ls = new ArrayList<String>(Arrays.asList(args));
+                String input = Joiner.on(" ")
+                        .skipNulls()
+                        .join(ls).replace(args[0], "").replace(args[1], "").replaceAll("\\s+", " ").trim();
+
+                execute.tempBanConsole(args[0], args[1], input, sender);
+            } else {
+                sender.sendMessage("Usage: /tempban <player> <time> <reason>");
             }
         }
         return true;

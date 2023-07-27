@@ -349,7 +349,7 @@ public class BanSQL {
             String sql = "INSERT INTO punishments " +
                     "(playerName, UUID, banned_forever, ban_start, ban_end, ban_status, ban_logs) " +
                     "VALUES " +
-                    "('"+UUIDChecker.uuidName + "', '"+UUIDChecker.uuid+"', false,'"+currentTime.format(formatter)+"', '"+updatedTime.format(formatter)+"', false, "+"'"+ArrayStorage.ban_logs+"')";
+                    "('"+UUIDChecker.uuidName + "', '"+UUIDChecker.uuid+"', false,'"+currentTime.format(formatter)+"', '"+updatedTime.format(formatter)+"', true, "+"'"+ArrayStorage.ban_logs+"')";
 
             if (punishment_UUID == null && ban_logs == null) {
                 statement.executeUpdate(sql);
@@ -395,6 +395,103 @@ public class BanSQL {
                 return;
             } else {
                 p.sendMessage("§7You §asuccessfully §7banned §b"+username+" §7for §c"+time+"§7.");
+            }
+
+            String sql = "UPDATE punishments " +
+                    "SET banned_forever = false, ban_start = '"+currentTime.format(formatter)+"', ban_end = '"+updatedTime.format(formatter)+"', ban_status = true"+
+                    " WHERE UUID = '"+UUIDChecker.uuid+"'";
+            statement.executeUpdate(sql);
+            ban_logsUpdate(username);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void tempBanConsole(String username, String time, String reason , CommandSender sender) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+
+            RealtimeBan discord = new RealtimeBan();
+            UUIDChecker uc = new UUIDChecker();
+            uc.check(username);
+            tempBanCalculate(time);
+            banData(UUID.fromString(UUIDChecker.uuid));
+
+            json_o.put("banned by", "Console");
+            json_o.put("ban_start", currentTime.format(formatter));
+            json_o.put("ban_end", updatedTime.format(formatter));
+            json_o.put("reason", reason);
+            ArrayStorage.ban_logs.add(json_o);
+
+            try {
+                Bukkit.getServer().getPlayer(UUID.fromString(UUIDChecker.uuid)).kickPlayer("§7You are §4temporarily §7banned from §9MineralPractice§7.\n\n" +
+                        "§7Duration: §c"+time+"\n\n" +
+                        "§7Reason: §c" +reason+"\n\n"+
+                        "§7If you feel this ban has been unjustified, appeal on our §9discord §7at\n §9discord.mineral.gg§7.");
+            } catch (Exception e) {
+
+            }
+
+            String sql = "INSERT INTO punishments " +
+                    "(playerName, UUID, banned_forever, ban_start, ban_end, ban_status, ban_logs) " +
+                    "VALUES " +
+                    "('"+UUIDChecker.uuidName + "', '"+UUIDChecker.uuid+"', false,'"+currentTime.format(formatter)+"', '"+updatedTime.format(formatter)+"', true, "+"'"+ArrayStorage.ban_logs+"')";
+
+            if (punishment_UUID == null && ban_logs == null) {
+                statement.executeUpdate(sql);
+                sender.sendMessage("§7You §asuccessfully §7banned §b"+username+" §7for §c"+time+"§7.");
+            } else {
+                tempBanUpdateConsole(username, time, reason, sender);
+            }
+            ArrayStorage.ban_logs.clear();
+            discord.realtimeChatOnTempBan(UUID.fromString(UUIDChecker.uuid), username, "Console", ban_end, reason);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void tempBanUpdateConsole(String username, String time, String reason , CommandSender sender) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+
+            UUIDChecker check_UUID = new UUIDChecker();
+            check_UUID.check(username);
+
+            banData(UUID.fromString(UUIDChecker.uuid));
+
+            json_o.put("banned by", "Console");
+            json_o.put("ban_start", currentTime.format(formatter));
+            json_o.put("ban_end", updatedTime.format(formatter));
+            json_o.put("reason", reason);
+            ArrayStorage.ban_logs.add(json_o);
+
+            if (ban_forever) {
+                sender.sendMessage("§b"+username+" §7has been already §4banned.");
+                return;
+            } else {
+                sender.sendMessage("§7You §asuccessfully §7banned §b"+username+" §7for §c"+time+"§7.");
             }
 
             String sql = "UPDATE punishments " +
