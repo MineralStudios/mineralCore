@@ -5,6 +5,7 @@ import de.jeezycore.commands.chatColors.ChatColors;
 import de.jeezycore.commands.chatColors.CreateChatColor;
 import de.jeezycore.commands.chatColors.GrantChatColor;
 import de.jeezycore.commands.chatColors.UnGrantChatColors;
+import de.jeezycore.commands.friends.FriendsCommands;
 import de.jeezycore.commands.ranks.UnGrantRank;
 import de.jeezycore.commands.staff.Logs;
 import de.jeezycore.db.hikari.HikariCP;
@@ -32,7 +33,6 @@ import de.jeezycore.commands.staff.StaffRankDisable;
 import de.jeezycore.commands.staff.StaffRankEnable;
 import de.jeezycore.commands.tags.*;
 import de.jeezycore.config.JeezyConfig;
-import de.jeezycore.db.RanksSQL;
 import de.jeezycore.discord.JeezyBot;
 import de.jeezycore.events.*;
 import de.jeezycore.events.chat.ChatEvent;
@@ -102,6 +102,7 @@ public class Main extends JavaPlugin {
         this.getCommand("brodcast").setExecutor(new Brodcast());
         //this.getCommand("languages").setExecutor(new Languages());
         //this.getCommand("lang").setExecutor(new Lang());
+        this.getCommand("friends").setExecutor(new FriendsCommands());
 
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);

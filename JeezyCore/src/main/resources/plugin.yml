@@ -148,14 +148,17 @@ commands:
    # description: Opens store where Players can buy stuff with minerals / coins.
   #  usage: /store
   disguise:
+    usage: /disguise <player>
     description: Disguises player to another player.
-    usage: /disguise <player> |
   brodcast:
-    usage: Brodcast a message to all online players.
-    description: /brodcast <message>
+    usage: /brodcast <message>
+    description: Brodcast a message to all online players.
   #languages:
    # usage: Shows all available languages.
     #description: /languages
   #lang:
    # usage: Opens language inventory.
     #description: /lang
+  friends:
+    usage: /friends <command>
+    description: Executes friends commands.
