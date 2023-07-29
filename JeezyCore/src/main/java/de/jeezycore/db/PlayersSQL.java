@@ -112,7 +112,7 @@ public class PlayersSQL {
            } while (resultSet.next());
             }
             if (!p.getPlayer().getDisplayName().equalsIgnoreCase(playerName)) {
-                updateIfUsernameChanged(p);
+                updatePlayersTable(p);
                 updateEloTable(p);
             }
         } catch (SQLException e) {
@@ -152,7 +152,7 @@ public class PlayersSQL {
        }
    }
 
-   public void updateIfUsernameChanged(PlayerJoinEvent p) {
+   public void updatePlayersTable(PlayerJoinEvent p) {
        Connection connection = null;
        Statement statement = null;
        ResultSet resultSet = null;
