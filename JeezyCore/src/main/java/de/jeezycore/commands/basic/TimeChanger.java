@@ -14,13 +14,12 @@ public class TimeChanger implements CommandExecutor {
 
             if (cmd.getName().equalsIgnoreCase("day")) {
                 p.getPlayer().setPlayerTime(6000, false);
-                p.sendMessage("Successfully changed time to day.");
+                p.sendMessage("§2Successfully§7 changed the time to §9day§7.");
             } else if (cmd.getName().equalsIgnoreCase("night")) {
                 p.getPlayer().setPlayerTime(16000, false);
-                p.sendMessage("Successfully changed time to night.");
+                p.sendMessage("§2Successfully§7 changed the time to §9night§7.");
             }
         }
-
         return true;
     }
 }
