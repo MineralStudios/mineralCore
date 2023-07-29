@@ -36,8 +36,8 @@ public class FriendsCommands implements CommandExecutor {
                 "                                                                       ",
                 " §9§lFriends §f§lHelp",
                 "                                                                       ",
-                " §f/§9friends §fadd       - §7Adds a friend to your friend list.",
-                " §f/§9friends §fremove  - §7Removes a friend from your friend list.",
+                " §f/§9friends §fadd §7<player> §f- §7Adds a friend to your friends list.",
+                " §f/§9friends §fremove §7<player> §f- §7Removes a friend from your friends list.",
                 "                                                                       "
         });
     }
