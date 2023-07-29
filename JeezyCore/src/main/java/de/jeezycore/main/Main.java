@@ -7,6 +7,7 @@ import de.jeezycore.commands.chatColors.GrantChatColor;
 import de.jeezycore.commands.chatColors.UnGrantChatColors;
 import de.jeezycore.commands.ranks.UnGrantRank;
 import de.jeezycore.commands.staff.Logs;
+import de.jeezycore.db.hikari.HikariCP;
 import de.jeezycore.disguise.manger.DisguiseManager;
 import de.jeezycore.colors.Color;
 import de.jeezycore.commands.basic.*;
@@ -114,8 +115,8 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerCommandPreprocessEvent(), this);
 
         // Setups Databases + Tables
-        RanksSQL ranksSQL = new RanksSQL();
-        ranksSQL.start();
+        HikariCP hikariCP = new HikariCP();
+        hikariCP.start();
         // Launching discord bot
        JeezyBot bot = new JeezyBot();
        bot.start();
