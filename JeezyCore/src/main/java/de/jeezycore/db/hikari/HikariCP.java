@@ -28,7 +28,6 @@ public class HikariCP {
         config.setPassword((String) db.get("password"));
         config.setMaximumPoolSize(25);
         config.setConnectionTimeout(300000);
-        config.setConnectionTimeout(120000);
         config.setLeakDetectionThreshold(300000);
 
         dataSource = new HikariDataSource(config);
