@@ -1,11 +1,14 @@
 package de.jeezycore.commands.friends;
 
+import de.jeezycore.db.FriendsSQL;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class FriendsCommands implements CommandExecutor {
+
+    FriendsSQL friendsSQL = new FriendsSQL();
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -14,8 +17,23 @@ public class FriendsCommands implements CommandExecutor {
 
             try {
                 switch (args[0]) {
+                    case "accept":
+                        if (args.length == 2) {
+                            friendsSQL.acceptFriends(p, args[1]);
+                        } else {
+                            helpMessage(p);
+                        }
+                        break;
                     case "add":
-                        p.sendMessage("Execute add");
+                        if (args.length == 2) {
+                            if (p.getDisplayName().equalsIgnoreCase(args[0])) {
+                                p.sendMessage("§7You can't §cadd §7yourself as a §9friend§7!");
+                                return true;
+                            }
+                            friendsSQL.addFriends(p, args[1]);
+                        } else {
+                            helpMessage(p);
+                        }
                         break;
                     case "remove":
                         p.sendMessage("Execute remove");
@@ -25,6 +43,7 @@ public class FriendsCommands implements CommandExecutor {
                         break;
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 helpMessage(p);
             }
         }
