@@ -26,7 +26,7 @@ public class FriendsCommands implements CommandExecutor {
                         break;
                     case "add":
                         if (args.length == 2) {
-                            if (p.getDisplayName().equalsIgnoreCase(args[0])) {
+                            if (p.getDisplayName().equalsIgnoreCase(args[1])) {
                                 p.sendMessage("§7You can't §cadd §7yourself as a §9friend§7!");
                                 return true;
                             }
@@ -43,7 +43,6 @@ public class FriendsCommands implements CommandExecutor {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
                 helpMessage(p);
             }
         }
