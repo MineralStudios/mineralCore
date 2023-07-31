@@ -208,9 +208,14 @@ public class FriendsSQL {
     public void acceptFriends(Player sender, String playerName) {
         try {
             Player ps = Bukkit.getPlayer(playerName);
-            pushMYSQL(ps, sender);
-            ps.sendMessage(" §9§l"+sender.getDisplayName()+" §7successfully §2accepted §7your friend request!");
-            sender.sendMessage(" §7You §2accepted §9§l"+playerName+"`s §7friend request!");
+            if (ps != null) {
+                pushMYSQL(ps, sender);
+                ps.sendMessage(" §9§l"+sender.getDisplayName()+" §7successfully §2accepted §7your friend request!");
+                sender.sendMessage(" §7You §2accepted §9§l"+playerName+"`s §7friend request!");
+            } else {
+                sender.sendMessage("§7You can't §caccept §7this friend request anymore!");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
