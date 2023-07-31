@@ -1,5 +1,6 @@
 package de.jeezycore.events;
 
+import de.jeezycore.db.FriendsSQL;
 import de.jeezycore.db.RanksSQL;
 import de.jeezycore.db.PlayersSQL;
 import de.jeezycore.disguise.manger.DisguiseManager;
@@ -15,11 +16,14 @@ public class QuitEvent implements Listener {
   PlayersSQL playersSQL = new PlayersSQL();
   RanksSQL ranksSQL = new RanksSQL();
 
+  FriendsSQL friendsSQL = new FriendsSQL();
+
   @EventHandler
   private void onQuit(PlayerQuitEvent event) {
     if (FakePlayerChecker.isFakePlayer(event.getPlayer()))
       return;
 
+    friendsSQL.sendFriendOfflineMessage(event);
     playersSQL.lastSeen(event);
     disguiseManager.deleteDisguise(event.getPlayer());
     ranksSQL.rankMonthlyDurationCalculator(event.getPlayer());

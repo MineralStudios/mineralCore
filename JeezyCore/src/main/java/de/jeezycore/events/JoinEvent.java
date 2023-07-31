@@ -1,12 +1,10 @@
 package de.jeezycore.events;
 
 import de.jeezycore.config.JeezyConfig;
-import de.jeezycore.db.BanSQL;
-import de.jeezycore.db.RanksSQL;
-import de.jeezycore.db.PlayersSQL;
-import de.jeezycore.db.TabListSQL;
+import de.jeezycore.db.*;
 import de.jeezycore.utils.FakePlayerChecker;
 import de.jeezycore.utils.NameTag;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
@@ -24,6 +22,8 @@ public class JoinEvent implements Listener {
 
     TabListSQL tabList = new TabListSQL();
     PlayersSQL playersSQL = new PlayersSQL();
+
+    FriendsSQL friendsSQL = new FriendsSQL();
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
@@ -74,6 +74,8 @@ public class JoinEvent implements Listener {
         playersSQL.checkIfUsernameChanged(e);
         givePermsOnJoin.rankMonthlyDurationCalculator(e.getPlayer());
         nameTag.giveTagOnJoin(e.getPlayer());
+        friendsSQL.sendFriendOnlineMessage(e);
+
 
         try {
             givePermsOnJoin.getPlayerInformation(e.getPlayer());

@@ -6,6 +6,8 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -16,18 +18,115 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
+import static de.jeezycore.utils.ArrayStorage.friendsOnJoinMessageArray;
 
 public class FriendsSQL {
 
-    String playerName;
     UUID playerUUID;
 
     String friendsListArrayString;
 
-    String [] friendsListArray;
+    public String [] friendsListArray;
 
-    ArrayList<String> friendsList = new ArrayList<>();
+    public ArrayList<String> friendsList = new ArrayList<>();
 
+    RanksSQL ranksSQL = new RanksSQL();
+
+    public void sendFriendOnlineMessage(PlayerJoinEvent p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql_select = "SELECT * FROM friends WHERE friendsList LIKE '%"+p.getPlayer().getUniqueId()+"%'";
+            resultSet = statement.executeQuery(sql_select);
+
+            if (!resultSet.next()) {
+                playerUUID = null;
+            } else {
+                do {
+                    playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
+                    friendsOnJoinMessageArray.add(playerUUID);
+                } while (resultSet.next());
+
+                if (playerUUID == null) return;
+
+                ranksSQL.getPlayerInformation(p.getPlayer());
+                String sql = "SELECT * FROM ranks WHERE rankName = '"+ranksSQL.rankNameInformation+"'";
+                ranksSQL.displayChatRank(sql);
+
+                for (int i = 0; i < friendsOnJoinMessageArray.size(); i++) {
+                    try {
+                        if (!Bukkit.getPlayer(friendsOnJoinMessageArray.get(i)).isOnline()) {
+                            continue;
+                        }
+                        Bukkit.getPlayer(friendsOnJoinMessageArray.get(i)).sendMessage(" §7§l[§9FRIENDS§7§l] "+ranksSQL.rankColor.replace("&", "§") + " "+p.getPlayer().getDisplayName()+" §7just came §2online§7!");
+                    } catch (Exception f) {
+                    }
+                }
+                friendsOnJoinMessageArray.clear();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+                friendsList.clear();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void sendFriendOfflineMessage(PlayerQuitEvent p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql_select = "SELECT * FROM friends WHERE friendsList LIKE '%"+p.getPlayer().getUniqueId()+"%'";
+            resultSet = statement.executeQuery(sql_select);
+
+            if (!resultSet.next()) {
+                playerUUID = null;
+            } else {
+                do {
+                    playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
+                    friendsOnJoinMessageArray.add(playerUUID);
+                } while (resultSet.next());
+
+                if (playerUUID == null) return;
+
+                ranksSQL.getPlayerInformation(p.getPlayer());
+                String sql = "SELECT * FROM ranks WHERE rankName = '"+ranksSQL.rankNameInformation+"'";
+                ranksSQL.displayChatRank(sql);
+
+                for (int i = 0; i < friendsOnJoinMessageArray.size(); i++) {
+                    try {
+                        if (!Bukkit.getPlayer(friendsOnJoinMessageArray.get(i)).isOnline()) {
+                            continue;
+                        }
+                        Bukkit.getPlayer(friendsOnJoinMessageArray.get(i)).sendMessage(" §7§l[§9FRIENDS§7§l] "+ranksSQL.rankColor.replace("&", "§") + " "+p.getPlayer().getDisplayName()+" §7just went §coffline§7!");
+                    } catch (Exception f) {
+                    }
+                }
+                friendsOnJoinMessageArray.clear();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+                friendsList.clear();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private void pushMYSQL(Player p, Player playerName) {
         Connection connection = null;
@@ -42,6 +141,7 @@ public class FriendsSQL {
                 if (!resultSet.next()) {
                     playerUUID = null;
                     friendsListArrayString = null;
+                    friendsListArray = null;
                 } else {
                     do {
                         playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
@@ -73,54 +173,24 @@ public class FriendsSQL {
         }
     }
 
-
-    public void acceptFriends(Player sender, String playerName) {
-        try {
-            Player ps = Bukkit.getPlayer(playerName);
-            pushMYSQL(ps, sender);
-            sender.sendMessage("§9§l"+playerName+" §2successfully §7accepted accepted your friend request!");
-            ps.sendMessage("§7You added §9"+sender.getDisplayName()+" §7to your friend list!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void addFriends(Player p, String playerName) {
+    public void checkIfAlreadyFriends(Player p) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
-
         try {
-            Player ps = Bukkit.getPlayer(playerName);
-            if (ps != null) {
-                connection = dataSource.getConnection();
-                statement = connection.createStatement();
-                String sql_select = "SELECT * FROM players WHERE playerUUID = '"+ps.getUniqueId()+"'";
-                resultSet = statement.executeQuery(sql_select);
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql_select = "SELECT * FROM friends WHERE playerUUID = '"+p.getUniqueId()+"'";
+            resultSet = statement.executeQuery(sql_select);
 
-                if (!resultSet.next()) {
-                    playerUUID = null;
-                } else {
-                    do {
-                        playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
-                    } while (resultSet.next());
-                }
-                if (playerUUID == null) {
-                    p.sendMessage("§7The player §c"+playerName+" §7has never been §cseen on the §9Mineral §fNetwork§7.");
-                } else {
-                    p.sendMessage("§7You §2successfully §7sent a friend request to §9"+playerName+"§7.");
-
-                    TextComponent message = new TextComponent("§7(§2CLICK TO ACCEPT§7)");
-                    message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friends accept "+playerName));
-                    message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to accept the friend request.").create()));
-
-                    System.out.println(message);
-
-                    ps.sendMessage(" §9§l"+p.getDisplayName()+" §7has sent you a §2friend §7request!");
-                    ps.sendMessage(message);
-                }
+            if (!resultSet.next()) {
+                friendsListArray = null;
             } else {
-                p.sendMessage("§7The player §c"+playerName+" §7isn't online.");
+                do {
+                    friendsListArrayString = resultSet.getString("friendsList");
+                    friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
+                    friendsList.addAll(Arrays.asList(friendsListArray));
+                } while (resultSet.next());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -131,6 +201,48 @@ public class FriendsSQL {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+
+    public void acceptFriends(Player sender, String playerName) {
+        try {
+            Player ps = Bukkit.getPlayer(playerName);
+            pushMYSQL(ps, sender);
+            ps.sendMessage(" §9§l"+sender.getDisplayName()+" §7successfully §2accepted §7your friend request!");
+            sender.sendMessage(" §7You §2accepted §9§l"+playerName+"`s §7friend request!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addFriends(Player p, String playerName) {
+        try {
+            Player ps = Bukkit.getPlayer(playerName);
+            if (ps != null) {
+                checkIfAlreadyFriends(p);
+                if (friendsList.contains(ps.getUniqueId().toString())) {
+                    p.sendMessage("§7You §calready §7have §9"+ps.getDisplayName()+" §7as a friend.");
+                    return;
+                }
+                p.sendMessage("§7You §2successfully §7sent a friend request to §9"+playerName+"§7.");
+
+                    TextComponent message = new TextComponent("             §7(§2CLICK TO ACCEPT§7)                 ");
+                    message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friends accept "+p.getDisplayName()));
+                    message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to accept the friend request.").create()));
+
+                    ps.sendMessage("                                                                    ");
+                    ps.sendMessage(" §9§l"+p.getDisplayName()+" §7has sent you a §2friend §7request!");
+                    ps.sendMessage("                                                                    ");
+                    ps.sendMessage(message);
+                    ps.sendMessage("                                                                    ");
+
+                } else {
+                p.sendMessage(" §7The player §c"+playerName+" §7isn't online.");
+            }
+            friendsList.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
