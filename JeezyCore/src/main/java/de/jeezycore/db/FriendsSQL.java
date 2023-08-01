@@ -252,8 +252,13 @@ public class FriendsSQL {
 
     public void acceptFriends(Player sender, String playerName) {
         try {
-            Player ps = Bukkit.getPlayer(playerName);
+            Player ps = Bukkit.getPlayerExact(playerName);
             if (ps != null) {
+                checkIfAlreadyFriends(ps);
+                if (friendsList.contains(sender.getUniqueId().toString())) {
+                    sender.sendMessage("§7You §calready §7accepted §9"+playerName+"`s §7friend request!");
+                    return;
+                }
                 pushMYSQL(ps, sender);
                 ps.sendMessage(" §9§l"+sender.getDisplayName()+" §7successfully §2accepted §7your friend request!");
                 sender.sendMessage(" §7You §2accepted §9§l"+playerName+"`s §7friend request!");
@@ -268,7 +273,7 @@ public class FriendsSQL {
 
     public void addFriends(Player p, String playerName) {
         try {
-            Player ps = Bukkit.getPlayer(playerName);
+            Player ps = Bukkit.getPlayerExact(playerName);
             if (ps != null) {
                 checkIfAlreadyFriends(p);
                 if (friendsList.contains(ps.getUniqueId().toString())) {
