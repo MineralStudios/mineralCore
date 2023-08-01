@@ -182,14 +182,14 @@ public class FriendsSQL {
         }
     }
 
-    private void pushMYSQL(Player p, Player playerName) {
+    private void pushMYSQL(Player sender, Player target) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
         try {
                 connection = dataSource.getConnection();
                 statement = connection.createStatement();
-                String sql_select = "SELECT * FROM friends WHERE playerUUID = '"+p.getUniqueId()+"'";
+                String sql_select = "SELECT * FROM friends WHERE playerUUID = '"+sender.getUniqueId()+"'";
                 resultSet = statement.executeQuery(sql_select);
 
                 if (!resultSet.next()) {
@@ -204,15 +204,15 @@ public class FriendsSQL {
                         friendsList.addAll(Arrays.asList(friendsListArray));
                     } while (resultSet.next());
                 }
-                friendsList.add(playerName.getUniqueId().toString());
+                friendsList.add(target.getUniqueId().toString());
                 if (playerUUID == null) {
                     statement.executeUpdate("INSERT INTO friends" +
                             "(playerName, playerUUID, friendsList) " +
-                            "VALUES ('"+p.getDisplayName()+"', '"+p.getUniqueId()+"', '"+friendsList+"')");
+                            "VALUES ('"+sender.getDisplayName()+"', '"+sender.getUniqueId()+"', '"+friendsList+"')");
                 } else {
                     statement.executeUpdate("UPDATE friends " +
                             "SET friendsList = '"+friendsList+
-                            "' WHERE playerUUID = '"+p.getUniqueId()+"'");
+                            "' WHERE playerUUID = '"+sender.getUniqueId()+"'");
                 }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -227,14 +227,14 @@ public class FriendsSQL {
         }
     }
 
-    public void checkIfAlreadyFriends(Player p) {
+    public void checkIfAlreadyFriends(Player sender) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
             statement = connection.createStatement();
-            String sql_select = "SELECT * FROM friends WHERE playerUUID = '"+p.getUniqueId()+"'";
+            String sql_select = "SELECT * FROM friends WHERE playerUUID = '"+sender.getUniqueId()+"'";
             resultSet = statement.executeQuery(sql_select);
 
             if (!resultSet.next()) {
@@ -258,17 +258,18 @@ public class FriendsSQL {
         }
     }
 
-    public void checkFriendsLimit(Player p) {
+    public void checkFriendsLimit(Player sender) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
             statement = connection.createStatement();
-            String sql_select = "SELECT * FROM friends WHERE playerUUID = '" + p.getUniqueId() + "'";
+            String sql_select = "SELECT * FROM friends WHERE playerUUID = '" + sender.getUniqueId() + "'";
             resultSet = statement.executeQuery(sql_select);
 
             if (!resultSet.next()) {
+                friendsListArrayString = null;
                 friendsListArray = null;
             } else {
                 do {
@@ -297,80 +298,80 @@ public class FriendsSQL {
     }
 
 
-    public void acceptFriends(Player sender, String playerName) {
+    public void acceptFriends(Player receiver, String target) {
         try {
-            Player ps = Bukkit.getPlayerExact(playerName);
-            if (ps != null) {
-                checkIfAlreadyFriends(ps);
-                if (friendsList.contains(sender.getUniqueId().toString())) {
-                    sender.sendMessage("§7You §calready §7accepted §9"+playerName+"`s §7friend request!");
+            Player sender = Bukkit.getPlayerExact(target);
+            if (sender != null) {
+                checkIfAlreadyFriends(sender);
+                if (friendsList.contains(receiver.getUniqueId().toString())) {
+                    receiver.sendMessage("§7You §calready §7accepted §9"+target+"`s §7friend request!");
                     return;
                 }
                 try {
-                    if (!friendRequestsList.get(ps.getPlayer().getUniqueId()).contains(sender.getUniqueId())) {}
+                    if (!friendRequestsList.get(sender.getPlayer().getUniqueId()).contains(receiver.getUniqueId())) {}
                 } catch (Exception e) {
-                    sender.sendMessage("§7You haven't §cgotten §7a friend request from §9"+playerName+" §7yet!");
+                    receiver.sendMessage("§7You haven't §cgotten §7a friend request from §9"+target+" §7yet!");
                     return;
                 }
 
                 friendsList.clear();
-                pushMYSQL(ps, sender);
+                pushMYSQL(sender, receiver);
 
-                ps.sendMessage("§9§l"+sender.getDisplayName()+" §7successfully §2accepted §7your friend request!");
-                sender.sendMessage("§7You §2accepted §9§l"+playerName+"`s §7friend request!");
+                sender.sendMessage("§9§l"+receiver.getDisplayName()+" §7successfully §2accepted §7your friend request!");
+                receiver.sendMessage("§7You §2accepted §9§l"+target+"`s §7friend request!");
 
             } else {
-                sender.sendMessage("§7The player you are trying to §caccept §7the friend request from isn't §2online §7anymore!");
+                receiver.sendMessage("§7The player you are trying to §caccept §7the friend request from isn't §2online §7anymore!");
                 return;
             }
-            friendRequestsList.get(ps.getPlayer().getUniqueId()).remove(sender.getUniqueId());
+            friendRequestsList.get(sender.getPlayer().getUniqueId()).remove(receiver.getUniqueId());
             friendRequestsArrayList.clear();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void addFriends(Player p, String playerName) {
+    public void addFriends(Player sender, String playerName) {
         try {
-            Player ps = Bukkit.getPlayerExact(playerName);
-            if (ps != null) {
-                checkFriendsLimit(p);
+            Player receiver = Bukkit.getPlayerExact(playerName);
+            if (receiver != null) {
+                checkFriendsLimit(sender);
                 if (friendsLimitStatus) {
-                    p.sendMessage("§7You have §calready §7reached the friends limit of §9"+friendsLimit+" §7friends.");
+                    sender.sendMessage("§7You have §calready §7reached the friends limit of §9"+friendsLimit+" §7friends.");
                     friendsList.clear();
                     return;
                 }
 
-                    if (friendRequestsList.containsKey(p.getPlayer().getUniqueId())) {
-                        if (friendRequestsList.get(p.getPlayer().getUniqueId()).contains(ps.getUniqueId())) {
-                            p.sendMessage("§7You have §calready §7sent a friend request to §9"+playerName+"§7.");
+                    if (friendRequestsList.containsKey(sender.getPlayer().getUniqueId())) {
+                        if (friendRequestsList.get(sender.getPlayer().getUniqueId()).contains(receiver.getUniqueId())) {
+                            sender.sendMessage("§7You have §calready §7sent a friend request to §9"+playerName+"§7.");
                             return;
                         }
                     }
 
-                checkIfAlreadyFriends(p);
-                if (friendsList.contains(ps.getUniqueId().toString())) {
-                    p.sendMessage("§7You §calready §7have §9"+ps.getDisplayName()+" §7as a friend.");
+                checkIfAlreadyFriends(sender);
+                if (friendsList.contains(receiver.getUniqueId().toString())) {
+                    sender.sendMessage("§7You §calready §7have §9"+receiver.getDisplayName()+" §7as a friend.");
                     return;
                 }
 
-                friendRequestsArrayList.add(ps.getUniqueId());
-                friendRequestsList.put(p.getPlayer().getUniqueId(), friendRequestsArrayList);
+                friendRequestsArrayList.add(receiver.getUniqueId());
+                friendRequestsList.put(sender.getPlayer().getUniqueId(), friendRequestsArrayList);
 
-                p.sendMessage("§7You §2successfully §7sent a friend request to §9"+playerName+"§7.");
+                sender.sendMessage("§7You §2successfully §7sent a friend request to §9"+playerName+"§7.");
 
                     TextComponent message = new TextComponent("             §7(§2CLICK TO ACCEPT§7)                 ");
-                    message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friends accept "+p.getDisplayName()));
+                    message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friends accept "+sender.getDisplayName()));
                     message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to accept the friend request.").create()));
 
-                    ps.sendMessage("                                                                    ");
-                    ps.sendMessage(" §9§l"+p.getDisplayName()+" §7has sent you a §2friend §7request!");
-                    ps.sendMessage("                                                                    ");
-                    ps.sendMessage(message);
-                    ps.sendMessage("                                                                    ");
+                    receiver.sendMessage("                                                                    ");
+                    receiver.sendMessage(" §9§l"+sender.getDisplayName()+" §7has sent you a §2friend §7request!");
+                    receiver.sendMessage("                                                                    ");
+                    receiver.sendMessage(message);
+                    receiver.sendMessage("                                                                    ");
 
                 } else {
-                p.sendMessage("§7The player §c"+playerName+" §7isn't online.");
+                sender.sendMessage("§7The player §c"+playerName+" §7isn't online.");
             }
             friendsList.clear();
         } catch (Exception e) {
