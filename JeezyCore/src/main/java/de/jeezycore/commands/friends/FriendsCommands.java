@@ -50,6 +50,17 @@ public class FriendsCommands implements CommandExecutor {
                             helpMessage(p);
                         }
                         break;
+                    case "list":
+                        if (args.length == 2) {
+                            if (isNumeric(args[1]) && !args[1].equalsIgnoreCase("0")) {
+                                friendsSQL.listFriends(p, Integer.parseInt(args[1]));
+                            } else {
+                                p.sendMessage("§7You need to enter a §cvalid §7number, starting from the number §91§7!");
+                            }
+                        } else {
+                            helpMessage(p);
+                        }
+                        break;
                     default:
                         helpMessage(p);
                         break;
@@ -61,6 +72,15 @@ public class FriendsCommands implements CommandExecutor {
         return true;
     }
 
+    public static boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch(NumberFormatException e){
+            return false;
+        }
+    }
+
     private void helpMessage(Player p) {
         p.getPlayer().sendMessage(new String[]{
                 "                                                                       ",
@@ -68,6 +88,7 @@ public class FriendsCommands implements CommandExecutor {
                 "                                                                       ",
                 " §f/§9friends §fadd §7<player> §f- §7Adds a friend to your friends list.",
                 " §f/§9friends §fremove §7<player> §f- §7Removes a friend from your friends list.",
+                " §f/§9friends §flist §7<page> §f- §7Lists all friends you have.",
                 "                                                                       "
         });
     }

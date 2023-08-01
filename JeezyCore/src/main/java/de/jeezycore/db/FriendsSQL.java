@@ -28,14 +28,17 @@ public class FriendsSQL {
     String friendsListArrayString;
 
     String playerUUIDString;
+    String playerNameStringForLists;
 
-    int friendsLimit = 2;
+    int friendsLimit = 50;
 
     boolean friendsLimitStatus;
 
     public String [] friendsListArray;
 
     public ArrayList<String> friendsList = new ArrayList<>();
+
+    public ArrayList<String> showFriendsList = new ArrayList<>();
 
 
     public ArrayList<UUID> friendRequestsArrayList = new ArrayList<>();
@@ -326,6 +329,60 @@ public class FriendsSQL {
         }
     }
 
+    public void displayPlayersListData(Player sender, int page) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+
+            for (int i = 0; i < friendsList.size(); i++) {
+                String sql_select = "SELECT playerName FROM players WHERE playerUUID = '" + friendsList.get(i) + "'";
+                resultSet = statement.executeQuery(sql_select);
+
+                if (!resultSet.next()) {
+                    playerNameStringForLists = null;
+                    showFriendsList.clear();
+                } else {
+                    do {
+                        playerNameStringForLists = resultSet.getString(1);
+                        showFriendsList.add(playerNameStringForLists);
+                    } while (resultSet.next());
+                }
+            }
+            System.out.println("HERE");
+            System.out.println(friendsList);
+            System.out.println(showFriendsList);
+            int pageEnd = (int) Math.ceil((double)showFriendsList.size() / 10);
+
+            if (page > pageEnd) {
+                page = pageEnd;
+            }
+
+            sender.sendMessage("                                               ");
+            sender.sendMessage(" §9§lFriends §f§lList §7(§f"+page+" / §9§l"+pageEnd+"§7)            ");
+            sender.sendMessage("                                               ");
+            for (int i = 0; i < showFriendsList.size(); i++) {
+                sender.sendMessage("   §9"+showFriendsList.get(i)+"            ");
+                sender.sendMessage("                                               ");
+            }
+
+            } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+                showFriendsList.clear();
+                friendsList.clear();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void checkFriendsLimit(Player sender) {
         Connection connection = null;
         Statement statement = null;
@@ -470,4 +527,18 @@ public class FriendsSQL {
         }
     }
 
+    public void listFriends(Player sender, int page) {
+        try {
+            friendsData(sender);
+
+            if (friendsList.isEmpty()) {
+                sender.sendMessage("§7You don't have any §9friends §7added yet.");
+                return;
+            }
+
+            displayPlayersListData(sender, page);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
