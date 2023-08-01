@@ -261,21 +261,21 @@ public class FriendsSQL {
             if (ps != null) {
                 checkIfAlreadyFriends(ps);
                 if (friendsList.contains(sender.getUniqueId().toString())) {
-                    sender.sendMessage(" §7You §calready §7accepted §9"+playerName+"`s §7friend request!");
+                    sender.sendMessage("§7You §calready §7accepted §9"+playerName+"`s §7friend request!");
                     return;
                 }
                 try {
                     if (!friendRequestsList.get(ps.getPlayer().getUniqueId()).contains(sender.getUniqueId())) {}
                 } catch (Exception e) {
-                    sender.sendMessage(" §7You haven't §cgotten §7a friend request from §9"+playerName+" §7yet!");
+                    sender.sendMessage("§7You haven't §cgotten §7a friend request from §9"+playerName+" §7yet!");
                     return;
                 }
 
                 friendsList.clear();
                 pushMYSQL(ps, sender);
 
-                ps.sendMessage(" §9§l"+sender.getDisplayName()+" §7successfully §2accepted §7your friend request!");
-                sender.sendMessage(" §7You §2accepted §9§l"+playerName+"`s §7friend request!");
+                ps.sendMessage("§9§l"+sender.getDisplayName()+" §7successfully §2accepted §7your friend request!");
+                sender.sendMessage("§7You §2accepted §9§l"+playerName+"`s §7friend request!");
 
             } else {
                 sender.sendMessage("§7You can't §caccept §7this friend request anymore!");
@@ -291,13 +291,23 @@ public class FriendsSQL {
         try {
             Player ps = Bukkit.getPlayerExact(playerName);
             if (ps != null) {
+
+                    if (friendRequestsList.containsKey(p.getPlayer().getUniqueId())) {
+                        if (friendRequestsList.get(p.getPlayer().getUniqueId()).contains(ps.getUniqueId())) {
+                            p.sendMessage("§7You have §calready §7sent a friend request to §9"+playerName+"§7.");
+                            return;
+                        }
+                    }
+
                 checkIfAlreadyFriends(p);
                 if (friendsList.contains(ps.getUniqueId().toString())) {
                     p.sendMessage("§7You §calready §7have §9"+ps.getDisplayName()+" §7as a friend.");
                     return;
                 }
+
                 friendRequestsArrayList.add(ps.getUniqueId());
-                friendRequestsList.put(p.getUniqueId(), friendRequestsArrayList);
+                friendRequestsList.put(p.getPlayer().getUniqueId(), friendRequestsArrayList);
+
                 p.sendMessage("§7You §2successfully §7sent a friend request to §9"+playerName+"§7.");
 
                     TextComponent message = new TextComponent("             §7(§2CLICK TO ACCEPT§7)                 ");
