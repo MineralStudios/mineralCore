@@ -27,6 +27,8 @@ public class FriendsSQL {
 
     String friendsListArrayString;
 
+    String playerUUIDString;
+
     int friendsLimit = 2;
 
     boolean friendsLimitStatus;
@@ -79,6 +81,7 @@ public class FriendsSQL {
             e.printStackTrace();
         } finally {
             try {
+                resultSet.close();
                 statement.close();
                 connection.close();
                 friendsList.clear();
@@ -127,6 +130,7 @@ public class FriendsSQL {
             e.printStackTrace();
         } finally {
             try {
+                resultSet.close();
                 statement.close();
                 connection.close();
             } catch (SQLException e) {
@@ -174,6 +178,7 @@ public class FriendsSQL {
             e.printStackTrace();
         } finally {
             try {
+                resultSet.close();
                 statement.close();
                 connection.close();
             } catch (SQLException e) {
@@ -182,7 +187,7 @@ public class FriendsSQL {
         }
     }
 
-    private void pushMYSQL(Player sender, Player target) {
+    private void addFriendsMYSQL(Player sender, Player target) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -218,6 +223,7 @@ public class FriendsSQL {
             e.printStackTrace();
         } finally {
             try {
+                resultSet.close();
                 statement.close();
                 connection.close();
                 friendsList.clear();
@@ -227,7 +233,36 @@ public class FriendsSQL {
         }
     }
 
-    public void checkIfAlreadyFriends(Player sender) {
+    private void removeFriendsMYSQL(Player sender) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+
+            if (friendsList.isEmpty()) {
+                statement.executeUpdate("DELETE FROM friends" +
+                        " WHERE playerUUID = '"+sender.getUniqueId()+"'");
+            } else {
+                statement.executeUpdate("UPDATE friends " +
+                        "SET friendsList = '"+friendsList+
+                        "' WHERE playerUUID = '"+sender.getUniqueId()+"'");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+                friendsList.clear();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void friendsData(Player sender) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -239,6 +274,8 @@ public class FriendsSQL {
 
             if (!resultSet.next()) {
                 friendsListArray = null;
+                friendsListArrayString = null;
+                friendsList.clear();
             } else {
                 do {
                     friendsListArrayString = resultSet.getString("friendsList");
@@ -250,6 +287,37 @@ public class FriendsSQL {
             e.printStackTrace();
         } finally {
             try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void playersData(String playerName) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql_select = "SELECT playerUUID FROM players WHERE playerName = '"+playerName+"'";
+            resultSet = statement.executeQuery(sql_select);
+
+            if (!resultSet.next()) {
+                playerUUIDString = null;
+            } else {
+                do {
+                    playerUUIDString = resultSet.getString(1);
+                } while (resultSet.next());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
                 statement.close();
                 connection.close();
             } catch (SQLException e) {
@@ -271,6 +339,7 @@ public class FriendsSQL {
             if (!resultSet.next()) {
                 friendsListArrayString = null;
                 friendsListArray = null;
+                friendsList.clear();
             } else {
                 do {
                     friendsListArrayString = resultSet.getString("friendsList");
@@ -278,7 +347,7 @@ public class FriendsSQL {
                     friendsList.addAll(Arrays.asList(friendsListArray));
                 } while (resultSet.next());
             }
-
+            System.out.println(friendsList);
             if (friendsList.size() == friendsLimit) {
                 friendsLimitStatus = true;
             } else {
@@ -289,6 +358,7 @@ public class FriendsSQL {
             e.printStackTrace();
         } finally {
             try {
+                resultSet.close();
                 statement.close();
                 connection.close();
             } catch (SQLException e) {
@@ -302,7 +372,7 @@ public class FriendsSQL {
         try {
             Player sender = Bukkit.getPlayerExact(target);
             if (sender != null) {
-                checkIfAlreadyFriends(sender);
+                friendsData(sender);
                 if (friendsList.contains(receiver.getUniqueId().toString())) {
                     receiver.sendMessage("§7You §calready §7accepted §9"+target+"`s §7friend request!");
                     return;
@@ -315,7 +385,7 @@ public class FriendsSQL {
                 }
 
                 friendsList.clear();
-                pushMYSQL(sender, receiver);
+                addFriendsMYSQL(sender, receiver);
 
                 sender.sendMessage("§9§l"+receiver.getDisplayName()+" §7successfully §2accepted §7your friend request!");
                 receiver.sendMessage("§7You §2accepted §9§l"+target+"`s §7friend request!");
@@ -338,7 +408,6 @@ public class FriendsSQL {
                 checkFriendsLimit(sender);
                 if (friendsLimitStatus) {
                     sender.sendMessage("§7You have §calready §7reached the friends limit of §9"+friendsLimit+" §7friends.");
-                    friendsList.clear();
                     return;
                 }
 
@@ -349,7 +418,7 @@ public class FriendsSQL {
                         }
                     }
 
-                checkIfAlreadyFriends(sender);
+                friendsData(sender);
                 if (friendsList.contains(receiver.getUniqueId().toString())) {
                     sender.sendMessage("§7You §calready §7have §9"+receiver.getDisplayName()+" §7as a friend.");
                     return;
@@ -373,9 +442,32 @@ public class FriendsSQL {
                 } else {
                 sender.sendMessage("§7The player §c"+playerName+" §7isn't online.");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            friendsList.clear();
+        }
+    }
+
+    public void removeFriends(Player sender, String playerName) {
+        try {
+            friendsData(sender);
+            playersData(playerName);
+
+            System.out.println(playerUUIDString);
+            System.out.println(friendsList);
+
+            if (!friendsList.contains(playerUUIDString)) {
+                sender.sendMessage("§7You don't have §9"+playerName+" §7as a friend of yours.");
+            } else {
+                friendsList.remove(playerUUIDString);
+                removeFriendsMYSQL(sender);
+                sender.sendMessage("§7You §2successfully §7removed §9"+playerName+" §7from your friends list.");
+            }
             friendsList.clear();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 }

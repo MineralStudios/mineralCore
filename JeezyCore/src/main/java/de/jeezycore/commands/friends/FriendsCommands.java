@@ -40,7 +40,15 @@ public class FriendsCommands implements CommandExecutor {
                         }
                         break;
                     case "remove":
-                        p.sendMessage("Execute remove");
+                        if (args.length == 2) {
+                            if (p.getDisplayName().equalsIgnoreCase(args[1])) {
+                                p.sendMessage("§7You can't §cremove §7yourself as a §9friend§7!");
+                                return true;
+                            }
+                            friendsSQL.removeFriends(p, args[1]);
+                        } else {
+                            helpMessage(p);
+                        }
                         break;
                     default:
                         helpMessage(p);
