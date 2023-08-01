@@ -19,6 +19,10 @@ public class FriendsCommands implements CommandExecutor {
                 switch (args[0]) {
                     case "accept":
                         if (args.length == 2) {
+                            if (p.getDisplayName().equalsIgnoreCase(args[1])) {
+                                p.sendMessage("§7You can't §caccept §7yourself as a §9friend§7!");
+                                return true;
+                            }
                             friendsSQL.acceptFriends(p, args[1]);
                         } else {
                             helpMessage(p);
