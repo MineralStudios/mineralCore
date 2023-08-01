@@ -27,6 +27,10 @@ public class FriendsSQL {
 
     String friendsListArrayString;
 
+    int friendsLimit = 2;
+
+    boolean friendsLimitStatus;
+
     public String [] friendsListArray;
 
     public ArrayList<String> friendsList = new ArrayList<>();
@@ -254,6 +258,44 @@ public class FriendsSQL {
         }
     }
 
+    public void checkFriendsLimit(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql_select = "SELECT * FROM friends WHERE playerUUID = '" + p.getUniqueId() + "'";
+            resultSet = statement.executeQuery(sql_select);
+
+            if (!resultSet.next()) {
+                friendsListArray = null;
+            } else {
+                do {
+                    friendsListArrayString = resultSet.getString("friendsList");
+                    friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
+                    friendsList.addAll(Arrays.asList(friendsListArray));
+                } while (resultSet.next());
+            }
+
+            if (friendsList.size() == friendsLimit) {
+                friendsLimitStatus = true;
+            } else {
+                friendsLimitStatus = false;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     public void acceptFriends(Player sender, String playerName) {
         try {
@@ -278,7 +320,7 @@ public class FriendsSQL {
                 sender.sendMessage("§7You §2accepted §9§l"+playerName+"`s §7friend request!");
 
             } else {
-                sender.sendMessage("§7You can't §caccept §7this friend request anymore!");
+                sender.sendMessage("§7The player you are trying to §caccept §7the friend request from isn't §2online §7anymore!");
                 return;
             }
             friendRequestsList.get(ps.getPlayer().getUniqueId()).remove(sender.getUniqueId());
@@ -292,6 +334,12 @@ public class FriendsSQL {
         try {
             Player ps = Bukkit.getPlayerExact(playerName);
             if (ps != null) {
+                checkFriendsLimit(p);
+                if (friendsLimitStatus) {
+                    p.sendMessage("§7You have §calready §7reached the friends limit of §9"+friendsLimit+" §7friends.");
+                    friendsList.clear();
+                    return;
+                }
 
                     if (friendRequestsList.containsKey(p.getPlayer().getUniqueId())) {
                         if (friendRequestsList.get(p.getPlayer().getUniqueId()).contains(ps.getUniqueId())) {
