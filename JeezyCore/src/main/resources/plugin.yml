@@ -54,9 +54,9 @@ commands:
   night:
     description: Changes player time to night.
     usage: /night
-  fly:
-    description: Makes you fly.
-    usage: /fly
+    #fly:
+    #description: Makes you fly.
+    # usage: /fly
   report:
     description: Reports a player.
     usage: /report <player><message>
