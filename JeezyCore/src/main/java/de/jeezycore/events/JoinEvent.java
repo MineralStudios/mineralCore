@@ -74,6 +74,7 @@ public class JoinEvent implements Listener {
         playersSQL.checkIfUsernameChanged(e);
         givePermsOnJoin.rankMonthlyDurationCalculator(e.getPlayer());
         nameTag.giveTagOnJoin(e.getPlayer());
+        friendsSQL.getAllFriendsOnJoin(e);
         friendsSQL.sendFriendOnlineMessage(e);
 
 

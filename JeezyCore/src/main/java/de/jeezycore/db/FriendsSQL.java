@@ -32,6 +32,53 @@ public class FriendsSQL {
 
     RanksSQL ranksSQL = new RanksSQL();
 
+    public void getAllFriendsOnJoin(PlayerJoinEvent p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql_select = "SELECT friendsList FROM friends WHERE playerUUID = '"+p.getPlayer().getUniqueId()+"'";
+            resultSet = statement.executeQuery(sql_select);
+
+            if (!resultSet.next()) {
+                playerUUID = null;
+                friendsListArray = null;
+            } else {
+                do {
+                    friendsListArrayString = resultSet.getString(1);
+                    friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
+                    friendsList.addAll(Arrays.asList(friendsListArray));
+                } while (resultSet.next());
+
+                if (friendsList.isEmpty()) return;
+                int countPlayersOnline = 0;
+                for (int i = 0; i < friendsList.size(); i++) {
+
+                    try {
+                        if (!Bukkit.getPlayer(UUID.fromString(friendsList.get(i))).isOnline()) {
+                            continue;
+                        }
+                        countPlayersOnline += 1;
+                    } catch (Exception f) {
+                    }
+                }
+                p.getPlayer().sendMessage(" §7§l[§9FRIENDS§7§l] §9§l"+countPlayersOnline+" §f§l/ §9§l"+friendsList.size()+" §7friends are §2online.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+                friendsList.clear();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void sendFriendOnlineMessage(PlayerJoinEvent p) {
         Connection connection = null;
         Statement statement = null;
@@ -73,7 +120,6 @@ public class FriendsSQL {
             try {
                 statement.close();
                 connection.close();
-                friendsList.clear();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -121,7 +167,6 @@ public class FriendsSQL {
             try {
                 statement.close();
                 connection.close();
-                friendsList.clear();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
