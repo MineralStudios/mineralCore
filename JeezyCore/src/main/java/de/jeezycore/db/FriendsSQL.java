@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.UUID;
 
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
@@ -29,6 +30,10 @@ public class FriendsSQL {
     public String [] friendsListArray;
 
     public ArrayList<String> friendsList = new ArrayList<>();
+
+
+    public ArrayList<UUID> friendRequestsArrayList = new ArrayList<>();
+    HashMap<UUID, ArrayList<UUID>> friendRequestsList = new HashMap<>();
 
     RanksSQL ranksSQL = new RanksSQL();
 
@@ -256,16 +261,27 @@ public class FriendsSQL {
             if (ps != null) {
                 checkIfAlreadyFriends(ps);
                 if (friendsList.contains(sender.getUniqueId().toString())) {
-                    sender.sendMessage("§7You §calready §7accepted §9"+playerName+"`s §7friend request!");
+                    sender.sendMessage(" §7You §calready §7accepted §9"+playerName+"`s §7friend request!");
                     return;
                 }
+                try {
+                    if (!friendRequestsList.get(ps.getPlayer().getUniqueId()).contains(sender.getUniqueId())) {}
+                } catch (Exception e) {
+                    sender.sendMessage(" §7You haven't §cgotten §7a friend request from §9"+playerName+" §7yet!");
+                    return;
+                }
+
+                friendsList.clear();
                 pushMYSQL(ps, sender);
+
                 ps.sendMessage(" §9§l"+sender.getDisplayName()+" §7successfully §2accepted §7your friend request!");
                 sender.sendMessage(" §7You §2accepted §9§l"+playerName+"`s §7friend request!");
+
             } else {
                 sender.sendMessage("§7You can't §caccept §7this friend request anymore!");
             }
-
+            friendRequestsList.get(ps.getPlayer().getUniqueId()).remove(sender.getUniqueId());
+            friendRequestsArrayList.clear();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -280,6 +296,8 @@ public class FriendsSQL {
                     p.sendMessage("§7You §calready §7have §9"+ps.getDisplayName()+" §7as a friend.");
                     return;
                 }
+                friendRequestsArrayList.add(ps.getUniqueId());
+                friendRequestsList.put(p.getUniqueId(), friendRequestsArrayList);
                 p.sendMessage("§7You §2successfully §7sent a friend request to §9"+playerName+"§7.");
 
                     TextComponent message = new TextComponent("             §7(§2CLICK TO ACCEPT§7)                 ");
