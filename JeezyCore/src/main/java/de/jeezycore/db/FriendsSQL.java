@@ -279,6 +279,7 @@ public class FriendsSQL {
 
             } else {
                 sender.sendMessage("§7You can't §caccept §7this friend request anymore!");
+                return;
             }
             friendRequestsList.get(ps.getPlayer().getUniqueId()).remove(sender.getUniqueId());
             friendRequestsArrayList.clear();
@@ -321,7 +322,7 @@ public class FriendsSQL {
                     ps.sendMessage("                                                                    ");
 
                 } else {
-                p.sendMessage(" §7The player §c"+playerName+" §7isn't online.");
+                p.sendMessage("§7The player §c"+playerName+" §7isn't online.");
             }
             friendsList.clear();
         } catch (Exception e) {
