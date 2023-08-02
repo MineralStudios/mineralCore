@@ -406,13 +406,14 @@ public class FriendsSQL {
             sender.sendMessage(" §9§lFriends §f§lList §7(§f"+page+" / §9§l"+pageEnd+"§7)            ");
             sender.sendMessage("                                               ");
             int resultCalculation = showFriendsList.size() - (10 * page - 10);
-            for (int i = 0; i < showFriendsList.size(); i++) {
+            for (int i = 0; i < resultCalculation; i++) {
                 sender.sendMessage("   §9"+showFriendsList.get((10 * page - 10) + i)+"            ");
                 sender.sendMessage("                                               ");
-                if (resultCalculation < 9 || i == 9) {
+                if (i == 9) {
                     break;
                 }
             }
+            System.out.println(showFriendsList);
             } catch (SQLException e) {
             e.printStackTrace();
         } finally {
