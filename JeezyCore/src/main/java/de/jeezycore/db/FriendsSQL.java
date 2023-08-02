@@ -351,11 +351,7 @@ public class FriendsSQL {
                     } while (resultSet.next());
                 }
             }
-            System.out.println("HERE");
-            System.out.println(friendsList);
-            System.out.println(showFriendsList);
             int pageEnd = (int) Math.ceil((double)showFriendsList.size() / 10);
-
             if (page > pageEnd) {
                 page = pageEnd;
             }
@@ -363,11 +359,14 @@ public class FriendsSQL {
             sender.sendMessage("                                               ");
             sender.sendMessage(" §9§lFriends §f§lList §7(§f"+page+" / §9§l"+pageEnd+"§7)            ");
             sender.sendMessage("                                               ");
+            int resultCalculation = showFriendsList.size() - (10 * page - 10);
             for (int i = 0; i < showFriendsList.size(); i++) {
-                sender.sendMessage("   §9"+showFriendsList.get(i)+"            ");
+                sender.sendMessage("   §9"+showFriendsList.get((10 * page - 10) + i)+"            ");
                 sender.sendMessage("                                               ");
+                if (resultCalculation < 9 || i == 9) {
+                    break;
+                }
             }
-
             } catch (SQLException e) {
             e.printStackTrace();
         } finally {
