@@ -123,7 +123,7 @@ public class FriendsSQL {
                         if (!Bukkit.getPlayer(friendsOnJoinMessageArray.get(i)).isOnline()) {
                             continue;
                         }
-                        Bukkit.getPlayer(friendsOnJoinMessageArray.get(i)).sendMessage(" §7§l[§9FRIENDS§7§l] "+ranksSQL.rankColor.replace("&", "§") + " "+p.getPlayer().getDisplayName()+" §7just came §2online§7!");
+                        Bukkit.getPlayer(friendsOnJoinMessageArray.get(i)).sendMessage("§7§l[§9FRIENDS§7§l] "+ranksSQL.rankColor.replace("&", "§") + " "+p.getPlayer().getDisplayName()+" §7just came §2online§7!");
                     } catch (Exception f) {
                     }
                 }
@@ -171,7 +171,7 @@ public class FriendsSQL {
                         if (!Bukkit.getPlayer(friendsOnJoinMessageArray.get(i)).isOnline()) {
                             continue;
                         }
-                        Bukkit.getPlayer(friendsOnJoinMessageArray.get(i)).sendMessage(" §7§l[§9FRIENDS§7§l] "+ranksSQL.rankColor.replace("&", "§") + " "+p.getPlayer().getDisplayName()+" §7just went §coffline§7!");
+                        Bukkit.getPlayer(friendsOnJoinMessageArray.get(i)).sendMessage("§7§l[§9FRIENDS§7§l] "+ranksSQL.rankColor.replace("&", "§") + " "+p.getPlayer().getDisplayName()+" §7just went §coffline§7!");
                     } catch (Exception f) {
                     }
                 }
@@ -236,7 +236,7 @@ public class FriendsSQL {
         }
     }
 
-    private void removeFriendsMYSQL(Player sender) {
+    private void removeFriendsMYSQL(UUID uuid) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -246,11 +246,11 @@ public class FriendsSQL {
 
             if (friendsList.isEmpty()) {
                 statement.executeUpdate("DELETE FROM friends" +
-                        " WHERE playerUUID = '"+sender.getUniqueId()+"'");
+                        " WHERE playerUUID = '"+uuid+"'");
             } else {
                 statement.executeUpdate("UPDATE friends " +
                         "SET friendsList = '"+friendsList+
-                        "' WHERE playerUUID = '"+sender.getUniqueId()+"'");
+                        "' WHERE playerUUID = '"+uuid+"'");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -265,14 +265,14 @@ public class FriendsSQL {
         }
     }
 
-    public void friendsData(Player sender) {
+    public void friendsData(UUID senderUUID) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
             statement = connection.createStatement();
-            String sql_select = "SELECT * FROM friends WHERE playerUUID = '"+sender.getUniqueId()+"'";
+            String sql_select = "SELECT * FROM friends WHERE playerUUID = '"+senderUUID+"'";
             resultSet = statement.executeQuery(sql_select);
 
             if (!resultSet.next()) {
@@ -428,7 +428,7 @@ public class FriendsSQL {
         try {
             Player sender = Bukkit.getPlayerExact(target);
             if (sender != null) {
-                friendsData(sender);
+                friendsData(sender.getUniqueId());
                 if (friendsList.contains(receiver.getUniqueId().toString())) {
                     receiver.sendMessage("§7You §calready §7accepted §9"+target+"`s §7friend request!");
                     return;
@@ -474,7 +474,7 @@ public class FriendsSQL {
                         }
                     }
 
-                friendsData(sender);
+                friendsData(sender.getUniqueId());
                 if (friendsList.contains(receiver.getUniqueId().toString())) {
                     sender.sendMessage("§7You §calready §7have §9"+receiver.getDisplayName()+" §7as a friend.");
                     return;
@@ -505,21 +505,38 @@ public class FriendsSQL {
         }
     }
 
-    public void removeFriends(Player sender, String playerName) {
+    public void removeFriendsExecutor(Player sender, String playerName) {
         try {
-            friendsData(sender);
+            friendsData(sender.getUniqueId());
             playersData(playerName);
-
-            System.out.println(playerUUIDString);
-            System.out.println(friendsList);
 
             if (!friendsList.contains(playerUUIDString)) {
                 sender.sendMessage("§7You don't have §9"+playerName+" §7as a friend of yours.");
             } else {
                 friendsList.remove(playerUUIDString);
-                removeFriendsMYSQL(sender);
+                removeFriendsMYSQL(sender.getUniqueId());
                 sender.sendMessage("§7You §2successfully §7removed §9"+playerName+" §7from your friends list.");
+                removeFriendsReceiver(UUID.fromString(playerUUIDString), sender);
             }
+            friendsList.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeFriendsReceiver(UUID receiverUUID, Player sender) {
+        try {
+            friendsData(receiverUUID);
+
+                friendsList.remove(sender.getUniqueId().toString());
+                removeFriendsMYSQL(receiverUUID);
+
+                Player ps = Bukkit.getPlayer(receiverUUID);
+
+                if (ps != null) {
+                    ps.sendMessage("§7§l[§9FRIENDS§7§l] §9§l"+sender.getDisplayName() + " §7has §cended §7the friendship!");
+                }
+
             friendsList.clear();
         } catch (Exception e) {
             e.printStackTrace();
@@ -528,7 +545,7 @@ public class FriendsSQL {
 
     public void listFriends(Player sender, int page) {
         try {
-            friendsData(sender);
+            friendsData(sender.getUniqueId());
 
             if (friendsList.isEmpty()) {
                 sender.sendMessage("§7You don't have any §9friends §7added yet.");

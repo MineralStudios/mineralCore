@@ -45,7 +45,7 @@ public class FriendsCommands implements CommandExecutor {
                                 p.sendMessage("§7You can't §cremove §7yourself as a §9friend§7!");
                                 return true;
                             }
-                            friendsSQL.removeFriends(p, args[1]);
+                            friendsSQL.removeFriendsExecutor(p, args[1]);
                         } else {
                             helpMessage(p);
                         }
