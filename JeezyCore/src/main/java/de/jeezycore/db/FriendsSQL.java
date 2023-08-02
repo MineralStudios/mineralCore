@@ -190,7 +190,7 @@ public class FriendsSQL {
         }
     }
 
-    private void addFriendsMYSQL(Player sender, Player target) {
+    private void addFriendsMysqlSender(Player sender, Player target) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -222,6 +222,53 @@ public class FriendsSQL {
                             "SET friendsList = '"+friendsList+
                             "' WHERE playerUUID = '"+sender.getUniqueId()+"'");
                 }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+                friendsList.clear();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void addFriendsMysqlReceiver(Player sender, Player receiver) {
+        friendsData(receiver.getUniqueId());
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql_select = "SELECT * FROM friends WHERE playerUUID = '"+receiver.getUniqueId()+"'";
+            resultSet = statement.executeQuery(sql_select);
+
+            if (!resultSet.next()) {
+                playerUUID = null;
+                friendsListArrayString = null;
+                friendsListArray = null;
+            } else {
+                do {
+                    playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
+                    friendsListArrayString = resultSet.getString("friendsList");
+                    friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
+                    friendsList.addAll(Arrays.asList(friendsListArray));
+                } while (resultSet.next());
+            }
+            friendsList.add(sender.getUniqueId().toString());
+            if (playerUUID == null) {
+                statement.executeUpdate("INSERT INTO friends" +
+                        "(playerName, playerUUID, friendsList) " +
+                        "VALUES ('"+receiver.getDisplayName()+"', '"+receiver.getUniqueId()+"', '"+friendsList+"')");
+            } else {
+                statement.executeUpdate("UPDATE friends " +
+                        "SET friendsList = '"+friendsList+
+                        "' WHERE playerUUID = '"+receiver.getUniqueId()+"'");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -441,7 +488,8 @@ public class FriendsSQL {
                 }
 
                 friendsList.clear();
-                addFriendsMYSQL(sender, receiver);
+                addFriendsMysqlSender(sender, receiver);
+                addFriendsMysqlReceiver(sender, receiver);
 
                 sender.sendMessage("§9§l"+receiver.getDisplayName()+" §7successfully §2accepted §7your friend request!");
                 receiver.sendMessage("§7You §2accepted §9§l"+target+"`s §7friend request!");
