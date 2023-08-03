@@ -71,4 +71,15 @@ public class ArrayStorage {
    //friends
     public static ArrayList<UUID> friendsOnJoinMessageArray = new ArrayList<>();
 
+    public static ArrayList<String> friendsList = new ArrayList<>();
+
+    public static ArrayList<String> showFriendsList = new ArrayList<>();
+
+
+    public static ArrayList<UUID> friendRequestsArrayList = new ArrayList<>();
+    public static HashMap<UUID, ArrayList<UUID>> friendRequestsList = new HashMap<>();
+
+    public static ArrayList<UUID> friendsAddArrayList = new ArrayList<>();
+    public static HashMap<UUID, ArrayList<UUID>> friendsAddList = new HashMap<>();
+
 }
