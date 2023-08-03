@@ -61,6 +61,20 @@ public class FriendsCommands implements CommandExecutor {
                             helpMessage(p);
                         }
                         break;
+                    case "enable":
+                        if (args.length == 1) {
+                            friendsSQL.friendsSwitcherMYSQL(p, String.valueOf(true), "§2enabled");
+                        } else {
+                            helpMessage(p);
+                        }
+                        break;
+                    case "disable":
+                        if (args.length == 1) {
+                            friendsSQL.friendsSwitcherMYSQL(p, String.valueOf(false), "§cdisabled");
+                        } else {
+                            helpMessage(p);
+                        }
+                        break;
                     default:
                         helpMessage(p);
                         break;
@@ -89,6 +103,8 @@ public class FriendsCommands implements CommandExecutor {
                 " §f/§9friends §fadd §7<player> §f- §7Adds a friend to your friends list.",
                 " §f/§9friends §fremove §7<player> §f- §7Removes a friend from your friends list.",
                 " §f/§9friends §flist §7<page> §f- §7Lists all friends you have.",
+                " §f/§9friends §fenable §f- §7Enables you from receiving friends requests.",
+                " §f/§9friends §fdisable §f- §7Stops you from receiving friends requests.",
                 "                                                                       "
         });
     }

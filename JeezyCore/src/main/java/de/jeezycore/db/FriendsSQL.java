@@ -31,6 +31,8 @@ public class FriendsSQL {
 
     boolean friendsLimitStatus;
 
+    boolean friendsStatus;
+
     public String [] friendsListArray;
 
     RanksSQL ranksSQL = new RanksSQL();
@@ -51,9 +53,14 @@ public class FriendsSQL {
                 friendsList.clear();
             } else {
                 do {
-                    friendsListArrayString = resultSet.getString(1);
-                    friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
-                    friendsList.addAll(Arrays.asList(friendsListArray));
+                    try {
+                        friendsListArrayString = resultSet.getString(1);
+                        friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
+                        friendsList.addAll(Arrays.asList(friendsListArray));
+                    } catch (Exception e) {
+
+                    }
+
                 } while (resultSet.next());
 
                 if (friendsList.isEmpty()) return;
@@ -98,8 +105,13 @@ public class FriendsSQL {
                 playerUUID = null;
             } else {
                 do {
-                    playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
-                    friendsOnJoinMessageArray.add(playerUUID);
+                    try {
+                        playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
+                        friendsOnJoinMessageArray.add(playerUUID);
+                    } catch (Exception e) {
+
+                    }
+
                 } while (resultSet.next());
 
                 if (playerUUID == null) return;
@@ -146,8 +158,13 @@ public class FriendsSQL {
                 playerUUID = null;
             } else {
                 do {
-                    playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
-                    friendsOnJoinMessageArray.add(playerUUID);
+                    try {
+                        playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
+                        friendsOnJoinMessageArray.add(playerUUID);
+                    } catch (Exception e) {
+
+                    }
+
                 } while (resultSet.next());
 
                 if (playerUUID == null) return;
@@ -197,10 +214,15 @@ public class FriendsSQL {
                     friendsList.clear();
                 } else {
                     do {
-                        playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
-                        friendsListArrayString = resultSet.getString("friendsList");
-                        friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
-                        friendsList.addAll(Arrays.asList(friendsListArray));
+                        try {
+                            playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
+                            friendsListArrayString = resultSet.getString("friendsList");
+                            friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
+                            friendsList.addAll(Arrays.asList(friendsListArray));
+                        } catch (Exception e) {
+
+                        }
+
                     } while (resultSet.next());
                 }
                 friendsList.add(target.getUniqueId().toString());
@@ -274,6 +296,61 @@ public class FriendsSQL {
         }
     }
 
+    public void friendsSwitcherMYSQL(Player sender, String switcher, String message) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql_select = "SELECT * FROM friends WHERE playerUUID = '"+sender.getUniqueId()+"'";
+            resultSet = statement.executeQuery(sql_select);
+
+            if (!resultSet.next()) {
+                playerUUID = null;
+                friendsStatus = false;
+            } else {
+                do {
+                    playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
+                    friendsStatus = resultSet.getBoolean("friendsStatus");
+                } while (resultSet.next());
+            }
+
+
+            System.out.println(friendsStatus);
+            System.out.println(Boolean.parseBoolean(switcher));
+            System.out.println(friendsStatus == Boolean.parseBoolean(switcher));
+
+            if (friendsStatus == Boolean.parseBoolean(switcher)) {
+                sender.sendMessage("§7§l[§9FRIENDS§7§l] §7Your §9friends §7requests are §calready §7"+message.substring(2)+"!");
+                return;
+            }
+
+
+            if (playerUUID == null) {
+                statement.executeUpdate("INSERT INTO friends" +
+                        "(playerName, playerUUID, friendsStatus) " +
+                        "VALUES ('"+sender.getDisplayName()+"', '"+sender.getUniqueId()+"', "+switcher+")");
+            } else {
+                statement.executeUpdate("UPDATE friends " +
+                        "SET friendsStatus = "+switcher+
+                        " WHERE playerUUID = '"+sender.getUniqueId()+"'");
+            }
+            sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You §7successfully "+message+" §9friends §7requests.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     private void removeFriendsMYSQL(UUID uuid) {
         Connection connection = null;
         Statement statement = null;
@@ -316,12 +393,18 @@ public class FriendsSQL {
             if (!resultSet.next()) {
                 friendsListArray = null;
                 friendsListArrayString = null;
+                friendsStatus = false;
                 friendsList.clear();
             } else {
                 do {
-                    friendsListArrayString = resultSet.getString("friendsList");
-                    friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
-                    friendsList.addAll(Arrays.asList(friendsListArray));
+                    try {
+                        friendsStatus = resultSet.getBoolean("friendsStatus");
+                        friendsListArrayString = resultSet.getString("friendsList");
+                        friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
+                        friendsList.addAll(Arrays.asList(friendsListArray));
+                    } catch (Exception e) {
+
+                    }
                 } while (resultSet.next());
             }
         } catch (SQLException e) {
@@ -437,9 +520,14 @@ public class FriendsSQL {
                 friendsList.clear();
             } else {
                 do {
-                    friendsListArrayString = resultSet.getString("friendsList");
-                    friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
-                    friendsList.addAll(Arrays.asList(friendsListArray));
+                    try {
+                        friendsListArrayString = resultSet.getString("friendsList");
+                        friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
+                        friendsList.addAll(Arrays.asList(friendsListArray));
+                    } catch (Exception e) {
+
+                    }
+
                 } while (resultSet.next());
             }
             System.out.println(friendsList);
@@ -470,7 +558,7 @@ public class FriendsSQL {
                 friendsData(sender.getUniqueId());
 
                 if (friendsList.contains(receiver.getUniqueId().toString())) {
-                    receiver.sendMessage("§7You §calready §7accepted §9"+target+"`s §7friend request!");
+                    receiver.sendMessage("§7§l[§9FRIENDS§7§l] §7You §calready §7accepted §9"+target+"`s §7friend request!");
                     return;
                 }
 
@@ -492,8 +580,8 @@ public class FriendsSQL {
                 addFriendsMysqlSender(sender, receiver);
                 addFriendsMysqlReceiver(sender, receiver);
 
-                sender.sendMessage("§9§l"+receiver.getDisplayName()+" §7successfully §2accepted §7your friend request!");
-                receiver.sendMessage("§7You §2accepted §9§l"+target+"`s §7friend request!");
+                sender.sendMessage("§7§l[§9FRIENDS§7§l] §9§l"+receiver.getDisplayName()+" §7successfully §2accepted §7your friend request!");
+                receiver.sendMessage("§7§l[§9FRIENDS§7§l] §7You §2accepted §9§l"+target+"`s §7friend request!");
 
             } else {
                 receiver.sendMessage("§7§l[§9FRIENDS§7§l] §7The friend request §ccan't §7be accepted anymore!");
@@ -512,20 +600,25 @@ public class FriendsSQL {
             if (receiver != null) {
                 checkFriendsLimit(sender);
                 if (friendsLimitStatus) {
-                    sender.sendMessage("§7You have §calready §7reached the friends limit of §9"+friendsLimit+" §7friends.");
+                    sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You have §calready §7reached the friends limit of §9"+friendsLimit+" §7friends.");
                     return;
                 }
 
                     if (friendRequestsList.containsKey(sender.getPlayer().getUniqueId())) {
                         if (friendRequestsList.get(sender.getPlayer().getUniqueId()).contains(receiver.getUniqueId())) {
-                            sender.sendMessage("§7You have §calready §7sent a friend request to §9"+playerName+"§7.");
+                            sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You have §calready §7sent a friend request to §9"+playerName+"§7.");
                             return;
                         }
                     }
 
                 friendsData(sender.getUniqueId());
                 if (friendsList.contains(receiver.getUniqueId().toString())) {
-                    sender.sendMessage("§7You §calready §7have §9"+receiver.getDisplayName()+" §7as a friend.");
+                    sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You §calready §7have §9"+receiver.getDisplayName()+" §7as a friend.");
+                    return;
+                }
+                friendsData(receiver.getUniqueId());
+                if (friendsStatus) {
+                    sender.sendMessage("§7§l[§9FRIENDS§7§l] §9"+receiver.getDisplayName() + " §7has turned §coff §7friends requests.");
                     return;
                 }
 
@@ -535,8 +628,6 @@ public class FriendsSQL {
 
                 friendsAddArrayList.add(receiver.getUniqueId());
                 friendsAddList.put(sender.getPlayer().getUniqueId(), friendsAddArrayList);
-
-                System.out.println(friendsAddList);
 
                 sender.sendMessage("§7You §2successfully §7sent a friend request to §9"+playerName+"§7.");
 
@@ -578,7 +669,7 @@ public class FriendsSQL {
             friendsData(sender.getUniqueId());
 
             if (!friendsList.contains(playerUUIDString)) {
-                sender.sendMessage("§7You don't have §9"+playerName+" §7as a friend of yours.");
+                sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You don't have §9"+playerName+" §7as a friend of yours.");
                 return;
             }
 
@@ -589,7 +680,7 @@ public class FriendsSQL {
             removeFriendsMYSQL(sender.getUniqueId());
 
 
-            sender.sendMessage("§7You §2successfully §7removed §9"+playerName+" §7from your friends list.");
+            sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You §2successfully §7removed §9"+playerName+" §7from your friends list.");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -612,7 +703,6 @@ public class FriendsSQL {
                     ps.sendMessage("§7§l[§9FRIENDS§7§l] §9§l"+sender.getDisplayName() + " §7has §cended §7the friendship!");
                 }
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -621,7 +711,7 @@ public class FriendsSQL {
             friendsData(sender.getUniqueId());
 
             if (friendsList.isEmpty()) {
-                sender.sendMessage("§7You don't have any §9friends §7added yet.");
+                sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You don't have any §9friends §7added yet.");
                 return;
             }
 

@@ -148,6 +148,7 @@ public class HikariCP {
             String friends_table = "CREATE TABLE IF NOT EXISTS friends " +
                     " (playerName VARCHAR(255), " +
                     " playerUUID VARCHAR(255), " +
+                    " friendsStatus boolean, " +
                     " friendsList longtext, " +
                     " PRIMARY KEY ( playerUUID ))";
 
