@@ -6,7 +6,6 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -485,9 +484,10 @@ public class FriendsSQL {
                 try {
                     if (!friendRequestsList.get(sender.getPlayer().getUniqueId()).contains(receiver.getUniqueId())) {}
                 } catch (Exception e) {
-                    receiver.sendMessage("§7You haven't §cgotten §7a friend request from §9"+target+" §7yet!");
+                    receiver.sendMessage("§7§l[§9FRIENDS§7§l] §7You haven't §cgotten §7a friend request from §9"+target+" §7yet!");
                     return;
                 }
+
                 friendsList.clear();
                 addFriendsMysqlSender(sender, receiver);
                 addFriendsMysqlReceiver(sender, receiver);
@@ -533,8 +533,6 @@ public class FriendsSQL {
                 friendRequestsArrayList.add(receiver.getUniqueId());
                 friendRequestsList.put(sender.getPlayer().getUniqueId(), friendRequestsArrayList);
 
-                friendRequestsList.get(sender.getPlayer().getUniqueId()).remove(receiver.getUniqueId());
-
                 friendsAddArrayList.add(receiver.getUniqueId());
                 friendsAddList.put(sender.getPlayer().getUniqueId(), friendsAddArrayList);
 
@@ -555,7 +553,8 @@ public class FriendsSQL {
                 } else {
                 sender.sendMessage("§7The player §c"+playerName+" §7isn't online.");
             }
-            timeRemover(sender, receiver);
+            timeRemoverForFriendsAdd(sender, receiver);
+            timeRemoverForFriendsRequests(sender, receiver);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -632,7 +631,7 @@ public class FriendsSQL {
         }
     }
 
-    private void timeRemover(Player sender, Player receiver) {
+    private void timeRemoverForFriendsAdd(Player sender, Player receiver) {
         Timer time = new Timer();
         TimerTask RemoveAddList = new TimerTask() {
             @Override
@@ -648,4 +647,22 @@ public class FriendsSQL {
         };
         time.schedule(RemoveAddList, 3000);
     }
+
+    private void timeRemoverForFriendsRequests(Player sender, Player receiver) {
+        Timer time = new Timer();
+        TimerTask RemoveAddList = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    friendRequestsList.get(sender.getPlayer().getUniqueId()).remove(receiver.getUniqueId());
+                    System.out.println("You can send a friend request again");
+                    time.purge();
+                    time.cancel();
+                } catch (Exception e) {
+                }
+            }
+        };
+        time.schedule(RemoveAddList, 60000);
+    }
+
 }
