@@ -1,9 +1,12 @@
 package de.jeezycore.events;
 
+import de.jeezycore.commands.friends.FriendsCommands;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public class PlayerCommandPreprocessEvent implements Listener {
+
+    FriendsCommands friendsCommands = new FriendsCommands();
 
     @EventHandler
     public void onCommandExecute(org.bukkit.event.player.PlayerCommandPreprocessEvent e) {
@@ -26,14 +29,7 @@ public class PlayerCommandPreprocessEvent implements Listener {
        }
     if (e.getMessage().equalsIgnoreCase("/friend")) {
         e.setCancelled(true);
-        e.getPlayer().sendMessage(new String[]{
-                "                                                                       ",
-                " §9§lFriends §f§lHelp",
-                "                                                                       ",
-                " §f/§9friends §fadd       - §7Adds a friend to your friend list.",
-                " §f/§9friends §fremove  - §7Removes a friend from your friend list.",
-                "                                                                       "
-        });
+        friendsCommands.helpMessage(e.getPlayer());
     }
     }
 }

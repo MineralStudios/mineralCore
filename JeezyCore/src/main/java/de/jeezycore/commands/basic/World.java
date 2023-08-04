@@ -26,6 +26,10 @@ public class World implements CommandExecutor {
 
             if (p.hasPermission("jeezy.core.world.tp") || p.hasPermission("jeezy.core.world.*")) {
                 try {
+                    if (cmd.getName().equalsIgnoreCase("world") && args.length == 0) {
+                        helpMessage(p);
+                        return true;
+                    }
                     switch (args[0]) {
                         case "load":
                             if (args.length == 2) {
@@ -85,6 +89,9 @@ public class World implements CommandExecutor {
                                 p.sendMessage("   §9"+w.getName());
                                 p.sendMessage("                                         ");
                             }
+                            break;
+                        default:
+                            helpMessage(p);
                             break;
                     }
                 } catch (Exception e) {

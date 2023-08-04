@@ -15,6 +15,11 @@ public class FriendsCommands implements CommandExecutor {
         if (sender instanceof Player) {
             Player p = (Player) sender;
 
+            if (cmd.getName().equalsIgnoreCase("friends") && args.length == 0) {
+                helpMessage(p);
+                return true;
+            }
+
             try {
                 switch (args[0]) {
                     case "accept":
@@ -81,6 +86,7 @@ public class FriendsCommands implements CommandExecutor {
                 }
             } catch (Exception e) {
                 helpMessage(p);
+                e.printStackTrace();
             }
         }
         return true;
@@ -95,7 +101,7 @@ public class FriendsCommands implements CommandExecutor {
         }
     }
 
-    private void helpMessage(Player p) {
+    public void helpMessage(Player p) {
         p.getPlayer().sendMessage(new String[]{
                 "                                                                       ",
                 " §9§lFriends §f§lHelp",
