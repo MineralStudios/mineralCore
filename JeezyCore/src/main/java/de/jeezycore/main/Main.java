@@ -45,6 +45,8 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.GREEN_BOLD+" Successfully"+Color.CYAN_BOLD+" started JeezyCore coded by JeezyDevelopment!"+Color.RESET);
+        World world = new World();
+        world.loadWorldsOnStartup();
         JeezyConfig file_Jeezy_config = new JeezyConfig();
         file_Jeezy_config.create_folder();
         HTTPUtility httpUtility = new HTTPUtility(this);
@@ -103,6 +105,7 @@ public class Main extends JavaPlugin {
         //this.getCommand("languages").setExecutor(new Languages());
         //this.getCommand("lang").setExecutor(new Lang());
         this.getCommand("friends").setExecutor(new FriendsCommands());
+        this.getCommand("world").setExecutor(new World());
 
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);

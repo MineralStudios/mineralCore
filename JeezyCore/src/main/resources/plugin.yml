@@ -162,3 +162,6 @@ commands:
   friends:
     usage: /friends <command>
     description: Executes friends commands.
+  world:
+    usage: /world <command>
+    description: Executes world commands.
