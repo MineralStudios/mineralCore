@@ -12,8 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import java.util.*;
-
 public class JoinEvent implements Listener {
 
     RanksSQL givePermsOnJoin = new RanksSQL();
@@ -82,18 +80,20 @@ public class JoinEvent implements Listener {
             givePermsOnJoin.getPlayerInformation(e.getPlayer());
             givePermsOnJoin.onJoinPerms(givePermsOnJoin.rankNameInformation, e.getPlayer().getUniqueId());
 
+            MemorySection spawnPoint = (MemorySection) JeezyConfig.config_defaults.get("entry-spawn-point");
             MemorySection mc = (MemorySection) JeezyConfig.config_defaults.get("spawn-settings");
             boolean spawnOnSpownpointOnJoin = mc.getBoolean("spawn-at-spawnpoint-on-join");
 
             if (!spawnOnSpownpointOnJoin)
                 return;
-            List<Location> ls = (List<Location>) JeezyConfig.config_defaults.get("entry-spawn-point");
-            World w = ls.get(0).getWorld();
-            double x = ls.get(0).getBlockX();
-            double y = ls.get(0).getBlockY();
-            double z = ls.get(0).getBlockZ();
-            float pitch = ls.get(0).getPitch();
-            float yaw = ls.get(0).getYaw();
+
+
+            World w = Bukkit.getServer().getWorld(spawnPoint.getString("world"));
+            double x = Double.parseDouble(spawnPoint.getString("x"));
+            double y = Double.parseDouble(spawnPoint.getString("y"));
+            double z = Double.parseDouble(spawnPoint.getString("z"));
+            float yaw = Float.parseFloat(spawnPoint.getString("yaw"));
+            float pitch = Float.parseFloat(spawnPoint.getString("pitch"));
 
             e.getPlayer().teleport(new Location(w, x, y, z, yaw, pitch));
 

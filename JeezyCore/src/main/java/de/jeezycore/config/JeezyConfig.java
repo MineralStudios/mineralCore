@@ -1,30 +1,48 @@
 package de.jeezycore.config;
 
-import com.google.common.collect.Lists;
-import org.bukkit.configuration.file.YamlConfiguration;
 
+import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.util.*;
 
 public class JeezyConfig {
      private final File folder = new File("plugins/JeezyCore");
+
      public static File config = new File("plugins/JeezyCore/config.yml");
      public static File database = new File("plugins/JeezyCore/database.yml");
-    public static File tips = new File("plugins/JeezyCore/tips.yml");
+     public static File tips = new File("plugins/JeezyCore/tips.yml");
      public static File redis = new File("plugins/JeezyCore/redis.yml");
+
      public static File discord = new File("plugins/JeezyCore/discord.yml");
+     public static File multiverse = new File("plugins/JeezyCore/multiverse.yml");
+
      public static YamlConfiguration config_defaults = YamlConfiguration.loadConfiguration(config);
      public static YamlConfiguration database_defaults = YamlConfiguration.loadConfiguration(database);
      public static YamlConfiguration tips_defaults = YamlConfiguration.loadConfiguration(tips);
      public static YamlConfiguration redis_defaults = YamlConfiguration.loadConfiguration(redis);
      public static YamlConfiguration discord_defaults = YamlConfiguration.loadConfiguration(discord);
+     public static YamlConfiguration multiverse_defaults = YamlConfiguration.loadConfiguration(multiverse);
 
 
 
     private void create_config_defaults() {
         try {
             config.createNewFile();
-            config_defaults.addDefault("entry-spawn-point", "");
+
+            String x = "entry-spawn-point.x";
+            String y = "entry-spawn-point.y";
+            String z = "entry-spawn-point.z";
+            String pitch = "entry-spawn-point.pitch";
+            String yaw = "entry-spawn-point.yaw";
+            String world = "entry-spawn-point.world";
+
+            config_defaults.addDefault(x, "");
+            config_defaults.addDefault(y, "");
+            config_defaults.addDefault(z, "");
+            config_defaults.addDefault(pitch, "");
+            config_defaults.addDefault(yaw, "");
+            config_defaults.addDefault(world, "");
+
             String path_spawn_settings_1 = "spawn-settings.spawn-at-spawnpoint-on-join";
             String path_spawn_settings_2 = "spawn-settings.spawn-command";
             String path_spawn_settings_3 = "spawn-settings.respawn-at-spawn";
@@ -194,6 +212,23 @@ public class JeezyConfig {
         }
     }
 
+    public void multiverse_defaults() {
+        try {
+            multiverse.createNewFile();
+            String path_multiverse_1 = "Multiverse.worlds";
+
+            List<Object> worlds = new ArrayList<>();
+
+            multiverse_defaults.addDefault(path_multiverse_1, worlds);
+
+            multiverse_defaults.options().copyDefaults(true);
+            multiverse_defaults.save(multiverse);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void create_folder() {
         if (!folder.exists()) {
             folder.mkdir();
@@ -203,5 +238,6 @@ public class JeezyConfig {
         create_redis_defaults();
         create_tips_defaults();
         create_discord_defaults();
+        multiverse_defaults();
     }
 }

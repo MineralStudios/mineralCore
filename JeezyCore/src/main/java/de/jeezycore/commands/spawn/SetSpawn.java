@@ -7,11 +7,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class SetSpawn implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -19,23 +14,37 @@ public class SetSpawn implements CommandExecutor {
         if(sender instanceof Player) {
             Player p = (Player) sender;
 
-            if (cmd.getName().equalsIgnoreCase("spawnSet") && args.length > 0) {
-                p.sendMessage("Usage /spawnSet");
-            } else {
-                if (p.hasPermission("jeezy.core.spawn.setup")) {
-                    p.sendMessage("§2§lYou successfully setuped the spawn.");
+            if (p.hasPermission("jeezy.core.spawn.setup")) {
+            if (cmd.getName().equalsIgnoreCase("spawnSet") && args.length == 0) {
                     try {
                         Location worldObject = p.getLocation();
 
-                        List<Location> locations = new ArrayList<>(Arrays.asList(worldObject));
-                        JeezyConfig.config_defaults.set("entry-spawn-point", locations);
+                        String x = "entry-spawn-point.x";
+                        String y = "entry-spawn-point.y";
+                        String z = "entry-spawn-point.z";
+                        String pitch = "entry-spawn-point.pitch";
+                        String yaw = "entry-spawn-point.yaw";
+                        String world = "entry-spawn-point.world";
+
+                        JeezyConfig.config_defaults.set(x, worldObject.getBlockX());
+                        JeezyConfig.config_defaults.set(y, worldObject.getBlockY());
+                        JeezyConfig.config_defaults.set(z, worldObject.getBlockZ());
+                        JeezyConfig.config_defaults.set(pitch, worldObject.getPitch());
+                        JeezyConfig.config_defaults.set(yaw, worldObject.getYaw());
+                        JeezyConfig.config_defaults.set(world, worldObject.getWorld().getName());
+
                         JeezyConfig.config_defaults.save(JeezyConfig.config);
+
+                        p.sendMessage("§2§lYou successfully setuped the spawn.");
+
                     } catch (Exception f) {
                         f.printStackTrace();
                     }
                 } else {
-                    p.sendMessage("No permission.");
+                p.sendMessage("Usage /spawnSet");
                 }
+            } else {
+                p.sendMessage("No permission.");
             }
         }
         return true;
