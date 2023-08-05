@@ -1,6 +1,7 @@
 package de.jeezycore.main;
 
 import de.jeezycore.commands.basic.msg.*;
+import de.jeezycore.commands.basic.multiverse.World;
 import de.jeezycore.commands.chatColors.ChatColors;
 import de.jeezycore.commands.chatColors.CreateChatColor;
 import de.jeezycore.commands.chatColors.GrantChatColor;
