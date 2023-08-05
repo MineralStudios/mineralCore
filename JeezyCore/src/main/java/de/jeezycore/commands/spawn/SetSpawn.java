@@ -35,7 +35,7 @@ public class SetSpawn implements CommandExecutor {
 
                         JeezyConfig.config_defaults.save(JeezyConfig.config);
 
-                        p.sendMessage("§2§lYou successfully setuped the spawn.");
+                        p.sendMessage("§7You §2successfully §7setup the §9spawn§7.");
 
                     } catch (Exception f) {
                         f.printStackTrace();
