@@ -29,6 +29,13 @@ public class JeezyConfig {
         try {
             config.createNewFile();
 
+            String hubEnabled = "hub.enabled";
+            String hubServerName = "hub.serverName";
+
+            config_defaults.addDefault(hubEnabled, false);
+            config_defaults.addDefault(hubServerName, "hub");
+
+
             String x = "entry-spawn-point.x";
             String y = "entry-spawn-point.y";
             String z = "entry-spawn-point.z";

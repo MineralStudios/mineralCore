@@ -165,3 +165,6 @@ commands:
   world:
     usage: /world <command>
     description: Executes world commands.
+  hub:
+    usage: /hub
+    description: Brings a player back to the hub.

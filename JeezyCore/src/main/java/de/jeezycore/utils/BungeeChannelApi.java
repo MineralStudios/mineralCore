@@ -1,8 +1,11 @@
 package de.jeezycore.utils;
 
+import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.RanksSQL;
 import de.jeezycore.db.StaffSQL;
 import de.jeezycore.main.Main;
+import org.bukkit.configuration.MemorySection;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class BungeeChannelApi {
@@ -10,6 +13,9 @@ public class BungeeChannelApi {
     StaffSQL staffSQL = new StaffSQL();
 
     RanksSQL display = new RanksSQL();
+
+    MemorySection hubConfig = (MemorySection) JeezyConfig.config_defaults.get("hub");
+
 
     io.github.leonardosnt.bungeechannelapi.BungeeChannelApi api = io.github.leonardosnt.bungeechannelapi.BungeeChannelApi.of(Main.getPlugin(Main.class));
 
@@ -36,5 +42,10 @@ public class BungeeChannelApi {
                     }
                  });
                 });
+    }
+
+
+    public void sendToHub(Player p) {
+        api.connect(p, hubConfig.getString("serverName"));
     }
 }

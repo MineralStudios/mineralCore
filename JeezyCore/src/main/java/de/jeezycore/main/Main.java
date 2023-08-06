@@ -107,6 +107,7 @@ public class Main extends JavaPlugin {
         //this.getCommand("lang").setExecutor(new Lang());
         this.getCommand("friends").setExecutor(new FriendsCommands());
         this.getCommand("world").setExecutor(new World());
+        this.getCommand("hub").setExecutor(new Hub());
 
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
@@ -150,6 +151,4 @@ public class Main extends JavaPlugin {
     public void onDisable() {
         System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.RED_BOLD+" shutting down..."+Color.RESET);
     }
-
-
 }
