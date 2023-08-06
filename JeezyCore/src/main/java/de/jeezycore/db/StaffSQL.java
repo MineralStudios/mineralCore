@@ -174,7 +174,7 @@ public class StaffSQL {
             connection = dataSource.getConnection();
             statement = connection.createStatement();
             for (String ranks : staffRankNamesArray) {
-                String select_sql = "SELECT playerUUID FROM players WHERE rank = '" + ranks + "'";
+                String select_sql = "SELECT playerName FROM players WHERE rank = '" + ranks + "'";
                 resultSet = statement.executeQuery(select_sql);
 
                 if (!resultSet.next()) {
@@ -200,7 +200,7 @@ public class StaffSQL {
         }
     }
 
-    public void checkIfStaff(String rankName, UUID get_UUID) {
+    public void checkIfStaff(String rankName) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
