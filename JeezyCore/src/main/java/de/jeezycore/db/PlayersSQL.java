@@ -113,7 +113,6 @@ public class PlayersSQL {
             }
             if (!p.getPlayer().getDisplayName().equalsIgnoreCase(playerName)) {
                 updatePlayersTable(p);
-                updateEloTable(p);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -126,30 +125,6 @@ public class PlayersSQL {
                 e.printStackTrace();
             }
         }
-   }
-
-   private void updateEloTable(PlayerJoinEvent p) {
-       Connection connection = null;
-       Statement statement = null;
-       ResultSet resultSet = null;
-       try {
-           connection = dataSource.getConnection();
-           statement = connection.createStatement();
-
-           String select_sql ="UPDATE practice.elo " +
-                   "SET PLAYER = '"+ p.getPlayer().getDisplayName() + "'"+
-                   " WHERE UUID = '"+ p.getPlayer().getUniqueId() + "'";;
-           statement.executeUpdate(select_sql);
-       } catch (SQLException e) {
-           e.printStackTrace();
-       } finally {
-           try {
-               statement.close();
-               connection.close();
-           } catch (SQLException e) {
-               e.printStackTrace();
-           }
-       }
    }
 
    public void updatePlayersTable(PlayerJoinEvent p) {
