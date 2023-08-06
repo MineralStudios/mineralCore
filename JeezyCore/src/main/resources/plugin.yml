@@ -168,3 +168,6 @@ commands:
   hub:
     usage: /hub
     description: Brings a player back to the hub.
+  send:
+    usage: /send <player> <server>
+    description: Sends a player to another server in the network.

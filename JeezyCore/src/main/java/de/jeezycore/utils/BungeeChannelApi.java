@@ -48,4 +48,23 @@ public class BungeeChannelApi {
     public void sendToHub(Player p) {
         api.connect(p, hubConfig.getString("serverName"));
     }
+
+    public void sendPlayerToServer(Player sender, String playerName, String serverName) {
+        api.getPlayerList("ALL")
+                .whenComplete((allPlayers, error) -> {
+        api.getServers()
+                .whenComplete((servers, errorServer) -> {
+
+                    if (allPlayers.contains(playerName)) {
+                        if (servers.contains(serverName)) {
+                            api.connectOther(playerName, serverName);
+                        } else {
+                            sender.sendMessage("§7The server: §9"+serverName+" §7doesn't §cexist!");
+                        }
+                    } else {
+                        sender.sendMessage("§c"+playerName+" §7isn't online!");
+                    }
+                });
+                });
+    }
 }
