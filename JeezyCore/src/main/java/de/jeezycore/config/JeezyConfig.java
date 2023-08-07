@@ -50,16 +50,18 @@ public class JeezyConfig {
             config_defaults.addDefault(yaw, "");
             config_defaults.addDefault(world, "");
 
-            String path_spawn_settings_1 = "spawn-settings.joinMessage";
-            String path_spawn_settings_2 = "spawn-settings.spawn-at-spawnpoint-on-join";
-            String path_spawn_settings_3 = "spawn-settings.spawn-command";
-            String path_spawn_settings_4 = "spawn-settings.respawn-at-spawn";
-            String path_spawn_settings_5 = "spawn-settings.respawn-after-death-at-spawn";
+            String path_spawn_settings_1 = "spawn-settings.defaultJoinMessage";
+            String path_spawn_settings_2 = "spawn-settings.coreJoinMessage";
+            String path_spawn_settings_3 = "spawn-settings.spawn-at-spawnpoint-on-join";
+            String path_spawn_settings_4 = "spawn-settings.spawn-command";
+            String path_spawn_settings_5 = "spawn-settings.respawn-at-spawn";
+            String path_spawn_settings_6 = "spawn-settings.respawn-after-death-at-spawn";
             config_defaults.addDefault(path_spawn_settings_1, false);
             config_defaults.addDefault(path_spawn_settings_2, false);
             config_defaults.addDefault(path_spawn_settings_3, false);
             config_defaults.addDefault(path_spawn_settings_4, false);
             config_defaults.addDefault(path_spawn_settings_5, false);
+            config_defaults.addDefault(path_spawn_settings_6, false);
 
 
             String path_settings_1 = "settings.disable_raining";

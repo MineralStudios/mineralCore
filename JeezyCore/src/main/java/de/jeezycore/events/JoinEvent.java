@@ -23,6 +23,9 @@ public class JoinEvent implements Listener {
 
     FriendsSQL friendsSQL = new FriendsSQL();
 
+    MemorySection spawnPoint = (MemorySection) JeezyConfig.config_defaults.get("entry-spawn-point");
+    MemorySection spawnSettings = (MemorySection) JeezyConfig.config_defaults.get("spawn-settings");
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         if (FakePlayerChecker.isFakePlayer(e.getPlayer()))
@@ -40,34 +43,37 @@ public class JoinEvent implements Listener {
             return;
         }
 
-        e.getPlayer().sendMessage(new String[] {
-                "\n",
-                " §9§lMineral Network §7§l(§6§lSeason §f§l1§7§l)\n",
-                "\n",
-                " §9§l♦ §f§lWebsite: §9§lmineral.gg\n",
-                "\n",
-                " §9§l♦ §f§lStore: §9§lstore.mineral.gg\n",
-                "\n",
-                " §9§l♦ §f§lDiscord: §9§ldiscord.mineral.gg\n",
-                "\n",
-                " §9§l♦ §f§lTwitter: §9§ltwitter.com/MineralServer\n",
-        });
+        if (spawnSettings.getBoolean("coreJoinMessage")) {
+            e.getPlayer().sendMessage(new String[] {
+                    "\n",
+                    " §9§lMineral Network §7§l(§6§lSeason §f§l1§7§l)\n",
+                    "\n",
+                    " §9§l♦ §f§lWebsite: §9§lmineral.gg\n",
+                    "\n",
+                    " §9§l♦ §f§lStore: §9§lstore.mineral.gg\n",
+                    "\n",
+                    " §9§l♦ §f§lDiscord: §9§ldiscord.mineral.gg\n",
+                    "\n",
+                    " §9§l♦ §f§lTwitter: §9§ltwitter.com/MineralServer\n",
+            });
 
-        e.getPlayer().sendMessage(new String[] {
-                "\n",
-                "\n",
-                " §9§lMineral §f§lPractice",
-                "\n",
-                " §71v1s, 2v2s, PvPBots, Duels, Parties, Events",
-                "\n",
-                " §9§l♦ §fTo play,§9§l right click with your sword",
-                "\n",
-                " §9§l♦ §fTo duel someone,§9§l /duel [player]",
-                "\n",
-                " §9§l♦ §fTo edit your kit,§9§l right click with your book",
-                "\n",
-                " §9§lThanks §f§lfor §9§ljoining §f§lour network§9§l! §9§l❤"
-        });
+            e.getPlayer().sendMessage(new String[] {
+                    "\n",
+                    "\n",
+                    " §9§lMineral §f§lPractice",
+                    "\n",
+                    " §71v1s, 2v2s, PvPBots, Duels, Parties, Events",
+                    "\n",
+                    " §9§l♦ §fTo play,§9§l right click with your sword",
+                    "\n",
+                    " §9§l♦ §fTo duel someone,§9§l /duel [player]",
+                    "\n",
+                    " §9§l♦ §fTo edit your kit,§9§l right click with your book",
+                    "\n",
+                    " §9§lThanks §f§lfor §9§ljoining §f§lour network§9§l! §9§l❤"
+            });
+        }
+
         playersSQL.firstJoined(e);
         playersSQL.checkIfUsernameChanged(e);
         givePermsOnJoin.rankMonthlyDurationCalculator(e.getPlayer());
@@ -80,8 +86,7 @@ public class JoinEvent implements Listener {
             givePermsOnJoin.getPlayerInformation(e.getPlayer());
             givePermsOnJoin.onJoinPerms(givePermsOnJoin.rankNameInformation, e.getPlayer().getUniqueId());
 
-            MemorySection spawnPoint = (MemorySection) JeezyConfig.config_defaults.get("entry-spawn-point");
-            MemorySection spawnSettings = (MemorySection) JeezyConfig.config_defaults.get("spawn-settings");
+
             boolean spawnOnSpownpointOnJoin = spawnSettings.getBoolean("spawn-at-spawnpoint-on-join");
 
             if (!spawnSettings.getBoolean("joinMessage")) {
