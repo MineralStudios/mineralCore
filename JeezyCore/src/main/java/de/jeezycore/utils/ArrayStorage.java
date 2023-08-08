@@ -73,6 +73,8 @@ public class ArrayStorage {
 
     public static ArrayList<String> friendsList = new ArrayList<>();
 
+    public static ArrayList<String> friendsListData = new ArrayList<>();
+
     public static ArrayList<String> showFriendsList = new ArrayList<>();
 
 

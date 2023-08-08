@@ -37,6 +37,44 @@ public class FriendsSQL {
 
     RanksSQL ranksSQL = new RanksSQL();
 
+
+    public void getAllFriendsData(PlayerJoinEvent p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql_select = "SELECT friendsList FROM friends WHERE playerUUID = '"+p.getPlayer().getUniqueId()+"'";
+            resultSet = statement.executeQuery(sql_select);
+
+            if (!resultSet.next()) {
+                playerUUID = null;
+                friendsListArray = null;
+                friendsListData.clear();
+            } else {
+                do {
+                    try {
+                        friendsListArrayString = resultSet.getString(1);
+                        friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
+                        friendsListData.addAll(Arrays.asList(friendsListArray));
+                    } catch (Exception e) {
+                    }
+                } while (resultSet.next());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void getAllFriendsOnJoin(PlayerJoinEvent p) {
         Connection connection = null;
         Statement statement = null;
