@@ -38,7 +38,7 @@ public class FriendsSQL {
     RanksSQL ranksSQL = new RanksSQL();
 
 
-    public void getAllFriendsData(PlayerJoinEvent p) {
+    public void getAllFriendsData(Player p) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
