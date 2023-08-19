@@ -20,7 +20,7 @@ import static de.jeezycore.utils.ArrayStorage.*;
 
 public class FriendsSQL {
 
-    UUID playerUUID;
+    public UUID playerUUID;
 
     String friendsListArrayString;
 
@@ -31,7 +31,7 @@ public class FriendsSQL {
 
     boolean friendsLimitStatus;
 
-    boolean friendsStatus;
+    public boolean friendsStatus;
 
     public String [] friendsListArray;
 
@@ -333,6 +333,39 @@ public class FriendsSQL {
             }
         }
     }
+
+    public void getFriendsStatus(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql_select = "SELECT * FROM friends WHERE playerUUID = '"+p.getUniqueId()+"'";
+            resultSet = statement.executeQuery(sql_select);
+
+            if (!resultSet.next()) {
+                playerUUID = null;
+                friendsStatus = false;
+            } else {
+                do {
+                    playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
+                    friendsStatus = resultSet.getBoolean("friendsStatus");
+                } while (resultSet.next());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     public void friendsSwitcherMYSQL(Player sender, String switcher, String message) {
         Connection connection = null;
