@@ -1,5 +1,6 @@
 package de.jeezycore.main;
 
+import de.jeezycore.commands.ShortenedHubCmd;
 import de.jeezycore.commands.basic.gamemodes.Creative;
 import de.jeezycore.commands.basic.gamemodes.Survival;
 import de.jeezycore.commands.basic.msg.*;
@@ -112,6 +113,7 @@ public class Main extends JavaPlugin {
         this.getCommand("friends").setExecutor(new FriendsCommands());
         this.getCommand("world").setExecutor(new World());
         this.getCommand("hub").setExecutor(new Hub());
+        this.getCommand("l").setExecutor(new ShortenedHubCmd());
         this.getCommand("send").setExecutor(new Send());
 
         // Register Listener

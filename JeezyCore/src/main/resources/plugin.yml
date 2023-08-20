@@ -174,6 +174,9 @@ commands:
   hub:
     usage: /hub
     description: Brings a player back to the hub.
+  l:
+    usage: /l
+    description: Shortened hub command.
   send:
     usage: /send <player> <server>
     description: Sends a player to another server in the network.
