@@ -54,6 +54,12 @@ commands:
   night:
     description: Changes player time to night.
     usage: /night
+  gm0:
+    description: Sets a player into survival mode
+    usage: /gm0
+  gm1:
+    description: Sets a player into creative mode
+    usage: /gm1
     #fly:
     #description: Makes you fly.
     # usage: /fly

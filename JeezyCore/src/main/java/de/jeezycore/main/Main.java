@@ -1,5 +1,7 @@
 package de.jeezycore.main;
 
+import de.jeezycore.commands.basic.gamemodes.Creative;
+import de.jeezycore.commands.basic.gamemodes.Survival;
 import de.jeezycore.commands.basic.msg.*;
 import de.jeezycore.commands.basic.multiverse.World;
 import de.jeezycore.commands.chatColors.ChatColors;
@@ -68,6 +70,8 @@ public class Main extends JavaPlugin {
         this.getCommand("unignore").setExecutor(new UnIgnore());
         this.getCommand("day").setExecutor(new TimeChanger());
         this.getCommand("night").setExecutor(new TimeChanger());
+        this.getCommand("gm0").setExecutor(new Survival());
+        this.getCommand("gm1").setExecutor(new Creative());
         //this.getCommand("fly").setExecutor(new Fly());
         this.getCommand("report").setExecutor(new Report());
         this.getCommand("core").setExecutor(new Core());
