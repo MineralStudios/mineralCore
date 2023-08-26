@@ -1,4 +1,4 @@
-package de.jeezycore.commands;
+package de.jeezycore.commands.basic;
 
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.utils.BungeeChannelApi;
