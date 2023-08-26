@@ -1,6 +1,7 @@
 package de.jeezycore.events;
 
 import de.jeezycore.db.FriendsSQL;
+import de.jeezycore.db.PlayTimeSQL;
 import de.jeezycore.db.RanksSQL;
 import de.jeezycore.db.PlayersSQL;
 import de.jeezycore.disguise.manger.DisguiseManager;
@@ -14,6 +15,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class QuitEvent implements Listener {
   private final DisguiseManager disguiseManager;
   PlayersSQL playersSQL = new PlayersSQL();
+
+  PlayTimeSQL playTimeSQL = new PlayTimeSQL();
+
   RanksSQL ranksSQL = new RanksSQL();
 
   FriendsSQL friendsSQL = new FriendsSQL();
@@ -27,5 +31,6 @@ public class QuitEvent implements Listener {
     playersSQL.lastSeen(event);
     disguiseManager.deleteDisguise(event.getPlayer());
     ranksSQL.rankMonthlyDurationCalculator(event.getPlayer());
+    playTimeSQL.playTimeQuit(event);
   }
 }

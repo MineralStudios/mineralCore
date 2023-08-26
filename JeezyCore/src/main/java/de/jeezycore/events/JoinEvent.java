@@ -21,6 +21,8 @@ public class JoinEvent implements Listener {
     TabListSQL tabList = new TabListSQL();
     PlayersSQL playersSQL = new PlayersSQL();
 
+    PlayTimeSQL playTimeSQL = new PlayTimeSQL();
+
     FriendsSQL friendsSQL = new FriendsSQL();
 
     MemorySection spawnPoint = (MemorySection) JeezyConfig.config_defaults.get("entry-spawn-point");
@@ -75,6 +77,7 @@ public class JoinEvent implements Listener {
         }
 
         playersSQL.firstJoined(e);
+        playTimeSQL.playTimeJoin(e);
         playersSQL.checkIfUsernameChanged(e);
         givePermsOnJoin.rankMonthlyDurationCalculator(e.getPlayer());
         nameTag.giveTagOnJoin(e.getPlayer());

@@ -6,6 +6,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -83,5 +84,7 @@ public class ArrayStorage {
 
     public static ArrayList<UUID> friendsAddArrayList = new ArrayList<>();
     public static HashMap<UUID, ArrayList<UUID>> friendsAddList = new HashMap<>();
+
+    public static HashMap<UUID, LocalDateTime> playTimeHashMap = new HashMap<>();
 
 }
