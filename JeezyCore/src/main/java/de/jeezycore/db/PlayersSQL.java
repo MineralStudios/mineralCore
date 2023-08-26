@@ -113,6 +113,7 @@ public class PlayersSQL {
             }
             if (!p.getPlayer().getDisplayName().equalsIgnoreCase(playerName)) {
                 updatePlayersTable(p);
+                updatePlayTimeTable(p);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -150,4 +151,29 @@ public class PlayersSQL {
            }
        }
    }
+
+    public void updatePlayTimeTable(PlayerJoinEvent p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+
+            String select_sql ="UPDATE playtime " +
+                    "SET playerName = '"+ p.getPlayer().getDisplayName() + "'"+
+                    " WHERE playerUUID = '"+ p.getPlayer().getUniqueId() + "'";;
+            statement.executeUpdate(select_sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
