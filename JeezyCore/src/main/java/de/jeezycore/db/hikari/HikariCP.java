@@ -152,6 +152,14 @@ public class HikariCP {
                     " friendsList longtext, " +
                     " PRIMARY KEY ( playerUUID ))";
 
+            String playTime_table = "CREATE TABLE IF NOT EXISTS playtime " +
+                    " (playerName VARCHAR(255), " +
+                    " playerUUID VARCHAR(255), " +
+                    " playTime longtext, " +
+                    " playtime_start VARCHAR(255), " +
+                    " playtime_end VARCHAR(255), " +
+                    " PRIMARY KEY ( playerUUID ))";
+
             statement.executeUpdate(ranks_table);
             statement.executeUpdate(players_table);
             statement.executeUpdate(items_table);
@@ -162,6 +170,7 @@ public class HikariCP {
             //stm.executeUpdate(minerals_table);
             statement.executeUpdate(settings_table);
             statement.executeUpdate(friends_table);
+            statement.executeUpdate(playTime_table);
 
             if (connection.isValid(20)) {
                 System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" connected to database."+Color.RESET);
