@@ -1,6 +1,7 @@
 package de.jeezycore.main;
 
-import de.jeezycore.commands.ShortenedHubCmd;
+import de.jeezycore.commands.basic.PlayTime;
+import de.jeezycore.commands.basic.ShortenedHubCmd;
 import de.jeezycore.commands.basic.gamemodes.Creative;
 import de.jeezycore.commands.basic.gamemodes.Survival;
 import de.jeezycore.commands.basic.msg.*;
@@ -76,6 +77,7 @@ public class Main extends JavaPlugin {
         //this.getCommand("fly").setExecutor(new Fly());
         this.getCommand("report").setExecutor(new Report());
         this.getCommand("core").setExecutor(new Core());
+        this.getCommand("playtime").setExecutor(new PlayTime());
         this.getCommand("permissionAdd").setExecutor(new PermissionAdd());
         this.getCommand("permissionRemove").setExecutor(new PermissionRemove());
         this.getCommand("ban").setExecutor(new Ban());

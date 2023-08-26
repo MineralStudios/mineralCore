@@ -69,6 +69,9 @@ commands:
   core:
       description: Author of the core and version.
       usage: /core
+  playtime:
+    description: Shows current playtime of a player.
+    usage: /playtime
   ban:
     description: Bans a player.
     usage: /ban <player>
