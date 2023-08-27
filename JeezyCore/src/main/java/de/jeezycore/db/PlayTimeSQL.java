@@ -8,6 +8,8 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
 import static java.time.temporal.ChronoUnit.MINUTES;
@@ -23,33 +25,41 @@ public class PlayTimeSQL {
     int playTimeResult;
 
 
-
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public void playTimeJoin(PlayerJoinEvent join) {
-        ArrayStorage.playTimeHashMap.put(join.getPlayer().getUniqueId(), LocalDateTime.now());
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-            statement = connection.createStatement();
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // here goes your code to delay
+                ArrayStorage.playTimeHashMap.put(join.getPlayer().getUniqueId(), LocalDateTime.now());
+                Connection connection = null;
+                Statement statement = null;
+                ResultSet resultSet = null;
+                try {
+                    connection = dataSource.getConnection();
+                    statement = connection.createStatement();
 
-            String select_sql ="INSERT INTO playtime" +
-                    "(playerName, playerUUID, playtime_start) " +
-                    "VALUES ('"+ join.getPlayer().getDisplayName() + "', '"+ join.getPlayer().getUniqueId() +"', "+
-                    "'"+ LocalDateTime.now().format(formatter) + "')";
-            statement.executeUpdate(select_sql);
-        } catch (SQLException e) {
-            alreadyGotPlayTime(join);
-        } finally {
-            try {
-                statement.close();
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+                    String select_sql ="INSERT INTO playtime" +
+                            "(playerName, playerUUID, playtime_start) " +
+                            "VALUES ('"+ join.getPlayer().getDisplayName() + "', '"+ join.getPlayer().getUniqueId() +"', "+
+                            "'"+ LocalDateTime.now().format(formatter) + "')";
+
+
+
+                    statement.executeUpdate(select_sql);
+                } catch (SQLException e) {
+                    alreadyGotPlayTime(join);
+                } finally {
+                    try {
+                        statement.close();
+                        connection.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-        }
+        }, 300L); // 300 is the delay in millis
     }
 
     public void alreadyGotPlayTime(PlayerJoinEvent join) {
