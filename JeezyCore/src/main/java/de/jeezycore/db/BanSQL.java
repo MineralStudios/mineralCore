@@ -3,6 +3,7 @@ package de.jeezycore.db;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.discord.messages.ban.RealtimeBan;
 import de.jeezycore.utils.ArrayStorage;
+import de.jeezycore.utils.BungeeChannelApi;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -44,7 +45,7 @@ public class BanSQL {
 
     private JSONObject json_o = new JSONObject();
 
-    
+    BungeeChannelApi bungeeChannelApi = new BungeeChannelApi();
 
     public void ban(String username, String input, Player p) {
         Connection connection = null;
@@ -66,7 +67,7 @@ public class BanSQL {
             ArrayStorage.ban_logs.add(json_o);
 
             try {
-                Bukkit.getServer().getPlayer(UUID.fromString(UUIDChecker.uuid)).kickPlayer("§7You are §4permanently §7banned from §9MineralPractice§7.\n\n" +
+                bungeeChannelApi.kickPlayer(UUIDChecker.uuidName, "§7You are §4permanently §7banned from §9MineralPractice§7.\n\n" +
                         "§7Reason: §c" + input + "\n\n" +
                         "§7If you feel this ban has been unjustified, appeal on our §9discord §7at\n §9discord.mineral.gg§7.");
             } catch (Exception e) {
@@ -118,7 +119,7 @@ public class BanSQL {
             ArrayStorage.ban_logs.add(json_o);
 
             try {
-                Bukkit.getServer().getPlayer(UUID.fromString(UUIDChecker.uuid)).kickPlayer("§7You are §4permanently §7banned from §9MineralPractice§7.\n\n" +
+                bungeeChannelApi.kickPlayer(UUIDChecker.uuidName, "§7You are §4permanently §7banned from §9MineralPractice§7.\n\n" +
                         "§7Reason: §c" + input + "\n\n" +
                         "§7If you feel this ban has been unjustified, appeal on our §9discord §7at\n §9discord.mineral.gg§7.");
             } catch (Exception e) {
@@ -271,7 +272,7 @@ public class BanSQL {
             return;
         }
 
-        p.kickPlayer("§7You are §4temporarily §7banned from §9MineralPractice§7.\n\n" +
+        bungeeChannelApi.kickPlayer(p.getDisplayName(), "§7You are §4temporarily §7banned from §9MineralPractice§7.\n\n" +
                 "§cBan duration: " + "§cDay(s): §7[§9"+days+"§7] | "+"§cHour(s): §7[§9"+hours+"§7] | "+"§cMinutes: §7[§9"+minutes+"§7] | " +"§cSeconds: §7[§9"+seconds+"§7];\n\n" +
                 "§7If you feel this ban has been unjustified, appeal on our §9discord §7at\n §9discord.mineral.gg§7.");
     }
@@ -338,12 +339,11 @@ public class BanSQL {
             ArrayStorage.ban_logs.add(json_o);
 
             try {
-                Bukkit.getServer().getPlayer(UUID.fromString(UUIDChecker.uuid)).kickPlayer("§7You are §4temporarily §7banned from §9MineralPractice§7.\n\n" +
+                bungeeChannelApi.kickPlayer(UUIDChecker.uuidName, "§7You are §4temporarily §7banned from §9MineralPractice§7.\n\n" +
                         "§7Duration: §c"+time+"\n\n" +
                         "§7Reason: §c" +reason+"\n\n"+
                         "§7If you feel this ban has been unjustified, appeal on our §9discord §7at\n §9discord.mineral.gg§7.");
             } catch (Exception e) {
-
             }
 
             String sql = "INSERT INTO punishments " +
@@ -435,12 +435,11 @@ public class BanSQL {
             ArrayStorage.ban_logs.add(json_o);
 
             try {
-                Bukkit.getServer().getPlayer(UUID.fromString(UUIDChecker.uuid)).kickPlayer("§7You are §4temporarily §7banned from §9MineralPractice§7.\n\n" +
+                bungeeChannelApi.kickPlayer(UUIDChecker.uuidName, "§7You are §4temporarily §7banned from §9MineralPractice§7.\n\n" +
                         "§7Duration: §c"+time+"\n\n" +
                         "§7Reason: §c" +reason+"\n\n"+
                         "§7If you feel this ban has been unjustified, appeal on our §9discord §7at\n §9discord.mineral.gg§7.");
             } catch (Exception e) {
-
             }
 
             String sql = "INSERT INTO punishments " +

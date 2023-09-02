@@ -67,4 +67,11 @@ public class BungeeChannelApi {
                 });
                 });
     }
+
+    public void kickPlayer(String playerName, String message) {
+        try {
+            api.kickPlayer(playerName, message);
+        } catch (Exception e) {
+        }
+    }
 }
