@@ -1,7 +1,7 @@
 package de.jeezycore.commands.basic;
 
 import com.google.common.base.Joiner;
-import org.bukkit.Bukkit;
+import de.jeezycore.utils.BungeeChannelApi;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Brodcast implements CommandExecutor {
+public class Alert implements CommandExecutor {
+
+    BungeeChannelApi bungeeChannelApi = new BungeeChannelApi();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -21,21 +23,16 @@ public class Brodcast implements CommandExecutor {
 
             List<String> ls = new ArrayList<String>(Arrays.asList(args));
 
-            if (cmd.getName().equalsIgnoreCase("brodcast") && args.length > 0) {
-                if (p.hasPermission("jeezy.core.staff.brodcast")) {
+            if (cmd.getName().equalsIgnoreCase("alert") && args.length > 0) {
+                if (p.hasPermission("jeezy.core.staff.alerts")) {
 
                     String input = Joiner.on(" ")
                             .skipNulls()
                             .join(ls);
-
-                    System.out.println(input);
-
-                    for (Player ps : Bukkit.getOnlinePlayers()) {
-                        ps.sendMessage("§7§l[§6§lBrodcast§7§l] §f"+input.replace("&", "§"));
-                    }
+                    bungeeChannelApi.broadcastMessage("§7§l[§4§lALERT§7§l] §f"+input.replace("&", "§"));
                 }
                 } else {
-                p.sendMessage("Usage: /brodcast <message>");
+                p.sendMessage("Usage: /alert <message>");
             }
         }
         return true;

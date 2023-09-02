@@ -74,4 +74,13 @@ public class BungeeChannelApi {
         } catch (Exception e) {
         }
     }
+
+    public void broadcastMessage(String input) {
+        api.getPlayerList("ALL")
+                .whenComplete((result, error) -> {
+                    for (String playerName : result) {
+                        api.sendMessage(playerName, input);
+                    }
+                });
+    }
 }

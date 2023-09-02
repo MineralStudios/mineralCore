@@ -159,9 +159,9 @@ commands:
   disguise:
     usage: /disguise <player>
     description: Disguises player to another player.
-  brodcast:
-    usage: /brodcast <message>
-    description: Brodcast a message to all online players.
+  alert:
+    usage: /alert <message>
+    description: Broadcast a message to all online players.
   #languages:
    # usage: Shows all available languages.
     #description: /languages
