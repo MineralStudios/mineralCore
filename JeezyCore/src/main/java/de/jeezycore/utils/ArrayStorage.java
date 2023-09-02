@@ -87,4 +87,6 @@ public class ArrayStorage {
 
     public static HashMap<UUID, LocalDateTime> playTimeHashMap = new HashMap<>();
 
+    public static ArrayList<UUID> freezeList = new ArrayList<>();
+
 }

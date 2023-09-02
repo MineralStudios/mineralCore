@@ -183,3 +183,9 @@ commands:
   send:
     usage: /send <player> <server>
     description: Sends a player to another server in the network.
+  freeze:
+    usage: /freeze <playerName>
+    description: Freezes a player.
+  unfreeze:
+    usage: /unfreeze <playerName>
+    description: Unfreezes a player.

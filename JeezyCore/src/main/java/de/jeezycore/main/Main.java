@@ -11,6 +11,8 @@ import de.jeezycore.commands.chatColors.CreateChatColor;
 import de.jeezycore.commands.chatColors.GrantChatColor;
 import de.jeezycore.commands.chatColors.UnGrantChatColors;
 import de.jeezycore.commands.friends.FriendsCommands;
+import de.jeezycore.commands.punishments.freeze.Freeze;
+import de.jeezycore.commands.punishments.freeze.UnFreeze;
 import de.jeezycore.commands.ranks.UnGrantRank;
 import de.jeezycore.commands.staff.Logs;
 import de.jeezycore.db.hikari.HikariCP;
@@ -117,6 +119,8 @@ public class Main extends JavaPlugin {
         this.getCommand("hub").setExecutor(new Hub());
         this.getCommand("l").setExecutor(new ShortenedHubCmd());
         this.getCommand("send").setExecutor(new Send());
+        this.getCommand("freeze").setExecutor(new Freeze());
+        this.getCommand("unfreeze").setExecutor(new UnFreeze());
 
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
@@ -128,6 +132,7 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new WeatherEvent(), this);
         getServer().getPluginManager().registerEvents(new QuitEvent(disguiseManager), this);
         getServer().getPluginManager().registerEvents(new PlayerCommandPreprocessEvent(), this);
+        getServer().getPluginManager().registerEvents(new MoveEvent(), this);
 
         // Setups Databases + Tables
         HikariCP hikariCP = new HikariCP();
