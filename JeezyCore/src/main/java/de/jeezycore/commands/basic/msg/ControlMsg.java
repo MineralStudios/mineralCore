@@ -19,10 +19,10 @@ public class ControlMsg implements CommandExecutor {
             settingsSQL.getSettingsData(p.getUniqueId());
             if (settingsSQL.settingsMsg) {
                 settingsSQL.disableMsg(p);
-                p.sendMessage("§7You successfully §2enabled §7private messages.");
+                p.sendMessage("§7You successfully §cdisabled §7private messages.");
             } else {
                 settingsSQL.enableMsg(p);
-                p.sendMessage("§7You successfully §cdisabled §7private messages.");
+                p.sendMessage("§7You successfully §2enabled §7private messages.");
             }
         } else {
             p.sendMessage("Usage: /tpm");

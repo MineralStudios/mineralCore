@@ -42,7 +42,7 @@ public class Reply implements CommandExecutor {
                 uc.check(result);
                 settingsSQL.getSettingsData(UUID.fromString(UUIDChecker.uuid));
 
-                if (settingsSQL.settingsMsg) {
+                if (!settingsSQL.settingsMsg && settingsSQL.playerUUID != null) {
                     p.sendMessage("§9"+result+" §7has turned off his §9private §7messages.");
                     return true;
                 }
@@ -63,7 +63,7 @@ public class Reply implements CommandExecutor {
                 display.displayChatRank(sql);
 
                 Bukkit.getPlayer(result).sendMessage("§9From§7 ("+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§7)"+"§7 "+input);
-                if (settingsSQL.settingsPmSound) {
+                if (settingsSQL.playerUUID == null || settingsSQL.settingsPmSound) {
                     Bukkit.getPlayer(result).playSound(Bukkit.getPlayer(result).getLocation(), Sound.ANVIL_LAND, 2L, 2L);
                 }
                 reply_array.put(result, p.getPlayer().getDisplayName());

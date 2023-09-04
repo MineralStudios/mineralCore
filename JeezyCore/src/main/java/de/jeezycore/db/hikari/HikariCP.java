@@ -143,6 +143,7 @@ public class HikariCP {
                     " playerUUID VARCHAR(255), " +
                     " ignoredPlayerList longtext, " +
                     " msg boolean, " +
+                    " friendsRequests boolean, " +
                     " pmSound boolean, " +
                     " friendsSound boolean, " +
                     " PRIMARY KEY ( playerUUID ))";
@@ -150,7 +151,6 @@ public class HikariCP {
             String friends_table = "CREATE TABLE IF NOT EXISTS friends " +
                     " (playerName VARCHAR(255), " +
                     " playerUUID VARCHAR(255), " +
-                    " friendsStatus boolean, " +
                     " friendsList longtext, " +
                     " PRIMARY KEY ( playerUUID ))";
 

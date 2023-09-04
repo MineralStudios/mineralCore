@@ -32,8 +32,6 @@ public class FriendsSQL {
 
     boolean friendsLimitStatus;
 
-    public boolean friendsStatus;
-
     public String [] friendsListArray;
 
     RanksSQL ranksSQL = new RanksSQL();
@@ -337,92 +335,33 @@ public class FriendsSQL {
         }
     }
 
-    public void getFriendsStatus(Player p) {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-            statement = connection.createStatement();
-            String sql_select = "SELECT * FROM friends WHERE playerUUID = '"+p.getUniqueId()+"'";
-            resultSet = statement.executeQuery(sql_select);
-
-            if (!resultSet.next()) {
-                playerUUID = null;
-                friendsStatus = false;
-            } else {
-                do {
-                    playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
-                    friendsStatus = resultSet.getBoolean("friendsStatus");
-                } while (resultSet.next());
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                resultSet.close();
-                statement.close();
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
     public void friendsSwitcherMYSQL(Player sender, String switcher, String message) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
         try {
+            settingsSQL.setup(sender);
+            settingsSQL.getSettingsData(sender.getUniqueId());
             connection = dataSource.getConnection();
             statement = connection.createStatement();
-            String sql_select = "SELECT * FROM friends WHERE playerUUID = '"+sender.getUniqueId()+"'";
-            resultSet = statement.executeQuery(sql_select);
-
-            if (!resultSet.next()) {
-                playerUUID = null;
-                friendsStatus = false;
-            } else {
-                do {
-                    playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
-                    friendsStatus = resultSet.getBoolean("friendsStatus");
-                } while (resultSet.next());
-            }
 
 
-            System.out.println(friendsStatus);
-            System.out.println(Boolean.parseBoolean(switcher));
-            System.out.println(friendsStatus == Boolean.parseBoolean(switcher));
+            String sqlUpdateMsg = "UPDATE settings " +
+                    "SET friendsRequests = "+switcher+
+                    " WHERE playerUUID = '"+sender.getUniqueId()+"'";
+            statement.executeUpdate(sqlUpdateMsg);
 
-            if (friendsStatus == Boolean.parseBoolean(switcher)) {
-                sender.sendMessage("§7§l[§9FRIENDS§7§l] §7Your §9friends §7requests are §calready §7"+message.substring(2)+"!");
-                return;
-            }
-
-
-            if (playerUUID == null) {
-                statement.executeUpdate("INSERT INTO friends" +
-                        "(playerName, playerUUID, friendsStatus) " +
-                        "VALUES ('"+sender.getDisplayName()+"', '"+sender.getUniqueId()+"', "+switcher+")");
-            } else {
-                statement.executeUpdate("UPDATE friends " +
-                        "SET friendsStatus = "+switcher+
-                        " WHERE playerUUID = '"+sender.getUniqueId()+"'");
-            }
             sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You §7successfully "+message+" §9friends §7requests.");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
-                resultSet.close();
                 statement.close();
                 connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-
     }
 
     private void removeFriendsMYSQL(UUID uuid) {
@@ -467,12 +406,10 @@ public class FriendsSQL {
             if (!resultSet.next()) {
                 friendsListArray = null;
                 friendsListArrayString = null;
-                friendsStatus = false;
                 friendsList.clear();
             } else {
                 do {
                     try {
-                        friendsStatus = resultSet.getBoolean("friendsStatus");
                         friendsListArrayString = resultSet.getString("friendsList");
                         friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
                         friendsList.addAll(Arrays.asList(friendsListArray));
@@ -690,13 +627,12 @@ public class FriendsSQL {
                     sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You §calready §7have §9"+receiver.getDisplayName()+" §7as a friend.");
                     return;
                 }
+                settingsSQL.getSettingsData(receiver.getUniqueId());
                 friendsData(receiver.getUniqueId());
-                if (friendsStatus) {
+                if (!settingsSQL.friendsRequests && settingsSQL.playerUUID != null) {
                     sender.sendMessage("§7§l[§9FRIENDS§7§l] §9"+receiver.getDisplayName() + " §7has turned §coff §7friends requests.");
                     return;
                 }
-
-                settingsSQL.getSettingsData(receiver.getUniqueId());
 
                 friendRequestsArrayList.add(receiver.getUniqueId());
                 friendRequestsList.put(sender.getPlayer().getUniqueId(), friendRequestsArrayList);
@@ -716,7 +652,7 @@ public class FriendsSQL {
                     receiver.sendMessage(message);
                     receiver.sendMessage("                                                                    ");
 
-                    if (settingsSQL.settingsFriendsSound) {
+                if (settingsSQL.playerUUID == null || settingsSQL.settingsFriendsSound) {
                         receiver.playSound(receiver.getLocation(), Sound.ENDERDRAGON_GROWL, 2L, 2L);
                     }
                 } else {

@@ -10,10 +10,14 @@ import static de.jeezycore.utils.ArrayStorage.*;
 
 public class SettingsSQL {
 
+    public String playerUUID;
 
     String settingsAvailable;
 
     public String settingsIgnoredList;
+
+    public boolean friendsRequests;
+
     public boolean settingsMsg;
 
     public boolean settingsPmSound;
@@ -21,7 +25,7 @@ public class SettingsSQL {
     public boolean settingsFriendsSound;
     
 
-    private void setup(Player p) {
+    public void setup(Player p) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -39,9 +43,9 @@ public class SettingsSQL {
             }
             if (settingsAvailable == null) {
                 String sql_settings_available ="INSERT INTO settings" +
-                        "(playerName, playerUUID, ignoredPlayerList, msg, pmSound, friendsSound) " +
+                        "(playerName, playerUUID, ignoredPlayerList, msg, friendsRequests, pmSound, friendsSound) " +
                         "VALUES ('"+p.getDisplayName()+"', '"+p.getUniqueId()+"', " +
-                        "NULL, false, false, false)";
+                        "NULL, true, true, true, true)";
                 statement.executeUpdate(sql_settings_available);
             }
         } catch (SQLException e) {
@@ -68,13 +72,17 @@ public class SettingsSQL {
             resultSet = statement.executeQuery(sql_select);
 
             if (!resultSet.next()) {
+                playerUUID = null;
                 settingsIgnoredList = null;
                 settingsMsg = false;
+                friendsRequests = false;
                 settingsPmSound = false;
                 settingsFriendsSound = false;
             } else {
                 do {
+                    playerUUID = resultSet.getString("playerUUID");
                     settingsIgnoredList = resultSet.getString(3);
+                    friendsRequests = resultSet.getBoolean("friendsRequests");
                     settingsMsg = resultSet.getBoolean(4);
                     settingsPmSound = resultSet.getBoolean("pmSound");
                     settingsFriendsSound = resultSet.getBoolean("friendsSound");
