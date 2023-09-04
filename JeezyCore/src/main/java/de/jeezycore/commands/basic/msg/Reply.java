@@ -5,6 +5,7 @@ import de.jeezycore.db.RanksSQL;
 import de.jeezycore.db.SettingsSQL;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -62,6 +63,7 @@ public class Reply implements CommandExecutor {
                 display.displayChatRank(sql);
 
                 Bukkit.getPlayer(result).sendMessage("§9From§7 ("+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§7)"+"§7 "+input);
+                Bukkit.getPlayer(result).playSound(Bukkit.getPlayer(result).getLocation(), Sound.ANVIL_LAND, 2L, 2L);
                 reply_array.put(result, p.getPlayer().getDisplayName());
 
 
