@@ -63,9 +63,10 @@ public class Reply implements CommandExecutor {
                 display.displayChatRank(sql);
 
                 Bukkit.getPlayer(result).sendMessage("§9From§7 ("+display.rankColor.replace("&", "§")+p.getPlayer().getDisplayName()+"§7)"+"§7 "+input);
-                Bukkit.getPlayer(result).playSound(Bukkit.getPlayer(result).getLocation(), Sound.ANVIL_LAND, 2L, 2L);
+                if (settingsSQL.settingsPmSound) {
+                    Bukkit.getPlayer(result).playSound(Bukkit.getPlayer(result).getLocation(), Sound.ANVIL_LAND, 2L, 2L);
+                }
                 reply_array.put(result, p.getPlayer().getDisplayName());
-
 
                 uc.check(result);
                 display.getColorsForMessages(UUID.fromString(UUIDChecker.uuid));

@@ -121,6 +121,7 @@ public class Main extends JavaPlugin {
         this.getCommand("send").setExecutor(new Send());
         this.getCommand("freeze").setExecutor(new Freeze());
         this.getCommand("unfreeze").setExecutor(new UnFreeze());
+        this.getCommand("pmSound").setExecutor(new PmSound());
 
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);

@@ -189,3 +189,6 @@ commands:
   unfreeze:
     usage: /unfreeze <playerName>
     description: Unfreezes a player.
+  pmSound:
+    usage: /pmSound
+    description: Toggles private message sound.

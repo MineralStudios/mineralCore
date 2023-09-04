@@ -38,6 +38,8 @@ public class FriendsSQL {
 
     RanksSQL ranksSQL = new RanksSQL();
 
+    SettingsSQL settingsSQL = new SettingsSQL();
+
 
     public void getAllFriendsData(Player p) {
         Connection connection = null;
@@ -694,6 +696,7 @@ public class FriendsSQL {
                     return;
                 }
 
+                settingsSQL.getSettingsData(receiver.getUniqueId());
 
                 friendRequestsArrayList.add(receiver.getUniqueId());
                 friendRequestsList.put(sender.getPlayer().getUniqueId(), friendRequestsArrayList);
@@ -713,7 +716,9 @@ public class FriendsSQL {
                     receiver.sendMessage(message);
                     receiver.sendMessage("                                                                    ");
 
-                    receiver.playSound(receiver.getLocation(), Sound.ENDERDRAGON_GROWL, 2L, 2L);
+                    if (settingsSQL.settingsFriendsSound) {
+                        receiver.playSound(receiver.getLocation(), Sound.ENDERDRAGON_GROWL, 2L, 2L);
+                    }
                 } else {
                 sender.sendMessage("§7The player §c"+playerName+" §7isn't online.");
             }
@@ -808,7 +813,7 @@ public class FriendsSQL {
                 }
             }
         };
-        time.schedule(RemoveAddList, 3000);
+        time.schedule(RemoveAddList, 10000);
     }
 
     private void timeRemoverForFriendsRequests(Player sender, Player receiver) {

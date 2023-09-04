@@ -1,27 +1,24 @@
 package de.jeezycore.db;
 
-import de.jeezycore.config.JeezyConfig;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
-
 import java.sql.*;
 import java.util.Arrays;
 import java.util.UUID;
-
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
 import static de.jeezycore.utils.ArrayStorage.*;
 
 public class SettingsSQL {
 
-    String url;
-    String user;
-    String password;
 
     String settingsAvailable;
 
     public String settingsIgnoredList;
     public boolean settingsMsg;
+
+    public boolean settingsPmSound;
+
+    public boolean settingsFriendsSound;
     
 
     private void setup(Player p) {
@@ -42,9 +39,9 @@ public class SettingsSQL {
             }
             if (settingsAvailable == null) {
                 String sql_settings_available ="INSERT INTO settings" +
-                        "(playerName, playerUUID, ignoredPlayerList, msg) " +
+                        "(playerName, playerUUID, ignoredPlayerList, msg, pmSound, friendsSound) " +
                         "VALUES ('"+p.getDisplayName()+"', '"+p.getUniqueId()+"', " +
-                        "NULL, false)";
+                        "NULL, false, false, false)";
                 statement.executeUpdate(sql_settings_available);
             }
         } catch (SQLException e) {
@@ -73,10 +70,14 @@ public class SettingsSQL {
             if (!resultSet.next()) {
                 settingsIgnoredList = null;
                 settingsMsg = false;
+                settingsPmSound = false;
+                settingsFriendsSound = false;
             } else {
                 do {
                     settingsIgnoredList = resultSet.getString(3);
                     settingsMsg = resultSet.getBoolean(4);
+                    settingsPmSound = resultSet.getBoolean("pmSound");
+                    settingsFriendsSound = resultSet.getBoolean("friendsSound");
                 } while (resultSet.next());
             }
 
@@ -280,6 +281,102 @@ public class SettingsSQL {
             msg_ignore_array.clear();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void enablePmSound(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            this.setup(p);
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sqlUpdatePmSound = "UPDATE settings " +
+                    "SET pmSound = true"+
+                    " WHERE playerUUID = '"+p.getUniqueId()+"'";
+            statement.executeUpdate(sqlUpdatePmSound);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void disablePmSound(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            this.setup(p);
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sqlUpdatePmSound = "UPDATE settings " +
+                    "SET pmSound = false"+
+                    " WHERE playerUUID = '"+p.getUniqueId()+"'";
+            statement.executeUpdate(sqlUpdatePmSound);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void enableFriendsSound(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            this.setup(p);
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sqlUpdatePmSound = "UPDATE settings " +
+                    "SET friendsSound = true"+
+                    " WHERE playerUUID = '"+p.getUniqueId()+"'";
+            statement.executeUpdate(sqlUpdatePmSound);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void disableFriendsSound(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            this.setup(p);
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sqlUpdatePmSound = "UPDATE settings " +
+                    "SET friendsSound = false"+
+                    " WHERE playerUUID = '"+p.getUniqueId()+"'";
+            statement.executeUpdate(sqlUpdatePmSound);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package de.jeezycore.commands.friends;
 
 import de.jeezycore.db.FriendsSQL;
+import de.jeezycore.db.SettingsSQL;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,6 +10,7 @@ import org.bukkit.entity.Player;
 public class FriendsCommands implements CommandExecutor {
 
     FriendsSQL friendsSQL = new FriendsSQL();
+    SettingsSQL settingsSQL = new SettingsSQL();
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -80,6 +82,16 @@ public class FriendsCommands implements CommandExecutor {
                             helpMessage(p);
                         }
                         break;
+                    case "sound":
+                         settingsSQL.getSettingsData(p.getUniqueId());
+                         if (settingsSQL.settingsFriendsSound) {
+                             settingsSQL.disableFriendsSound(p);
+                             p.sendMessage("§7You successfully §cdisabled §7friends message §9sounds§7.");
+                         } else {
+                             settingsSQL.enableFriendsSound(p);
+                             p.sendMessage("§7You successfully §aenabled §7friends message §9sounds§7.");
+                         }
+                         break;
                     default:
                         helpMessage(p);
                         break;
@@ -111,6 +123,7 @@ public class FriendsCommands implements CommandExecutor {
                 " §f/§9friends §flist §7<page> §f- §7Lists all friends you have.",
                 " §f/§9friends §fenable §f- §7Enables you from receiving friends requests.",
                 " §f/§9friends §fdisable §f- §7Stops you from receiving friends requests.",
+                " §f/§9friends §fsound §f- §7Toggles the sound.",
                 "                                                                       "
         });
     }
