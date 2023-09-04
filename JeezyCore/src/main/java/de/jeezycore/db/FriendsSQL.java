@@ -5,6 +5,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -712,6 +713,7 @@ public class FriendsSQL {
                     receiver.sendMessage(message);
                     receiver.sendMessage("                                                                    ");
 
+                    receiver.playSound(receiver.getLocation(), Sound.ENDERDRAGON_GROWL, 2L, 2L);
                 } else {
                 sender.sendMessage("§7The player §c"+playerName+" §7isn't online.");
             }
