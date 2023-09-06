@@ -1,8 +1,10 @@
 package de.jeezycore.utils;
 
+
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.RanksSQL;
 import de.jeezycore.db.StaffSQL;
+import de.jeezycore.events.chat.StaffChat;
 import de.jeezycore.main.Main;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
@@ -81,6 +83,33 @@ public class BungeeChannelApi {
                     for (String playerName : result) {
                         api.sendMessage(playerName, input);
                     }
+                });
+    }
+
+    public void reportPlayer(Player sender, String playerName, String input) {
+        StaffChat staffChat = new StaffChat();
+        api.getServer()
+                .whenComplete((server, errorServer) -> {
+                    api.getPlayerList("ALL")
+                            .whenComplete((result, error) -> {
+
+                    if (sender.getDisplayName().equalsIgnoreCase(playerName)) {
+                        sender.sendMessage("§7You can't §creport §7yourself!");
+                        return;
+                    }
+
+                    if (result.contains(playerName)) {
+                        String report_msg = "§7§l[§4Report§7§l] "+ "§7(§9"+server+"§7)"+ " ("+"§a"+sender.getDisplayName()+"§6§l -> §7"+"§c"+playerName+"§7§l) §c§lReason§f§l: §7"+input;
+
+                        staffChat.reportChat(sender, report_msg, api, result);
+
+                        sender.sendMessage("§7You §a§lsuccessfully §7reported "+"§9"+playerName+"§7.\n" +
+                                "§7§l► §9Thanks §7for §9§lcaring §7about our §9§lcommunity§7. §7§l[§4§l❤§7§l]");
+
+                    } else {
+                        sender.sendMessage("§7The §9player §7isn't currently §conline§7.");
+                    }
+                            });
                 });
     }
 }

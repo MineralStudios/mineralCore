@@ -6,6 +6,8 @@ import de.jeezycore.utils.BungeeChannelApi;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+
+import java.util.List;
 import java.util.UUID;
 
 
@@ -62,22 +64,19 @@ public class StaffChat {
         }
     }
 
-    public void reportChat(Player p, String message) {
+    public void reportChat(Player p, String message, io.github.leonardosnt.bungeechannelapi.BungeeChannelApi api, List<String> result) {
         staffSQL.getStaff();
 
         display.getPlayerInformation(p.getPlayer());
         String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
         display.displayChatRank(sql);
 
-
         for (int i = 0; i < StaffSQL.staff.size(); i++) {
-
             try {
-                if (!Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).isOnline()) {
+                if (!result.contains(StaffSQL.staff.get(i))) {
                     continue;
                 }
-                Bukkit.getPlayer(UUID.fromString(StaffSQL.staff.get(i))).sendMessage(message);
-
+                api.sendMessage(StaffSQL.staff.get(i), message);
             } catch (Exception f) {
             }
         }
