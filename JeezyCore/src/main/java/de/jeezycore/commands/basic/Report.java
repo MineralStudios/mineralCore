@@ -27,7 +27,7 @@ public class Report implements CommandExecutor {
                         .skipNulls()
                         .join(ls).replace(args[0], "").replaceAll("\\s+", " ").trim();
 
-                bungeeChannelApi.reportPlayer(p, args[0], input);
+                bungeeChannelApi.BungeeReportPlayer(p, args[0], input);
             } else {
                 p.sendMessage("Usage: /report <player><message>");
             }
