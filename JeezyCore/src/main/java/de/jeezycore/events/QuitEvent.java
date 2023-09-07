@@ -1,9 +1,6 @@
 package de.jeezycore.events;
 
-import de.jeezycore.db.FriendsSQL;
-import de.jeezycore.db.PlayTimeSQL;
-import de.jeezycore.db.RanksSQL;
-import de.jeezycore.db.PlayersSQL;
+import de.jeezycore.db.*;
 import de.jeezycore.disguise.manger.DisguiseManager;
 import de.jeezycore.utils.FakePlayerChecker;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +19,8 @@ public class QuitEvent implements Listener {
 
   FriendsSQL friendsSQL = new FriendsSQL();
 
+  MsgSQL msgSQL = new MsgSQL();
+
   @EventHandler
   private void onQuit(PlayerQuitEvent event) {
     if (FakePlayerChecker.isFakePlayer(event.getPlayer()))
@@ -32,5 +31,6 @@ public class QuitEvent implements Listener {
     disguiseManager.deleteDisguise(event.getPlayer());
     ranksSQL.rankMonthlyDurationCalculator(event.getPlayer());
     playTimeSQL.playTimeQuit(event);
+    msgSQL.quit(event.getPlayer().getUniqueId());
   }
 }

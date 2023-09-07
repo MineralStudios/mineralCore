@@ -1,8 +1,8 @@
 package de.jeezycore.utils;
 
 
-import com.google.common.base.Joiner;
 import de.jeezycore.config.JeezyConfig;
+import de.jeezycore.db.MsgSQL;
 import de.jeezycore.db.RanksSQL;
 import de.jeezycore.db.SettingsSQL;
 import de.jeezycore.db.StaffSQL;
@@ -14,11 +14,11 @@ import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 import static de.jeezycore.utils.ArrayStorage.msg_ignore_array;
-import static de.jeezycore.utils.ArrayStorage.reply_array;
 
 public class BungeeChannelApi {
 
@@ -28,7 +28,7 @@ public class BungeeChannelApi {
 
     SettingsSQL settingsSQL = new SettingsSQL();
 
-    UUIDChecker uc = new UUIDChecker();
+    MsgSQL msgSQL = new MsgSQL();
 
     MemorySection hubConfig = (MemorySection) JeezyConfig.config_defaults.get("hub");
 
@@ -162,12 +162,12 @@ public class BungeeChannelApi {
                                     display.displayChatRank(sql);
 
                                     api.sendMessage(playerName, "§9From§7 ("+display.rankColor.replace("&", "§")+sender.getPlayer().getDisplayName()+"§7)"+"§7 "+input);
+                                    msgSQL.setup(UUID.fromString(getUUID), playerName, sender.getDisplayName(), sender.getUniqueId());
+                                    /*
                                     if (settingsSQL.playerUUID == null || settingsSQL.settingsPmSound) {
                                         Bukkit.getPlayer(playerName).playSound(Bukkit.getPlayer(playerName).getLocation(), Sound.ANVIL_LAND, 2L, 2L);
                                     }
-                                    reply_array.remove(sender.getPlayer().getDisplayName());
-                                    reply_array.put(playerName, sender.getPlayer().getDisplayName());
-
+                                     */
                         });
                     } else {
                         sender.sendMessage("§9"+playerName+" §7isn't §conline§7.");
@@ -178,32 +178,26 @@ public class BungeeChannelApi {
     public void BungeeReply(Player sender, String input) {
         api.getPlayerList("ALL")
                 .whenComplete((result, error) -> {
+                    msgSQL.getReplyData(sender.getUniqueId());
+                    api.getUUID(msgSQL.replyToName)
+                            .whenComplete((uuid, slow) -> {
 
-                    String resultArray = reply_array.get(sender.getPlayer().getDisplayName());
+                   String getUUID = uuid.replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5");
 
-                    if (sender.getDisplayName().equalsIgnoreCase(resultArray)) {
-                        sender.sendMessage("§7You §ccan't §7message yourself!");
-                        return;
-                    }
-
-                    if (resultArray == null || !result.contains(resultArray)) {
+                    if (!result.contains(msgSQL.replyToName) || msgSQL.playerUUID == null) {
                         sender.sendMessage("§cThere is nobody to reply to.");
                         return;
                     }
 
-            api.getUUID(resultArray)
-                    .whenComplete((uuid, slow) -> {
-                        String getUUID = uuid.replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5");
-
                     settingsSQL.getSettingsData(UUID.fromString(getUUID));
 
                     if (!settingsSQL.settingsMsg && settingsSQL.playerUUID != null) {
-                        sender.sendMessage("§9"+resultArray+" §7has turned off his §9private §7messages.");
+                        sender.sendMessage("§9"+msgSQL.replyToName +" §7has turned off his §9private §7messages.");
                         return;
                     }
 
                     if (msg_ignore_array.contains(sender.getUniqueId().toString())) {
-                        sender.sendMessage("§9"+resultArray+" §7has ignored you.");
+                        sender.sendMessage("§9"+msgSQL.replyToName +" §7has ignored you.");
                         msg_ignore_array.clear();
                         return;
                     }
@@ -212,17 +206,20 @@ public class BungeeChannelApi {
                     String sql = "SELECT * FROM ranks WHERE rankName = '"+display.privateMessageColors+"'";
                     display.displayChatRank(sql);
 
-                    api.sendMessage(resultArray, "§9From§7 ("+display.rankColor.replace("&", "§")+sender.getPlayer().getDisplayName()+"§7)"+"§7 "+input);
+                    api.sendMessage(msgSQL.replyToName, "§9From§7 ("+display.rankColor.replace("&", "§")+sender.getPlayer().getDisplayName()+"§7)"+"§7 "+input);
+                    /*
                     if (settingsSQL.playerUUID == null || settingsSQL.settingsPmSound) {
-                        Bukkit.getPlayer(resultArray).playSound(Bukkit.getPlayer(resultArray).getLocation(), Sound.ANVIL_LAND, 2L, 2L);
+                        Bukkit.getPlayer(msgSQL.replyToName).playSound(Bukkit.getPlayer(msgSQL.replyToName).getLocation(), Sound.ANVIL_LAND, 2L, 2L);
                     }
-                    reply_array.put(resultArray, sender.getPlayer().getDisplayName());
-
+                     */
                     display.getColorsForMessages(UUID.fromString(getUUID));
                     sql = "SELECT * FROM ranks WHERE rankName = '"+display.privateMessageColors+"'";
                     display.displayChatRank(sql);
 
-                    sender.sendMessage("§9To§7 ("+display.rankColor.replace("&", "§")+resultArray+"§7)"+"§7 "+input);
+                    sender.sendMessage("§9To§7 ("+display.rankColor.replace("&", "§")+msgSQL.replyToName +"§7)"+"§7 "+input);
+
+                    msgSQL.setup(UUID.fromString(getUUID), msgSQL.replyToName, sender.getDisplayName(), sender.getUniqueId());
+
                 });
                 });
     }
