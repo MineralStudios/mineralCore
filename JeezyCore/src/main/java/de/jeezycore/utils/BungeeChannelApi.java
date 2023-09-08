@@ -14,6 +14,7 @@ import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -163,12 +164,8 @@ public class BungeeChannelApi {
 
                                     api.sendMessage(playerName, "§9From§7 ("+display.rankColor.replace("&", "§")+sender.getPlayer().getDisplayName()+"§7)"+"§7 "+input);
                                     msgSQL.setup(UUID.fromString(getUUID), playerName, sender.getDisplayName(), sender.getUniqueId());
-                                    /*
-                                    if (settingsSQL.playerUUID == null || settingsSQL.settingsPmSound) {
-                                        Bukkit.getPlayer(playerName).playSound(Bukkit.getPlayer(playerName).getLocation(), Sound.ANVIL_LAND, 2L, 2L);
-                                    }
-                                     */
-                        });
+                                    this.playSound(playerName);
+                                });
                     } else {
                         sender.sendMessage("§9"+playerName+" §7isn't §conline§7.");
                     }
@@ -207,11 +204,8 @@ public class BungeeChannelApi {
                     display.displayChatRank(sql);
 
                     api.sendMessage(msgSQL.replyToName, "§9From§7 ("+display.rankColor.replace("&", "§")+sender.getPlayer().getDisplayName()+"§7)"+"§7 "+input);
-                    /*
-                    if (settingsSQL.playerUUID == null || settingsSQL.settingsPmSound) {
-                        Bukkit.getPlayer(msgSQL.replyToName).playSound(Bukkit.getPlayer(msgSQL.replyToName).getLocation(), Sound.ANVIL_LAND, 2L, 2L);
-                    }
-                     */
+
+
                     display.getColorsForMessages(UUID.fromString(getUUID));
                     sql = "SELECT * FROM ranks WHERE rankName = '"+display.privateMessageColors+"'";
                     display.displayChatRank(sql);
@@ -219,8 +213,20 @@ public class BungeeChannelApi {
                     sender.sendMessage("§9To§7 ("+display.rankColor.replace("&", "§")+msgSQL.replyToName +"§7)"+"§7 "+input);
 
                     msgSQL.setup(UUID.fromString(getUUID), msgSQL.replyToName, sender.getDisplayName(), sender.getUniqueId());
+                    this.playSound(msgSQL.replyToName);
+                });
+                });
+    }
 
-                });
-                });
+    public void playSound(String playerName) {
+        byte[] soundByte = "Hello World".getBytes();
+        api.forwardToPlayer(playerName, "BungeeCord", soundByte);
+
+        api.registerForwardListener((channelName, player, data) -> {
+
+                    if (settingsSQL.playerUUID == null || settingsSQL.settingsPmSound) {
+                        player.playSound(player.getLocation(), Sound.ANVIL_LAND, 2L, 2L);
+                    }
+        });
     }
 }
