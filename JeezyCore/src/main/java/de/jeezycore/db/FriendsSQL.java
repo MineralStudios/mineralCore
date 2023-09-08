@@ -1,5 +1,6 @@
 package de.jeezycore.db;
 
+import de.jeezycore.utils.BungeeChannelApi;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -37,6 +38,8 @@ public class FriendsSQL {
     RanksSQL ranksSQL = new RanksSQL();
 
     SettingsSQL settingsSQL = new SettingsSQL();
+
+    BungeeChannelApi bungeeChannelApi = new BungeeChannelApi();
 
 
     public void getAllFriendsData(Player p) {
@@ -652,9 +655,7 @@ public class FriendsSQL {
                     receiver.sendMessage(message);
                     receiver.sendMessage("                                                                    ");
 
-                if (settingsSQL.playerUUID == null || settingsSQL.settingsFriendsSound) {
-                        receiver.playSound(receiver.getLocation(), Sound.ENDERDRAGON_GROWL, 2L, 2L);
-                    }
+                 bungeeChannelApi.playFriendsSound(receiver.getDisplayName());
                 } else {
                 sender.sendMessage("§7The player §c"+playerName+" §7isn't online.");
             }

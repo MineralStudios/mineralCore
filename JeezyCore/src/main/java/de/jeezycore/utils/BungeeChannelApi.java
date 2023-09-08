@@ -8,15 +8,11 @@ import de.jeezycore.db.SettingsSQL;
 import de.jeezycore.db.StaffSQL;
 import de.jeezycore.events.chat.StaffChat;
 import de.jeezycore.main.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import java.util.Arrays;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
 import static de.jeezycore.utils.ArrayStorage.msg_ignore_array;
@@ -164,7 +160,7 @@ public class BungeeChannelApi {
 
                                     api.sendMessage(playerName, "§9From§7 ("+display.rankColor.replace("&", "§")+sender.getPlayer().getDisplayName()+"§7)"+"§7 "+input);
                                     msgSQL.setup(UUID.fromString(getUUID), playerName, sender.getDisplayName(), sender.getUniqueId());
-                                    this.playSound(playerName);
+                                    this.playPrivateMessageSound(playerName);
                                 });
                     } else {
                         sender.sendMessage("§9"+playerName+" §7isn't §conline§7.");
@@ -213,12 +209,12 @@ public class BungeeChannelApi {
                     sender.sendMessage("§9To§7 ("+display.rankColor.replace("&", "§")+msgSQL.replyToName +"§7)"+"§7 "+input);
 
                     msgSQL.setup(UUID.fromString(getUUID), msgSQL.replyToName, sender.getDisplayName(), sender.getUniqueId());
-                    this.playSound(msgSQL.replyToName);
+                    this.playPrivateMessageSound(msgSQL.replyToName);
                 });
                 });
     }
 
-    public void playSound(String playerName) {
+    public void playPrivateMessageSound(String playerName) {
         byte[] soundByte = "Hello World".getBytes();
         api.forwardToPlayer(playerName, "BungeeCord", soundByte);
 
@@ -227,6 +223,18 @@ public class BungeeChannelApi {
                     if (settingsSQL.playerUUID == null || settingsSQL.settingsPmSound) {
                         player.playSound(player.getLocation(), Sound.ANVIL_LAND, 2L, 2L);
                     }
+        });
+    }
+
+    public void playFriendsSound(String playerName) {
+        byte[] soundByte = "Hello World".getBytes();
+        api.forwardToPlayer(playerName, "BungeeCord", soundByte);
+
+        api.registerForwardListener((channelName, player, data) -> {
+
+            if (settingsSQL.playerUUID == null || settingsSQL.settingsFriendsSound) {
+                player.playSound(player.getLocation(), Sound.ENDERDRAGON_GROWL, 2L, 2L);
+            }
         });
     }
 }
