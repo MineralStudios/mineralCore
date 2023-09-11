@@ -7,7 +7,6 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import de.jeezycore.velocity.events.CommandExecuteEvent;
-import de.jeezycore.velocity.events.LoginEvent;
 import java.util.logging.Logger;
 
 @Plugin(id = "mineralcore", name = "MineralCore", version = "1.0",
@@ -26,7 +25,6 @@ public class Main {
     }
     @Subscribe
     public void onInitialize(ProxyInitializeEvent event) {
-        server.getEventManager().register(this, new LoginEvent());
         server.getEventManager().register(this, new CommandExecuteEvent());
         server.getChannelRegistrar().register(MinecraftChannelIdentifier.from("bungeecord:main"));
     }
