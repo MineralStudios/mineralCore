@@ -1,22 +1,15 @@
 package de.jeezycore.db;
 
 import de.jeezycore.utils.BungeeChannelApi;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
-
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
 import static de.jeezycore.utils.ArrayStorage.*;
 
@@ -610,57 +603,55 @@ public class FriendsSQL {
 
     public void addFriends(Player sender, String playerName) {
         try {
-            Player receiver = Bukkit.getPlayerExact(playerName);
-            if (receiver != null) {
-                checkFriendsLimit(sender);
-                if (friendsLimitStatus) {
-                    sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You have §calready §7reached the friends limit of §9"+friendsLimit+" §7friends.");
-                    return;
-                }
-
-                    if (friendRequestsList.containsKey(sender.getPlayer().getUniqueId())) {
-                        if (friendRequestsList.get(sender.getPlayer().getUniqueId()).contains(receiver.getUniqueId())) {
-                            sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You have §calready §7sent a friend request to §9"+playerName+"§7.");
+            bungeeChannelApi.getPlayerStatus(playerName);
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (bungeeChannelApi.isPlayerOnline) {
+                        checkFriendsLimit(sender);
+                        if (friendsLimitStatus) {
+                            sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You have §calready §7reached the friends limit of §9"+friendsLimit+" §7friends.");
                             return;
                         }
+
+                        if (friendRequestsList.containsKey(sender.getPlayer().getUniqueId())) {
+                            if (friendRequestsList.get(sender.getPlayer().getUniqueId()).contains(bungeeChannelApi.getUUID)) {
+                                sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You have §calready §7sent a friend request to §9"+playerName+"§7.");
+                                return;
+                            }
+                        }
+
+                        friendsData(sender.getUniqueId());
+                        if (friendsList.contains(bungeeChannelApi.getUUID.toString())) {
+                            sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You §calready §7have §9"+playerName+" §7as a friend.");
+                            return;
+                        }
+                        settingsSQL.getSettingsData(bungeeChannelApi.getUUID);
+                        friendsData(bungeeChannelApi.getUUID);
+                        if (!settingsSQL.friendsRequests && settingsSQL.playerUUID != null) {
+                            sender.sendMessage("§7§l[§9FRIENDS§7§l] §9"+playerName + " §7has turned §coff §7friends requests.");
+                            return;
+                        }
+
+                        friendRequestsArrayList.add(bungeeChannelApi.getUUID);
+                        friendRequestsList.put(sender.getPlayer().getUniqueId(), friendRequestsArrayList);
+
+                        friendsAddArrayList.add(bungeeChannelApi.getUUID);
+                        friendsAddList.put(sender.getPlayer().getUniqueId(), friendsAddArrayList);
+
+                        sender.sendMessage("§7You §2successfully §7sent a friend request to §9"+playerName+"§7.");
+
+                        bungeeChannelApi.sendFriendRequest(sender, sender.getDisplayName(), playerName);
+
+                        bungeeChannelApi.playFriendsSound(playerName);
+
+                        timeRemoverForFriendsAdd(sender, bungeeChannelApi.getUUID);
+                        timeRemoverForFriendsRequests(sender, bungeeChannelApi.getUUID);
+                    } else {
+                        sender.sendMessage("§7The player §c"+playerName+" §7isn't online.");
                     }
-
-                friendsData(sender.getUniqueId());
-                if (friendsList.contains(receiver.getUniqueId().toString())) {
-                    sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You §calready §7have §9"+receiver.getDisplayName()+" §7as a friend.");
-                    return;
                 }
-                settingsSQL.getSettingsData(receiver.getUniqueId());
-                friendsData(receiver.getUniqueId());
-                if (!settingsSQL.friendsRequests && settingsSQL.playerUUID != null) {
-                    sender.sendMessage("§7§l[§9FRIENDS§7§l] §9"+receiver.getDisplayName() + " §7has turned §coff §7friends requests.");
-                    return;
-                }
-
-                friendRequestsArrayList.add(receiver.getUniqueId());
-                friendRequestsList.put(sender.getPlayer().getUniqueId(), friendRequestsArrayList);
-
-                friendsAddArrayList.add(receiver.getUniqueId());
-                friendsAddList.put(sender.getPlayer().getUniqueId(), friendsAddArrayList);
-
-                sender.sendMessage("§7You §2successfully §7sent a friend request to §9"+playerName+"§7.");
-
-                    TextComponent message = new TextComponent("             §7(§2CLICK TO ACCEPT§7)                 ");
-                    message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friends accept "+sender.getDisplayName()));
-                    message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to accept the friend request.").create()));
-
-                    receiver.sendMessage("                                                                    ");
-                    receiver.sendMessage(" §9§l"+sender.getDisplayName()+" §7has sent you a §2friend §7request!");
-                    receiver.sendMessage("                                                                    ");
-                    receiver.sendMessage(message);
-                    receiver.sendMessage("                                                                    ");
-
-                 bungeeChannelApi.playFriendsSound(receiver.getDisplayName());
-                } else {
-                sender.sendMessage("§7The player §c"+playerName+" §7isn't online.");
-            }
-            timeRemoverForFriendsAdd(sender, receiver);
-            timeRemoverForFriendsRequests(sender, receiver);
+            }, 300L);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -736,13 +727,13 @@ public class FriendsSQL {
         }
     }
 
-    private void timeRemoverForFriendsAdd(Player sender, Player receiver) {
+    private void timeRemoverForFriendsAdd(Player sender, UUID receiver) {
         Timer time = new Timer();
         TimerTask RemoveAddList = new TimerTask() {
             @Override
             public void run() {
                 try {
-                    friendsAddList.get(sender.getPlayer().getUniqueId()).remove(receiver.getUniqueId());
+                    friendsAddList.get(sender.getPlayer().getUniqueId()).remove(receiver);
                     System.out.println("can't accept anymore");
                     time.purge();
                     time.cancel();
@@ -753,13 +744,13 @@ public class FriendsSQL {
         time.schedule(RemoveAddList, 10000);
     }
 
-    private void timeRemoverForFriendsRequests(Player sender, Player receiver) {
+    private void timeRemoverForFriendsRequests(Player sender, UUID receiver) {
         Timer time = new Timer();
         TimerTask RemoveAddList = new TimerTask() {
             @Override
             public void run() {
                 try {
-                    friendRequestsList.get(sender.getPlayer().getUniqueId()).remove(receiver.getUniqueId());
+                    friendRequestsList.get(sender.getPlayer().getUniqueId()).remove(receiver);
                     System.out.println("You can send a friend request again");
                     time.purge();
                     time.cancel();

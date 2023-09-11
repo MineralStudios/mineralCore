@@ -48,10 +48,16 @@ import de.jeezycore.events.*;
 import de.jeezycore.events.chat.ChatEvent;
 import de.jeezycore.events.inventories.JeezyInventories;
 import de.jeezycore.utils.HTTPUtility;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 
 public class Main extends JavaPlugin implements PluginMessageListener {
 
@@ -198,6 +204,33 @@ public class Main extends JavaPlugin implements PluginMessageListener {
                     if (settingsSQLFriends.playerUUID == null || settingsSQLFriends.settingsFriendsSound) {
                         player.playSound(player.getLocation(), Sound.ENDERDRAGON_GROWL, 2L, 2L);
                     }
+                    break;
+                case "friendsRequestChannel":
+                    try {
+                        short len = in.readShort();
+                        byte[] msgbytes = new byte[len];
+                        in.readFully(msgbytes);
+
+                        DataInputStream msgIn = new DataInputStream(new ByteArrayInputStream(msgbytes));
+                        String senderUsername = msgIn.readUTF(); // Read the data in the same way you wrote it
+
+                        System.out.println("----------------------------");
+                        System.out.println(senderUsername);
+                        System.out.println("----------------------------");
+
+                        TextComponent friendMessage = new TextComponent("             §7(§2CLICK TO ACCEPT§7)                 ");
+                        friendMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friends accept "+senderUsername));
+                        friendMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to accept the friend request.").create()));
+
+                        player.sendMessage("                                                                    ");
+                        player.sendMessage(" §9§l"+player.getDisplayName()+" §7has sent you a §2friend §7request!");
+                        player.sendMessage("                                                                    ");
+                        player.sendMessage(friendMessage);
+                        player.sendMessage("                                                                    ");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();

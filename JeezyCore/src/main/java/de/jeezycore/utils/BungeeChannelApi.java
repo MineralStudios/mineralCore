@@ -1,6 +1,7 @@
 package de.jeezycore.utils;
 
-
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.MsgSQL;
 import de.jeezycore.db.RanksSQL;
@@ -8,13 +9,12 @@ import de.jeezycore.db.SettingsSQL;
 import de.jeezycore.db.StaffSQL;
 import de.jeezycore.events.chat.StaffChat;
 import de.jeezycore.main.Main;
-import org.bukkit.Sound;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.util.UUID;
-
 import static de.jeezycore.utils.ArrayStorage.msg_ignore_array;
 
 public class BungeeChannelApi {
@@ -28,6 +28,10 @@ public class BungeeChannelApi {
     MsgSQL msgSQL = new MsgSQL();
 
     MemorySection hubConfig = (MemorySection) JeezyConfig.config_defaults.get("hub");
+
+    public boolean isPlayerOnline;
+
+    public UUID getUUID;
 
 
     io.github.leonardosnt.bungeechannelapi.BungeeChannelApi api = io.github.leonardosnt.bungeechannelapi.BungeeChannelApi.of(Main.getPlugin(Main.class));
@@ -214,13 +218,50 @@ public class BungeeChannelApi {
                 });
     }
 
-    public void playPrivateMessageSound(String playerName) {
+    private void playPrivateMessageSound(String playerName) {
         byte[] soundByte = "Random".getBytes();
         api.forwardToPlayer(playerName, "pmSoundChannel", soundByte);
     }
 
     public void playFriendsSound(String playerName) {
-        byte[] soundByte = "Random".getBytes();
-        api.forwardToPlayer(playerName, "friendsSoundChannel", soundByte);
+        byte[] friendsMessageSoundByte = "Random".getBytes();
+        api.forwardToPlayer(playerName, "friendsSoundChannel", friendsMessageSoundByte);
+    }
+
+    public void sendFriendRequest(Player CmdExecutor, String receiver, String playerName) {
+        try {
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+
+            out.writeUTF("ForwardToPlayer");
+            out.writeUTF(playerName);
+            out.writeUTF("friendsRequestChannel");
+
+            ByteArrayOutputStream msgbytes = new ByteArrayOutputStream();
+            DataOutputStream msgout = new DataOutputStream(msgbytes);
+            msgout.writeUTF(receiver);
+            msgout.writeShort(42);
+
+            out.writeShort(msgbytes.toByteArray().length);
+            out.write(msgbytes.toByteArray());
+
+            CmdExecutor.sendPluginMessage(Main.getPlugin(Main.class), "BungeeCord", out.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getPlayerStatus(String playerName) {
+        api.getPlayerList("ALL")
+                .whenComplete((result, error) -> {
+                    if (result.contains(playerName)) {
+                        isPlayerOnline = true;
+                    } else {
+                        isPlayerOnline = false;
+                    }
+                });
+        api.getUUID(playerName)
+                .whenComplete((uuid, slow) -> {
+                    getUUID = UUID.fromString((uuid.replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5")));
+                });
     }
 }
