@@ -1,5 +1,7 @@
 package de.jeezycore.main;
 
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteStreams;
 import de.jeezycore.commands.basic.PlayTime;
 import de.jeezycore.commands.basic.ShortenedHubCmd;
 import de.jeezycore.commands.basic.gamemodes.Creative;
@@ -15,6 +17,7 @@ import de.jeezycore.commands.punishments.freeze.Freeze;
 import de.jeezycore.commands.punishments.freeze.UnFreeze;
 import de.jeezycore.commands.ranks.UnGrantRank;
 import de.jeezycore.commands.staff.Logs;
+import de.jeezycore.db.SettingsSQL;
 import de.jeezycore.db.hikari.HikariCP;
 import de.jeezycore.disguise.manger.DisguiseManager;
 import de.jeezycore.colors.Color;
@@ -45,9 +48,12 @@ import de.jeezycore.events.*;
 import de.jeezycore.events.chat.ChatEvent;
 import de.jeezycore.events.inventories.JeezyInventories;
 import de.jeezycore.utils.HTTPUtility;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 
-public class Main extends JavaPlugin {
+public class Main extends JavaPlugin implements PluginMessageListener {
 
     @Override
     public void onEnable() {
@@ -134,7 +140,8 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new QuitEvent(disguiseManager), this);
         getServer().getPluginManager().registerEvents(new PlayerCommandPreprocessEvent(), this);
         getServer().getPluginManager().registerEvents(new MoveEvent(), this);
-
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this);
         // Setups Databases + Tables
         HikariCP hikariCP = new HikariCP();
         hikariCP.start();
@@ -165,5 +172,35 @@ public class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.RED_BOLD+" shutting down..."+Color.RESET);
+    }
+
+
+    @Override
+    public void onPluginMessageReceived(String channel, Player player, byte[] message) {
+        try {
+            if (!channel.equals("BungeeCord")) {
+                return;
+            }
+            ByteArrayDataInput in = ByteStreams.newDataInput(message);
+            String subchannel = in.readUTF();
+
+            switch (subchannel) {
+                case "pmSoundChannel":
+                    SettingsSQL settingsSQLPM = new SettingsSQL();
+                    settingsSQLPM.getSettingsData(player.getUniqueId());
+                    if (settingsSQLPM.playerUUID == null || settingsSQLPM.settingsPmSound) {
+                        player.playSound(player.getLocation(), Sound.ANVIL_LAND, 2L, 2L);
+                    }
+                    break;
+                case "friendsSoundChannel":
+                    SettingsSQL settingsSQLFriends = new SettingsSQL();
+                    settingsSQLFriends.getSettingsData(player.getUniqueId());
+                    if (settingsSQLFriends.playerUUID == null || settingsSQLFriends.settingsFriendsSound) {
+                        player.playSound(player.getLocation(), Sound.ENDERDRAGON_GROWL, 2L, 2L);
+                    }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -215,26 +215,12 @@ public class BungeeChannelApi {
     }
 
     public void playPrivateMessageSound(String playerName) {
-        byte[] soundByte = "Hello World".getBytes();
-        api.forwardToPlayer(playerName, "BungeeCord", soundByte);
-
-        api.registerForwardListener((channelName, player, data) -> {
-
-                    if (settingsSQL.playerUUID == null || settingsSQL.settingsPmSound) {
-                        player.playSound(player.getLocation(), Sound.ANVIL_LAND, 2L, 2L);
-                    }
-        });
+        byte[] soundByte = "Random".getBytes();
+        api.forwardToPlayer(playerName, "pmSoundChannel", soundByte);
     }
 
     public void playFriendsSound(String playerName) {
-        byte[] soundByte = "Hello World".getBytes();
-        api.forwardToPlayer(playerName, "BungeeCord", soundByte);
-
-        api.registerForwardListener((channelName, player, data) -> {
-
-            if (settingsSQL.playerUUID == null || settingsSQL.settingsFriendsSound) {
-                player.playSound(player.getLocation(), Sound.ENDERDRAGON_GROWL, 2L, 2L);
-            }
-        });
+        byte[] soundByte = "Random".getBytes();
+        api.forwardToPlayer(playerName, "friendsSoundChannel", soundByte);
     }
 }
