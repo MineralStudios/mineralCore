@@ -19,7 +19,6 @@ public class QuitEvent implements Listener {
 
   FriendsSQL friendsSQL = new FriendsSQL();
 
-  MsgSQL msgSQL = new MsgSQL();
 
   @EventHandler
   private void onQuit(PlayerQuitEvent event) {
@@ -31,6 +30,5 @@ public class QuitEvent implements Listener {
     disguiseManager.deleteDisguise(event.getPlayer());
     ranksSQL.rankMonthlyDurationCalculator(event.getPlayer());
     playTimeSQL.playTimeQuit(event);
-    msgSQL.quit(event.getPlayer().getUniqueId());
   }
 }
