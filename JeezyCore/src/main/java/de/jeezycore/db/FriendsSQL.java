@@ -1,5 +1,6 @@
 package de.jeezycore.db;
 
+import de.jeezycore.main.Main;
 import de.jeezycore.utils.BungeeChannelApi;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -19,6 +20,8 @@ public class FriendsSQL {
 
     String friendsListArrayString;
 
+    String friendsRequestsListArrayString;
+
     String playerUUIDString;
     String playerNameStringForLists;
 
@@ -28,11 +31,15 @@ public class FriendsSQL {
 
     public String [] friendsListArray;
 
+    public String [] friendsListRequestArray;
+
     RanksSQL ranksSQL = new RanksSQL();
 
     SettingsSQL settingsSQL = new SettingsSQL();
 
     BungeeChannelApi bungeeChannelApi = new BungeeChannelApi();
+
+    io.github.leonardosnt.bungeechannelapi.BungeeChannelApi api = io.github.leonardosnt.bungeechannelapi.BungeeChannelApi.of(Main.getPlugin(Main.class));
 
 
     public void getAllFriendsData(Player p) {
@@ -232,14 +239,14 @@ public class FriendsSQL {
         }
     }
 
-    private void addFriendsMysqlSender(Player sender, Player target) {
+    private void addFriendsMysqlSender(String senderName, UUID senderUUID, Player receiver) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
         try {
                 connection = dataSource.getConnection();
                 statement = connection.createStatement();
-                String sql_select = "SELECT * FROM friends WHERE playerUUID = '"+sender.getUniqueId()+"'";
+                String sql_select = "SELECT * FROM friends WHERE playerUUID = '"+senderUUID+"'";
                 resultSet = statement.executeQuery(sql_select);
 
                 if (!resultSet.next()) {
@@ -260,15 +267,15 @@ public class FriendsSQL {
 
                     } while (resultSet.next());
                 }
-                friendsList.add(target.getUniqueId().toString());
+                friendsList.add(receiver.getUniqueId().toString());
                 if (playerUUID == null) {
                     statement.executeUpdate("INSERT INTO friends" +
                             "(playerName, playerUUID, friendsList) " +
-                            "VALUES ('"+sender.getDisplayName()+"', '"+sender.getUniqueId()+"', '"+friendsList+"')");
+                            "VALUES ('"+senderName+"', '"+senderUUID+"', '"+friendsList+"')");
                 } else {
                     statement.executeUpdate("UPDATE friends " +
                             "SET friendsList = '"+friendsList+
-                            "' WHERE playerUUID = '"+sender.getUniqueId()+"'");
+                            "' WHERE playerUUID = '"+senderUUID+"'");
                 }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -284,7 +291,7 @@ public class FriendsSQL {
         }
     }
 
-    private void addFriendsMysqlReceiver(Player sender, Player receiver) {
+    private void addFriendsMysqlReceiver(String senderName, UUID senderUUID, Player receiver) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -301,13 +308,17 @@ public class FriendsSQL {
                 friendsList.clear();
             } else {
                 do {
-                    playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
-                    friendsListArrayString = resultSet.getString("friendsList");
-                    friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
-                    friendsList.addAll(Arrays.asList(friendsListArray));
+                    try {
+                        playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
+                        friendsListArrayString = resultSet.getString("friendsList");
+                        friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
+                        friendsList.addAll(Arrays.asList(friendsListArray));
+                    } catch (Exception e) {
+                    }
                 } while (resultSet.next());
             }
-            friendsList.add(sender.getUniqueId().toString());
+
+            friendsList.add(senderUUID.toString());
             if (playerUUID == null) {
                 statement.executeUpdate("INSERT INTO friends" +
                         "(playerName, playerUUID, friendsList) " +
@@ -389,6 +400,54 @@ public class FriendsSQL {
         }
     }
 
+    private void pushFriendsRequest(String receiverUsername, UUID receiver, Player sender) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql_select = "SELECT * FROM friends WHERE playerUUID = '"+receiver+"'";
+            resultSet = statement.executeQuery(sql_select);
+
+            if (!resultSet.next()) {
+                playerUUID = null;
+                friendsRequestsListArrayString = null;
+                friendsListRequestArray = null;
+                friendRequestsArrayList.clear();
+            } else {
+                do {
+                    playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
+                    friendsRequestsListArrayString = resultSet.getString("friendsRequests");
+                    friendsListRequestArray = friendsRequestsListArrayString.replace("[", "").replace("]", "").split(", ");
+                    friendRequestsArrayList.addAll(Arrays.asList(friendsListRequestArray));
+                } while (resultSet.next());
+            }
+            friendRequestsArrayList.add(sender.getUniqueId().toString());
+            if (playerUUID == null) {
+                statement.executeUpdate("INSERT INTO friends" +
+                        "(playerName, playerUUID, friendsRequests) " +
+                        "VALUES ('"+receiverUsername+"', '"+receiver+"', '"+friendRequestsArrayList+"')");
+            } else {
+                statement.executeUpdate("UPDATE friends " +
+                        "SET friendsRequests = '"+friendRequestsArrayList+
+                        "' WHERE playerUUID = '"+receiver+"'");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+                friendRequestsArrayList.clear();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     public void friendsData(UUID senderUUID) {
         Connection connection = null;
         Statement statement = null;
@@ -401,7 +460,7 @@ public class FriendsSQL {
 
             if (!resultSet.next()) {
                 friendsListArray = null;
-                friendsListArrayString = null;
+                friendsListRequestArray = null;
                 friendsList.clear();
             } else {
                 do {
@@ -410,7 +469,43 @@ public class FriendsSQL {
                         friendsListArray = friendsListArrayString.replace("[", "").replace("]", "").split(", ");
                         friendsList.addAll(Arrays.asList(friendsListArray));
                     } catch (Exception e) {
+                    }
+                } while (resultSet.next());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    public void friendsDataRequestList(UUID senderUUID) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql_select = "SELECT * FROM friends WHERE playerUUID = '"+senderUUID+"'";
+            resultSet = statement.executeQuery(sql_select);
+
+            if (!resultSet.next()) {
+                friendsRequestsListArrayString = null;
+                friendsListRequestArray = null;
+                friendRequestsArrayList.clear();
+            } else {
+                do {
+                    try {
+                        friendsRequestsListArrayString = resultSet.getString("friendsRequests");
+                        friendsListRequestArray = friendsRequestsListArrayString.replace("[", "").replace("]", "").split(", ");
+                        friendRequestsArrayList.addAll(Arrays.asList(friendsListRequestArray));
+                    } catch (Exception e) {
                     }
                 } while (resultSet.next());
             }
@@ -560,42 +655,49 @@ public class FriendsSQL {
 
     public void acceptFriends(Player receiver, String target) {
         try {
-            Player sender = Bukkit.getPlayerExact(target);
-            if (sender != null) {
-                friendsData(sender.getUniqueId());
+            bungeeChannelApi.getPlayerStatus(target);
 
-                if (friendsList.contains(receiver.getUniqueId().toString())) {
-                    receiver.sendMessage("§7§l[§9FRIENDS§7§l] §7You §calready §7accepted §9"+target+"`s §7friend request!");
-                    return;
-                }
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
 
-                if (friendsAddList.containsKey(sender.getPlayer().getUniqueId())) {
-                    if (!friendsAddList.get(sender.getPlayer().getUniqueId()).contains(receiver.getUniqueId())) {
-                        receiver.sendMessage("§7§l[§9FRIENDS§7§l] §7The friend request §cexpired§7!");
-                        return;
+                    if (bungeeChannelApi.isPlayerOnline) {
+                        friendsData(bungeeChannelApi.getUUID);
+
+                        if (friendsList.contains(receiver.getUniqueId().toString())) {
+                            receiver.sendMessage("§7§l[§9FRIENDS§7§l] §7You §calready §7accepted §9"+target+"`s §7friend request!");
+                            return;
+                        }
+
+                        /*
+                        if (friendsAddList.containsKey(bungeeChannelApi.getUUID)) {
+                            if (!friendsAddList.get(bungeeChannelApi.getUUID).contains(receiver.getUniqueId())) {
+                                receiver.sendMessage("§7§l[§9FRIENDS§7§l] §7The friend request §cexpired§7!");
+                                return;
+                            }
+                        }
+                         */
+                        friendsList.clear();
+                        addFriendsMysqlSender(target, bungeeChannelApi.getUUID, receiver);
+                        addFriendsMysqlReceiver(target, bungeeChannelApi.getUUID, receiver);
+
+                        api.sendMessage(target, "§7§l[§9FRIENDS§7§l] §9§l"+receiver.getDisplayName()+" §7successfully §2accepted §7your friend request!");
+
+                        receiver.sendMessage("§7§l[§9FRIENDS§7§l] §7You §2accepted §9§l"+target+"`s §7friend request!");
+
+                        /*
+                        friendRequestsList.get(bungeeChannelApi.getUUID).remove(receiver.getUniqueId().toString());
+                        friendRequestsArrayList.clear();
+                         */
+
+                    } else {
+                        receiver.sendMessage("§7§l[§9FRIENDS§7§l] §7The friend request §ccan't §7be accepted anymore!");
                     }
+
                 }
+            }, 300L);
 
-                try {
-                    if (!friendRequestsList.get(sender.getPlayer().getUniqueId()).contains(receiver.getUniqueId())) {}
-                } catch (Exception e) {
-                    receiver.sendMessage("§7§l[§9FRIENDS§7§l] §7You haven't §cgotten §7a friend request from §9"+target+" §7yet!");
-                    return;
-                }
 
-                friendsList.clear();
-                addFriendsMysqlSender(sender, receiver);
-                addFriendsMysqlReceiver(sender, receiver);
-
-                sender.sendMessage("§7§l[§9FRIENDS§7§l] §9§l"+receiver.getDisplayName()+" §7successfully §2accepted §7your friend request!");
-                receiver.sendMessage("§7§l[§9FRIENDS§7§l] §7You §2accepted §9§l"+target+"`s §7friend request!");
-
-            } else {
-                receiver.sendMessage("§7§l[§9FRIENDS§7§l] §7The friend request §ccan't §7be accepted anymore!");
-                return;
-            }
-            friendRequestsList.get(sender.getPlayer().getUniqueId()).remove(receiver.getUniqueId());
-            friendRequestsArrayList.clear();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -613,31 +715,34 @@ public class FriendsSQL {
                             sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You have §calready §7reached the friends limit of §9"+friendsLimit+" §7friends.");
                             return;
                         }
+                        friendsData(bungeeChannelApi.getUUID);
 
-                        if (friendRequestsList.containsKey(sender.getPlayer().getUniqueId())) {
-                            if (friendRequestsList.get(sender.getPlayer().getUniqueId()).contains(bungeeChannelApi.getUUID)) {
-                                sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You have §calready §7sent a friend request to §9"+playerName+"§7.");
-                                return;
-                            }
-                        }
-
-                        friendsData(sender.getUniqueId());
                         if (friendsList.contains(bungeeChannelApi.getUUID.toString())) {
                             sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You §calready §7have §9"+playerName+" §7as a friend.");
                             return;
                         }
                         settingsSQL.getSettingsData(bungeeChannelApi.getUUID);
-                        friendsData(bungeeChannelApi.getUUID);
                         if (!settingsSQL.friendsRequests && settingsSQL.playerUUID != null) {
                             sender.sendMessage("§7§l[§9FRIENDS§7§l] §9"+playerName + " §7has turned §coff §7friends requests.");
                             return;
+
                         }
 
-                        friendRequestsArrayList.add(bungeeChannelApi.getUUID);
+                        friendsDataRequestList(bungeeChannelApi.getUUID);
+                        if (friendRequestsArrayList.contains(sender.getUniqueId().toString())) {
+                            sender.sendMessage("§7§l[§9FRIENDS§7§l] §7You have §calready §7sent a §7friend request!");
+                            return;
+                        }
+                        friendRequestsArrayList.clear();
+                        pushFriendsRequest(playerName, bungeeChannelApi.getUUID, sender);
+
+                        /*
+                        friendRequestsArrayList.add(bungeeChannelApi.getUUID.toString());
                         friendRequestsList.put(sender.getPlayer().getUniqueId(), friendRequestsArrayList);
 
                         friendsAddArrayList.add(bungeeChannelApi.getUUID);
                         friendsAddList.put(sender.getPlayer().getUniqueId(), friendsAddArrayList);
+                         */
 
                         sender.sendMessage("§7You §2successfully §7sent a friend request to §9"+playerName+"§7.");
 
@@ -645,8 +750,11 @@ public class FriendsSQL {
 
                         bungeeChannelApi.playFriendsSound(playerName);
 
+                        /*
                         timeRemoverForFriendsAdd(sender, bungeeChannelApi.getUUID);
                         timeRemoverForFriendsRequests(sender, bungeeChannelApi.getUUID);
+                         */
+
                     } else {
                         sender.sendMessage("§7The player §c"+playerName+" §7isn't online.");
                     }

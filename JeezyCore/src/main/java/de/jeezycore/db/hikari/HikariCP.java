@@ -152,6 +152,7 @@ public class HikariCP {
                     " (playerName VARCHAR(255), " +
                     " playerUUID VARCHAR(255), " +
                     " friendsList longtext, " +
+                    " friendsRequests longtext, " +
                     " PRIMARY KEY ( playerUUID ))";
 
             String playTime_table = "CREATE TABLE IF NOT EXISTS playtime " +

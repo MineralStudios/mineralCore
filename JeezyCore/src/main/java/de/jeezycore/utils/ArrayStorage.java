@@ -78,11 +78,9 @@ public class ArrayStorage {
 
     public static ArrayList<String> showFriendsList = new ArrayList<>();
 
+    public static ArrayList<String> friendRequestsArrayList = new ArrayList<>();
+    public static HashMap<UUID, ArrayList<String>> friendRequestsList = new HashMap<>();
 
-    public static ArrayList<UUID> friendRequestsArrayList = new ArrayList<>();
-    public static HashMap<UUID, ArrayList<UUID>> friendRequestsList = new HashMap<>();
-
-    public static ArrayList<UUID> friendsAddArrayList = new ArrayList<>();
     public static HashMap<UUID, ArrayList<UUID>> friendsAddList = new HashMap<>();
 
     public static HashMap<UUID, LocalDateTime> playTimeHashMap = new HashMap<>();
