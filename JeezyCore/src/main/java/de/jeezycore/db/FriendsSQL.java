@@ -811,11 +811,7 @@ public class FriendsSQL {
                 friendsList.remove(sender.getUniqueId().toString());
                 removeFriendsMYSQL(UUID.fromString(playerUUIDString));
 
-                Player ps = Bukkit.getPlayer(UUID.fromString(playerUUIDString));
-
-                if (ps != null) {
-                    ps.sendMessage("§7§l[§9FRIENDS§7§l] §9§l"+sender.getDisplayName() + " §7has §cended §7the friendship!");
-                }
+                    api.sendMessage(playerName,"§7§l[§9FRIENDS§7§l] §9§l"+sender.getDisplayName() + " §7has §cended §7the friendship!");
         } catch (Exception e) {
         }
     }
