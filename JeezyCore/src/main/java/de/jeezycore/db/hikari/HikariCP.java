@@ -146,6 +146,7 @@ public class HikariCP {
                     " friendsRequests boolean, " +
                     " pmSound boolean, " +
                     " friendsSound boolean, " +
+                    " globalChat boolean, "+
                     " PRIMARY KEY ( playerUUID ))";
 
             String friends_table = "CREATE TABLE IF NOT EXISTS friends " +
