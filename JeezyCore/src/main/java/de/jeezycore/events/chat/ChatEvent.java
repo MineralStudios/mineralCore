@@ -29,11 +29,13 @@ public class ChatEvent implements Listener {
 
     AntiSpam antiSpam = new AntiSpam();
 
+    GlobalChat globalChat = new GlobalChat();
 
     String chat_format_rep;
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
+        globalChat.checkGlobalChat(e);
         antiSpam.AntiSpamChat(e);
         staffChat.chat(e);
         display.getPlayerInformation(e.getPlayer());
@@ -51,6 +53,7 @@ public class ChatEvent implements Listener {
                 chat_format_rep = cf.getString("chat_format").replace("[rank]", "§7["+display.rankColor+""+display.rank+"§7]§f").replace("&", "§").replace("[player]", ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat.replace("&", "§"));
                 rmc.realtimeMcChat("["+display.rank+"]"+" "+e.getPlayer().getDisplayName()+": "+e.getMessage());
             }
-            e.setFormat(chat_format_rep.replace("%", "%%").trim());
+
+        e.setFormat(chat_format_rep.replace("%", "%%").trim());
     }
 }
