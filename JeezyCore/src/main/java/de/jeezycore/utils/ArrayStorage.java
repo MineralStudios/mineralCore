@@ -70,7 +70,7 @@ public class ArrayStorage {
    public static HashMap<String, Language> languageMap = new HashMap<>();
 
    //friends
-    public static ArrayList<UUID> friendsOnJoinMessageArray = new ArrayList<>();
+    public static ArrayList<String> friendsOnJoinMessageArray = new ArrayList<>();
 
     public static ArrayList<String> friendsList = new ArrayList<>();
 

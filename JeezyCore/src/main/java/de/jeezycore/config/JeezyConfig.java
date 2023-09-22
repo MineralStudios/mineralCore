@@ -84,6 +84,9 @@ public class JeezyConfig {
             list.add("Owner");
             config_defaults.addDefault(path_chat_3, list);
 
+            String path_friends_1 = "friends.notifications";
+            config_defaults.addDefault(path_friends_1, true);
+
             config_defaults.options().copyDefaults(true);
             config_defaults.save(config);
         } catch (Exception e) {

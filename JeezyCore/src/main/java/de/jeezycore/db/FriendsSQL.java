@@ -1,8 +1,10 @@
 package de.jeezycore.db;
 
+import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.main.Main;
 import de.jeezycore.utils.BungeeChannelApi;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -17,6 +19,8 @@ import static de.jeezycore.utils.ArrayStorage.*;
 public class FriendsSQL {
 
     public UUID playerUUID;
+
+    public String playerName;
 
     String friendsListArrayString;
 
@@ -40,6 +44,8 @@ public class FriendsSQL {
     BungeeChannelApi bungeeChannelApi = new BungeeChannelApi();
 
     io.github.leonardosnt.bungeechannelapi.BungeeChannelApi api = io.github.leonardosnt.bungeechannelapi.BungeeChannelApi.of(Main.getPlugin(Main.class));
+
+    MemorySection friendsConfig = (MemorySection) JeezyConfig.config_defaults.get("friends");
 
 
     public void getAllFriendsData(Player p) {
@@ -149,7 +155,8 @@ public class FriendsSQL {
                 do {
                     try {
                         playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
-                        friendsOnJoinMessageArray.add(playerUUID);
+                        playerName = resultSet.getString("playerName");
+                        friendsOnJoinMessageArray.add(playerName);
                     } catch (Exception e) {
 
                     }
@@ -162,16 +169,15 @@ public class FriendsSQL {
                 String sql = "SELECT * FROM ranks WHERE rankName = '"+ranksSQL.rankNameInformation+"'";
                 ranksSQL.displayChatRank(sql);
 
+                if (friendsConfig.getBoolean("notifications")) {
                 for (int i = 0; i < friendsOnJoinMessageArray.size(); i++) {
                     try {
-                        if (!Bukkit.getPlayer(friendsOnJoinMessageArray.get(i)).isOnline()) {
-                            continue;
-                        }
-                        Bukkit.getPlayer(friendsOnJoinMessageArray.get(i)).sendMessage("§7§l[§9FRIENDS§7§l] "+ranksSQL.rankColor.replace("&", "§") + " "+p.getPlayer().getDisplayName()+" §7just came §2online§7!");
+                       api.sendMessage(friendsOnJoinMessageArray.get(i), "§7§l[§9FRIENDS§7§l] "+ranksSQL.rankColor.replace("&", "§") + " "+p.getPlayer().getDisplayName()+" §7just came §2online§7!");
                     } catch (Exception f) {
                     }
                 }
                 friendsOnJoinMessageArray.clear();
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -202,9 +208,9 @@ public class FriendsSQL {
                 do {
                     try {
                         playerUUID = UUID.fromString(resultSet.getString("playerUUID"));
-                        friendsOnJoinMessageArray.add(playerUUID);
+                        playerName = resultSet.getString("playerName");
+                        friendsOnJoinMessageArray.add(playerName);
                     } catch (Exception e) {
-
                     }
 
                 } while (resultSet.next());
@@ -214,17 +220,15 @@ public class FriendsSQL {
                 ranksSQL.getPlayerInformation(p.getPlayer());
                 String sql = "SELECT * FROM ranks WHERE rankName = '"+ranksSQL.rankNameInformation+"'";
                 ranksSQL.displayChatRank(sql);
-
-                for (int i = 0; i < friendsOnJoinMessageArray.size(); i++) {
-                    try {
-                        if (!Bukkit.getPlayer(friendsOnJoinMessageArray.get(i)).isOnline()) {
-                            continue;
+                if (friendsConfig.getBoolean("notifications")) {
+                    for (int i = 0; i < friendsOnJoinMessageArray.size(); i++) {
+                        try {
+                            api.sendMessage(friendsOnJoinMessageArray.get(i), "§7§l[§9FRIENDS§7§l] " + ranksSQL.rankColor.replace("&", "§") + " " + p.getPlayer().getDisplayName() + " §7just went §coffline§7!");
+                        } catch (Exception f) {
                         }
-                        Bukkit.getPlayer(friendsOnJoinMessageArray.get(i)).sendMessage("§7§l[§9FRIENDS§7§l] "+ranksSQL.rankColor.replace("&", "§") + " "+p.getPlayer().getDisplayName()+" §7just went §coffline§7!");
-                    } catch (Exception f) {
                     }
+                    friendsOnJoinMessageArray.clear();
                 }
-                friendsOnJoinMessageArray.clear();
             }
         } catch (SQLException e) {
             e.printStackTrace();
