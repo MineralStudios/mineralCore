@@ -19,6 +19,7 @@ import de.jeezycore.commands.ranks.UnGrantRank;
 import de.jeezycore.commands.staff.Logs;
 import de.jeezycore.db.SettingsSQL;
 import de.jeezycore.db.hikari.HikariCP;
+import de.jeezycore.db.redis.FriendsRedis;
 import de.jeezycore.disguise.manger.DisguiseManager;
 import de.jeezycore.colors.Color;
 import de.jeezycore.commands.basic.*;
@@ -151,6 +152,11 @@ public class Main extends JavaPlugin implements PluginMessageListener {
         // Setups Databases + Tables
         HikariCP hikariCP = new HikariCP();
         hikariCP.start();
+
+        //Setups HashMap for Friends network system
+        FriendsRedis friendsRedis = new FriendsRedis();
+        friendsRedis.setFriendsMapOnStartup();
+
         // Launching discord bot
        JeezyBot bot = new JeezyBot();
        bot.start();

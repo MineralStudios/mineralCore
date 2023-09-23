@@ -1,10 +1,9 @@
 package de.jeezycore.db;
 
-import de.jeezycore.config.JeezyConfig;
+import de.jeezycore.db.redis.FriendsRedis;
 import de.jeezycore.main.Main;
 import de.jeezycore.utils.BungeeChannelApi;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -45,7 +44,7 @@ public class FriendsSQL {
 
     io.github.leonardosnt.bungeechannelapi.BungeeChannelApi api = io.github.leonardosnt.bungeechannelapi.BungeeChannelApi.of(Main.getPlugin(Main.class));
 
-    MemorySection friendsConfig = (MemorySection) JeezyConfig.config_defaults.get("friends");
+    FriendsRedis friendsRedis = new FriendsRedis();
 
 
     public void getAllFriendsData(Player p) {
@@ -169,14 +168,18 @@ public class FriendsSQL {
                 String sql = "SELECT * FROM ranks WHERE rankName = '"+ranksSQL.rankNameInformation+"'";
                 ranksSQL.displayChatRank(sql);
 
-                if (friendsConfig.getBoolean("notifications")) {
-                for (int i = 0; i < friendsOnJoinMessageArray.size(); i++) {
-                    try {
-                       api.sendMessage(friendsOnJoinMessageArray.get(i), "§7§l[§9FRIENDS§7§l] "+ranksSQL.rankColor.replace("&", "§") + " "+p.getPlayer().getDisplayName()+" §7just came §2online§7!");
-                    } catch (Exception f) {
+
+                friendsRedis.getFriendsOnJoinData(p.getPlayer());
+                try {
+                    for (int i = 0; i < friendsOnJoinMessageArray.size(); i++) {
+                        if (!friendsRedis.friendsAlreadyJoinedStatus) {
+                            api.sendMessage(friendsOnJoinMessageArray.get(i), "§7§l[§9FRIENDS§7§l] "+ranksSQL.rankColor.replace("&", "§") + " "+p.getPlayer().getDisplayName()+" §7just came §2online§7!");
+                        }
                     }
-                }
-                friendsOnJoinMessageArray.clear();
+                    friendsOnJoinMessageArray.clear();
+                    friendsRedis.setFriendsOnJoin(p.getPlayer());
+                } catch (Exception f) {
+                    f.printStackTrace();
                 }
             }
         } catch (SQLException e) {
@@ -220,15 +223,23 @@ public class FriendsSQL {
                 ranksSQL.getPlayerInformation(p.getPlayer());
                 String sql = "SELECT * FROM ranks WHERE rankName = '"+ranksSQL.rankNameInformation+"'";
                 ranksSQL.displayChatRank(sql);
-                if (friendsConfig.getBoolean("notifications")) {
-                    for (int i = 0; i < friendsOnJoinMessageArray.size(); i++) {
                         try {
-                            api.sendMessage(friendsOnJoinMessageArray.get(i), "§7§l[§9FRIENDS§7§l] " + ranksSQL.rankColor.replace("&", "§") + " " + p.getPlayer().getDisplayName() + " §7just went §coffline§7!");
+                            api.getPlayerList("ALL")
+                                    .whenComplete((result, error) -> {
+                                                System.out.println("OFFLINE");
+                                                System.out.println(result);
+                                                System.out.println(friendsOnJoinMessageArray);
+                                                for (int i = 0; i < friendsOnJoinMessageArray.size(); i++) {
+                                                    if (!result.contains(p.getPlayer().getDisplayName())) {
+                                                        api.sendMessage(friendsOnJoinMessageArray.get(i), "§7§l[§9FRIENDS§7§l] " + ranksSQL.rankColor.replace("&", "§") + " " + p.getPlayer().getDisplayName() + " §7just went §coffline§7!");
+                                                        friendsRedis.setFriendsOnQuit(p.getPlayer());
+                                                    }
+                                                }
+                                                friendsOnJoinMessageArray.clear();
+                                    });
                         } catch (Exception f) {
+                            f.printStackTrace();
                         }
-                    }
-                    friendsOnJoinMessageArray.clear();
-                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
