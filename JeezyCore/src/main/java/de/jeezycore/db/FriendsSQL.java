@@ -232,7 +232,7 @@ public class FriendsSQL {
                                                 for (int i = 0; i < friendsOnJoinMessageArray.size(); i++) {
                                                     if (!result.contains(p.getPlayer().getDisplayName())) {
                                                         api.sendMessage(friendsOnJoinMessageArray.get(i), "§7§l[§9FRIENDS§7§l] " + ranksSQL.rankColor.replace("&", "§") + " " + p.getPlayer().getDisplayName() + " §7just went §coffline§7!");
-                                                        friendsRedis.setFriendsOnQuit(p.getPlayer());
+                                                        friendsRedis.deleteRedisFriendsHashOnQuit(p.getPlayer());
                                                     }
                                                 }
                                                 friendsOnJoinMessageArray.clear();

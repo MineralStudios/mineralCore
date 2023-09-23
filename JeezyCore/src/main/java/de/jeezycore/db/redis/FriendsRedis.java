@@ -57,7 +57,7 @@ public class FriendsRedis {
         }
     }
 
-    public void setFriendsOnQuit(Player p) {
+    public void deleteRedisFriendsHashOnQuit(Player p) {
         establishRedisPool();
         try (Jedis jedis = pool.getResource()) {
             jedis.hdel("friends-already-joined", p.getUniqueId().toString());
