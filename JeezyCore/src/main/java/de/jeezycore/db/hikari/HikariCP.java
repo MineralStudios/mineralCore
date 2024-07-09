@@ -16,14 +16,15 @@ public class HikariCP {
     public static HikariDataSource dataSource = null;
 
     public void start() {
+        startHikariPool();
         createDB();
         createTable();
-        startHikariPool();
     }
 
     public void startHikariPool() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://"+db.get("ip")+":"+db.get("mysql-port")+"/"+db.get("database"));
+        config.setJdbcUrl("jdbc:mariadb://"+db.get("ip")+":"+db.get("mysql-port")+"/"+db.get("database"));
+        config.setDriverClassName(org.mariadb.jdbc.Driver.class.getName());
         config.setUsername((String) db.get("user"));
         config.setPassword((String) db.get("password"));
         config.setMaximumPoolSize(25);
@@ -33,12 +34,16 @@ public class HikariCP {
         dataSource = new HikariDataSource(config);
     }
 
+    public static Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
+    }
+
     private void createDB() {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://"+db.get("ip")+":"+db.get("mysql-port")+"/", (String) db.get("user"), (String) db.get("password"));
+            connection = getConnection();
             statement = connection.createStatement();
             String createDB = "CREATE DATABASE IF NOT EXISTS jeezydevelopment";
             statement.executeUpdate(createDB);
@@ -59,7 +64,7 @@ public class HikariCP {
         Statement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://"+db.get("ip")+":"+db.get("mysql-port")+"/"+db.get("database"), (String) db.get("user"), (String) db.get("password"));
+            connection = getConnection();
             statement = connection.createStatement();
             String ranks_table = "CREATE TABLE IF NOT EXISTS ranks " +
                     " (rankName VARCHAR(255), " +

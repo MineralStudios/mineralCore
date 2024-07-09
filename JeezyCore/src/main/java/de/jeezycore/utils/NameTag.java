@@ -23,6 +23,10 @@ public class NameTag {
         NametagEdit.getApi().setPrefix(p, "§2");
     }
 
+    public void specialBotTag(Player p) {
+        NametagEdit.getApi().setPrefix(p, "§9");
+    }
+
     public void giveTagAfterMatch(Player player1, Player player2) {
 
         if (tab_name_list_array.get(player1) != null) {

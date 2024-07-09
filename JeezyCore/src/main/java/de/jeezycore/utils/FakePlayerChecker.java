@@ -1,15 +1,17 @@
 package de.jeezycore.utils;
 
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import gg.mineral.botapi.manager.FakePlayerManager;
 import org.bukkit.entity.Player;
 
-import gg.mineral.server.fakeplayer.FakePlayer;
 
 public class FakePlayerChecker {
 
-    public static boolean isFakePlayer(Player player) {
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        return FakePlayer.isFakePlayer(craftPlayer.getHandle());
-    }
+   private static final NameTag nameTag = new NameTag();
 
+    public static boolean isFakePlayer(Player player) {
+
+        nameTag.specialBotTag(player);
+
+        return FakePlayerManager.getFakePlayer(player.getUniqueId()) != null;
+    }
 }
