@@ -15,7 +15,7 @@ public class MessageCreate implements MessageCreateListener {
         MemorySection discord = (MemorySection) JeezyConfig.discord_defaults.get("discord-text-channels-realtime-chat");
         String id = (String) discord.get("discordToMc");
 
-        if (event.getMessage().getUserAuthor().get().isBot() || event.getChannel().getId() != Long.parseLong(id)) {
+        if (event.getMessage().getUserAuthor().isPresent() || event.getMessage().getUserAuthor().get().isBot() || event.getChannel().getId() != Long.parseLong(id)) {
             return;
         }
         discord_realtime.realtimeChatViaDiscord("§7[§9Discord§7]§f "+event.getMessage().getUserAuthor().get().getName()+"#"+event.getMessage().getUserAuthor().get().getDiscriminator()+": "+event.getMessageContent());
