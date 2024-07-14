@@ -21,7 +21,9 @@ public class LanguagesRedis {
     CountryCodeChecker countryCodeChecker = new CountryCodeChecker();
 
     public void establishRedisPool() {
-        pool = new JedisPool((String) config.get("ip"), (Integer) config.get("port"), (String) config.get("user"), (String) config.get("password"));
+        if (!(Boolean) config.get("enabled")) {
+            pool = new JedisPool((String) config.get("ip"), (Integer) config.get("port"), (String) config.get("user"), (String) config.get("password"));
+        }
     }
 
     public void setLanguage(org.bukkit.event.inventory.InventoryClickEvent e, String language) {
