@@ -21,7 +21,7 @@ public class JoinEvent implements Listener {
     TabListSQL tabList = new TabListSQL();
     PlayersSQL playersSQL = new PlayersSQL();
 
-    FriendsSQL friendsSQL = new FriendsSQL();
+
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
@@ -72,8 +72,6 @@ public class JoinEvent implements Listener {
         playersSQL.checkIfUsernameChanged(e);
         givePermsOnJoin.rankMonthlyDurationCalculator(e.getPlayer());
         nameTag.giveTagOnJoin(e.getPlayer());
-        friendsSQL.getAllFriendsOnJoin(e);
-        friendsSQL.sendFriendOnlineMessage(e);
 
 
         try {
