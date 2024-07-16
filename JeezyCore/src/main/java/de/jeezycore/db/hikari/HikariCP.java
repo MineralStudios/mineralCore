@@ -166,7 +166,7 @@ public class HikariCP {
             // stm.executeUpdate(reward_table);
             //stm.executeUpdate(minerals_table);
             statement.executeUpdate(settings_table);
-            statement.executeUpdate(friends_table);
+            //statement.executeUpdate(friends_table);
 
             if (connection.isValid(20)) {
                 System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" connected to database."+Color.RESET);

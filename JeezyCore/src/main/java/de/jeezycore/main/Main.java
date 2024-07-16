@@ -105,7 +105,7 @@ public class Main extends JavaPlugin {
         this.getCommand("brodcast").setExecutor(new Brodcast());
         //this.getCommand("languages").setExecutor(new Languages());
         //this.getCommand("lang").setExecutor(new Lang());
-        this.getCommand("friends").setExecutor(new FriendsCommands());
+        //this.getCommand("friends").setExecutor(new FriendsCommands());
         this.getCommand("world").setExecutor(new World());
 
         // Register Listener
