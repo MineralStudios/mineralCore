@@ -159,9 +159,9 @@ commands:
   #lang:
    # usage: Opens language inventory.
     #description: /lang
-  friends:
-    usage: /friends <command>
-    description: Executes friends commands.
+  #friends:
+   # usage: /friends <command>
+    #description: Executes friends commands.
   world:
     usage: /world <command>
     description: Executes world commands.
