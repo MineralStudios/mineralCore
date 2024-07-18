@@ -3,6 +3,9 @@ package de.jeezycore.velocity.commands;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.ProxyServer;
+import de.jeezycore.velocity.db.MaintenanceSQL;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -12,6 +15,8 @@ public final class Maintenance implements SimpleCommand {
 
     private final ProxyServer server;
     private final Logger logger;
+    private final MaintenanceSQL maintenanceSQL = new MaintenanceSQL();
+
 
     public Maintenance(ProxyServer server, Logger logger) {
         this.server = server;
@@ -24,10 +29,21 @@ public final class Maintenance implements SimpleCommand {
         CommandSource source = invocation.source();
         // Get the arguments after the command alias
         String[] args = invocation.arguments();
+        String str = String.join(",", args);
 
-        //source.sendMessage(Component.text("Hello World!", NamedTextColor.AQUA));
-
-
+        switch (str) {
+            case "on":
+                source.sendMessage(Component.text("[Maintenance] successfully turned on", NamedTextColor.GOLD));
+                maintenanceSQL.enableMaintenance();
+                break;
+            case "off":
+                source.sendMessage(Component.text("[Maintenance] successfully turned off", NamedTextColor.GOLD));
+                maintenanceSQL.disableMaintenance();
+                break;
+            default:
+                source.sendMessage(Component.text("[Maintenance] on / off", NamedTextColor.GOLD));
+                break;
+        }
     }
 
     // This method allows you to control who can execute the command.

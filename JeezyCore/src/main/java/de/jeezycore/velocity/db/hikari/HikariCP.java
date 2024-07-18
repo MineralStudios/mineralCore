@@ -1,4 +1,4 @@
-package de.jeezycore.velocity.db;
+package de.jeezycore.velocity.db.hikari;
 
 
 import com.zaxxer.hikari.HikariConfig;

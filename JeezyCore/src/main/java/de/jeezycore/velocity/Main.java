@@ -11,7 +11,8 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import de.jeezycore.velocity.commands.Maintenance;
 import de.jeezycore.velocity.config.JeezyConfig;
-import de.jeezycore.velocity.db.HikariCP;
+import de.jeezycore.velocity.db.MaintenanceSQL;
+import de.jeezycore.velocity.db.hikari.HikariCP;
 import de.jeezycore.velocity.events.CommandExecuteListener;
 import de.jeezycore.velocity.events.PingEventListener;
 
@@ -32,6 +33,7 @@ public class Main {
     private final Logger logger;
     JeezyConfig jeezyConfig = new JeezyConfig();
     HikariCP hikariCP = new HikariCP();
+    MaintenanceSQL maintenanceSQL = new MaintenanceSQL();
 
     @Inject
     public Main(ProxyServer server, Logger logger) throws IOException {
@@ -44,10 +46,11 @@ public class Main {
 
     @Subscribe
     public void onProxyInitialize(ProxyInitializeEvent event) {
-        this.registerEvents();
-        this.registerCommands();
         jeezyConfig.createData();
         hikariCP.start();
+        maintenanceSQL.getMaintenanceData();
+        this.registerEvents();
+        this.registerCommands();
     }
 
 
@@ -61,10 +64,10 @@ public class Main {
     public void registerCommands () {
         CommandManager commandManager = server.getCommandManager();
         // Here you can add meta for the command, as aliases and the plugin to which it belongs (RECOMMENDED)
-        CommandMeta commandMeta = commandManager.metaBuilder("shutdown")
+        CommandMeta commandMeta = commandManager.metaBuilder("maintenance")
                 // This will create a new alias for the command "/test"
                 // with the same arguments and functionality
-                .aliases("otherAlias", "anotherAlias")
+               // .aliases("otherAlias", "anotherAlias")
                 .plugin(this)
                 .build();
 
