@@ -1,0 +1,6 @@
+#MariaDB Database
+ip = "localhost"
+mysql-port = 3306
+user = "username"
+password = "password"
+database = "db_name"
