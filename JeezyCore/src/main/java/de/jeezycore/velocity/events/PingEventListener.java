@@ -14,7 +14,7 @@ public class PingEventListener {
         final ServerPing ping = event.getPing();
         final ServerPing.Builder builder = ping.asBuilder();
 
-        builder.version(new ServerPing.Version(0, "Maintenance"));
+        builder.version(new ServerPing.Version(0, "Whitelisted"));
 
 
         event.setPing(builder.build());

@@ -63,6 +63,27 @@ public class HikariCP {
         }
     }
 
+    public void createDefaultInserts() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = getConnection();
+            statement = connection.createStatement();
+            String maintenance_tableInserts = "INSERT INTO velocity (actionName) VALUES ('maintenance')";
+
+            statement.executeUpdate(maintenance_tableInserts);
+        } catch (SQLException e) {
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void createTable() {
         Connection connection = null;
         Statement statement = null;
@@ -75,10 +96,10 @@ public class HikariCP {
                     " status boolean DEFAULT FALSE, " +
                     " PRIMARY KEY ( actionName ))";
 
-            String maintenance_tableInserts = "INSERT INTO velocity (actionName) VALUES ('maintenance')";
+
 
             statement.executeUpdate(maintenance_table);
-            statement.executeUpdate(maintenance_tableInserts);
+            this.createDefaultInserts();
 
             if (connection.isValid(20)) {
                 System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment] "+Color.GREEN_BOLD+"Successfully"+Color.CYAN+" connected to database."+Color.RESET);
