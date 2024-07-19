@@ -17,7 +17,7 @@ public class PingEventListener {
             final ServerPing ping = event.getPing();
             final ServerPing.Builder builder = ping.asBuilder();
 
-            builder.version(new ServerPing.Version(0, "Whitelisted"));
+            builder.version(new ServerPing.Version(event.getConnection().getProtocolVersion().getProtocol()+1, "Whitelisted"));
 
             event.setPing(builder.build());
         }
