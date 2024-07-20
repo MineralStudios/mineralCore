@@ -4,3 +4,8 @@ mysql-port = 3306
 user = "username"
 password = "password"
 database = "db_name"
+
+#Velocity
+maintenance_display = "maintenance"
+motd_maintenance = "<blue><bold>Mineral <gray><bold>- <red><bold>Maintenance\n<gray><bold>►<reset> <white>discord.mineral.gg"
+motd = "<blue><bold>Mineral <gray><bold>► <red><bold>BotPvP <gray><bold>(1.7-1.20)\n<gray><bold>►<reset> <white><bold>Smartest PvpBots"
