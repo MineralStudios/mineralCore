@@ -50,13 +50,12 @@ public final class Maintenance implements SimpleCommand {
     // If the executor does not have the required permission,
     // the execution of the command and the control of its autocompletion
     // will be sent directly to the server on which the sender is located
-    /*
+
     @Override
     public boolean hasPermission(final Invocation invocation) {
-        return invocation.source().hasPermission("command.test");
+        return invocation.source().hasPermission("maintenance.*");
     }
 
-     */
 
     // With this method you can control the suggestions to send
     // to the CommandSource according to the arguments
