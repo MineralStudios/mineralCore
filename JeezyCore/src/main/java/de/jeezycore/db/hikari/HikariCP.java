@@ -117,7 +117,8 @@ public class HikariCP {
                     " tagCategory VARCHAR(255), " +
                     " tagDesign VARCHAR(255), " +
                     " tagPriority INT(3), " +
-                    " PRIMARY KEY ( tagName ))";
+                    " PRIMARY KEY ( tagName )" +
+                    ") CHARSET=utf8 ";
 
             String chatColors_table = "CREATE TABLE IF NOT EXISTS chatColors " +
                     " (colorName VARCHAR(255), " +
