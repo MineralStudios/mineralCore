@@ -98,9 +98,14 @@ public class HikariCP {
                     " status boolean DEFAULT FALSE, " +
                     " PRIMARY KEY ( actionName ))";
 
+            String whitelist_table = "CREATE TABLE IF NOT EXISTS whitelisted " +
+                    " (playerUUID VARCHAR(255), " +
+                    " whitelisted boolean DEFAULT FALSE, " +
+                    " PRIMARY KEY ( playerUUID ))";
 
 
             statement.executeUpdate(maintenance_table);
+            statement.execute(whitelist_table);
             this.createDefaultInserts();
 
             if (connection.isValid(20)) {

@@ -16,6 +16,7 @@ import de.jeezycore.velocity.db.MaintenanceSQL;
 import de.jeezycore.velocity.db.WhitelistedSQL;
 import de.jeezycore.velocity.db.hikari.HikariCP;
 import de.jeezycore.velocity.events.CommandExecuteListener;
+import de.jeezycore.velocity.events.LoginEventListener;
 import de.jeezycore.velocity.events.PingEventListener;
 
 import java.io.IOException;
@@ -30,7 +31,6 @@ import java.util.logging.Logger;
         authors = {"MineralStudio", "Jeffrey"}
 )
 public class Main {
-
     private final ProxyServer server;
     private final Logger logger;
     JeezyConfig jeezyConfig = new JeezyConfig();
@@ -61,6 +61,7 @@ public class Main {
 
     public void registerEvents () {
         EventManager eventManager = server.getEventManager();
+        eventManager.register(this, new LoginEventListener(server, logger));
         eventManager.register(this, new PingEventListener());
         eventManager.register(this, new CommandExecuteListener());
     }
@@ -92,4 +93,4 @@ public class Main {
         commandManager.register(maintenanceMeta, maintenanceCMD);
         commandManager.register(whitelistMeta, whitelistCMD);
     }
-}
+    }

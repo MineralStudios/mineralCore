@@ -41,7 +41,7 @@ public final class Maintenance implements SimpleCommand {
                 maintenanceSQL.disableMaintenance();
                 break;
             default:
-                source.sendMessage(Component.text("[Maintenance] on / off", NamedTextColor.GOLD));
+                source.sendMessage(Component.text("[Maintenance] (on / off)", NamedTextColor.GOLD));
                 break;
         }
     }

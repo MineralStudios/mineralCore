@@ -4,6 +4,7 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.ProxyServer;
 import de.jeezycore.velocity.db.WhitelistedSQL;
+import de.jeezycore.velocity.utils.UUIDCheckerVelocity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
@@ -17,7 +18,6 @@ public final class Whitelist implements SimpleCommand {
     private final Logger logger;
     private final WhitelistedSQL whitelistedSQL = new WhitelistedSQL();
 
-
     public Whitelist(ProxyServer server, Logger logger) {
         this.server = server;
         this.logger = logger;
@@ -25,25 +25,48 @@ public final class Whitelist implements SimpleCommand {
 
     @Override
     public void execute(final Invocation invocation) {
+        UUIDCheckerVelocity uuidCheckerVelocity = new UUIDCheckerVelocity(server, logger);
 
         CommandSource source = invocation.source();
         // Get the arguments after the command alias
         String[] args = invocation.arguments();
         String str = String.join(",", args);
 
-        switch (str) {
-            case "on":
-                source.sendMessage(Component.text("[Whitelist] successfully turned on", NamedTextColor.DARK_AQUA));
-                whitelistedSQL.enableWhitelisted();
-                break;
-            case "off":
-                source.sendMessage(Component.text("[Whitelist] successfully turned off", NamedTextColor.DARK_AQUA));
-                whitelistedSQL.disableWhitelisted();
-                break;
-            default:
-                source.sendMessage(Component.text("[Whitelist] on / off", NamedTextColor.DARK_AQUA));
-                break;
+
+        if (args.length > 0) {
+            switch (args[0]) {
+                case "on":
+                    source.sendMessage(Component.text("[Whitelist] successfully turned on", NamedTextColor.DARK_AQUA));
+                    whitelistedSQL.enableWhitelisted();
+                    break;
+                case "off":
+                    source.sendMessage(Component.text("[Whitelist] successfully turned off", NamedTextColor.DARK_AQUA));
+                    whitelistedSQL.disableWhitelisted();
+                    break;
+                case "add":
+                    String inputAdd = "INSERT INTO whitelisted " +
+                            "(playerUUID, whitelisted) " +
+                            "VALUES " +
+                            "(?, ?)";
+                    uuidCheckerVelocity.check(args[1]);
+                    whitelistedSQL.add(inputAdd, UUIDCheckerVelocity.uuid, true);
+                    source.sendMessage(Component.text("You successfully added "+UUIDCheckerVelocity.uuidName+" to the whitelist!" , NamedTextColor.BLUE));
+                    break;
+                case "remove":
+                    String inputRemove = "DELETE FROM whitelisted " +
+                            " WHERE playerUUID=? ";
+                    uuidCheckerVelocity.check(args[1]);
+                    whitelistedSQL.remove(inputRemove, UUIDCheckerVelocity.uuid);
+                    source.sendMessage(Component.text("You successfully removed "+UUIDCheckerVelocity.uuidName+" from the whitelist!", NamedTextColor.DARK_RED));
+                    break;
+                default:
+                    source.sendMessage(Component.text("[Whitelist] (on / off)", NamedTextColor.DARK_AQUA));
+                    break;
+            }
+        } else {
+            source.sendMessage(Component.text("[Whitelist] (on / off / add / remove)", NamedTextColor.DARK_AQUA));
         }
+
     }
 
     // This method allows you to control who can execute the command.

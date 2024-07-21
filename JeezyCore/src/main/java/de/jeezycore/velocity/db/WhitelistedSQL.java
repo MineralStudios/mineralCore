@@ -1,15 +1,13 @@
 package de.jeezycore.velocity.db;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 import static de.jeezycore.velocity.db.hikari.HikariCP.dataSource;
 
 public class WhitelistedSQL {
 
     public static Boolean whitelisted;
+    public static Boolean isWhitelisted;
 
 
     public void enableWhitelisted() {
@@ -93,5 +91,88 @@ public class WhitelistedSQL {
             }
         }
     }
+
+    public void add(String sql, String playerUUID, Boolean status) {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, playerUUID);
+            pstmt.setBoolean(2, status);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                pstmt.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void remove(String sql, String playerUUID) {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, playerUUID);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                pstmt.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public void isPlayerWhitelisted(String playerUUID) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql_select = "SELECT whitelisted FROM whitelisted WHERE playerUUID = '"+playerUUID+"'";
+            resultSet = statement.executeQuery(sql_select);
+
+            if (!resultSet.next()) {
+                isWhitelisted = false;
+            } else {
+                do {
+                    isWhitelisted = resultSet.getBoolean(1);
+                } while (resultSet.next());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 }
