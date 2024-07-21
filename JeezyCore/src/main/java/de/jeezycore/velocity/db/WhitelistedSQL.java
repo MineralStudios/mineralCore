@@ -4,14 +4,15 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import static de.jeezycore.velocity.db.hikari.HikariCP.dataSource;
 
-public class MaintenanceSQL {
+public class WhitelistedSQL {
 
-   public static Boolean maintenance;
+    public static Boolean whitelisted;
 
 
-    public void enableMaintenance() {
+    public void enableWhitelisted() {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -20,9 +21,9 @@ public class MaintenanceSQL {
             statement = connection.createStatement();
             String sqlUpdateMsg = "UPDATE velocity " +
                     "SET status = true"+
-                    " WHERE actionName = 'maintenance'";
+                    " WHERE actionName = 'whitelisted'";
             statement.executeUpdate(sqlUpdateMsg);
-            maintenance = true;
+            whitelisted = true;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -36,7 +37,7 @@ public class MaintenanceSQL {
     }
 
 
-    public void disableMaintenance() {
+    public void disableWhitelisted() {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -45,9 +46,9 @@ public class MaintenanceSQL {
             statement = connection.createStatement();
             String sqlUpdateMsg = "UPDATE velocity " +
                     "SET status = false"+
-                    " WHERE actionName = 'maintenance'";
+                    " WHERE actionName = 'whitelisted'";
             statement.executeUpdate(sqlUpdateMsg);
-            maintenance = false;
+            whitelisted = false;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -61,21 +62,21 @@ public class MaintenanceSQL {
     }
 
 
-    public void getMaintenanceData() {
+    public void getWhitelistedData() {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
             statement = connection.createStatement();
-            String sql_select = "SELECT status FROM velocity WHERE actionName = 'maintenance'";
+            String sql_select = "SELECT status FROM velocity WHERE actionName = 'whitelisted'";
             resultSet = statement.executeQuery(sql_select);
 
             if (!resultSet.next()) {
-                maintenance = false;
+                whitelisted = false;
             } else {
                 do {
-                    maintenance = resultSet.getBoolean(1);
+                    whitelisted = resultSet.getBoolean(1);
                 } while (resultSet.next());
             }
 

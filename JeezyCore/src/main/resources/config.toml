@@ -5,9 +5,13 @@ user = "username"
 password = "password"
 database = "db_name"
 
-#Velocity
-maintenance_display = "maintenance"
+#Velocity - Maintenance
+maintenance_display = "Maintenance"
 maintenance_logo_change = false
 maintenance_favicon_Path = "plugins/jeezycore/server-logo-maintenance.png"
 motd_maintenance = "<blue><bold>Mineral <gray><bold>- <red><bold>Maintenance\n<gray><bold>►<reset> <white>discord.mineral.gg"
 motd = "<blue><bold>Mineral <gray><bold>► <red><bold>BotPvP <gray><bold>(1.7-1.20)\n<gray><bold>►<reset> <white><bold>Smartest PvpBots"
+
+#Velocity - Whitelisted
+whitelisted_display = "Whitelisted"
+whitelisted_motd = "<blue><bold>Mineral <gray><bold>► <red><bold>BotPvP <gray><bold>(1.7-1.20)\n<gray><bold>►<reset> <white><bold>Smartest PvpBots"

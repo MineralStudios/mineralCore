@@ -6,6 +6,7 @@ import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
 import de.jeezycore.velocity.db.MaintenanceSQL;
+import de.jeezycore.velocity.db.WhitelistedSQL;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
@@ -32,6 +33,10 @@ public class PingEventListener {
                 toml.getString("motd")
         );
 
+        Component motDWhitelist = MiniMessage.miniMessage().deserialize(
+                toml.getString("whitelisted_motd")
+        );
+
         if (MaintenanceSQL.maintenance) {
             builder.version(new ServerPing.Version(event.getConnection().getProtocolVersion().getProtocol() + 1, toml.getString("maintenance_display")));
             builder.description(motDMaintenance);
@@ -43,8 +48,13 @@ public class PingEventListener {
                 }
             }
         } else {
-            builder.maximumPlayers(0);
-            builder.description(motD);
+            if (WhitelistedSQL.whitelisted) {
+                builder.version(new ServerPing.Version(event.getConnection().getProtocolVersion().getProtocol() + 1, "Whitelisted"));
+                builder.description(motDWhitelist);
+            } else {
+                builder.maximumPlayers(0);
+                builder.description(motDWhitelist);
+            }
         }
         event.setPing(builder.build());
     }

@@ -71,8 +71,10 @@ public class HikariCP {
             connection = getConnection();
             statement = connection.createStatement();
             String maintenance_tableInserts = "INSERT INTO velocity (actionName) VALUES ('maintenance')";
+            String whitelist_tableInsert = "INSERT INTO velocity (actionName) VALUES ('whitelisted')";
 
             statement.executeUpdate(maintenance_tableInserts);
+            statement.executeUpdate(whitelist_tableInsert);
         } catch (SQLException e) {
         } finally {
             try {

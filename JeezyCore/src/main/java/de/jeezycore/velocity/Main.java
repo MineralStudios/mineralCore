@@ -10,8 +10,10 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import de.jeezycore.velocity.commands.Maintenance;
+import de.jeezycore.velocity.commands.Whitelist;
 import de.jeezycore.velocity.config.JeezyConfig;
 import de.jeezycore.velocity.db.MaintenanceSQL;
+import de.jeezycore.velocity.db.WhitelistedSQL;
 import de.jeezycore.velocity.db.hikari.HikariCP;
 import de.jeezycore.velocity.events.CommandExecuteListener;
 import de.jeezycore.velocity.events.PingEventListener;
@@ -34,6 +36,7 @@ public class Main {
     JeezyConfig jeezyConfig = new JeezyConfig();
     HikariCP hikariCP = new HikariCP();
     MaintenanceSQL maintenanceSQL = new MaintenanceSQL();
+    WhitelistedSQL whitelistedSQL = new WhitelistedSQL();
 
     @Inject
     public Main(ProxyServer server, Logger logger) throws IOException {
@@ -49,6 +52,7 @@ public class Main {
         jeezyConfig.createData();
         hikariCP.start();
         maintenanceSQL.getMaintenanceData();
+        whitelistedSQL.getWhitelistedData();
         this.registerEvents();
         this.registerCommands();
     }
@@ -64,10 +68,16 @@ public class Main {
     public void registerCommands () {
         CommandManager commandManager = server.getCommandManager();
         // Here you can add meta for the command, as aliases and the plugin to which it belongs (RECOMMENDED)
-        CommandMeta commandMeta = commandManager.metaBuilder("maintenance")
+        CommandMeta maintenanceMeta = commandManager.metaBuilder("maintenance")
                 // This will create a new alias for the command "/test"
                 // with the same arguments and functionality
                // .aliases("otherAlias", "anotherAlias")
+                .plugin(this)
+                .build();
+        CommandMeta whitelistMeta = commandManager.metaBuilder("whitelist")
+                // This will create a new alias for the command "/test"
+                // with the same arguments and functionality
+                // .aliases("otherAlias", "anotherAlias")
                 .plugin(this)
                 .build();
 
@@ -75,9 +85,11 @@ public class Main {
         // SimpleCommand simpleCommand = new TestCommand();
         // RawCommand rawCommand = new EchoCommand();
         // The registration is done in the same way, since all 3 interfaces implement "Command"
-        SimpleCommand simpleCommand = new Maintenance(server, logger);
+        SimpleCommand maintenanceCMD = new Maintenance(server, logger);
+        SimpleCommand whitelistCMD = new Whitelist(server, logger);
 
         // Finally, you can register the command
-        commandManager.register(commandMeta, simpleCommand);
+        commandManager.register(maintenanceMeta, maintenanceCMD);
+        commandManager.register(whitelistMeta, whitelistCMD);
     }
 }
