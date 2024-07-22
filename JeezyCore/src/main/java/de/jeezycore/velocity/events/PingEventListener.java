@@ -53,7 +53,7 @@ public class PingEventListener {
                 builder.description(motDWhitelist);
             } else {
                 builder.maximumPlayers(0);
-                builder.description(motDWhitelist);
+                builder.description(motD);
             }
         }
         event.setPing(builder.build());
