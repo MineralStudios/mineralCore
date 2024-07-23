@@ -26,7 +26,7 @@ public class LoginEventListener {
         if (MaintenanceSQL.maintenance || WhitelistedSQL.whitelisted) {
             whitelistedSQL.isPlayerWhitelisted(event.getPlayer().getUniqueId().toString());
 
-            if (MaintenanceSQL.maintenance && !WhitelistedSQL.isWhitelisted) {
+            if (MaintenanceSQL.maintenance && !event.getPlayer().hasPermission("maintenance.bypass")) {
                 event.setResult(ServerPreConnectEvent.ServerResult.denied());
                 event.getPlayer().disconnect(Component.text(toml.getString("onMaintenance_message")));
             }

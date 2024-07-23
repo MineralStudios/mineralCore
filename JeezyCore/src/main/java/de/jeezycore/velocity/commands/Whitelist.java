@@ -67,6 +67,9 @@ public final class Whitelist implements SimpleCommand {
                             " WHERE playerUUID=? ";
                     uuidCheckerVelocity.check(args[1]);
                     whitelistedSQL.remove(inputRemove, UUIDCheckerVelocity.uuid);
+                    if (server.getPlayer(UUIDCheckerVelocity.uuidName).isPresent()) {
+                        server.getPlayer(UUIDCheckerVelocity.uuidName).get().disconnect(Component.text(toml.getString("whitelisted_access_removed_if_active")));
+                     }
                     source.sendMessage(Component.text("You successfully removed "+UUIDCheckerVelocity.uuidName+" from the whitelist!", NamedTextColor.DARK_RED));
                     break;
                 default:

@@ -19,6 +19,7 @@ maintenance_kick_message = "Server is in maintenance mode!"
 whitelisted_display = "Whitelisted"
 whitelisted_motd = "<blue><bold>Mineral <gray><bold>► <red><bold>BotPvP <gray><bold>(1.7-1.20)\n<gray><bold>►<reset> <white><bold>Smartest PvpBots"
 whitelisted_kick_message = "Server is whitelisted!"
+whitelisted_access_removed_if_active = "Your whitelist got revoked"
 
 #Velocity - JoinMessages
 onMaintenance_message = "Server is in maintenance mode!"
