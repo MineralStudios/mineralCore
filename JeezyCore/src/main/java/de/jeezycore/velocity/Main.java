@@ -53,6 +53,7 @@ public class Main {
         hikariCP.start();
         maintenanceSQL.getMaintenanceData();
         whitelistedSQL.getWhitelistedData();
+        whitelistedSQL.getMaxPlayerCount();
         this.registerEvents();
         this.registerCommands();
     }

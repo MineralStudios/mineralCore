@@ -8,6 +8,7 @@ import de.jeezycore.velocity.db.WhitelistedSQL;
 import net.kyori.adventure.text.Component;
 import java.util.logging.Logger;
 import static de.jeezycore.velocity.config.JeezyConfig.toml;
+import static de.jeezycore.velocity.db.WhitelistedSQL.maxPlayerCount;
 
 public class LoginEventListener {
 
@@ -23,6 +24,13 @@ public class LoginEventListener {
 
     @Subscribe
     public void onPlayerJoin(ServerPreConnectEvent event) {
+
+        if (maxPlayerCount != 0 && server.getPlayerCount() > maxPlayerCount) {
+            event.setResult(ServerPreConnectEvent.ServerResult.denied());
+            event.getPlayer().disconnect(Component.text(toml.getString("max_players_kick_message")));
+            return;
+        }
+
         if (MaintenanceSQL.maintenance || WhitelistedSQL.whitelisted) {
             whitelistedSQL.isPlayerWhitelisted(event.getPlayer().getUniqueId().toString());
 

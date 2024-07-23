@@ -2,13 +2,15 @@ package de.jeezycore.velocity.db;
 
 import de.jeezycore.velocity.utils.ArrayStorage;
 import java.sql.*;
+
+import static de.jeezycore.utils.ArrayStorage.friendsList;
 import static de.jeezycore.velocity.db.hikari.HikariCP.dataSource;
 
 public class WhitelistedSQL {
 
     public static Boolean whitelisted;
     public static Boolean isWhitelisted;
-
+    public static Integer maxPlayerCount;
 
     public void enableWhitelisted() {
         Connection connection = null;
@@ -204,4 +206,64 @@ public class WhitelistedSQL {
             }
         }
     }
+
+
+    public void updateMaxPlayerCount(String sql, Integer getMaxPlayerCount) {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, getMaxPlayerCount);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                pstmt.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+    public void getMaxPlayerCount() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql_select = "SELECT maxPlayerCount FROM maxPlayers WHERE actionName = 'maxPlayerCount'";
+            resultSet = statement.executeQuery(sql_select);
+
+            if (!resultSet.next()) {
+                maxPlayerCount = 0;
+            } else {
+                do {
+                    maxPlayerCount = resultSet.getInt(1);
+                } while (resultSet.next());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

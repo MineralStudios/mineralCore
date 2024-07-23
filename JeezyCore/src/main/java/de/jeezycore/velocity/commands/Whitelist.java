@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import static de.jeezycore.velocity.config.JeezyConfig.toml;
+import static de.jeezycore.velocity.db.WhitelistedSQL.maxPlayerCount;
 
 public final class Whitelist implements SimpleCommand {
 
@@ -71,6 +72,14 @@ public final class Whitelist implements SimpleCommand {
                         server.getPlayer(UUIDCheckerVelocity.uuidName).get().disconnect(Component.text(toml.getString("whitelisted_access_removed_if_active")));
                      }
                     source.sendMessage(Component.text("You successfully removed "+UUIDCheckerVelocity.uuidName+" from the whitelist!", NamedTextColor.DARK_RED));
+                    break;
+                case "maxPlayers":
+                    String sql_select = "UPDATE maxPlayers " +
+                            "SET maxPlayerCount=? "+
+                            " WHERE actionName = 'maxPlayerCount'";
+                    whitelistedSQL.updateMaxPlayerCount(sql_select, Integer.valueOf(args[1]));
+                    whitelistedSQL.getMaxPlayerCount();
+                    source.sendMessage(Component.text("You successfully updated the maxPlayerCount to "+maxPlayerCount, NamedTextColor.DARK_GREEN));
                     break;
                 default:
                     source.sendMessage(Component.text("[Whitelist] (on / off)", NamedTextColor.DARK_AQUA));
