@@ -1,7 +1,7 @@
 package de.jeezycore.velocity.db;
 
+import de.jeezycore.velocity.utils.ArrayStorage;
 import java.sql.*;
-
 import static de.jeezycore.velocity.db.hikari.HikariCP.dataSource;
 
 public class WhitelistedSQL {
@@ -174,5 +174,34 @@ public class WhitelistedSQL {
         }
     }
 
+    public void getWhitelistedPlayers() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql_select = "SELECT playerUUID FROM whitelisted";
+            resultSet = statement.executeQuery(sql_select);
 
+            if (!resultSet.next()) {
+            } else {
+                do {
+                    ArrayStorage.whitelistedPlayerUUID.add(resultSet.getString(1));
+                } while (resultSet.next());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

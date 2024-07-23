@@ -2,14 +2,17 @@ package de.jeezycore.velocity.commands;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import de.jeezycore.velocity.db.MaintenanceSQL;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
+
+import static de.jeezycore.velocity.config.JeezyConfig.toml;
 
 public final class Maintenance implements SimpleCommand {
 
@@ -35,6 +38,12 @@ public final class Maintenance implements SimpleCommand {
             case "on":
                 source.sendMessage(Component.text("[Maintenance] successfully turned on", NamedTextColor.GOLD));
                 maintenanceSQL.enableMaintenance();
+                List<Player> allPlayers = (List<Player>) server.getAllPlayers();
+                for (Player ps : allPlayers) {
+                    if (!ps.hasPermission("maintenance.bypass")) {
+                        ps.disconnect(Component.text(toml.getString("maintenance_kick_message")));
+                    }
+                }
                 break;
             case "off":
                 source.sendMessage(Component.text("[Maintenance] successfully turned off", NamedTextColor.GOLD));
