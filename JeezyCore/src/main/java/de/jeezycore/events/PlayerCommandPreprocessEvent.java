@@ -27,9 +27,11 @@ public class PlayerCommandPreprocessEvent implements Listener {
                    " §9§l♦ §fTo edit your kit,§9§l right click with your book",
            });
        }
+       /*
     if (e.getMessage().equalsIgnoreCase("/friend")) {
         e.setCancelled(true);
         friendsCommands.helpMessage(e.getPlayer());
     }
+        */
     }
 }
