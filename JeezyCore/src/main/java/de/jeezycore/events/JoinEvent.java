@@ -2,7 +2,6 @@ package de.jeezycore.events;
 
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.*;
-import de.jeezycore.utils.FakePlayerChecker;
 import de.jeezycore.utils.NameTag;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -25,9 +24,6 @@ public class JoinEvent implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        if (FakePlayerChecker.isFakePlayer(e.getPlayer()))
-            return;
-
         tabList.setTabList1_8(e.getPlayer(), "§7You're connected to §9§lmineral.gg",
                 "§7Purchase ranks and more at: §9§lstore.mineral.gg");
         check_if_banned.banData(e.getPlayer().getUniqueId());

@@ -2,7 +2,6 @@ package de.jeezycore.db;
 
 import com.google.common.base.Splitter;
 import de.jeezycore.utils.ArrayStorage;
-import de.jeezycore.utils.FakePlayerChecker;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.entity.Player;
 import java.sql.*;
@@ -119,9 +118,6 @@ public class MineralsSQL {
     }
 
     public void addMinerals(Player player, String uuid, int amount, String message) {
-        if (FakePlayerChecker.isFakePlayer(player))
-            return;
-
         if (UUIDChecker.uuid == null) {
             player.sendMessage("§7This player doesn't §4exist§7.");
             return;
