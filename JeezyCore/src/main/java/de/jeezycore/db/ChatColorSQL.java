@@ -488,7 +488,6 @@ public class ChatColorSQL {
             e.printStackTrace();
         } finally {
             try {
-                resultSet.close();
                 statement.close();
                 connection.close();
             } catch (SQLException f) {

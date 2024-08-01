@@ -68,7 +68,7 @@ public class RealtimeGrant {
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle("__Ungrant notification__")
                 .setDescription("Removed the rank from **"+uuid_name+"**.")
-                .setImage("https://crafatar.com/avatars/"+uuid_player)
+                .setImage("https://mineskin.eu/helm/"+uuid_player)
                 .addField("UnGranted by", granter)
                 .addInlineField("UnGranted player", uuid_name)
                 .addInlineField("Date", date)
