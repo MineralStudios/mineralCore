@@ -37,11 +37,6 @@
       <option name="url" value="https://repo1.maven.org/maven2" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="utils" />
-      <option name="name" value="utils" />
-      <option name="url" value="file://JeezyCore/src/main/resources/config.toml" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="papermc" />
       <option name="name" value="papermc" />
       <option name="url" value="https://repo.papermc.io/repository/maven-public/" />

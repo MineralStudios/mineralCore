@@ -36,7 +36,7 @@ public class RealtimeGrant {
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle("__Grant notification__")
                 .setDescription("Granted the **"+rankName+"** rank to **"+uuid_name+"**.")
-                .setImage("https://crafatar.com/avatars/"+uuid_player)
+                .setImage("https://mineskin.eu/helm/"+uuid_player)
                 .addField("Granted by", granter)
                 .addInlineField("Granted player", uuid_name)
                 .addInlineField("Date", date)
