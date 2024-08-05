@@ -12,11 +12,12 @@ import de.jeezycore.events.inventories.rewards.RewardsInventory;
 import de.jeezycore.events.inventories.store.StoreInventory;
 import de.jeezycore.events.inventories.tags.TagsInventory;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 public class JeezyInventories implements Listener {
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGHEST)
     public void onCLickEvent(org.bukkit.event.inventory.InventoryClickEvent e) {
         if (e.getCurrentItem() == null || e.getCurrentItem().getItemMeta() == null || e.getClickedInventory() == null) {
             return;
