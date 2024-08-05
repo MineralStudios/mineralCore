@@ -932,7 +932,6 @@ public class RanksSQL {
             e.printStackTrace();
         } finally {
             try {
-                resultSet.close();
                 statement.close();
                 connection.close();
             } catch (SQLException e) {
