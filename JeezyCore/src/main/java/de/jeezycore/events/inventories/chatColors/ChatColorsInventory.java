@@ -80,7 +80,7 @@ public class ChatColorsInventory {
             if (ChatColorSQL.currentChatColorName != null) {
                 chatColorsInv.setItem(4, resetChatColor);
             }
-
+        /*
             ItemStack customChatColorItem = new ItemStack(Material.BLAZE_ROD);
             ItemMeta customChatColorMeta = customChatColorItem.getItemMeta();
             List<String> customChatColorText = new ArrayList<>();
@@ -93,6 +93,7 @@ public class ChatColorsInventory {
             customChatColorItem.setItemMeta(customChatColorMeta);
             chatColorsInv.setItem(8, customChatColorItem);
 
+         */
 
         for (int i = 0; i < chatColorSQL.chatColorArray.size(); i++) {
             String access = chatColorSQL.chatColorArray.get(i).replace("[", "").replace(",", "").replace("]", "");
