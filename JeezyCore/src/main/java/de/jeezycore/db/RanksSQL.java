@@ -926,8 +926,18 @@ public class RanksSQL {
                     "SET rank = NULL"+
                     " WHERE playerUUID = '"+p.getUniqueId()+"'";
 
+            String sql_reset_tag = "UPDATE players "+
+                    "SET tag = NULL"+
+                    " WHERE playerUUID = '"+p.getUniqueId()+"'";
+
+            String sql_reset_chatColor = "UPDATE players "+
+                    "SET chatColor = NULL"+
+                    " WHERE playerUUID = '"+p.getUniqueId()+"'";
+
             statement.executeUpdate(sql_reset_item_duration);
             statement.executeUpdate(sql_reset_rank);
+            statement.executeUpdate(sql_reset_tag);
+            statement.executeUpdate(sql_reset_chatColor);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
