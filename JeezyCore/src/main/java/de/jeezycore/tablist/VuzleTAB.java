@@ -1,10 +1,15 @@
 package de.jeezycore.tablist;
 
+import de.jeezycore.main.Main;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import static de.jeezycore.utils.ArrayStorage.playerRankNames;
 
 
 public class VuzleTAB implements Listener {
@@ -38,6 +43,22 @@ public class VuzleTAB implements Listener {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             ((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, server.getPlayerList().players));
+        }
+    }
+
+    public void removePlayersFromListOnQuit (PlayerQuitEvent e, EntityPlayer entityPlayer) {
+
+        if (playerRankNames.contains(e.getPlayer().getDisplayName())) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    removePlayersFromList ();
+                    server.getPlayerList().players.remove(entityPlayer);
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        ((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, server.getPlayerList().players));
+                    }
+                }
+            }.runTaskLater(Main.getPlugin(Main.class), 12L);
         }
     }
 }
