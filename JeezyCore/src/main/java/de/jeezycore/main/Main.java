@@ -6,9 +6,9 @@ import de.jeezycore.commands.chatColors.ChatColors;
 import de.jeezycore.commands.chatColors.CreateChatColor;
 import de.jeezycore.commands.chatColors.GrantChatColor;
 import de.jeezycore.commands.chatColors.UnGrantChatColors;
-import de.jeezycore.commands.friends.FriendsCommands;
 import de.jeezycore.commands.ranks.UnGrantRank;
 import de.jeezycore.commands.staff.Logs;
+import de.jeezycore.db.TabListSQL;
 import de.jeezycore.db.hikari.HikariCP;
 import de.jeezycore.disguise.manger.DisguiseManager;
 import de.jeezycore.colors.Color;
@@ -40,6 +40,7 @@ import de.jeezycore.events.chat.ChatEvent;
 import de.jeezycore.events.inventories.JeezyInventories;
 import de.jeezycore.utils.HTTPUtility;
 import org.bukkit.plugin.java.JavaPlugin;
+import static de.jeezycore.utils.NameTag.scoreboard;
 
 public class Main extends JavaPlugin {
 
@@ -118,7 +119,8 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new WeatherEvent(), this);
         getServer().getPluginManager().registerEvents(new QuitEvent(disguiseManager), this);
         getServer().getPluginManager().registerEvents(new PlayerCommandPreprocessEvent(), this);
-
+        //getServer().getPluginManager().registerEvents(new VuzleTAB(), this);
+        getServer().getPluginManager().registerEvents(new PlayerTeleportEvent(), this);
         // Setups Databases + Tables
         HikariCP hikariCP = new HikariCP();
         hikariCP.start();
@@ -144,6 +146,11 @@ public class Main extends JavaPlugin {
        // RewardSQL rewardSQL = new RewardSQL();
        // rewardSQL.tagData();
 
+      scoreboard.registerNewTeam("Founder").setPrefix("§9");
+      scoreboard.registerNewTeam("Manager").setPrefix("§4");
+      scoreboard.registerNewTeam("ZDefault").setPrefix("§2");
+      TabListSQL tabListSQL = new TabListSQL();
+      tabListSQL.getUsers();
     }
 
     @Override

@@ -1,52 +1,47 @@
 package de.jeezycore.utils;
 
-import com.nametagedit.plugin.NametagEdit;
+import de.jeezycore.db.RanksSQL;
 import de.jeezycore.db.TabListSQL;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
 import static de.jeezycore.utils.ArrayStorage.tab_name_list_array;
 
 public class NameTag {
 
     TabListSQL tabListSQL = new TabListSQL();
 
+    public static Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+
     public void giveTagOnJoin(Player player) {
             tabListSQL.getTabListData(player);
 
             if (tab_name_list_array.get(player) != null) {
-                NametagEdit.getApi().setPrefix(player, tab_name_list_array.get(player));
+                scoreboard.getTeam(RanksSQL.rankNameInformation).addEntry(player.getDisplayName());
             } else {
-                NametagEdit.getApi().setPrefix(player, "§2");
+                scoreboard.getTeam("ZDefault").addEntry(player.getDisplayName());
             }
         }
 
-    public void defaultTag(Player p) {
-        NametagEdit.getApi().setPrefix(p, "§2");
-    }
+   public void giveTagAfterMatch(Player player1, Player player2) {
 
-
-    public void giveTagAfterMatch(Player player1, Player player2) {
-
+/*
         if (tab_name_list_array.get(player1) != null) {
-            NametagEdit.getApi().setPrefix(player1, tab_name_list_array.get(player1));
+            //NametagEdit.getApi().setPrefix(player1, tab_name_list_array.get(player1));
+            tabListSQL.getTabListData(player1);
+            scoreboard.getTeam(RanksSQL.rankNameInformation).addEntry(tab_name_list_array.get(player1));
         } else {
-            NametagEdit.getApi().setPrefix(player1, "§2");
+            //NametagEdit.getApi().setPrefix(player1, "§2");
+            scoreboard.getTeam("ZDefault").addEntry(player1.getDisplayName());
         }
 
         if (tab_name_list_array.get(player2) != null) {
-            NametagEdit.getApi().setPrefix(player2, tab_name_list_array.get(player2));
+            //NametagEdit.getApi().setPrefix(player2, tab_name_list_array.get(player2));
+            scoreboard.getTeam(RanksSQL.rankNameInformation).addEntry(tab_name_list_array.get(player2));
         } else {
-            NametagEdit.getApi().setPrefix(player2, "§2");
+            //NametagEdit.getApi().setPrefix(player2, "§2");
+            scoreboard.getTeam("ZDefault").addEntry(player2.getDisplayName());
         }
+ */
     }
-
-    public void giveMatchNameTags(Player player1, Player player2) {
-        NametagEdit.getApi().setPrefix(player1, "§a");
-        NametagEdit.getApi().setPrefix(player2, "§c");
-    }
-
-    public void clearTagOnMatchStart(Player player1, Player player2) {
-        NametagEdit.getApi().clearNametag(player1);
-        NametagEdit.getApi().clearNametag(player2);
-    }
-
 }

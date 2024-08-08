@@ -47,6 +47,11 @@
       <option name="url" value="https://repo.clojars.org" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="viaversion-repo" />
+      <option name="name" value="viaversion-repo" />
+      <option name="url" value="https://repo.viaversion.com" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="spigot-repo" />
       <option name="name" value="spigot-repo" />
       <option name="url" value="https://hub.spigotmc.org/nexus/content/repositories/snapshots/" />

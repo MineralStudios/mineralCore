@@ -46,7 +46,7 @@ public class DisguiseCommand implements CommandExecutor {
 
         disguiseManager.applyDisguise(player, playerName, texture, signature);
         player.sendMessage(ChatColor.BLUE + "Disguised as "+ ChatColor.WHITE + playerName + ChatColor.GRAY +".");
-        nameTag.defaultTag(player);
+        //nameTag.defaultTag(player);
       }));
     }
     return true;

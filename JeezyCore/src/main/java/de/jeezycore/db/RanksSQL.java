@@ -1,6 +1,4 @@
 package de.jeezycore.db;
-import com.nametagedit.plugin.NametagEdit;
-import de.jeezycore.colors.Color;
 import de.jeezycore.discord.messages.grant.RealtimeGrant;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.PermissionHandler;
@@ -8,7 +6,6 @@ import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-// SQL imports
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,6 +13,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
+import static de.jeezycore.utils.NameTag.scoreboard;
 
 public class RanksSQL {
     public String url;
@@ -27,7 +25,7 @@ public class RanksSQL {
 
     public String rankColor;
 
-    public String rankNameInformation;
+    public static String rankNameInformation;
 
     public String privateMessageColors;
 
@@ -157,7 +155,7 @@ public class RanksSQL {
                 statement.executeUpdate(select_sql);
             }
             player.sendMessage("You §b§lsuccessfully§f granted §l§7" + UUIDChecker.uuidName + "§f the §l" +rankColorPerms.replace("&", "§")+rankName + " §frank.");
-            NametagEdit.getApi().setPrefix(UUIDChecker.uuidName, rankColorPerms.replace("&", "§"));
+            scoreboard.getTeam(rankName).addEntry(UUIDChecker.uuidName);
         } catch (SQLException e) {
             System.out.println(e);
         } finally {
@@ -216,7 +214,7 @@ public class RanksSQL {
                 statement.executeUpdate(select_sql);
             }
             sender.sendMessage("You §b§lsuccessfully§f granted §l§7" + UUIDChecker.uuidName + "§f the §l" +rankColorPerms.replace("&", "§")+rankName + " §frank.");
-            NametagEdit.getApi().setPrefix(UUIDChecker.uuidName, rankColorPerms.replace("&", "§"));
+            scoreboard.getTeam(grantPlayerRank).addEntry(UUIDChecker.uuidName);
         } catch (SQLException e) {
             System.out.println(e);
         } finally {
@@ -795,7 +793,7 @@ public class RanksSQL {
                 RealtimeGrant unGrant_discord = new RealtimeGrant();
                 unGrant_discord.realtimeChatOnUnGranting(ArrayStorage.grant_array.get(p.getUniqueId()), ArrayStorage.grant_array_names.get(p.getUniqueId()), p.getDisplayName());
             p.sendMessage("§aSuccessfully§f removed the rank from player §b§l" + ArrayStorage.grant_array_names.get(p.getUniqueId()));
-            NametagEdit.getApi().setPrefix(UUIDChecker.uuidName, "§2");
+            scoreboard.getTeam("ZDefault").addEntry(UUIDChecker.uuidName);
             } else {
                 p.sendMessage("§4§lThis player doesn't have a rank!");
             }
@@ -848,7 +846,7 @@ public class RanksSQL {
                 statement.executeUpdate(sql);
                 statement.executeUpdate(sql_reset_rank_time);
                 sender.sendMessage("§aSuccessfully§7 removed the rank from player §9§l" + playerName);
-                NametagEdit.getApi().setPrefix(UUIDChecker.uuidName, "§2");
+                //NametagEdit.getApi().setPrefix(UUIDChecker.uuidName, "§2");
             } else {
                 sender.sendMessage("§4§lThis player doesn't have a rank!");
             }
