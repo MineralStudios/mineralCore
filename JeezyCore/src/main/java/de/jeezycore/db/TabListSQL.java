@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
 import java.sql.*;
 
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
-import static de.jeezycore.utils.ArrayStorage.playerNames;
+import static de.jeezycore.utils.ArrayStorage.playerRankNames;
 import static de.jeezycore.utils.ArrayStorage.tab_name_list_array;
 
 public class TabListSQL {
@@ -92,7 +92,7 @@ public class TabListSQL {
             } else {
                 do {
                     getUsers = resultSet.getString(1);
-                    playerNames.add(getUsers);
+                    playerRankNames.add(getUsers);
                 } while (resultSet.next());
 
             }

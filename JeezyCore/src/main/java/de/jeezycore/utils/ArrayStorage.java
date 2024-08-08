@@ -1,6 +1,5 @@
 package de.jeezycore.utils;
 
-import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.suuft.libretranslate.Language;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -84,5 +83,5 @@ public class ArrayStorage {
     public static HashMap<UUID, ArrayList<UUID>> friendsAddList = new HashMap<>();
 
     // Tablist
-    public static ArrayList<String> playerNames = new ArrayList<>();
+    public static ArrayList<String> playerRankNames = new ArrayList<>();
 }

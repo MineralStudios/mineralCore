@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
-import static de.jeezycore.utils.ArrayStorage.playerNames;
+import static de.jeezycore.utils.ArrayStorage.playerRankNames;
 import static de.jeezycore.utils.NameTag.scoreboard;
 
 public class PlayerTeleportEvent implements Listener {
@@ -20,11 +20,11 @@ public class PlayerTeleportEvent implements Listener {
             return;
         }
 
-        if (playerNames.contains(e.getPlayer().getDisplayName())) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                player.setScoreboard(scoreboard);
-            }
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.setScoreboard(scoreboard);
+        }
 
+        if (playerRankNames.contains(e.getPlayer().getDisplayName())) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
