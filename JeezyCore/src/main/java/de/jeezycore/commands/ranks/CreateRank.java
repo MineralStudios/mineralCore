@@ -13,10 +13,11 @@ public class CreateRank implements CommandExecutor {
         if (sender instanceof Player) {
             Player p = (Player) sender;
 
+            if (p.hasPermission("jeezy.core.rank.create")) {
            if (cmd.getName().equalsIgnoreCase("create-rank") && args.length < 4) {
               p.sendMessage("Usage: /create-rank (name) (rankRGB) (rankColor) (priority)");
            } else {
-               if (p.hasPermission("jeezy.core.rank.create")) {
+
                    RanksSQL mySQL = new RanksSQL();
                    String input = "INSERT INTO ranks " +
                            "(rankName, rankRGB, rankColor, rankPriority) " +
@@ -24,11 +25,10 @@ public class CreateRank implements CommandExecutor {
                            "(?, ?, ?, ?)";
                    mySQL.pushData(input, args[0], args[1].replace(",", ", "), args[2], args[3]);
                    p.sendMessage(mySQL.createRankMsg.replace("{rank}", args[0]).replace("{colorID}", args[2].replace("&", "§")));
-               } else {
-                   p.sendMessage("No permission.");
-               }
-
            }
+            } else {
+                p.sendMessage("No permission.");
+            }
         }
         return true;
     }
