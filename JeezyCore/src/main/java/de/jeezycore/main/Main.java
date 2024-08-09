@@ -119,7 +119,6 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new WeatherEvent(), this);
         getServer().getPluginManager().registerEvents(new QuitEvent(disguiseManager), this);
         getServer().getPluginManager().registerEvents(new PlayerCommandPreprocessEvent(), this);
-        //getServer().getPluginManager().registerEvents(new VuzleTAB(), this);
         getServer().getPluginManager().registerEvents(new PlayerTeleportEvent(), this);
         // Setups Databases + Tables
         HikariCP hikariCP = new HikariCP();
