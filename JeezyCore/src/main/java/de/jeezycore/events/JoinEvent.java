@@ -2,6 +2,7 @@ package de.jeezycore.events;
 
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.*;
+import de.jeezycore.tablist.VuzleTAB;
 import de.jeezycore.utils.NameTag;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -16,15 +17,14 @@ public class JoinEvent implements Listener {
     RanksSQL givePermsOnJoin = new RanksSQL();
     BanSQL check_if_banned = new BanSQL();
     NameTag nameTag = new NameTag();
-
-    TabListSQL tabList = new TabListSQL();
+    VuzleTAB vuzleTAB = new VuzleTAB();
     PlayersSQL playersSQL = new PlayersSQL();
 
 
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        tabList.setTabList1_8(e.getPlayer(), "§7You're connected to §9§lmineral.gg",
+        vuzleTAB.setTabList1_8(e.getPlayer(), "§7You're connected to §9§lmineral.gg",
                 "§7Purchase ranks and more at: §9§lstore.mineral.gg");
         check_if_banned.banData(e.getPlayer().getUniqueId());
         if (BanSQL.ban_forever) {

@@ -9,6 +9,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.lang.reflect.Field;
+
 import static de.jeezycore.utils.ArrayStorage.playerRankNames;
 
 
@@ -61,4 +63,22 @@ public class VuzleTAB implements Listener {
             }.runTaskLater(Main.getPlugin(Main.class), 12L);
         }
     }
+
+    public void setTabList1_8(Player p, String Title, String subTitle) {
+        IChatBaseComponent tabTitle = IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + Title+ "\"}");
+        IChatBaseComponent tabSubTitle = IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + subTitle + "\"}");
+
+        PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter(tabTitle);
+
+        try {
+            Field field = packet.getClass().getDeclaredField("b");
+            field.setAccessible(true);
+            field.set(packet, tabSubTitle);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ((CraftPlayer)p).getHandle().playerConnection.sendPacket(packet);
+        }
+    }
+
 }
