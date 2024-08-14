@@ -3,6 +3,7 @@ package de.jeezycore.events;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.*;
 import de.jeezycore.tablist.VuzleTAB;
+import de.jeezycore.utils.NameMC;
 import de.jeezycore.utils.NameTag;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -20,7 +21,7 @@ public class JoinEvent implements Listener {
     VuzleTAB vuzleTAB = new VuzleTAB();
     PlayersSQL playersSQL = new PlayersSQL();
 
-
+    NameMC nameMC = new NameMC();
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
@@ -68,7 +69,7 @@ public class JoinEvent implements Listener {
         playersSQL.checkIfUsernameChanged(e);
         givePermsOnJoin.rankMonthlyDurationCalculator(e.getPlayer());
         nameTag.giveTagOnJoin(e.getPlayer());
-
+        nameMC.checkNameMc(e.getPlayer());
 
         try {
             givePermsOnJoin.getPlayerInformation(e.getPlayer());

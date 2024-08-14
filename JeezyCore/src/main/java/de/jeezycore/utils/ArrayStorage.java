@@ -84,4 +84,7 @@ public class ArrayStorage {
 
     // Tablist
     public static ArrayList<String> playerRankNames = new ArrayList<>();
+
+    // NameMC
+    public static ArrayList<String> nameMcLikes = new ArrayList<>();
 }
