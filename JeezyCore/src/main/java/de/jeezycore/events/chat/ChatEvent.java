@@ -47,7 +47,7 @@ public class ChatEvent implements Listener {
         banChat.onPlayerChatBan(e);
         ignoreChat.PlayerIgnoreChat(e);
         chatColorSQL.getPlayerChatName(e.getPlayer());
-        setNameMcTag = nameMC.checkIfVoted(e.getPlayer()) ? "§l§9✔ " : " ";
+        setNameMcTag = nameMC.checkIfVoted(e.getPlayer()) ? "§l§9✔ " : "";
 
         if (display.rankNameInformation == null || display.rank == null) {
                  chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("&", "§").replace("[player]", setNameMcTag+ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat).replace("&", "§");
