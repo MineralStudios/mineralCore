@@ -39,6 +39,7 @@ import de.jeezycore.events.*;
 import de.jeezycore.events.chat.ChatEvent;
 import de.jeezycore.events.inventories.JeezyInventories;
 import de.jeezycore.utils.HTTPUtility;
+import de.jeezycore.utils.NameMC;
 import org.bukkit.plugin.java.JavaPlugin;
 import static de.jeezycore.utils.NameTag.scoreboard;
 
@@ -150,6 +151,10 @@ public class Main extends JavaPlugin {
       scoreboard.registerNewTeam("ZDefault").setPrefix("§2");
       TabListSQL tabListSQL = new TabListSQL();
       tabListSQL.getUsers();
+
+      NameMC nameMC = new NameMC();
+      nameMC.getLikes();
+
     }
 
     @Override

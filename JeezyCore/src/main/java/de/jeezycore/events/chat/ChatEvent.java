@@ -5,6 +5,7 @@ import de.jeezycore.db.ChatColorSQL;
 import de.jeezycore.db.RanksSQL;
 import de.jeezycore.db.TagsSQL;
 import de.jeezycore.discord.messages.realtime.RealtimeChat;
+import de.jeezycore.utils.NameMC;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,8 +30,11 @@ public class ChatEvent implements Listener {
 
     AntiSpam antiSpam = new AntiSpam();
 
+    NameMC nameMC = new NameMC();
 
     String chat_format_rep;
+
+    String setNameMcTag;
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
@@ -43,12 +47,13 @@ public class ChatEvent implements Listener {
         banChat.onPlayerChatBan(e);
         ignoreChat.PlayerIgnoreChat(e);
         chatColorSQL.getPlayerChatName(e.getPlayer());
+        setNameMcTag = nameMC.checkIfVoted(e.getPlayer()) ? "§l§9✔ " : " ";
 
-            if (display.rankNameInformation == null || display.rank == null) {
-                 chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("&", "§").replace("[player]", ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat).replace("&", "§");
+        if (display.rankNameInformation == null || display.rank == null) {
+                 chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("&", "§").replace("[player]", setNameMcTag+ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat).replace("&", "§");
                 rmc.realtimeMcChat( e.getPlayer().getDisplayName()+": "+e.getMessage());
             } else {
-                chat_format_rep = cf.getString("chat_format").replace("[rank]", "§7["+display.rankColor+""+display.rank+"§7]§f").replace("&", "§").replace("[player]", ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat.replace("&", "§"));
+                chat_format_rep = cf.getString("chat_format").replace("[rank]", "§7["+display.rankColor+""+display.rank+"§7]§f").replace("&", "§").replace("[player]", setNameMcTag+ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat.replace("&", "§"));
                 rmc.realtimeMcChat("["+display.rank+"]"+" "+e.getPlayer().getDisplayName()+": "+e.getMessage());
             }
             e.setFormat(chat_format_rep.replace("%", "%%").trim());
