@@ -42,9 +42,8 @@ public class NameMC {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                //180000
             }
-        }, 0, 30000);
+        }, 0, 180000);
     }
 
     public void checkNameMc(Player p) {
