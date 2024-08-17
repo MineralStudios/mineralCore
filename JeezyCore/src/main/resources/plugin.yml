@@ -165,3 +165,6 @@ commands:
   world:
     usage: /world <command>
     description: Executes world commands.
+  sync:
+    usage: /sync
+    description: Generates code that you can use to link your account with discord.

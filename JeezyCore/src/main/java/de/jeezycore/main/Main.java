@@ -109,6 +109,7 @@ public class Main extends JavaPlugin {
         //this.getCommand("lang").setExecutor(new Lang());
         //this.getCommand("friends").setExecutor(new FriendsCommands());
         this.getCommand("world").setExecutor(new World());
+        this.getCommand("sync").setExecutor(new Sync());
 
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
