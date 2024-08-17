@@ -9,6 +9,7 @@ public class SyncSQL {
 
     private String syncCode;
     private String linked;
+    private String codeDuplicated;
 
 
     public void createCode (Player p) {
@@ -20,6 +21,8 @@ public class SyncSQL {
             statement = connection.createStatement();
 
             String syncCode = UUID.randomUUID().toString().replace("-", "").substring(4, 14);
+
+            if (checkIfCodeDuplicated(syncCode) != null) return;
 
             String select_sql ="INSERT INTO sync" +
                     "(playerUUID, syncCode) " +
@@ -137,5 +140,36 @@ public class SyncSQL {
         return linked;
     }
 
+    private String checkIfCodeDuplicated (String code) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
 
+            String select_sql = "SELECT * FROM sync WHERE syncCode = '"+code+"'";
+
+            resultSet = statement.executeQuery(select_sql);
+
+            if (!resultSet.next()) {
+                codeDuplicated = null;
+            }  else {
+                do {
+                    codeDuplicated = resultSet.getString(1);
+                } while (resultSet.next());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return codeDuplicated;
+    }
 }
