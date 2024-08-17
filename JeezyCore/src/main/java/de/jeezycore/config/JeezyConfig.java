@@ -184,6 +184,7 @@ public class JeezyConfig {
             String path_discord_20 = "discord-text-channels-banning.onBan";
             String path_discord_21 = "discord-text-channels-banning.onTempBan";
             String path_discord_22 = "discord-text-channels-banning.onUnBan";
+            String path_discord_23 = "discord-nameMc-notifications.onVote";
 
             discord_defaults.addDefault(path_discord_1, "");
             discord_defaults.addDefault(path_discord_2, true);
@@ -207,6 +208,7 @@ public class JeezyConfig {
             discord_defaults.addDefault(path_discord_20, "");
             discord_defaults.addDefault(path_discord_21, "");
             discord_defaults.addDefault(path_discord_22, "");
+            discord_defaults.addDefault(path_discord_23, "");
             discord_defaults.options().copyDefaults(true);
             discord_defaults.save(discord);
         } catch (Exception e) {

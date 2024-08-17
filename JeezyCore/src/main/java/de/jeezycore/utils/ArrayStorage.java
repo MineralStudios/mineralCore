@@ -6,6 +6,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
 
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -86,5 +87,13 @@ public class ArrayStorage {
     public static ArrayList<String> playerRankNames = new ArrayList<>();
 
     // NameMC
-    public static ArrayList<String> nameMcLikes = new ArrayList<>();
+
+    public static HttpResponse<String> gettingNameMcLikesResponse;
+
+    public static ArrayList<String> prepareNameMcVoters = new ArrayList<>();
+    public static ArrayList<String> nameMcVoters = new ArrayList<>();
+
+    public static ArrayList<String> nameMcOldVoters = new ArrayList<>();
+
+
 }
