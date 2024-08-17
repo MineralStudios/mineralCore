@@ -5,7 +5,8 @@ import de.jeezycore.db.TabListSQL;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
-import static de.jeezycore.utils.ArrayStorage.tab_name_list_array;
+
+import static de.jeezycore.utils.ArrayStorage.*;
 
 public class NameTag {
 
@@ -18,6 +19,8 @@ public class NameTag {
 
             if (tab_name_list_array.get(player) != null) {
                 scoreboard.getTeam(RanksSQL.rankNameInformation).addEntry(player.getDisplayName());
+            } else if (gettingNameMcLikesResponse.body().contains(player.getUniqueId().toString())) {
+                scoreboard.getTeam("QNameMC").addEntry(player.getDisplayName());
             } else {
                 scoreboard.getTeam("ZDefault").addEntry(player.getDisplayName());
             }

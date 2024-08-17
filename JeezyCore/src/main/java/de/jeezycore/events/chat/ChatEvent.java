@@ -10,7 +10,6 @@ import org.bukkit.configuration.MemorySection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-
 import static de.jeezycore.db.TagsSQL.tag_in_chat;
 
 public class ChatEvent implements Listener {
@@ -47,7 +46,7 @@ public class ChatEvent implements Listener {
         banChat.onPlayerChatBan(e);
         ignoreChat.PlayerIgnoreChat(e);
         chatColorSQL.getPlayerChatName(e.getPlayer());
-        setNameMcTag = nameMC.checkIfVoted(e.getPlayer()) ? "§l§9✔ " : "";
+        setNameMcTag = nameMC.checkIfAlreadyVoted(e.getPlayer()) ? "§l§9✔ " : "";
 
         if (display.rankNameInformation == null || display.rank == null) {
                  chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("&", "§").replace("[player]", setNameMcTag+ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat).replace("&", "§");

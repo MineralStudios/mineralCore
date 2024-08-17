@@ -148,6 +148,7 @@ public class Main extends JavaPlugin {
 
       scoreboard.registerNewTeam("Founder").setPrefix("§9");
       scoreboard.registerNewTeam("Manager").setPrefix("§4");
+      scoreboard.registerNewTeam("QNameMC").setPrefix("§l§9✔§2");
       scoreboard.registerNewTeam("ZDefault").setPrefix("§2");
       TabListSQL tabListSQL = new TabListSQL();
       tabListSQL.getUsers();
