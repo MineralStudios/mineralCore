@@ -160,7 +160,7 @@ public class HikariCP {
 
             String sync_table = "CREATE TABLE IF NOT EXISTS sync " +
                     " (playerUUID VARCHAR(255), " +
-                    " discordUsername VARCHAR(255), " +
+                    " discordUserID VARCHAR(255), " +
                     " syncCode VARCHAR(255), " +
                     " PRIMARY KEY ( playerUUID ))";
 
