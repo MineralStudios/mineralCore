@@ -1,5 +1,6 @@
 package de.jeezycore.db;
 
+import de.jeezycore.discord.sync.Unlink;
 import org.bukkit.entity.Player;
 import java.sql.*;
 import java.util.UUID;
@@ -10,6 +11,8 @@ public class SyncSQL {
     private String syncCode;
     private String linked;
     private String codeDuplicated;
+    private String discordUserID;
+    Unlink unlink = new Unlink();
 
 
     public void createCode (Player p) {
@@ -91,14 +94,47 @@ public class SyncSQL {
                 p.getPlayer().sendMessage("§7§l[§9§lMINE§f§lRAL§7§l] §fYou §4haven't §flinked your account yet. Do §9/sync §fto do so.");
                 return;
             }
-
+            selectUnLinkDiscordAccount(p);
             String select_sql ="DELETE FROM sync WHERE playerUUID = '"+p.getPlayer().getUniqueId()+"'";
             statement.executeUpdate(select_sql);
             p.sendMessage("§7§l[§9§lMINE§f§lRAL§7§l] §fYou §2§lsuccessfully§f §funlinked your account from §9discord§f.");
-
         } catch (SQLException e) {
         } finally {
             try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void selectUnLinkDiscordAccount(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+
+            String select_sql = "SELECT discordUserID FROM sync WHERE playerUUID = '"+p.getPlayer().getUniqueId()+"'";
+
+            resultSet = statement.executeQuery(select_sql);
+
+            if (!resultSet.next()) {
+                discordUserID = null;
+            }  else {
+                do {
+                    discordUserID = resultSet.getString(1);
+                } while (resultSet.next());
+            }
+
+            unlink.removeRole(discordUserID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
                 statement.close();
                 connection.close();
             } catch (SQLException e) {
