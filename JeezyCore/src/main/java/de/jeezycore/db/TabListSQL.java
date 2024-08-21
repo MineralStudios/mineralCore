@@ -2,9 +2,10 @@ package de.jeezycore.db;
 
 import org.bukkit.entity.Player;
 import java.sql.*;
+import java.util.UUID;
+
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
-import static de.jeezycore.utils.ArrayStorage.playerRankNames;
-import static de.jeezycore.utils.ArrayStorage.tab_name_list_array;
+import static de.jeezycore.utils.ArrayStorage.*;
 
 public class TabListSQL {
     public String url;
@@ -12,23 +13,30 @@ public class TabListSQL {
     public String password;
     String rankColor;
     String getUsers;
+    public static String getTabListRanks;
+    public static Integer getTabListPriority;
+    String getTabListRankColor;
     RanksSQL ranksSQL = new RanksSQL();
 
-    public void getTabListData(Player p) {
+    public void getTabListData(UUID uuid) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
             statement = connection.createStatement();
-            ranksSQL.getPlayerInformation(p);
+            ranksSQL.getPlayerInformation(uuid);
             String sql = "SELECT * FROM ranks WHERE rankName = '"+ RanksSQL.rankNameInformation +"'";
             resultSet = statement.executeQuery(sql);
 
             if (!resultSet.next()) {
+                getTabListRanks = null;
+                getTabListPriority = null;
                 rankColor = null;
             } else {
                 do {
+                    getTabListRanks = resultSet.getString("rankName");
+                    getTabListPriority = resultSet.getInt("rankPriority");
                     rankColor = resultSet.getString(3);
                 } while(resultSet.next());
 
@@ -36,10 +44,10 @@ public class TabListSQL {
                 return;
                 }
 
-                tab_name_list_array.put(p, rankColor);
+                tab_name_list_array.put(uuid, rankColor);
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         } finally {
             try {
                 resultSet.close();
@@ -51,6 +59,41 @@ public class TabListSQL {
         }
 
     }
+
+    public void getTabListRanks() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql = "SELECT * FROM ranks ORDER BY rankPriority ASC";
+            resultSet = statement.executeQuery(sql);
+
+            if (!resultSet.next()) {
+                getTabListRanks = null;
+            } else {
+                do {
+                    getTabListRanks = resultSet.getString("rankName");
+                    getTabListPriority = resultSet.getInt("rankPriority");
+                    getTabListRankColor = resultSet.getString("rankColor");
+                    rankTabListSorting.put(getTabListPriority+""+getTabListRanks, getTabListRankColor);
+                } while (resultSet.next());
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     public void getUsers() {
         Connection connection = null;

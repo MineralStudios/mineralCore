@@ -179,7 +179,10 @@ public class RanksSQL {
                 statement.executeUpdate(select_sql);
             }
             player.sendMessage("You §b§lsuccessfully§f granted §l§7" + UUIDChecker.uuidName + "§f the §l" +rankColorPerms.replace("&", "§")+rankName + " §frank.");
-            scoreboard.getTeam(rankName).addEntry(UUIDChecker.uuidName);
+
+            TabListSQL tabListSQL = new TabListSQL();
+            tabListSQL.getTabListData(UUID.fromString(UUIDChecker.uuid));
+            scoreboard.getTeam(TabListSQL.getTabListPriority+""+TabListSQL.getTabListRanks).addEntry(UUIDChecker.uuidName);
         } catch (SQLException e) {
             System.out.println(e);
         } finally {
@@ -290,7 +293,7 @@ public class RanksSQL {
         }
     }
 
-    public void getPlayerInformation(Player p) {
+    public void getPlayerInformation(UUID uuid) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -298,7 +301,7 @@ public class RanksSQL {
             connection = dataSource.getConnection();
             statement = connection.createStatement();
 
-            String sql = "SELECT rank FROM players WHERE playerUUID = '"+p.getPlayer().getUniqueId()+"'";
+            String sql = "SELECT rank FROM players WHERE playerUUID = '"+uuid+"'";
 
             resultSet = statement.executeQuery(sql);
 
@@ -310,7 +313,7 @@ public class RanksSQL {
                 } while (resultSet.next());
             }
         }catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         } finally {
             try {
                 resultSet.close();

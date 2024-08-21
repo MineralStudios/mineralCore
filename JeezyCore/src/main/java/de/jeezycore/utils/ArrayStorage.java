@@ -9,6 +9,7 @@ import org.json.simple.JSONObject;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 
 public class ArrayStorage {
@@ -53,7 +54,7 @@ public class ArrayStorage {
 
     public static ArrayList<String> set_current_tag_array = new ArrayList<>();
 
-    public static HashMap<Player, String> tab_name_list_array = new HashMap<>();
+    public static HashMap<UUID, String> tab_name_list_array = new HashMap<>();
 
     public static ArrayList<ItemStack> rewardItems = new ArrayList<>();
 
@@ -85,6 +86,7 @@ public class ArrayStorage {
 
     // Tablist
     public static ArrayList<String> playerRankNames = new ArrayList<>();
+    public static LinkedHashMap<String, String> rankTabListSorting = new LinkedHashMap<>();
 
     // NameMC
 

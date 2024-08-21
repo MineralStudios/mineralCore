@@ -18,13 +18,13 @@ public class StaffChat {
         String expectedOutput = "@";
 
 
-        playerInfo.getPlayerInformation(e.getPlayer());
+        playerInfo.getPlayerInformation(e.getPlayer().getUniqueId());
         staffSQL.checkIfStaff(playerInfo.rankNameInformation, UUID.fromString(e.getPlayer().getUniqueId().toString()));
 
 
         if (StaffSQL.staffRank && firstChar.equalsIgnoreCase(expectedOutput)) {
                 staffSQL.getStaff();
-                display.getPlayerInformation(e.getPlayer());
+                display.getPlayerInformation(e.getPlayer().getUniqueId());
                 String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
                 display.displayChatRank(sql);
 
@@ -45,13 +45,13 @@ public class StaffChat {
     }
 
     public void helpopChat(Player p, String message) {
-        playerInfo.getPlayerInformation(p.getPlayer());
+        playerInfo.getPlayerInformation(p.getPlayer().getUniqueId());
         staffSQL.checkIfStaff(playerInfo.rankNameInformation, UUID.fromString(p.getPlayer().getUniqueId().toString()));
 
         if (StaffSQL.staffRank) {
             staffSQL.getStaff();
 
-            display.getPlayerInformation(p.getPlayer());
+            display.getPlayerInformation(p.getPlayer().getUniqueId());
             String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
             display.displayChatRank(sql);
 
@@ -76,7 +76,7 @@ public class StaffChat {
     public void reportChat(Player p, String message) {
         staffSQL.getStaff();
 
-        display.getPlayerInformation(p.getPlayer());
+        display.getPlayerInformation(p.getPlayer().getUniqueId());
         String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
         display.displayChatRank(sql);
 

@@ -39,7 +39,7 @@ public class ChatEvent implements Listener {
     public void onPlayerChat(AsyncPlayerChatEvent e) {
         antiSpam.AntiSpamChat(e);
         staffChat.chat(e);
-        display.getPlayerInformation(e.getPlayer());
+        display.getPlayerInformation(e.getPlayer().getUniqueId());
         String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
         display.displayChatRank(sql);
         tagsSQL.tagChat(e.getPlayer());

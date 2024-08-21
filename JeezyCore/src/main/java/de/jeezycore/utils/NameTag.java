@@ -15,10 +15,10 @@ public class NameTag {
     public static Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
     public void giveTagOnJoin(Player player) {
-            tabListSQL.getTabListData(player);
+            tabListSQL.getTabListData(player.getPlayer().getUniqueId());
 
-            if (tab_name_list_array.get(player) != null) {
-                scoreboard.getTeam(RanksSQL.rankNameInformation).addEntry(player.getDisplayName());
+            if (tab_name_list_array.get(player.getPlayer().getUniqueId()) != null) {
+                scoreboard.getTeam(TabListSQL.getTabListPriority+""+TabListSQL.getTabListRanks).addEntry(player.getDisplayName());
             } else if (gettingNameMcLikesResponse.body().contains(player.getUniqueId().toString())) {
                 scoreboard.getTeam("QNameMC").addEntry(player.getDisplayName());
             } else {

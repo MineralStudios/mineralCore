@@ -10,6 +10,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import static de.jeezycore.utils.ArrayStorage.tab_name_list_array;
+
 @RequiredArgsConstructor
 public class QuitEvent implements Listener {
   private final DisguiseManager disguiseManager;
@@ -22,8 +24,9 @@ public class QuitEvent implements Listener {
     playersSQL.lastSeen(event);
     disguiseManager.deleteDisguise(event.getPlayer());
     ranksSQL.rankMonthlyDurationCalculator(event.getPlayer());
-
+    tab_name_list_array.remove(event.getPlayer().getUniqueId());
     CraftPlayer craftPlayer = (CraftPlayer) event.getPlayer();
     vuzleTAB.removePlayersFromListOnQuit(event, craftPlayer.getHandle());
+
   }
 }

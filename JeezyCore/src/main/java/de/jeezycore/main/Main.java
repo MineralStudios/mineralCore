@@ -42,6 +42,9 @@ import de.jeezycore.events.inventories.JeezyInventories;
 import de.jeezycore.utils.HTTPUtility;
 import de.jeezycore.utils.NameMC;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import static de.jeezycore.utils.ArrayStorage.playerRankNames;
+import static de.jeezycore.utils.ArrayStorage.rankTabListSorting;
 import static de.jeezycore.utils.NameTag.scoreboard;
 
 public class Main extends JavaPlugin {
@@ -149,20 +152,34 @@ public class Main extends JavaPlugin {
        // RewardSQL rewardSQL = new RewardSQL();
        // rewardSQL.tagData();
 
-      scoreboard.registerNewTeam("Founder").setPrefix("§9");
-      scoreboard.registerNewTeam("Manager").setPrefix("§4");
-      scoreboard.registerNewTeam("Staff").setPrefix("§b");
-      scoreboard.registerNewTeam("Partner").setPrefix("§d");
-      scoreboard.registerNewTeam("Famous").setPrefix("§6");
-      scoreboard.registerNewTeam("Creator").setPrefix("§5");
-      scoreboard.registerNewTeam("MiniCreator").setPrefix("§e");
-      scoreboard.registerNewTeam("Mineral").setPrefix("§3");
-      scoreboard.registerNewTeam("Obsidian").setPrefix("§0");
-      scoreboard.registerNewTeam("Silver").setPrefix("§7");
-      scoreboard.registerNewTeam("QNameMC").setPrefix("§l§9✔§2 ");
-      scoreboard.registerNewTeam("ZDefault").setPrefix("§2");
+
       TabListSQL tabListSQL = new TabListSQL();
-      tabListSQL.getUsers();
+      tabListSQL.getTabListRanks();
+
+
+        for (String i : rankTabListSorting.keySet()) {
+            scoreboard.registerNewTeam(i).setPrefix(rankTabListSorting.get(i).replace("&", "§"));
+            System.out.println(i + " "+rankTabListSorting.get(i).replace("&", "§"));
+        }
+        scoreboard.registerNewTeam("QNameMC").setPrefix("§l§9✔§2 ");
+        scoreboard.registerNewTeam("ZDefault").setPrefix("§2");
+
+        /*
+        scoreboard.registerNewTeam("Founder").setPrefix("§9");
+        scoreboard.registerNewTeam("Manager").setPrefix("§4");
+        scoreboard.registerNewTeam("Staff").setPrefix("§b");
+        scoreboard.registerNewTeam("Partner").setPrefix("§f");
+        scoreboard.registerNewTeam("Famous").setPrefix("§6");
+        scoreboard.registerNewTeam("Creator").setPrefix("§5");
+        scoreboard.registerNewTeam("MiniCreator").setPrefix("§e");
+        scoreboard.registerNewTeam("Mineral").setPrefix("§3");
+        scoreboard.registerNewTeam("Obsidian").setPrefix("§0");
+        scoreboard.registerNewTeam("Silver").setPrefix("§7");
+        scoreboard.registerNewTeam("QNameMC").setPrefix("§l§9✔§2 ");
+        scoreboard.registerNewTeam("ZDefault").setPrefix("§2");
+
+
+         */
 
       NameMC nameMC = new NameMC();
       nameMC.getLikes();

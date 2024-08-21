@@ -33,7 +33,7 @@ public class Report implements CommandExecutor {
                 UUIDChecker uc = new UUIDChecker();
                 uc.check(args[0]);
 
-                display.getPlayerInformation(p.getPlayer());
+                display.getPlayerInformation(p.getPlayer().getUniqueId());
                 String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
                 display.displayChatRank(sql);
 

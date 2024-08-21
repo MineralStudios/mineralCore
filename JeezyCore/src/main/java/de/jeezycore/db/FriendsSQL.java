@@ -116,7 +116,7 @@ public class FriendsSQL {
 
                 if (playerUUID == null) return;
 
-                ranksSQL.getPlayerInformation(p.getPlayer());
+                ranksSQL.getPlayerInformation(p.getPlayer().getUniqueId());
                 String sql = "SELECT * FROM ranks WHERE rankName = '"+ranksSQL.rankNameInformation+"'";
                 ranksSQL.displayChatRank(sql);
 
@@ -169,7 +169,7 @@ public class FriendsSQL {
 
                 if (playerUUID == null) return;
 
-                ranksSQL.getPlayerInformation(p.getPlayer());
+                ranksSQL.getPlayerInformation(p.getPlayer().getUniqueId());
                 String sql = "SELECT * FROM ranks WHERE rankName = '"+ranksSQL.rankNameInformation+"'";
                 ranksSQL.displayChatRank(sql);
 

@@ -72,7 +72,7 @@ public class JoinEvent implements Listener {
         nameMC.checkNameMc(e.getPlayer());
 
         try {
-            givePermsOnJoin.getPlayerInformation(e.getPlayer());
+            givePermsOnJoin.getPlayerInformation(e.getPlayer().getUniqueId());
             givePermsOnJoin.onJoinPerms(givePermsOnJoin.rankNameInformation, e.getPlayer().getUniqueId());
 
             MemorySection spawnPoint = (MemorySection) JeezyConfig.config_defaults.get("entry-spawn-point");
