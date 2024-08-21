@@ -6,6 +6,7 @@ import de.jeezycore.commands.chatColors.ChatColors;
 import de.jeezycore.commands.chatColors.CreateChatColor;
 import de.jeezycore.commands.chatColors.GrantChatColor;
 import de.jeezycore.commands.chatColors.UnGrantChatColors;
+import de.jeezycore.commands.ranks.DeleteRank;
 import de.jeezycore.commands.ranks.UnGrantRank;
 import de.jeezycore.commands.staff.Logs;
 import de.jeezycore.db.TabListSQL;
@@ -56,6 +57,7 @@ public class Main extends JavaPlugin {
         DisguiseManager disguiseManager = new DisguiseManager(this, httpUtility);
         // Register Commands
         this.getCommand("create-rank").setExecutor(new CreateRank());
+        this.getCommand("delete-rank").setExecutor(new DeleteRank());
         this.getCommand("grant").setExecutor(new GrantRank());
         this.getCommand("ungrant").setExecutor(new UnGrantRank());
         this.getCommand("chat-disable").setExecutor(new ChatDisabler());
@@ -149,7 +151,15 @@ public class Main extends JavaPlugin {
 
       scoreboard.registerNewTeam("Founder").setPrefix("§9");
       scoreboard.registerNewTeam("Manager").setPrefix("§4");
-      scoreboard.registerNewTeam("QNameMC").setPrefix("§l§9✔§2");
+      scoreboard.registerNewTeam("Staff").setPrefix("§b");
+      scoreboard.registerNewTeam("Partner").setPrefix("§d");
+      scoreboard.registerNewTeam("Famous").setPrefix("§6");
+      scoreboard.registerNewTeam("Creator").setPrefix("§5");
+      scoreboard.registerNewTeam("MiniCreator").setPrefix("§e");
+      scoreboard.registerNewTeam("Mineral").setPrefix("§3");
+      scoreboard.registerNewTeam("Obsidian").setPrefix("§0");
+      scoreboard.registerNewTeam("Silver").setPrefix("§7");
+      scoreboard.registerNewTeam("QNameMC").setPrefix("§l§9✔§2 ");
       scoreboard.registerNewTeam("ZDefault").setPrefix("§2");
       TabListSQL tabListSQL = new TabListSQL();
       tabListSQL.getUsers();

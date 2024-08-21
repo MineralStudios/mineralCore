@@ -83,7 +83,7 @@ public class RanksSQL {
     String getItemPlayerUUID;
 
 
-    public void pushData(String sql, String rankName, String rankRGB, String rankColor, String rankPriority)  {
+    public void createRank(String sql, String rankName, String rankRGB, String rankColor, String rankPriority)  {
         Connection connection = null;
         PreparedStatement pstmt = null;
         ResultSet resultSet = null;
@@ -104,6 +104,30 @@ public class RanksSQL {
         } finally {
             try {
                 pstmt.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteRank(Player p, String rankName) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+
+            String sql = "DELETE FROM ranks" +
+                    " WHERE rankName = '"+rankName+"'";
+            p.sendMessage("§fYou §2successfully §fremoved the §9"+rankName+" §frank!");
+            statement.executeUpdate(sql);
+
+        } catch (SQLException e) {
+        } finally {
+            try {
+                statement.close();
                 connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();

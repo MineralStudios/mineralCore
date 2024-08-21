@@ -5,7 +5,10 @@ version: 1.0.0
 commands:
   create-rank:
     description: Creates rank.
-    usage: /create-rank <player>
+    usage: /create-rank <name>
+  delete-rank:
+    description: Deletes rank.
+    usage: /delete-rank <name>
   permissionAdd:
     description: Gives a certain rank permission.
     usage: /permissionadd <perm><rankName>
