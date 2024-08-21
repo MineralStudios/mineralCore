@@ -155,6 +155,7 @@ public class Main extends JavaPlugin {
       TabListSQL tabListSQL = new TabListSQL();
       tabListSQL.getTabListRanks();
       tabListSQL.getTabListPerms();
+      tabListSQL.getUsers();
 
       for (int i = 0; i < rankTabListPerms.size(); i++) {
           if (!rankTabListPerms.get(i).contains("vuzle.tab")) {

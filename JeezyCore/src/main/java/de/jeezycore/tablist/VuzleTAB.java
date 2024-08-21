@@ -36,7 +36,6 @@ public class VuzleTAB implements Listener {
         }
     }
 
-
 /*
         if (e.getPlayer().hasPermission("vuzle.tab.second") &&
                 server.getPlayerList().players.size() > 1 && !e.getPlayer().isOp()) {
