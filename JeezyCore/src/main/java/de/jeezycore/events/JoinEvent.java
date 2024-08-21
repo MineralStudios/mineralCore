@@ -20,7 +20,7 @@ public class JoinEvent implements Listener {
     NameTag nameTag = new NameTag();
     VuzleTAB vuzleTAB = new VuzleTAB();
     PlayersSQL playersSQL = new PlayersSQL();
-
+    PlayTimeSQL playTimeSQL = new PlayTimeSQL();
     NameMC nameMC = new NameMC();
 
     @EventHandler
@@ -66,6 +66,7 @@ public class JoinEvent implements Listener {
                 " §9§lThanks §f§lfor §9§ljoining §f§lour network§9§l! §9§l❤"
         });
         playersSQL.firstJoined(e);
+        playTimeSQL.playTimeJoin(e);
         playersSQL.checkIfUsernameChanged(e);
         givePermsOnJoin.rankMonthlyDurationCalculator(e.getPlayer());
         nameTag.giveTagOnJoin(e.getPlayer());

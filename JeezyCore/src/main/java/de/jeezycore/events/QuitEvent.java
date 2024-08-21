@@ -1,5 +1,6 @@
 package de.jeezycore.events;
 
+import de.jeezycore.db.PlayTimeSQL;
 import de.jeezycore.db.RanksSQL;
 import de.jeezycore.db.PlayersSQL;
 import de.jeezycore.disguise.manger.DisguiseManager;
@@ -16,6 +17,7 @@ import static de.jeezycore.utils.ArrayStorage.tab_name_list_array;
 public class QuitEvent implements Listener {
   private final DisguiseManager disguiseManager;
   PlayersSQL playersSQL = new PlayersSQL();
+  PlayTimeSQL playTimeSQL = new PlayTimeSQL();
   RanksSQL ranksSQL = new RanksSQL();
   VuzleTAB vuzleTAB = new VuzleTAB();
 
@@ -27,6 +29,7 @@ public class QuitEvent implements Listener {
     tab_name_list_array.remove(event.getPlayer().getUniqueId());
     CraftPlayer craftPlayer = (CraftPlayer) event.getPlayer();
     vuzleTAB.removePlayersFromListOnQuit(event, craftPlayer.getHandle());
+    playTimeSQL.playTimeQuit(event);
 
   }
 }

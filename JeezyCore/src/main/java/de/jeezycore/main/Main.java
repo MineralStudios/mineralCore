@@ -114,6 +114,7 @@ public class Main extends JavaPlugin {
         //this.getCommand("friends").setExecutor(new FriendsCommands());
         this.getCommand("world").setExecutor(new World());
         this.getCommand("sync").setExecutor(new Sync());
+        this.getCommand("playtime").setExecutor(new PlayTime());
 
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);

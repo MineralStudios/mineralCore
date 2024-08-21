@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
 
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -98,5 +99,7 @@ public class ArrayStorage {
 
     public static ArrayList<String> nameMcOldVoters = new ArrayList<>();
 
+    // PlayTime
+    public static HashMap<UUID, LocalDateTime> playTimeHashMap = new HashMap<>();
 
 }

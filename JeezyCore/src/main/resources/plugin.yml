@@ -171,3 +171,6 @@ commands:
   sync:
     usage: /sync
     description: Generates code that you can use to link your account with discord.
+  playtime:
+    usage: /playtime
+    description: Shows current playtime of a player.
