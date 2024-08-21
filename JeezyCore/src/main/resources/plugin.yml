@@ -27,6 +27,12 @@ commands:
   chat-enable:
     description: Enables chat.
     usage: /chat-enable
+  gm0:
+    description: Sets a player into survival mode
+    usage: /gm0
+  gm1:
+    description: Sets a player into creative mode
+    usage: /gm1
   spawnSet:
     description: Sets entry point when joining.
     usage: /spawnSet

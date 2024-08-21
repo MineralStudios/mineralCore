@@ -1,5 +1,7 @@
 package de.jeezycore.main;
 
+import de.jeezycore.commands.basic.gamemodes.Creative;
+import de.jeezycore.commands.basic.gamemodes.Survival;
 import de.jeezycore.commands.basic.msg.*;
 import de.jeezycore.commands.basic.multiverse.World;
 import de.jeezycore.commands.chatColors.ChatColors;
@@ -64,6 +66,8 @@ public class Main extends JavaPlugin {
         this.getCommand("ungrant").setExecutor(new UnGrantRank());
         this.getCommand("chat-disable").setExecutor(new ChatDisabler());
         this.getCommand("chat-enable").setExecutor(new ChatDisabler());
+        this.getCommand("gm0").setExecutor(new Survival());
+        this.getCommand("gm1").setExecutor(new Creative());
         this.getCommand("spawnSet").setExecutor(new SetSpawn());
         this.getCommand("spawn").setExecutor(new Spawn());
         this.getCommand("ping").setExecutor(new Ping());
