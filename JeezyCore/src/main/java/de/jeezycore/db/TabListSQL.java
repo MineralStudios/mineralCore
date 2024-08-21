@@ -104,7 +104,7 @@ public class TabListSQL {
         try {
             connection = dataSource.getConnection();
             statement = connection.createStatement();
-            String sql = "SELECT rankPerms FROM ranks WHERE rankPerms IS NOT NULL";
+            String sql = "SELECT rankPerms FROM ranks WHERE rankPerms IS NOT NULL ORDER BY rankPriority DESC";
             resultSet = statement.executeQuery(sql);
 
 
