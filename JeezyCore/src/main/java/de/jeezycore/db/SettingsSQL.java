@@ -22,6 +22,7 @@ public class SettingsSQL {
 
     public String settingsIgnoredList;
     public boolean settingsMsg;
+    public boolean settingsPmSound;
     
 
     private void setup(Player p) {
@@ -73,10 +74,12 @@ public class SettingsSQL {
             if (!resultSet.next()) {
                 settingsIgnoredList = null;
                 settingsMsg = false;
+                settingsPmSound = false;
             } else {
                 do {
                     settingsIgnoredList = resultSet.getString(3);
                     settingsMsg = resultSet.getBoolean(4);
+                    settingsPmSound = resultSet.getBoolean("pmSound");
                 } while (resultSet.next());
             }
 
@@ -282,4 +285,54 @@ public class SettingsSQL {
             e.printStackTrace();
         }
     }
+
+    public void enablePmSound(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            this.setup(p);
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sqlUpdatePmSound = "UPDATE settings " +
+                    "SET pmSound = true"+
+                    " WHERE playerUUID = '"+p.getUniqueId()+"'";
+            statement.executeUpdate(sqlUpdatePmSound);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void disablePmSound(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            this.setup(p);
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sqlUpdatePmSound = "UPDATE settings " +
+                    "SET pmSound = false"+
+                    " WHERE playerUUID = '"+p.getUniqueId()+"'";
+            statement.executeUpdate(sqlUpdatePmSound);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 }

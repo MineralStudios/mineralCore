@@ -76,6 +76,7 @@ public class Main extends JavaPlugin {
         this.getCommand("r").setExecutor(new Reply());
         this.getCommand("ignore").setExecutor(new Ignore());
         this.getCommand("unignore").setExecutor(new UnIgnore());
+        this.getCommand("pmSound").setExecutor(new PmSound());
         this.getCommand("day").setExecutor(new TimeChanger());
         this.getCommand("night").setExecutor(new TimeChanger());
         //this.getCommand("fly").setExecutor(new Fly());

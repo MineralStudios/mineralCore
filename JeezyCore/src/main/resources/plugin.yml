@@ -57,6 +57,9 @@ commands:
   unignore:
     description: UnIgnores a certain player.
     usage: /unignore <player>
+  pmSound:
+    usage: /pmSound
+    description: Toggles private message sound.
   day:
     description: Changes player time to day.
     usage: /day
