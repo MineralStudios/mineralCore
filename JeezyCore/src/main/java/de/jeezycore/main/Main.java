@@ -43,8 +43,7 @@ import de.jeezycore.utils.HTTPUtility;
 import de.jeezycore.utils.NameMC;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import static de.jeezycore.utils.ArrayStorage.playerRankNames;
-import static de.jeezycore.utils.ArrayStorage.rankTabListSorting;
+import static de.jeezycore.utils.ArrayStorage.*;
 import static de.jeezycore.utils.NameTag.scoreboard;
 
 public class Main extends JavaPlugin {
@@ -155,7 +154,13 @@ public class Main extends JavaPlugin {
 
       TabListSQL tabListSQL = new TabListSQL();
       tabListSQL.getTabListRanks();
+      tabListSQL.getTabListPerms();
 
+      for (int i = 0; i < rankTabListPerms.size(); i++) {
+          if (!rankTabListPerms.get(i).contains("vuzle.tab")) {
+              rankTabListPerms.remove(i);
+          }
+      }
 
         for (String i : rankTabListSorting.keySet()) {
             scoreboard.registerNewTeam(i).setPrefix(rankTabListSorting.get(i).replace("&", "§"));

@@ -12,6 +12,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.lang.reflect.Field;
 
 import static de.jeezycore.utils.ArrayStorage.playerRankNames;
+import static de.jeezycore.utils.ArrayStorage.rankTabListPerms;
 
 
 public class VuzleTAB implements Listener {
@@ -25,18 +26,24 @@ public class VuzleTAB implements Listener {
         CraftPlayer craftPlayer = (CraftPlayer) e.getPlayer(); // CraftBukkit
         EntityPlayer entityPlayer = craftPlayer.getHandle(); // NMS - net minecraft server
 
-
-        if (e.getPlayer().hasPermission("vuzle.tab.first") || e.getPlayer().isOp()) {
-            server.getPlayerList().players.remove(entityPlayer);
-            server.getPlayerList().players.add(0, entityPlayer);
+    if (!rankTabListPerms.isEmpty()) {
+        for (int i = 0; i < rankTabListPerms.size(); i++) {
+            if (e.getPlayer().hasPermission(rankTabListPerms.get(i)) && !e.getPlayer().isOp() && server.getPlayerList().players.size() > i || e.getPlayer().isOp() && e.getPlayer().hasPermission("vuzle.tab.first")
+                    && server.getPlayerList().players.size() > i) {
+                server.getPlayerList().players.remove(entityPlayer);
+                server.getPlayerList().players.add(i, entityPlayer);
+            }
         }
+    }
 
+
+/*
         if (e.getPlayer().hasPermission("vuzle.tab.second") &&
                 server.getPlayerList().players.size() > 1 && !e.getPlayer().isOp()) {
             server.getPlayerList().players.remove(entityPlayer);
             server.getPlayerList().players.add(1, entityPlayer);
         }
-
+ */
         for (Player player : Bukkit.getOnlinePlayers()) {
             ((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, server.getPlayerList().players));
         }

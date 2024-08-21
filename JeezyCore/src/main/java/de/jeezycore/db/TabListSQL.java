@@ -2,6 +2,7 @@ package de.jeezycore.db;
 
 import org.bukkit.entity.Player;
 import java.sql.*;
+import java.util.Arrays;
 import java.util.UUID;
 
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
@@ -15,6 +16,8 @@ public class TabListSQL {
     String getUsers;
     public static String getTabListRanks;
     public static Integer getTabListPriority;
+    String getTabListPerms;
+    String [] getTabListPerms_Array;
     String getTabListRankColor;
     RanksSQL ranksSQL = new RanksSQL();
 
@@ -81,6 +84,40 @@ public class TabListSQL {
                 } while (resultSet.next());
 
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void getTabListPerms() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql = "SELECT rankPerms FROM ranks WHERE rankPerms IS NOT NULL";
+            resultSet = statement.executeQuery(sql);
+
+
+            if (!resultSet.next()) {
+                getTabListPerms = null;
+            } else {
+                do {
+                        getTabListPerms = resultSet.getString("rankPerms");
+                        getTabListPerms_Array = getTabListPerms.replace("]", "").replace("[", "").split(", ");
+                        rankTabListPerms.addAll(Arrays.asList(getTabListPerms_Array));
+                } while (resultSet.next());
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

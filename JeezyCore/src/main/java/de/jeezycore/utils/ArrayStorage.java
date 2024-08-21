@@ -87,6 +87,7 @@ public class ArrayStorage {
     // Tablist
     public static ArrayList<String> playerRankNames = new ArrayList<>();
     public static LinkedHashMap<String, String> rankTabListSorting = new LinkedHashMap<>();
+    public static ArrayList<String> rankTabListPerms = new ArrayList<>();
 
     // NameMC
 
