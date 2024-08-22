@@ -17,12 +17,13 @@ public class SettingsSQL {
     String url;
     String user;
     String password;
-
+    public String playerUUID;
     String settingsAvailable;
 
     public String settingsIgnoredList;
     public boolean settingsMsg;
     public boolean settingsPmSound;
+    public boolean settingsGlobalChat;
     
 
     private void setup(Player p) {
@@ -43,9 +44,9 @@ public class SettingsSQL {
             }
             if (settingsAvailable == null) {
                 String sql_settings_available ="INSERT INTO settings" +
-                        "(playerName, playerUUID, ignoredPlayerList, msg) " +
+                        "(playerName, playerUUID, ignoredPlayerList, msg, friendsRequests, pmSound, friendsSound, globalChat) " +
                         "VALUES ('"+p.getDisplayName()+"', '"+p.getUniqueId()+"', " +
-                        "NULL, false)";
+                        "NULL, true, true, true, true, true)";
                 statement.executeUpdate(sql_settings_available);
             }
         } catch (SQLException e) {
@@ -72,14 +73,18 @@ public class SettingsSQL {
             resultSet = statement.executeQuery(sql_select);
 
             if (!resultSet.next()) {
+                playerUUID = null;
                 settingsIgnoredList = null;
-                settingsMsg = false;
-                settingsPmSound = false;
+                settingsMsg = true;
+                settingsPmSound = true;
+                settingsGlobalChat = true;
             } else {
                 do {
+                    playerUUID = resultSet.getString("playerUUID");
                     settingsIgnoredList = resultSet.getString(3);
                     settingsMsg = resultSet.getBoolean(4);
                     settingsPmSound = resultSet.getBoolean("pmSound");
+                    settingsGlobalChat = resultSet.getBoolean("globalChat");
                 } while (resultSet.next());
             }
 
@@ -334,5 +339,52 @@ public class SettingsSQL {
         }
     }
 
+    public void enableGlobalChat(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            this.setup(p);
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sqlUpdateMsg = "UPDATE settings " +
+                    "SET globalChat = true"+
+                    " WHERE playerUUID = '"+p.getUniqueId()+"'";
+            statement.executeUpdate(sqlUpdateMsg);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void disableGlobalChat(Player p) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            this.setup(p);
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sqlUpdateMsg = "UPDATE settings " +
+                    "SET globalChat = false"+
+                    " WHERE playerUUID = '"+p.getUniqueId()+"'";
+            statement.executeUpdate(sqlUpdateMsg);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }

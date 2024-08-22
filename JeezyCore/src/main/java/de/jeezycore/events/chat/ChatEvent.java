@@ -29,6 +29,8 @@ public class ChatEvent implements Listener {
 
     AntiSpam antiSpam = new AntiSpam();
 
+    GlobalChat globalChat = new GlobalChat();
+
     NameMC nameMC = new NameMC();
 
     String chat_format_rep;
@@ -37,6 +39,7 @@ public class ChatEvent implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
+        globalChat.checkGlobalChat(e);
         antiSpam.AntiSpamChat(e);
         staffChat.chat(e);
         display.getPlayerInformation(e.getPlayer().getUniqueId());

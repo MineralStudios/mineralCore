@@ -41,7 +41,7 @@ public class Reply implements CommandExecutor {
                 uc.check(result);
                 settingsSQL.getSettingsData(UUID.fromString(UUIDChecker.uuid));
 
-                if (settingsSQL.settingsMsg) {
+                if (!settingsSQL.settingsMsg) {
                     p.sendMessage("§9"+result+" §7has turned off his §9private §7messages.");
                     return true;
                 }

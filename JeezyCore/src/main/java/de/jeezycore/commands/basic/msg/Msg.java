@@ -40,7 +40,7 @@ public class Msg implements CommandExecutor {
                 uc.check(args[0]);
                 settingsSQL.getSettingsData(UUID.fromString(UUIDChecker.uuid));
 
-                if (settingsSQL.settingsMsg) {
+                if (!settingsSQL.settingsMsg) {
                     p.sendMessage("§9"+args[0]+" §7has turned off his §9private §7messages.");
                     return true;
                 }

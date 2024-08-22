@@ -60,6 +60,9 @@ commands:
   pmSound:
     usage: /pmSound
     description: Toggles private message sound.
+  gc:
+      usage: /gc
+      description: Toggles the global chat.
   day:
     description: Changes player time to day.
     usage: /day
