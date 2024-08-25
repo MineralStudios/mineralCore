@@ -35,7 +35,7 @@ public class Build implements CommandExecutor {
                         case "off":
                             p.getPlayer().setGameMode(GameMode.SURVIVAL);
                             permissionHandler.removePermsPerPlayerBuild(p, "worldedit.*");
-                            permissionHandler.addPermsPerPlayerBuild(p, "multiverse.*");
+                            permissionHandler.removePermsPerPlayerBuild(p, "multiverse.*");
                             p.getPlayer().sendMessage("§7§l[§9§lMINE§f§lRAL§7§l] §fBuilding mode §cdisabled§f.");
                             inBuildingMode.remove(p.getPlayer().getUniqueId());
                             break;
