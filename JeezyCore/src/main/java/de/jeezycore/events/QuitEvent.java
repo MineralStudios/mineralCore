@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import static de.jeezycore.utils.ArrayStorage.inBuildingMode;
 import static de.jeezycore.utils.ArrayStorage.tab_name_list_array;
 
 @RequiredArgsConstructor
@@ -30,6 +31,7 @@ public class QuitEvent implements Listener {
     CraftPlayer craftPlayer = (CraftPlayer) event.getPlayer();
     vuzleTAB.removePlayersFromListOnQuit(event, craftPlayer.getHandle());
     playTimeSQL.playTimeQuit(event);
+    inBuildingMode.remove(event.getPlayer().getUniqueId());
 
   }
 }

@@ -102,4 +102,9 @@ public class ArrayStorage {
     // PlayTime
     public static HashMap<UUID, LocalDateTime> playTimeHashMap = new HashMap<>();
 
+    // Builder
+    public static ArrayList<UUID> allBuilders = new ArrayList<>();
+
+    public static ArrayList<UUID> inBuildingMode = new ArrayList<>();
+
 }

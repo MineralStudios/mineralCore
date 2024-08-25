@@ -41,6 +41,18 @@ public class PermissionHandler {
 
     }
 
+
+    public void addPermsPerPlayerBuild (Player p, String perm) {
+            attachment = p.getPlayer().addAttachment(Main.getPlugin(Main.class));
+            attachment.setPermission(perm, true);
+    }
+
+    public void removePermsPerPlayerBuild (Player p, String perm) {
+        attachment = p.getPlayer().addAttachment(Main.getPlugin(Main.class));
+        attachment.setPermission(perm, false);
+    }
+
+
     public void onRemovePerms(Player p, String perm) {
         if (RanksSQL.permPlayerUUIDArray.size() == 0) return;
 

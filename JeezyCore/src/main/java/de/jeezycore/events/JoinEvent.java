@@ -70,7 +70,7 @@ public class JoinEvent implements Listener {
         playersSQL.checkIfUsernameChanged(e);
         givePermsOnJoin.rankMonthlyDurationCalculator(e.getPlayer());
         nameTag.giveTagOnJoin(e.getPlayer());
-        nameMC.checkNameMc(e.getPlayer());
+        //nameMC.checkNameMc(e.getPlayer());
 
         try {
             givePermsOnJoin.getPlayerInformation(e.getPlayer().getUniqueId());

@@ -186,3 +186,6 @@ commands:
   playtime:
     usage: /playtime
     description: Shows current playtime of a player.
+  build:
+    usage: /build (on/off)
+    description: Gives a player the permissions they need or takes them.

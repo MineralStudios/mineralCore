@@ -19,8 +19,6 @@ public class NameTag {
 
             if (tab_name_list_array.get(player.getPlayer().getUniqueId()) != null) {
                 scoreboard.getTeam(TabListSQL.getTabListPriority+""+TabListSQL.getTabListRanks).addEntry(player.getDisplayName());
-            } else if (gettingNameMcLikesResponse.body().contains(player.getUniqueId().toString())) {
-                scoreboard.getTeam("QNameMC").addEntry(player.getDisplayName());
             } else {
                 scoreboard.getTeam("ZDefault").addEntry(player.getDisplayName());
             }

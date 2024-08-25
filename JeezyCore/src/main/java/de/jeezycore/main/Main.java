@@ -45,6 +45,8 @@ import de.jeezycore.utils.HTTPUtility;
 import de.jeezycore.utils.NameMC;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.UUID;
+
 import static de.jeezycore.utils.ArrayStorage.*;
 import static de.jeezycore.utils.NameTag.scoreboard;
 
@@ -121,6 +123,7 @@ public class Main extends JavaPlugin {
         this.getCommand("world").setExecutor(new World());
         this.getCommand("sync").setExecutor(new Sync());
         this.getCommand("playtime").setExecutor(new PlayTime());
+        this.getCommand("build").setExecutor(new Build());
 
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
@@ -133,16 +136,21 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new QuitEvent(disguiseManager), this);
         getServer().getPluginManager().registerEvents(new PlayerCommandPreprocessEvent(), this);
         getServer().getPluginManager().registerEvents(new PlayerTeleportEvent(), this);
+        getServer().getPluginManager().registerEvents(new BreakBlocksEvent(), this);
         // Setups Databases + Tables
         HikariCP hikariCP = new HikariCP();
         hikariCP.start();
         // Launching discord bot
+        /*
        JeezyBot bot = new JeezyBot();
        bot.start();
+         */
 
        // Schedule Tips
+        /*
         Tips tips = new Tips();
         tips.scheduleTips();
+         */
 
        // Putting in the Languages
         /*
@@ -194,8 +202,14 @@ public class Main extends JavaPlugin {
 
          */
 
+        /*
       NameMC nameMC = new NameMC();
       nameMC.getLikes();
+
+         */
+
+        allBuilders.add(UUID.fromString("3f7d7552-6faa-4fd1-a6a8-42694aa04889"));
+        allBuilders.add(UUID.fromString("e150b93f-a86b-488c-8414-4065f2717c5c"));
 
     }
 
@@ -203,6 +217,4 @@ public class Main extends JavaPlugin {
     public void onDisable() {
         System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.RED_BOLD+" shutting down..."+Color.RESET);
     }
-
-
 }
