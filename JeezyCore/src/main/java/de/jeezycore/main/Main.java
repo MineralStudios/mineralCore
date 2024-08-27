@@ -125,6 +125,7 @@ public class Main extends JavaPlugin {
         this.getCommand("playtime").setExecutor(new PlayTime());
         this.getCommand("build").setExecutor(new Build());
 
+
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
@@ -137,6 +138,7 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerCommandPreprocessEvent(), this);
         getServer().getPluginManager().registerEvents(new PlayerTeleportEvent(), this);
         getServer().getPluginManager().registerEvents(new BreakBlocksEvent(), this);
+        getServer().getPluginManager().registerEvents(new PlaceBlocksEvent(), this);
         // Setups Databases + Tables
         HikariCP hikariCP = new HikariCP();
         hikariCP.start();
