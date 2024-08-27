@@ -37,12 +37,10 @@ import de.jeezycore.commands.staff.StaffRankDisable;
 import de.jeezycore.commands.staff.StaffRankEnable;
 import de.jeezycore.commands.tags.*;
 import de.jeezycore.config.JeezyConfig;
-import de.jeezycore.discord.JeezyBot;
 import de.jeezycore.events.*;
 import de.jeezycore.events.chat.ChatEvent;
 import de.jeezycore.events.inventories.JeezyInventories;
 import de.jeezycore.utils.HTTPUtility;
-import de.jeezycore.utils.NameMC;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.UUID;
@@ -139,6 +137,7 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerTeleportEvent(), this);
         getServer().getPluginManager().registerEvents(new BreakBlocksEvent(), this);
         getServer().getPluginManager().registerEvents(new PlaceBlocksEvent(), this);
+        getServer().getPluginManager().registerEvents(new ItemUseEvent(), this);
         // Setups Databases + Tables
         HikariCP hikariCP = new HikariCP();
         hikariCP.start();
