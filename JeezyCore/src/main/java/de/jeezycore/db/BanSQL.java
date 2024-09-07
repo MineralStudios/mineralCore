@@ -1,12 +1,10 @@
 package de.jeezycore.db;
 
-import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.discord.messages.ban.RealtimeBan;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import java.sql.*;
