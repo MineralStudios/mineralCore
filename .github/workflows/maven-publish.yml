@@ -25,13 +25,13 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
 
     - name: Build with Maven
-      run: mvn -B package --file JeezyCore/pom.xml -s settings.xml
+      run: mvn clean -B package --file JeezyCore/pom.xml -s settings.xml
       env:
         USERNAME: ${{ github.actor }}
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Publish to GitHub Packages Apache Maven
-      run: mvn deploy --file JeezyCore/pom.xml -s settings.xml
+      run: mvn clean deploy --file JeezyCore/pom.xml -s settings.xml
       env:
         USERNAME: ${{ github.actor }}
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
