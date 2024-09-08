@@ -5,5 +5,10 @@
       <username>${env.USERNAME}</username> <!-- You can use environment variables or replace with actual values -->
       <password>${env.TOKEN}</password>
     </server>
+    <server>
+      <id>github</id> <!-- This matches the repository id in pom.xml -->
+      <username>${env.USERNAME}</username> <!-- You can use environment variables or replace with actual values -->
+      <password>${env.TOKEN}</password>
+    </server>
   </servers>
 </settings>
