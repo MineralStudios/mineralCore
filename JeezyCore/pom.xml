@@ -6,7 +6,7 @@
 
     <groupId>de.jeezycore</groupId>
     <artifactId>jeezy-core</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${buildVersion}</version>
 
     <repositories>
         <repository>
