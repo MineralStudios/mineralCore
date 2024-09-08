@@ -6,7 +6,7 @@
 
     <groupId>de.jeezycore</groupId>
     <artifactId>jeezy-core</artifactId>
-    <version>${buildVersion}</version>
+    <version>1.0-SNAPSHOT</version>
 
     <repositories>
         <repository>
@@ -190,6 +190,7 @@
                 <configuration>
                     <repositoryId>github</repositoryId>
                     <url>https://maven.pkg.github.com/MineralStudios/MineralCore</url>
+                    <version>${buildVersion}</version>
                 </configuration>
             </plugin>
         </plugins>
