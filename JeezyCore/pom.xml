@@ -129,24 +129,6 @@
 
     <build>
         <plugins>
-            <!-- Build Helper Plugin to generate the timestamp -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <id>timestamp-property</id>
-                        <goals>
-                            <goal>timestamp-property</goal>
-                        </goals>
-                        <configuration>
-                            <name>maven.build.timestamp</name>
-                            <pattern>yyyyMMdd-HH.mm.ss</pattern>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.2.1</version>
@@ -173,7 +155,6 @@
                 <configuration>
                     <repositoryId>github</repositoryId>
                     <url>https://maven.pkg.github.com/MineralStudios/MineralCore</url>
-                    <version>${buildVersion}</version>
                 </configuration>
             </plugin>
         </plugins>
@@ -183,6 +164,5 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <buildVersion>${maven.build.timestamp}</buildVersion>
     </properties>
 </project>
