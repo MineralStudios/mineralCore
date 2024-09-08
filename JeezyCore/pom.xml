@@ -136,9 +136,9 @@
                 <version>3.2.0</version>
                 <executions>
                     <execution>
-                        <id>timestamp-ty</id>
+                        <id>timestamp-property</id>
                         <goals>
-                            <goal>timestamp-ty</goal>
+                            <goal>timestamp-property</goal>
                         </goals>
                         <configuration>
                             <name>maven.build.timestamp</name>
