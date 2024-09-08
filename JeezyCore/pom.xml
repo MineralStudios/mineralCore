@@ -25,6 +25,16 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+         <repository>
+            <id>github-mineralspigot</id>
+            <url>https://maven.pkg.github.com/MineralStudios/MineralSpigot</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <!-- Publishing configuration -->
@@ -78,11 +88,10 @@
             <version>20201115</version>
         </dependency>
         <dependency>
-            <groupId>gg.mineral</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.8.8</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/spigot.jar</systemPath>
+            <groupId>gg.mineral.mineralspigot</groupId>
+            <artifactId>mineralspigot-server</artifactId>
+            <version>20240906-10.04.46</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>redis.clients</groupId>
