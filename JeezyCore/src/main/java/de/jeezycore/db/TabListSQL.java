@@ -2,8 +2,7 @@ package de.jeezycore.db;
 
 import org.bukkit.entity.Player;
 import java.sql.*;
-import java.util.Arrays;
-import java.util.UUID;
+import java.util.*;
 
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
 import static de.jeezycore.utils.ArrayStorage.*;
@@ -117,6 +116,18 @@ public class TabListSQL {
                         rankTabListPerms.addAll(Arrays.asList(getTabListPerms_Array));
                 } while (resultSet.next());
             }
+
+
+            for (Iterator<String> iterator = rankTabListPerms.iterator(); iterator.hasNext(); ) {
+                String perm = iterator.next();
+
+                if (!perm.contains("vuzle.tab.")) {
+                    iterator.remove();
+                }
+
+
+            }
+            System.out.println(rankTabListPerms);
 
         } catch (SQLException e) {
             e.printStackTrace();

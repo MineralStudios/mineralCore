@@ -32,6 +32,7 @@ public class VuzleTAB implements Listener {
                     && server.getPlayerList().players.size() > i) {
                 server.getPlayerList().players.remove(entityPlayer);
                 server.getPlayerList().players.add(i, entityPlayer);
+                break;
             }
         }
     }

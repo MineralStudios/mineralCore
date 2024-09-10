@@ -164,11 +164,6 @@ public class Main extends JavaPlugin {
       tabListSQL.getTabListPerms();
       tabListSQL.getUsers();
 
-      for (int i = 0; i < rankTabListPerms.size(); i++) {
-          if (!rankTabListPerms.get(i).contains("vuzle.tab")) {
-              rankTabListPerms.remove(i);
-          }
-      }
 
         for (String i : rankTabListSorting.keySet()) {
             scoreboard.registerNewTeam(i).setPrefix(rankTabListSorting.get(i).replace("&", "§"));
