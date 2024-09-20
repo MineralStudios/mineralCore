@@ -1,12 +1,7 @@
 <settings>
   <servers>
     <server>
-      <id>github-mineralspigot</id> <!-- This matches the repository id in pom.xml -->
-      <username>${env.USERNAME}</username> <!-- You can use environment variables or replace with actual values -->
-      <password>${env.TOKEN}</password>
-    </server>
-    <server>
-      <id>github</id> <!-- This matches the repository id in pom.xml -->
+      <id>Mineral Dev Private</id> <!-- This matches the repository id in pom.xml -->
       <username>${env.USERNAME}</username> <!-- You can use environment variables or replace with actual values -->
       <password>${env.TOKEN}</password>
     </server>
