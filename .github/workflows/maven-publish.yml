@@ -19,13 +19,15 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
     - name: Set version
       run: echo "VERSION=$(date +'%Y%m%d-%H.%M.%S')" >> $GITHUB_ENV
+    - name: Update POM version
+      run: mvn versions:set -DnewVersion=${{ env.VERSION }} --file JeezyCore/pom.xml
     - name: Build with Maven
-      run: mvn clean -B package --file JeezyCore/pom.xml -s settings.xml -Dproject.version=${{ env.VERSION }}
+      run: mvn clean -B package --file JeezyCore/pom.xml -s settings.xml
       env:
         USERNAME: ${{ secrets.REPOSILITE_USERNAME }}
         TOKEN: ${{ secrets.REPOSILITE_PASSWORD }}
     - name: Publish to Reposilite
-      run: mvn clean deploy --file JeezyCore/pom.xml -s settings.xml -Dproject.version=${{ env.VERSION }}
+      run: mvn clean deploy --file JeezyCore/pom.xml -s settings.xml
       env:
         USERNAME: ${{ secrets.REPOSILITE_USERNAME }}
         TOKEN: ${{ secrets.REPOSILITE_PASSWORD }}
