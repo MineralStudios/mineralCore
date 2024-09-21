@@ -13,6 +13,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
+import static de.jeezycore.utils.ArrayStorage.playerRankNames;
 import static de.jeezycore.utils.NameTag.scoreboard;
 
 public class RanksSQL {
@@ -179,7 +180,7 @@ public class RanksSQL {
                 statement.executeUpdate(select_sql);
             }
             player.sendMessage("You §b§lsuccessfully§f granted §l§7" + UUIDChecker.uuidName + "§f the §l" +rankColorPerms.replace("&", "§")+rankName + " §frank.");
-
+            playerRankNames.add(UUIDChecker.uuidName);
             TabListSQL tabListSQL = new TabListSQL();
             tabListSQL.getTabListData(UUID.fromString(UUIDChecker.uuid));
             scoreboard.getTeam(TabListSQL.getTabListPriority+""+TabListSQL.getTabListRanks).addEntry(UUIDChecker.uuidName);
@@ -242,6 +243,7 @@ public class RanksSQL {
             }
             sender.sendMessage("You §b§lsuccessfully§f granted §l§7" + UUIDChecker.uuidName + "§f the §l" +rankColorPerms.replace("&", "§")+rankName + " §frank.");
             scoreboard.getTeam(grantPlayerRank).addEntry(UUIDChecker.uuidName);
+            playerRankNames.add(UUIDChecker.uuidName);
         } catch (SQLException e) {
             System.out.println(e);
         } finally {
@@ -821,6 +823,7 @@ public class RanksSQL {
                 unGrant_discord.realtimeChatOnUnGranting(ArrayStorage.grant_array.get(p.getUniqueId()), ArrayStorage.grant_array_names.get(p.getUniqueId()), p.getDisplayName());
             p.sendMessage("§aSuccessfully§f removed the rank from player §b§l" + ArrayStorage.grant_array_names.get(p.getUniqueId()));
             scoreboard.getTeam("ZDefault").addEntry(UUIDChecker.uuidName);
+            playerRankNames.remove(UUIDChecker.uuidName);
             } else {
                 p.sendMessage("§4§lThis player doesn't have a rank!");
             }
@@ -874,6 +877,7 @@ public class RanksSQL {
                 statement.executeUpdate(sql_reset_rank_time);
                 sender.sendMessage("§aSuccessfully§7 removed the rank from player §9§l" + playerName);
                 //NametagEdit.getApi().setPrefix(UUIDChecker.uuidName, "§2");
+                playerRankNames.remove(UUIDChecker.uuidName);
             } else {
                 sender.sendMessage("§4§lThis player doesn't have a rank!");
             }
