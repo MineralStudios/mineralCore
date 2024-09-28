@@ -162,32 +162,15 @@ public class Main extends JavaPlugin {
       TabListSQL tabListSQL = new TabListSQL();
       tabListSQL.getTabListRanks();
       tabListSQL.getTabListPerms();
-      tabListSQL.getUsers();
+      tabListSQL.getTabListUsers();
 
 
         for (String i : rankTabListSorting.keySet()) {
             scoreboard.registerNewTeam(i).setPrefix(rankTabListSorting.get(i).replace("&", "§"));
-            System.out.println(i + " "+rankTabListSorting.get(i).replace("&", "§"));
         }
         scoreboard.registerNewTeam("QNameMC").setPrefix("§l§9✔§2 ");
         scoreboard.registerNewTeam("ZDefault").setPrefix("§2");
 
-        /*
-        scoreboard.registerNewTeam("Founder").setPrefix("§9");
-        scoreboard.registerNewTeam("Manager").setPrefix("§4");
-        scoreboard.registerNewTeam("Staff").setPrefix("§b");
-        scoreboard.registerNewTeam("Partner").setPrefix("§f");
-        scoreboard.registerNewTeam("Famous").setPrefix("§6");
-        scoreboard.registerNewTeam("Creator").setPrefix("§5");
-        scoreboard.registerNewTeam("MiniCreator").setPrefix("§e");
-        scoreboard.registerNewTeam("Mineral").setPrefix("§3");
-        scoreboard.registerNewTeam("Obsidian").setPrefix("§0");
-        scoreboard.registerNewTeam("Silver").setPrefix("§7");
-        scoreboard.registerNewTeam("QNameMC").setPrefix("§l§9✔§2 ");
-        scoreboard.registerNewTeam("ZDefault").setPrefix("§2");
-
-
-         */
 
       NameMC nameMC = new NameMC();
       nameMC.getLikes();
@@ -198,6 +181,4 @@ public class Main extends JavaPlugin {
     public void onDisable() {
         System.out.println(Color.WHITE_BOLD+"[JeezyDevelopment]"+Color.RED_BOLD+" shutting down..."+Color.RESET);
     }
-
-
 }
