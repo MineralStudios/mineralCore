@@ -102,4 +102,7 @@ public class ArrayStorage {
     // PlayTime
     public static HashMap<UUID, LocalDateTime> playTimeHashMap = new HashMap<>();
 
+
+    public static HashMap<UUID, String> getUserRankHashMap = new HashMap<>();
+
 }

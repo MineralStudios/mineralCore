@@ -13,6 +13,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
+import static de.jeezycore.utils.ArrayStorage.getUserRankHashMap;
 import static de.jeezycore.utils.ArrayStorage.playerRankNames;
 import static de.jeezycore.utils.NameTag.scoreboard;
 
@@ -25,6 +26,8 @@ public class RanksSQL {
     public String rankRGB;
 
     public String rankColor;
+
+    public String rankPlayerUUID;
 
     public static String rankNameInformation;
 
@@ -44,6 +47,8 @@ public class RanksSQL {
     public static HashSet<String> rankPerms = new HashSet<String>();
 
     public LinkedHashMap<String, String> rankData = new LinkedHashMap<String, String>();
+
+    public static LinkedHashMap<String, String> rankAndColor = new LinkedHashMap<String, String>();
 
     public static LinkedList<String> rankColorData = new LinkedList<>();
 
@@ -273,12 +278,14 @@ public class RanksSQL {
                 rankColor = null;
                 rankData.clear();
                 rankColorData.clear();
+                rankAndColor.clear();
             } else {
                 do {
                     rank = resultSet.getString(1);
                     rankRGB = resultSet.getString(2);
                     rankColor = resultSet.getString(3);
                     rankData.put(rank, rankRGB);
+                    rankAndColor.put(rank, rankColor);
                     rankColorData.add(rankColor);
                 }while(resultSet.next());
             }
@@ -1051,4 +1058,40 @@ public class RanksSQL {
             }
         }
     }
+
+    public void getAllUsersWithRank() {
+        displayData();
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql = "SELECT * FROM players P1 INNER JOIN ranks R1 ON P1.rank = R1.rankName ORDER BY rankPriority DESC";
+            resultSet = statement.executeQuery(sql);
+
+            if (!resultSet.next()) {
+                rankPlayerUUID = null;
+                rank = null;
+            } else {
+                do {
+                    rankPlayerUUID = resultSet.getString(2);
+                    rank = resultSet.getString(4);
+                    getUserRankHashMap.put(UUID.fromString(rankPlayerUUID), rank);
+                } while (resultSet.next());
+
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
