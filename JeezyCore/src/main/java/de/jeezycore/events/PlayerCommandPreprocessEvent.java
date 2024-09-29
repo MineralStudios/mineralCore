@@ -63,11 +63,16 @@ public class PlayerCommandPreprocessEvent implements Listener {
            availableRanks.delete(availableRanks.length() -2, availableRanks.length());
            onlinePlayers.delete(onlinePlayers.length() -2, onlinePlayers.length());
 
-           e.getPlayer().sendMessage(" \n §f§lAvailable §9§lRanks§f:");
-           e.getPlayer().sendMessage(" \n "+ availableRanks);
-
-           e.getPlayer().sendMessage(" \n §9§l"+playerCount+" §f§lPlayer§9§l(s) §f§lare §9§lOnline§f:\n");
-           e.getPlayer().sendMessage(" \n "+ onlinePlayers.toString());
+           e.getPlayer().sendMessage(new String[] {
+                   "\n",
+                   " §f§lAvailable §9§lRanks§f:",
+                   "\n",
+                   ""+availableRanks,
+                   "\n",
+                   " §9§l"+playerCount+" §f§lPlayer§9§l(s) §f§lare §9§lOnline§f:",
+                   "\n",
+                   ""+onlinePlayers,
+           });
            availableRanks.setLength(0);
            onlinePlayers.setLength(0);
            playerCount = 0;
