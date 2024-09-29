@@ -67,11 +67,11 @@ public class PlayerCommandPreprocessEvent implements Listener {
                    "\n",
                    " §f§lAvailable §9§lRanks§f:",
                    "\n",
-                   ""+availableRanks,
+                   " "+availableRanks,
                    "\n",
                    " §9§l"+playerCount+" §f§lPlayer§9§l(s) §f§lare §9§lOnline§f:",
                    "\n",
-                   ""+onlinePlayers,
+                   " "+onlinePlayers,
            });
            availableRanks.setLength(0);
            onlinePlayers.setLength(0);
