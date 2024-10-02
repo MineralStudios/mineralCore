@@ -12,7 +12,7 @@ public class AntiSpam implements Listener {
     HashMap<UUID, Integer> messageCounterList  = new HashMap<>();
     HashMap<UUID, Integer> kickCounterList = new HashMap<>();
 
-    int messageCounter = 5;
+    int messageCounter = 3;
     int kickCounter = 0;
 
     @EventHandler
@@ -53,6 +53,6 @@ public class AntiSpam implements Listener {
                 time.cancel();
             }
         };
-        time.schedule(AntiSpamTask, 5000);
+        time.schedule(AntiSpamTask, 3000);
     }
     }
