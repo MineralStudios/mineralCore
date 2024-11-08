@@ -62,7 +62,7 @@ public class NameMC {
 
 
     public boolean checkIfAlreadyVoted(Player p) {
-        return gettingNameMcLikesResponse.body().contains(p.getPlayer().getUniqueId().toString());
+        return gettingNameMcLikesResponse != null ? gettingNameMcLikesResponse.body().contains(p.getPlayer().getUniqueId().toString()) : false;
     }
 
     private void checkForNewVoters() {
