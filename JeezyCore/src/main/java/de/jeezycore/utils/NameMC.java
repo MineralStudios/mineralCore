@@ -42,7 +42,7 @@ public class NameMC {
                     e.printStackTrace();
                 }
             }
-        }, 0, 60000);
+        }, 0, 180000);
     }
 
     public void checkNameMc(Player p) {
