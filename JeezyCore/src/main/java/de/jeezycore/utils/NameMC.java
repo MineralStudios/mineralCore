@@ -35,7 +35,6 @@ public class NameMC {
                     for (int i = 0; i < prepareNameMcVoters.size(); i++) {
                         nameMcVoters.add(prepareNameMcVoters.get(i).substring(4, 40).trim());
                     }
-
                     checkForNewVoters();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -43,7 +42,7 @@ public class NameMC {
                     e.printStackTrace();
                 }
             }
-        }, 0, 180000);
+        }, 0, 60000);
     }
 
     public void checkNameMc(Player p) {
@@ -62,7 +61,7 @@ public class NameMC {
 
 
     public boolean checkIfAlreadyVoted(Player p) {
-        return gettingNameMcLikesResponse != null ? gettingNameMcLikesResponse.body().contains(p.getPlayer().getUniqueId().toString()) : false;
+        return gettingNameMcLikesResponse != null && gettingNameMcLikesResponse.body().contains(p.getPlayer().getUniqueId().toString());
     }
 
     private void checkForNewVoters() {
@@ -72,20 +71,14 @@ public class NameMC {
                 nameMcOldVoters.add(prepareNameMcVoters.get(i).substring(4, 40).trim());
             }
             return;
-        }
-
-        nameMcVoters.removeAll(nameMcOldVoters);
-
-        if (!nameMcVoters.isEmpty()) {
+        } else {
+            nameMcVoters.removeAll(nameMcOldVoters);
             for (int i = 0; i < nameMcVoters.size(); i++) {
-                sendDiscordMessage(nameMcVoters.get(i), nameMcOldVoters.size() + nameMcVoters.size());
+                sendDiscordMessage(nameMcVoters.get(i), prepareNameMcVoters.size());
             }
         }
 
         nameMcOldVoters.clear();
-        for (int i = 0; i < prepareNameMcVoters.size(); i++) {
-            nameMcOldVoters.add(prepareNameMcVoters.get(i).substring(4, 40).trim());
-        }
     }
 
     private void sendDiscordMessage (String playerUUID, Integer serverLikes) {

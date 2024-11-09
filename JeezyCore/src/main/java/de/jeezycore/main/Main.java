@@ -171,10 +171,10 @@ public class Main extends JavaPlugin {
         scoreboard.registerNewTeam("QNameMC").setPrefix("§l§9✔§2 ");
         scoreboard.registerNewTeam("ZDefault").setPrefix("§2");
 
-/*
+
       NameMC nameMC = new NameMC();
       nameMC.getLikes();
-*/
+
     }
 
     @Override
