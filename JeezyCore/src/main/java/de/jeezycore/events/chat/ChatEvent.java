@@ -52,10 +52,10 @@ public class ChatEvent implements Listener {
         setNameMcTag = nameMC.checkIfAlreadyVoted(e.getPlayer()) ? "§l§9✔ " : "";
 
         if (display.rankNameInformation == null || display.rank == null) {
-                 chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("&", "§").replace("[player]", setNameMcTag+ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat).replace("&", "§");
+                 chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("[player]", setNameMcTag+ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat);
                 rmc.realtimeMcChat( e.getPlayer().getDisplayName()+": "+e.getMessage());
             } else {
-                chat_format_rep = cf.getString("chat_format").replace("[rank]", "§7["+display.rankColor+""+display.rank+"§7]§f").replace("&", "§").replace("[player]", setNameMcTag+ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat.replace("&", "§"));
+                chat_format_rep = cf.getString("chat_format").replace("[rank]", "§7["+display.rankColor+""+display.rank+"§7]§f").replace("[player]", setNameMcTag+ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat);
                 rmc.realtimeMcChat("["+display.rank+"]"+" "+e.getPlayer().getDisplayName()+": "+e.getMessage());
             }
             e.setFormat(chat_format_rep.replace("%", "%%").trim());
