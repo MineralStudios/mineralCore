@@ -43,7 +43,7 @@ public class ChatEvent implements Listener {
         antiSpam.AntiSpamChat(e);
         staffChat.chat(e);
         display.getPlayerInformation(e.getPlayer().getUniqueId());
-        String sql = "SELECT * FROM ranks WHERE rankName = '"+display.rankNameInformation+"'";
+        String sql = "SELECT * FROM ranks WHERE rankName = '"+ RanksSQL.rankNameInformation +"'";
         display.displayChatRank(sql);
         tagsSQL.tagChat(e.getPlayer());
         banChat.onPlayerChatBan(e);
@@ -51,7 +51,7 @@ public class ChatEvent implements Listener {
         chatColorSQL.getPlayerChatName(e.getPlayer());
         setNameMcTag = nameMC.checkIfAlreadyVoted(e.getPlayer()) ? "§l§9✔ " : "";
 
-        if (display.rankNameInformation == null || display.rank == null) {
+        if (RanksSQL.rankNameInformation == null || display.rank == null) {
                  chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("[player]", setNameMcTag+ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat);
                 rmc.realtimeMcChat( e.getPlayer().getDisplayName()+": "+e.getMessage());
             } else {

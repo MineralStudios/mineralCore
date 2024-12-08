@@ -10,7 +10,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
-
+import java.util.concurrent.CompletableFuture;
 import static de.jeezycore.utils.ArrayStorage.tab_name_list_array;
 
 @RequiredArgsConstructor
@@ -23,6 +23,7 @@ public class QuitEvent implements Listener {
 
   @EventHandler
   private void onQuit(PlayerQuitEvent event) {
+    CompletableFuture.runAsync(() -> {
     playersSQL.lastSeen(event);
     disguiseManager.deleteDisguise(event.getPlayer());
     ranksSQL.rankMonthlyDurationCalculator(event.getPlayer());
@@ -30,6 +31,6 @@ public class QuitEvent implements Listener {
     CraftPlayer craftPlayer = (CraftPlayer) event.getPlayer();
     vuzleTAB.removePlayersFromListOnQuit(event, craftPlayer.getHandle());
     playTimeSQL.playTimeQuit(event);
-
+    });
   }
 }
