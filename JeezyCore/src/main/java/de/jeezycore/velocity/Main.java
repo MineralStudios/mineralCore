@@ -11,9 +11,11 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import de.jeezycore.velocity.commands.Maintenance;
 import de.jeezycore.velocity.commands.Whitelist;
+import de.jeezycore.velocity.commands.XmasMode;
 import de.jeezycore.velocity.config.JeezyConfig;
 import de.jeezycore.velocity.db.MaintenanceSQL;
 import de.jeezycore.velocity.db.WhitelistedSQL;
+import de.jeezycore.velocity.db.XmasModeSQL;
 import de.jeezycore.velocity.db.hikari.HikariCP;
 import de.jeezycore.velocity.events.CommandExecuteListener;
 import de.jeezycore.velocity.events.LoginEventListener;
@@ -37,6 +39,7 @@ public class Main {
     HikariCP hikariCP = new HikariCP();
     MaintenanceSQL maintenanceSQL = new MaintenanceSQL();
     WhitelistedSQL whitelistedSQL = new WhitelistedSQL();
+    XmasModeSQL xmasModeSQL = new XmasModeSQL();
 
     @Inject
     public Main(ProxyServer server, Logger logger) throws IOException {
@@ -54,6 +57,7 @@ public class Main {
         maintenanceSQL.getMaintenanceData();
         whitelistedSQL.getWhitelistedData();
         whitelistedSQL.getMaxPlayerCount();
+        xmasModeSQL.getXmasData();
         this.registerEvents();
         this.registerCommands();
     }
@@ -83,15 +87,25 @@ public class Main {
                 .plugin(this)
                 .build();
 
+
+        CommandMeta xmasMeta = commandManager.metaBuilder("xmas")
+                // This will create a new alias for the command "/test"
+                // with the same arguments and functionality
+                // .aliases("otherAlias", "anotherAlias")
+                .plugin(this)
+                .build();
+
         // You can replace this with "new EchoCommand()" or "new TestCommand()"
         // SimpleCommand simpleCommand = new TestCommand();
         // RawCommand rawCommand = new EchoCommand();
         // The registration is done in the same way, since all 3 interfaces implement "Command"
         SimpleCommand maintenanceCMD = new Maintenance(server, logger);
         SimpleCommand whitelistCMD = new Whitelist(server, logger);
+        SimpleCommand xmasCMD = new XmasMode(server, logger);
 
         // Finally, you can register the command
         commandManager.register(maintenanceMeta, maintenanceCMD);
         commandManager.register(whitelistMeta, whitelistCMD);
+        commandManager.register(xmasMeta, xmasCMD);
     }
     }

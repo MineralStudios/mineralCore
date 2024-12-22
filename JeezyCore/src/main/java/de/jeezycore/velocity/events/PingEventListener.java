@@ -7,6 +7,7 @@ import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
 import de.jeezycore.velocity.db.MaintenanceSQL;
 import de.jeezycore.velocity.db.WhitelistedSQL;
+import de.jeezycore.velocity.db.XmasModeSQL;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
@@ -36,6 +37,16 @@ public class PingEventListener {
         Component motDWhitelist = MiniMessage.miniMessage().deserialize(
                 toml.getString("whitelisted_motd")
         );
+
+        if (XmasModeSQL.xmasMode) {
+            if (toml.getBoolean("xmas_logo_change")) {
+                try {
+                    builder.favicon(Favicon.create((Paths.get("plugins/jeezycore/server-logo-xmas.png"))));
+                } catch (IOException e) {
+                    System.out.println("Can't find xmas logo");
+                }
+            }
+        }
 
         if (MaintenanceSQL.maintenance) {
             builder.version(new ServerPing.Version(event.getConnection().getProtocolVersion().getProtocol() + 1, toml.getString("maintenance_display")));

@@ -73,10 +73,12 @@ public class HikariCP {
             String maintenance_tableInserts = "INSERT INTO velocity (actionName) VALUES ('maintenance')";
             String whitelist_tableInsert = "INSERT INTO velocity (actionName) VALUES ('whitelisted')";
             String maxPlayers_tableInsert = "INSERT INTO maxPlayers (actionName, maxPlayerCount) VALUES ('maxPlayerCount', 0)";
+            String xmas_tableInserts = "INSERT INTO xmas (actionName) VALUES ('xmas')";
 
             statement.executeUpdate(maintenance_tableInserts);
             statement.executeUpdate(whitelist_tableInsert);
             statement.executeUpdate(maxPlayers_tableInsert);
+            statement.executeUpdate(xmas_tableInserts);
         } catch (SQLException e) {
         } finally {
             try {
@@ -110,10 +112,16 @@ public class HikariCP {
                     " maxPlayerCount INT(6), " +
                     " PRIMARY KEY ( actionName ))";
 
+            String xmas_table = "CREATE TABLE IF NOT EXISTS xmas " +
+                    " (actionName VARCHAR(255), " +
+                    " status boolean DEFAULT FALSE, " +
+                    " PRIMARY KEY ( actionName ))";
+
 
             statement.executeUpdate(maintenance_table);
             statement.execute(whitelist_table);
             statement.execute(maxPlayers_table);
+            statement.executeUpdate(xmas_table);
             this.createDefaultInserts();
 
             if (connection.isValid(20)) {
