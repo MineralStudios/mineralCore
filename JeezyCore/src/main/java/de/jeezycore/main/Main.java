@@ -114,7 +114,7 @@ public class Main extends JavaPlugin {
         //this.getCommand("daily-reward").setExecutor(new DailyReward());
         //this.getCommand("store").setExecutor(new Store());
         this.getCommand("disguise").setExecutor(new DisguiseCommand(disguiseManager));
-        this.getCommand("brodcast").setExecutor(new Brodcast());
+        this.getCommand("broadcast").setExecutor(new Broadcast());
         //this.getCommand("languages").setExecutor(new Languages());
         //this.getCommand("lang").setExecutor(new Lang());
         //this.getCommand("friends").setExecutor(new FriendsCommands());
