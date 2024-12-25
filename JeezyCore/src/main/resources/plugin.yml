@@ -27,6 +27,9 @@ commands:
   chat-enable:
     description: Enables chat.
     usage: /chat-enable
+  reboot:
+    description: Reboots the server.
+    usage: /reboot
   gm0:
     description: Sets a player into survival mode
     usage: /gm0
