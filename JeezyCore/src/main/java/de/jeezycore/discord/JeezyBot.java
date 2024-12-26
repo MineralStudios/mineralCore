@@ -40,7 +40,7 @@ public class JeezyBot {
         api.addListener(new MessageComponentCreate());
 
         // Register Commands
-        mineralSlashCommands.initializeCommands(api);
+        //mineralSlashCommands.initializeCommands(api);
 
         // Initialize SQL Connection
         System.out.println("HERRERE MINERALBOT");
