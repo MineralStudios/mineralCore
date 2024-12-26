@@ -11,10 +11,10 @@ public class MineralEmbeds {
     public MessageBuilder panelMessageBuilder() {
         return new MessageBuilder()
                 .addComponents(
-                        ActionRow.of(Button.success("success", "Restart"),
-                                Button.danger("danger", "Shutdown"),
-                                Button.secondary("secondary", "Whitelist"),
-                                Button.primary("primary", "Maintenance")))
+                        ActionRow.of(Button.success("reboot", "Restart"),
+                                Button.danger("shutdown", "Shutdown"),
+                                Button.secondary("whitelist", "Whitelist"),
+                                Button.primary("maintenance", "Maintenance")))
                 .setEmbeds(panelEmbed());
     }
 

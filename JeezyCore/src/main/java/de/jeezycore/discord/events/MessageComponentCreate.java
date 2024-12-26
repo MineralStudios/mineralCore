@@ -20,21 +20,21 @@ public class MessageComponentCreate implements MessageComponentCreateListener {
         String customId = messageComponentInteraction.getCustomId();
 
         switch (customId) {
-            case "success":
+            case "reboot":
                 messageComponentInteraction.createImmediateResponder()
                         .setContent("You **successfully** restarted the server!")
                         .setFlags(MessageFlag.EPHEMERAL)
                         .respond();
                 reboot.rebootServer();
                 break;
-            case "danger":
+            case "shutdown":
                 messageComponentInteraction.createImmediateResponder()
                         .setContent("You **successfully** shutdown the server!")
                         .setFlags(MessageFlag.EPHEMERAL)
                         .respond();
                 reboot.shutDownServer();
                 break;
-            case "secondary":
+            case "whitelist":
                 String whitelistStatus;
                 whitelistedSQL.getWhitelistedData();
                 if (WhitelistedSQL.whitelisted) {
@@ -51,7 +51,7 @@ public class MessageComponentCreate implements MessageComponentCreateListener {
                         .respond();
 
                 break;
-            case "primary":
+            case "maintenance":
                 String maintenanceStatus;
                 maintenanceSQL.getMaintenanceData();
                 if (MaintenanceSQL.maintenance) {
@@ -66,7 +66,6 @@ public class MessageComponentCreate implements MessageComponentCreateListener {
                         .setContent("You **successfully** turned "+maintenanceStatus+" the maintenance!")
                         .setFlags(MessageFlag.EPHEMERAL)
                         .respond();
-
                 break;
         }
     }
