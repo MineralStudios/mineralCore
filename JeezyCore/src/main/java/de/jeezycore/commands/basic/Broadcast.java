@@ -20,8 +20,9 @@ public class Broadcast implements CommandExecutor {
 
             List<String> ls = new ArrayList<String>(Arrays.asList(args));
 
+            if (p.hasPermission("jeezy.core.staff.brodcast")) {
             if (cmd.getName().equalsIgnoreCase("broadcast") && args.length > 0) {
-                if (p.hasPermission("jeezy.core.staff.brodcast")) {
+
 
                     String input = Joiner.on(" ")
                             .skipNulls()
@@ -30,9 +31,12 @@ public class Broadcast implements CommandExecutor {
                     for (Player ps : Bukkit.getOnlinePlayers()) {
                         ps.sendMessage("§7§l[§6§lBroadcast§7§l] §f"+input.replace("&", "§"));
                     }
-                }
+
                 } else {
                 p.sendMessage("Usage: /broadcast <message>");
+            }
+            } else {
+                p.sendMessage("No permission.");
             }
         }
         return true;

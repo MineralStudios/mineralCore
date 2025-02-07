@@ -1,47 +1,73 @@
-name: JeezyCore
+name: MineralCore
 main: de.jeezycore.main.Main
-author: JeezyDevelopment
+author: Mineral Studios
 version: 1.0.0
 commands:
   create-rank:
     description: Creates rank.
     usage: /create-rank <name>
+    permission: jeezy.core.rank.create
+    permission-message: No permission.
   delete-rank:
     description: Deletes rank.
     usage: /delete-rank <name>
+    permission: jeezy.core.rank.delete
+    permission-message: No permission.
   permissionAdd:
     description: Gives a certain rank permission.
     usage: /permissionadd <perm><rankName>
+    permission: jeezy.core.permission.add
+    permission-message: No permission.
   permissionRemove:
       description: Removes a certain rank permission.
       usage: /permissionremove <perm><rankName>
+      permission: jeezy.core.permission.remove
+      permission-message: No permission.
   grant:
     description: Grants selected player a rank.
     usage: /grant <player>
+    permission: jeezy.core.rank.grant
+    permission-message: No permission.
   ungrant:
     description: Ungrants selected player.
     usage: /ungrant <player>
+    permission: jeezy.core.rank.ungrant
+    permission-message: No permission.
   chat-disable:
     description: Disables chat.
     usage: /chat-disable
+    permission: jeezy.core.chat.disable
+    permission-message: No permission.
   chat-enable:
     description: Enables chat.
     usage: /chat-enable
+    permission: jeezy.core.chat.enable
+    permission-message: No permission.
   reboot:
     description: Reboots the server.
     usage: /reboot
+    permission: jeezy.core.reboot
+    permission-message: No permission.
   gm0:
     description: Sets a player into survival mode
     usage: /gm0
+    permission: jeezy.core.gamemode.survival
+    permission-message: No permission.
   gm1:
     description: Sets a player into creative mode
     usage: /gm1
+    permission: jeezy.core.gamemode.creative
+    permission-message: No permission.
   spawnSet:
     description: Sets entry point when joining.
     usage: /spawnSet
+    permission: jeezy.core.spawn.setup
+    permission-message: No permission.
   spawn:
     description: Teleports you back to spawn.
     usage: /spawn
+    permission: jeezy.core.spawn.spawn
+    permission-message: No permission.
   ping:
     description: Shows player ping.
     usage: /ping or /ping <player>
@@ -84,66 +110,106 @@ commands:
   ban:
     description: Bans a player.
     usage: /ban <player>
+    permission: jeezy.core.punishments.ban
+    permission-message: No permission.
   tempban:
     description: Bans a player for a certain time.
     usage: /tempban <player><time><reason> (days = d, hours = h, minutes = m, seconds = s)
+    permission: jeezy.core.punishments.tempban
+    permission-message: No permission.
   unban:
     description: Unbans a player.
     usage: /unban <player>
+    permission: jeezy.core.punishments.unban
+    permission-message: No permission.
   mute:
     description: Mutes player.
     usage: /mute <player>
+    permission: jeezy.core.punishments.mute
+    permission-message: No permission.
   tempmute:
     description: Mutes a player for a certain time.
     usage: /tempmute <player><time><reason> (days = d, hours = h, minutes = m, seconds = s)
+    permission: jeezy.core.punishments.tempmute
+    permission-message: No permission.
   unmute:
     description: Unmutes a player.
     /usage: /unmute <player>
+    permission: jeezy.core.punishments.unmute
+    permission-message: No permission.
   wipebans:
     description: Wipes a certain players bans.
     usage: /wipebans <player>
+    permission: jeezy.core.punishments.wipe.bans
+    permission-message: No permission.
   wipemutes:
     description: Wipes a certain players mutes.
     usage: /wipemutes <player>
+    permission: jeezy.core.punishments.wipe.mutes
+    permission-message: No permission.
   wipeall:
     description: Wipes all the punishments from all the players that got banned or muted.
     usage: /wipeall
+    permission: jeezy.core.punishments.wipe.all
+    permission-message: No permission.
   logs:
     description: Gets all punishment logs of a player.
     usage: /logs
+    permission: jeezy.core.staff.logs
+    permission-message: No permission.
   staffrank-enable:
     usage: /staffrank-enable <rankName>
     description: Elevates a normal rank to a staff rank.
+    permission: jeezy.core.staff.enable
+    permission-message: No permission.
   staffrank-disable:
     usage: /staffrank-disable <rankName>
     description: Delevates a normal rank to a staff rank.
+    permission: jeezy.core.staff.disable
+    permission-message: No permission.
   helpop:
     usage: /helpop <message>
     description: Sends a message to all the staffs.
+    permission: jeezy.core.staff.helpop
+    permission-message: No permission.
   create-tag:
     usage: /create-tag <tagName><tagDesign><tagPriority>
     description: Creates a tag.
+    permission: jeezy.core.tags.create
+    permission-message: No permission.
   grant-tag:
     usage: /grant-tag <tagName><playerName>
     description: Unlocks tag for player.
+    permission: jeezy.core.tags.grant
+    permission-message: No permission.
   ungrant-tag:
     usage: /ungrant-tag <tagName><playerName>
     description: Removes tag from player.
+    permission: jeezy.core.tag.ungrant
+    permission-message: No permission.
   delete-tag:
     usage: /delete-tag <tagName>
     description: Deletes tag from system.
+    permission: jeezy.core.tags.delete
+    permission-message: No permission.
   tags:
     usage: /tags
     description: Opens tags inventory.
   create-chatColor:
     usage: /create-chatColor <colorName> <color> <colorRGB> <colorPriority>
     description: Creates chatColor.
+    permission: jeezy.core.create.chatColor
+    permission-message: No permission.
   grant-chatColor:
     usage: /grant-chatColor <playerName> <chatColor>
     description: Grants a player a certain chatColor.
+    permission: jeezy.core.grant.chatColor
+    permission-message: No permission.
   ungrant-chatColor:
     usage: /ungrant-chatColor <playerName> <chatColor>
     description: Removes a certain chatColor from a player.
+    permission: jeezy.core.ungrant.chatColor
+    permission-message: No permission.
   chatColors:
     usage: /chatColors
     description: Opens ChatColors Inventory.
@@ -168,9 +234,13 @@ commands:
   disguise:
     usage: /disguise <player>
     description: Disguises player to another player.
+    permission: jeezy.core.disguise
+    permission-message: No permission.
   broadcast:
     usage: /broadcast <message>
     description: Broadcasts a message to all online players.
+    permission: jeezy.core.staff.brodcast
+    permission-message: No permission.
   #languages:
    # usage: Shows all available languages.
     #description: /languages
@@ -183,6 +253,8 @@ commands:
   world:
     usage: /world <command>
     description: Executes world commands.
+    permission: jeezy.core.world.*
+    permission-message: No permission.
   sync:
     usage: /sync
     description: Generates code that you can use to link your account with discord.

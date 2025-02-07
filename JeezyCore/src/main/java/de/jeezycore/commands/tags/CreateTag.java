@@ -19,11 +19,10 @@ public class CreateTag implements CommandExecutor {
 
         if (sender instanceof Player) {
             Player p = (Player) sender;
-
+            if (p.hasPermission("jeezy.core.tags.create")) {
            if (cmd.getName().equalsIgnoreCase("create-tag") && args.length < 3) {
               p.sendMessage("Usage: /create-tag (name) (category) (design) (priority)");
            } else {
-               if (p.hasPermission("jeezy.core.tags.create")) {
                    TagsSQL mySQL = new TagsSQL();
                    String input = "INSERT INTO tags " +
                            "(tagName, tagCategory, tagDesign, tagPriority) " +
@@ -35,10 +34,10 @@ public class CreateTag implements CommandExecutor {
                        p.sendMessage("The Category you chose doesn't exist.");
                        return true;
                    }
-               } else {
-                   p.sendMessage("No permission.");
-               }
            }
+            } else {
+                p.sendMessage("No permission.");
+            }
         }
         return true;
     }

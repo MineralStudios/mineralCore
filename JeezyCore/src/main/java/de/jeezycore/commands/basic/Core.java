@@ -13,7 +13,7 @@ public class Core implements CommandExecutor {
            Player p = (Player) sender;
 
             if (cmd.getName().equalsIgnoreCase("core")) {
-                p.sendMessage("§cMineralCore §7coded by §9MineralStudios §7with §4§l❤§7.\n§7- Version: §3§l1.0.0§7.");
+                p.sendMessage("§cMineralCore §7coded by §9Mineral Studios §7with §4§l❤§7.\n§7- Version: §3§l1.0.0§7.");
             }
         }
         return true;

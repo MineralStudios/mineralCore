@@ -15,16 +15,16 @@ public class GrantTag implements CommandExecutor {
 
         if (sender instanceof Player) {
             Player p = (Player) sender;
-
+            if (p.hasPermission("jeezy.core.tags.grant")) {
             if (cmd.getName().equalsIgnoreCase("grant-tag") && args.length == 2) {
-                if (p.hasPermission("jeezy.core.tags.grant")) {
 
                     mySQL.grantTag(p, args[0], args[1]);
-                } else {
-                    p.sendMessage("No permission.");
-                }
+
             } else {
                 p.sendMessage("Usage: /grant-tag (tagName) (playerName)");
+            }
+            } else {
+                p.sendMessage("No permission.");
             }
         } else {
             if (cmd.getName().equalsIgnoreCase("grant-tag") && args.length == 2) {

@@ -13,15 +13,15 @@ public class DeleteTag implements CommandExecutor {
         if (sender instanceof Player) {
             Player p = (Player) sender;
 
+            if (p.hasPermission("jeezy.core.tags.delete")) {
             if (cmd.getName().equalsIgnoreCase("delete-tag") && args.length == 1) {
-                if (p.hasPermission("jeezy.core.tags.delete")) {
                     TagsSQL tagsSQL = new TagsSQL();
                     tagsSQL.deleteTag(args[0], p);
-                } else {
-                    p.sendMessage("No permission.");
-                }
             } else {
                 p.sendMessage("Usage: /delete-tag <tagName>");
+            }
+            } else {
+                p.sendMessage("No permission.");
             }
         }
         return true;
