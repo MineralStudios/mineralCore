@@ -84,7 +84,7 @@
         <dependency>
             <groupId>gg.mineral.mineralspigot</groupId>
             <artifactId>mineralspigot-server</artifactId>
-            <version>20250122-21.00.59</version>
+            <version>20250214-02.41.02</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
