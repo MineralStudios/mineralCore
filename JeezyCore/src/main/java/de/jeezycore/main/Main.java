@@ -13,11 +13,9 @@ import de.jeezycore.commands.ranks.UnGrantRank;
 import de.jeezycore.commands.staff.Logs;
 import de.jeezycore.db.TabListSQL;
 import de.jeezycore.db.hikari.HikariCP;
-import de.jeezycore.disguise.manger.DisguiseManager;
 import de.jeezycore.colors.Color;
 import de.jeezycore.commands.basic.*;
 import de.jeezycore.commands.chat.ChatDisabler;
-import de.jeezycore.commands.disguise.DisguiseCommand;
 import de.jeezycore.commands.permissions.PermissionAdd;
 import de.jeezycore.commands.permissions.PermissionRemove;
 import de.jeezycore.commands.punishments.ban.Ban;
@@ -41,7 +39,6 @@ import de.jeezycore.discord.JeezyBot;
 import de.jeezycore.events.*;
 import de.jeezycore.events.chat.ChatEvent;
 import de.jeezycore.events.inventories.JeezyInventories;
-import de.jeezycore.utils.HTTPUtility;
 import de.jeezycore.utils.NameMC;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -57,8 +54,7 @@ public class Main extends JavaPlugin {
         world.loadWorldsOnStartup();
         JeezyConfig file_Jeezy_config = new JeezyConfig();
         file_Jeezy_config.create_folder();
-        HTTPUtility httpUtility = new HTTPUtility(this);
-        DisguiseManager disguiseManager = new DisguiseManager(this, httpUtility);
+
         // Register Commands
         this.getCommand("create-rank").setExecutor(new CreateRank());
         this.getCommand("delete-rank").setExecutor(new DeleteRank());
@@ -113,7 +109,6 @@ public class Main extends JavaPlugin {
         //this.getCommand("coins").setExecutor(new Minerals());
         //this.getCommand("daily-reward").setExecutor(new DailyReward());
         //this.getCommand("store").setExecutor(new Store());
-        this.getCommand("disguise").setExecutor(new DisguiseCommand(disguiseManager));
         this.getCommand("broadcast").setExecutor(new Broadcast());
         //this.getCommand("languages").setExecutor(new Languages());
         //this.getCommand("lang").setExecutor(new Lang());
@@ -131,7 +126,7 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new RespawnEvent(), this);
         getServer().getPluginManager().registerEvents(new DeathEvent(), this);
         getServer().getPluginManager().registerEvents(new WeatherEvent(), this);
-        getServer().getPluginManager().registerEvents(new QuitEvent(disguiseManager), this);
+        getServer().getPluginManager().registerEvents(new QuitEvent(), this);
         getServer().getPluginManager().registerEvents(new PlayerCommandPreprocessEvent(), this);
         getServer().getPluginManager().registerEvents(new PlayerTeleportEvent(), this);
         // Setups Databases + Tables
