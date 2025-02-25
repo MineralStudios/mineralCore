@@ -231,11 +231,6 @@ commands:
  #store:
    # description: Opens store where Players can buy stuff with minerals / coins.
   #  usage: /store
-  disguise:
-    usage: /disguise <player>
-    description: Disguises player to another player.
-    permission: jeezy.core.disguise
-    permission-message: No permission.
   broadcast:
     usage: /broadcast <message>
     description: Broadcasts a message to all online players.
