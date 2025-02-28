@@ -7,11 +7,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.util.BitSet;
 import java.util.Map;
 
 import static de.jeezycore.db.RanksSQL.rankAndColor;
 import static de.jeezycore.utils.ArrayStorage.getUserRankHashMap;
+import static de.jeezycore.utils.ArrayStorage.playerNickedList;
 
 public class PlayerCommandPreprocessEvent implements Listener {
 
@@ -45,7 +45,7 @@ public class PlayerCommandPreprocessEvent implements Listener {
                availableRanks.append(entry.getValue().replace('&', '§')).append(entry.getKey()).append("§f, ");
            }
            for (Player p : Bukkit.getOnlinePlayers()) {
-               if (getUserRankHashMap.containsKey(p.getUniqueId())) {
+               if (getUserRankHashMap.containsKey(p.getUniqueId()) && !playerNickedList.containsKey(p.getUniqueId())) {
                    onlinePlayers.append(rankAndColor.get(getUserRankHashMap.get(p.getUniqueId())).replace("&", "§")).append(p.getDisplayName()).append("§f, ");
                } else {
                    try {

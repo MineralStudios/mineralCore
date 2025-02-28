@@ -8,10 +8,7 @@ import org.json.simple.JSONObject;
 
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.UUID;
+import java.util.*;
 
 public class ArrayStorage {
     // Msg command array
@@ -107,5 +104,13 @@ public class ArrayStorage {
 
 
     public static HashMap<UUID, String> getUserRankHashMap = new HashMap<>();
+
+    // Nick
+    public static HashMap<UUID, String> playerNickedList = new HashMap<>();
+
+    public static ArrayList<UUID> playerOnNickCoolDownArray = new ArrayList<>();
+
+    public static final Map<UUID, String> originalTextures = new HashMap<>();
+    public static final Map<UUID, String> originalSignatures = new HashMap<>();
 
 }

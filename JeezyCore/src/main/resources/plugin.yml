@@ -256,3 +256,13 @@ commands:
   playtime:
     usage: /playtime
     description: Shows current playtime of a player.
+  nick:
+    usage: /nick
+    description: Gives you another nick.
+    permission: jeezy.core.nick
+    permission-message: No permission.
+  cnick:
+    usage: /cnick
+    description: Clears your nick.
+    permission: jeezy.core.cnick
+    permission-message: No permission.

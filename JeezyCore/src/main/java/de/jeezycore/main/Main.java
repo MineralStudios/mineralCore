@@ -4,6 +4,8 @@ import de.jeezycore.commands.basic.gamemodes.Creative;
 import de.jeezycore.commands.basic.gamemodes.Survival;
 import de.jeezycore.commands.basic.msg.*;
 import de.jeezycore.commands.basic.multiverse.World;
+import de.jeezycore.commands.basic.nick.CNick;
+import de.jeezycore.commands.basic.nick.Nick;
 import de.jeezycore.commands.chatColors.ChatColors;
 import de.jeezycore.commands.chatColors.CreateChatColor;
 import de.jeezycore.commands.chatColors.GrantChatColor;
@@ -117,6 +119,8 @@ public class Main extends JavaPlugin {
         this.getCommand("sync").setExecutor(new Sync());
         this.getCommand("playtime").setExecutor(new PlayTime());
         this.getCommand("reboot").setExecutor(new Reboot());
+        this.getCommand("nick").setExecutor(new Nick());
+        this.getCommand("cnick").setExecutor(new CNick());
 
         // Register Listener
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);

@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import static de.jeezycore.db.TagsSQL.tag_in_chat;
+import static de.jeezycore.utils.ArrayStorage.playerNickedList;
 
 public class ChatEvent implements Listener {
 
@@ -50,6 +51,13 @@ public class ChatEvent implements Listener {
         ignoreChat.PlayerIgnoreChat(e);
         chatColorSQL.getPlayerChatName(e.getPlayer());
         setNameMcTag = nameMC.checkIfAlreadyVoted(e.getPlayer()) ? "§l§9✔ " : "";
+
+        if (playerNickedList.containsKey(e.getPlayer().getUniqueId())) {
+            chat_format_rep = cf.getString("chat_format").replace("[rank]", "").replace("[player]", e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", "");
+            e.setFormat(chat_format_rep.replace("%", "%%").trim());
+            rmc.realtimeMcChat( e.getPlayer().getDisplayName()+": "+e.getMessage());
+            return;
+        }
 
         if (RanksSQL.rankNameInformation == null || display.rank == null) {
                  chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("[player]", setNameMcTag+ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat);
