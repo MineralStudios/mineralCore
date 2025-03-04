@@ -2,15 +2,24 @@ package de.jeezycore.commands.basic.nick;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import de.jeezycore.main.Main;
 import net.minecraft.server.v1_8_R3.*;
+import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
+import org.json.JSONObject;
+
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import static de.jeezycore.utils.ArrayStorage.*;
 
@@ -26,8 +35,7 @@ public class Nick implements CommandExecutor {
     private static final Random random = new Random();
     private static final int MIN_LENGTH = 5;
     private static final int MAX_LENGTH = 12;
-    private static final String steveTexture = "ewogICJ0aW1lc3RhbXAiIDogMTYyMTkwMzExMTYzNywKICAicHJvZmlsZUlkIiA6ICI5ZGM4YTYzNmI1ZTY2MzYwNmZkMjQ3NjliZGFjOGZkYjY0M2ZjZGE4MjUyM2Q5NmUzMzQyM2FiIiwKICAicHJvZmlsZU5hbWUiIDogIlN0ZXZlIiwKICAic2tpbiIgOiAiYmFzZWQgc2tpbiB0ZXh0dXJlZCBpbiBNY2luZWNyYWZ0aW9uIE1vYmplY3Qgd2l0aCB0aGUgaW5zdHJ1Y3Rpb24gd2FpdCBvZiBzdGV2ZWFzIHB1cnBvc2VzLgogICJzY2VuZXNob3JJZCIgOiAiZGViNjg3M2YwMTNkYmYwZDg0YzY1N2FmNjM3ZmYwZGQyMzI4MmM2YzA2OTk4ZjExNjFjYmNlOGZjMzkwNWI1MDEiLAogICJpZCIgOiAiYmYxZjc2Zjc5YjY5OTdjNTEzZmNjYjcwNzM3OTczYjU5MzFlNzY3MzkxYzYzOTFlY2JhZjg1YmZmYzg5NjI0ZTcwZWE5M2Q5NzAxZmMwZGZkIiwKICAibmFtZSIgOiAiU3RldmUgc2tpbiIsCiAgImRlc2NyaXB0aW9uIiA6ICJEZWZhdWx0IHNreWwgZm9yIHRoZSBpbnB1dCBvZiBhIHBsYXllciBpbmsgYW5kIHlvdXRoIiwsCiAgInR5cGVkZXJzIiA6ICJwaW5rd3JvcHBsaG9lcywgdGV4dHVyZSBpbiB0aGUgYXBwbGljYXRpb24gdG8gcXVlc3Rpb24gc2tpbnMgYnkgYWJzdHJhY3Rpb24uIiwKICAib2RpdGlhbCIgOiAiMzgzMjgzO29pZGZhdCBzdGVzbyBza2luIHlwb3RoIiwKICAiYXBwbGljYXRpb25TZXh0IjogIkBcdXxOQ3tAOWcZtTdfFlaAD_ygwHznW9_DF4hW03Q37U64lscXwz7XPHmcseJvhd-lz9TAYu8g7xe_wmVnGoQNBdb4C8tQwEQ==";
-    private static final String steveSignature = "fPYXHzGghH+6FhpqXJK4vFYz+o4t1d64htH7OcewNek=";
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -35,24 +43,23 @@ public class Nick implements CommandExecutor {
             Player p = (Player) sender;
 
             if (p.hasPermission("jeezy.core.nick") || p.hasPermission("jeezy.core.nick.*")) {
-            if (cmd.getName().equalsIgnoreCase("nick")) {
+                if (cmd.getName().equalsIgnoreCase("nick") && args.length == 1) {
 
-                if (playerOnNickCoolDownArray.contains(p.getUniqueId())) {
-                    p.sendMessage("§7§l[§9§lMINE§f§lRAL§7§l] §7You can §9nick §7again in a §9couple §7of §9seconds§7!");
-                    return true;
-                }
+                    if (playerOnNickCoolDownArray.contains(p.getUniqueId()) || playerOnFetchSkinCoolDownArray.contains(p.getUniqueId())) {
+                        p.sendMessage("§7§l[§9§lMINE§f§lRAL§7§l] §7You can §9nick §7again in a §9couple §7of §9seconds§7!");
+                        return true;
+                    }
+
 
                     if (!playerNickedList.containsKey(p.getUniqueId())) {
-                        playerNickedList.put(p.getUniqueId(), p.getPlayer().getDisplayName());
-                        saveOriginalSkin(p);
-                        spoofPlayer(p, generateMarkovName(p));
+                        spoofPlayer(args[0], generateMarkovName(p), p);
                     } else {
                         p.sendMessage("§7§l[§9§lMINE§f§lRAL§7§l] §7You're §9already §7nicked. Do ./§9cnick§7 to §9remove §7it!");
                     }
 
-            } else {
-                p.sendMessage("Usage: /nick");
-            }
+                } else {
+                    p.sendMessage("Usage: /nick <playernameskin>");
+                }
             } else {
                 p.sendMessage("No permission.");
             }
@@ -84,20 +91,18 @@ public class Nick implements CommandExecutor {
             name.append(nextLetter);
             currentLetter = nextLetter;
         }
-        p.sendMessage("§7§l[§9§lMINE§f§lRAL§7§l] §7You're nicked as: §9"+name+"§7! §7You can do §9/cnick §7to §9remove §7the nick!");
         return name.toString();
     }
 
 
-
-    private static void spoofPlayer(Player player, String fakeName) {
-        changeNameWithReflectionFor1_8(player, fakeName);
-        updateScoreboard(player, fakeName);
-        refreshPlayer(player);
+    private static void spoofPlayer(String playerSkin, String fakeName, Player player) {
+        playerNickedList.put(player.getUniqueId(), player.getPlayer().getDisplayName());
+        saveOriginalSkin(player);
+        fetchSkinData(playerSkin, fakeName, player);
     }
 
 
-    private static void changeNameWithReflectionFor1_8(Player player, String fakeName) {
+    private static void changeNameWithReflectionFor1_8(Player player, String fakeName, String texture, String signature) {
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
         GameProfile profile = entityPlayer.getProfile();
 
@@ -119,7 +124,7 @@ public class Nick implements CommandExecutor {
         }
 
         profile.getProperties().removeAll("textures");
-        profile.getProperties().put("textures", new Property("textures", Nick.steveTexture, Nick.steveSignature));
+        profile.getProperties().put("textures", new Property("textures", texture, signature));
 
     }
 
@@ -159,32 +164,109 @@ public class Nick implements CommandExecutor {
     private static void refreshPlayer(Player player) {
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
 
-        // Remove the player from the tab list
-        PacketPlayOutPlayerInfo removePacket = new PacketPlayOutPlayerInfo(
-                PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
+        // Remove player from the tab list
+        PacketPlayOutPlayerInfo removePacket = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
+        sendPacketToAll(removePacket);
 
-        // Add the player back to the tab list
-        PacketPlayOutPlayerInfo addPacket = new PacketPlayOutPlayerInfo(
-                PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
+        // Destroy the player's entity for all players (force skin refresh)
+        PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(player.getEntityId());
+        sendPacketToAll(destroyPacket);
 
-        // Remove the player entity from everyone's world
-        PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(entityPlayer.getId());
+        // Teleport the player slightly to force reloading their entity (can be same location)
+        Bukkit.getScheduler().runTaskLater(Main.getPlugin(Main.class), () -> {
+            player.teleport(player.getLocation().add(0, 0.1, 0)); // Small Y teleport to trigger a reload
 
-        // Re-add the player entity to everyone's world
-        PacketPlayOutNamedEntitySpawn spawnPacket = new PacketPlayOutNamedEntitySpawn(entityPlayer);
+            // Re-add the player to the tab list
+            PacketPlayOutPlayerInfo addPacket = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
+            sendPacketToAll(addPacket);
 
-        // Send all these packets to every online player
-        for (Player online : Bukkit.getOnlinePlayers()) {
-            if (!online.equals(player)) {
-                CraftPlayer craftPlayer = (CraftPlayer) online;
-                craftPlayer.getHandle().playerConnection.sendPacket(removePacket);
-                craftPlayer.getHandle().playerConnection.sendPacket(addPacket);
-                craftPlayer.getHandle().playerConnection.sendPacket(destroyPacket);
-                craftPlayer.getHandle().playerConnection.sendPacket(spawnPacket);
+            // Re-send entity spawn packets
+            for (Player online : Bukkit.getOnlinePlayers()) {
+                if (!online.equals(player)) {
+                    ((CraftPlayer) online).getHandle().playerConnection.sendPacket(new PacketPlayOutNamedEntitySpawn(entityPlayer));
+                }
             }
+
+            // Send a metadata update packet (final refresh)
+            PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(player.getEntityId(), entityPlayer.getDataWatcher(), true);
+            sendPacketToAll(metadataPacket);
+        }, 5L); // Small delay to allow packets to process
+    }
+
+    private static void sendPacketToAll(Packet<?> packet) {
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            ((CraftPlayer) online).getHandle().playerConnection.sendPacket(packet);
         }
     }
 
 
+    // Method to fetch the skin texture and signature from Mojang's API
+    public static void fetchSkinData(String skinPlayer, String fakeName, Player player) {
+        try {
+            // Step 1: Get the UUID of the player by querying Mojang's API
+            String uuid = getUUID(skinPlayer);
+            if (uuid == null) {
+                player.sendMessage("§7§l[§9§lMINE§f§lRAL§7§l] §9Player §7not found!");
+                nickFetchAgainTimer(player);
+            }
+                // Step 2: Fetch the player's profile data using their UUID
+                String urlString = "https://sessionserver.mojang.com/session/minecraft/profile/"+uuid+"?unsigned=false";
+                URL url = new URL(urlString);
+                InputStream inputStream = url.openStream();
+                String jsonResponse = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+
+                // Step 3: Parse the JSON response to extract the skin texture and signature
+                JSONObject jsonObject = new JSONObject(jsonResponse);
+                String texture = jsonObject.getJSONArray("properties")
+                        .getJSONObject(0)
+                        .getString("value"); // The texture value
+                String signature = jsonObject.getJSONArray("properties")
+                        .getJSONObject(0)
+                        .getString("signature"); // The signature value
+
+
+
+                changeNameWithReflectionFor1_8(player, fakeName, texture, signature);
+                updateScoreboard(player, fakeName);
+                refreshPlayer(player);
+                player.sendMessage("§7§l[§9§lMINE§f§lRAL§7§l] §7You're nicked as: §9" + fakeName + "§7! §7You can do §9/cnick §7to §9remove §7the nick!");
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Method to fetch UUID of the player using Mojang's API
+    public static String getUUID(String playerName) {
+        try {
+            // Request the UUID for the given playerName
+            String urlString = "https://api.mojang.com/users/profiles/minecraft/" + playerName;
+            URL url = new URL(urlString);
+            InputStream inputStream = url.openStream();
+            String jsonResponse = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+
+            // Parse the UUID from the response
+            JSONObject jsonObject = new JSONObject(jsonResponse);
+            return jsonObject.getString("id");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void nickFetchAgainTimer(Player p) {
+        playerOnFetchSkinCoolDownArray.add(p.getUniqueId());
+        Timer time = new Timer();
+        TimerTask nickAgainTask = new TimerTask() {
+            @Override
+            public void run() {
+                playerOnFetchSkinCoolDownArray.remove(p.getPlayer().getUniqueId());
+                time.purge();
+                time.cancel();
+            }
+        };
+        time.schedule(nickAgainTask, 10000);
+    }
 
 }

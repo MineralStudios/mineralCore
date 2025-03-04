@@ -110,6 +110,8 @@ public class ArrayStorage {
 
     public static ArrayList<UUID> playerOnNickCoolDownArray = new ArrayList<>();
 
+    public static ArrayList<UUID> playerOnFetchSkinCoolDownArray = new ArrayList<>();
+
     public static final Map<UUID, String> originalTextures = new HashMap<>();
     public static final Map<UUID, String> originalSignatures = new HashMap<>();
 

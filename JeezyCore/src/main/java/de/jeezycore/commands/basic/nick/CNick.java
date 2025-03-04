@@ -2,8 +2,10 @@ package de.jeezycore.commands.basic.nick;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import de.jeezycore.main.Main;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -62,7 +64,6 @@ public class CNick implements CommandExecutor {
             nameField.setAccessible(true);
             nameField.set(profile, realName);
         } catch (Exception e) {
-            e.printStackTrace();
             return;
         }
 
@@ -71,7 +72,6 @@ public class CNick implements CommandExecutor {
             profileField.setAccessible(true);
             profileField.set(entityPlayer, profile);
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
         // Restore the player's skin back to default
@@ -92,29 +92,38 @@ public class CNick implements CommandExecutor {
     private static void refreshPlayer(Player player) {
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
 
-        // Remove the player from the tab list
-        PacketPlayOutPlayerInfo removePacket = new PacketPlayOutPlayerInfo(
-                PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
+        // Remove player from the tab list
+        PacketPlayOutPlayerInfo removePacket = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
+        sendPacketToAll(removePacket);
 
-        // Add the player back to the tab list
-        PacketPlayOutPlayerInfo addPacket = new PacketPlayOutPlayerInfo(
-                PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
+        // Destroy the player's entity for all players (force skin refresh)
+        PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(player.getEntityId());
+        sendPacketToAll(destroyPacket);
 
-        // Remove the player entity from everyone's world
-        PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(entityPlayer.getId());
+        // Teleport the player slightly to force reloading their entity (can be same location)
+        Bukkit.getScheduler().runTaskLater(Main.getPlugin(Main.class), () -> {
+            player.teleport(player.getLocation().add(0, 0.1, 0)); // Small Y teleport to trigger a reload
 
-        // Re-add the player entity to everyone's world
-        PacketPlayOutNamedEntitySpawn spawnPacket = new PacketPlayOutNamedEntitySpawn(entityPlayer);
+            // Re-add the player to the tab list
+            PacketPlayOutPlayerInfo addPacket = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
+            sendPacketToAll(addPacket);
 
-        // Send all these packets to every online player
-        for (Player online : Bukkit.getOnlinePlayers()) {
-            if (!online.equals(player)) {
-                CraftPlayer craftPlayer = (CraftPlayer) online;
-                craftPlayer.getHandle().playerConnection.sendPacket(removePacket);
-                craftPlayer.getHandle().playerConnection.sendPacket(addPacket);
-                craftPlayer.getHandle().playerConnection.sendPacket(destroyPacket);
-                craftPlayer.getHandle().playerConnection.sendPacket(spawnPacket);
+            // Re-send entity spawn packets
+            for (Player online : Bukkit.getOnlinePlayers()) {
+                if (!online.equals(player)) {
+                    ((CraftPlayer) online).getHandle().playerConnection.sendPacket(new PacketPlayOutNamedEntitySpawn(entityPlayer));
+                }
             }
+
+            // Send a metadata update packet (final refresh)
+            PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(player.getEntityId(), entityPlayer.getDataWatcher(), true);
+            sendPacketToAll(metadataPacket);
+        }, 5L); // Small delay to allow packets to process
+    }
+
+    private static void sendPacketToAll(Packet<?> packet) {
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            ((CraftPlayer) online).getHandle().playerConnection.sendPacket(packet);
         }
     }
 
