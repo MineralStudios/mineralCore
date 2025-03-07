@@ -1,6 +1,7 @@
 package de.jeezycore.discord;
 
 import de.jeezycore.config.JeezyConfig;
+import de.jeezycore.discord.activity.BotStatus;
 import de.jeezycore.discord.db.HikariCP;
 import de.jeezycore.discord.commands.MineralSlashCommands;
 import de.jeezycore.discord.events.InteractionEvent;
@@ -31,8 +32,8 @@ public class JeezyBot {
                 .setAllIntents()
                 .login().join();
 
-        //BotStatus botStatus = new BotStatus();
-        //botStatus.set();
+        BotStatus botStatus = new BotStatus();
+        botStatus.set();
 
         // Register EventListener
         api.addListener(new MessageCreate());
@@ -40,10 +41,9 @@ public class JeezyBot {
         api.addListener(new MessageComponentCreate());
 
         // Register Commands
-        //mineralSlashCommands.initializeCommands(api);
+        mineralSlashCommands.initializeCommands(api);
 
         // Initialize SQL Connection
-        System.out.println("HERRERE MINERALBOT");
         hikariCP.start();
     }
 }
