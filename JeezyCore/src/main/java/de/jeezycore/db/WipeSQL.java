@@ -78,7 +78,6 @@ public class WipeSQL {
     public void wipeAll(Player p) {
         Connection connection = null;
         Statement statement = null;
-        ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
             statement = connection.createStatement();
@@ -86,7 +85,7 @@ public class WipeSQL {
             String select_sql ="DELETE FROM punishments";
             statement.executeUpdate(select_sql);
 
-            p.sendMessage("§7You §2successfully §7wiped all the players §cpunishments §7on your §bServer§7.");
+            p.sendMessage("§7§l[§9§lMINE§f§lRAL§7§l] §7You §2successfully §9wiped§7 all the players §cpunishments §7on your §9server§7.");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

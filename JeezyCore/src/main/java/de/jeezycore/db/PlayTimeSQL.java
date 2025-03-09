@@ -8,105 +8,41 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
-import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class PlayTimeSQL {
 
     String playTime;
 
-    String playTimeStart;
-
-    String playTimeEnd;
-
     int playTimeResult;
 
-
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public void playTimeJoin(PlayerJoinEvent join) {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                // here goes your code to delay
-                ArrayStorage.playTimeHashMap.put(join.getPlayer().getUniqueId(), LocalDateTime.now());
-                Connection connection = null;
-                Statement statement = null;
-                ResultSet resultSet = null;
-                try {
-                    connection = dataSource.getConnection();
-                    statement = connection.createStatement();
-
-                    String select_sql ="INSERT INTO playtime" +
-                            "(playerName, playerUUID, playtime_start) " +
-                            "VALUES ('"+ join.getPlayer().getDisplayName() + "', '"+ join.getPlayer().getUniqueId() +"', "+
-                            "'"+ LocalDateTime.now().format(formatter) + "')";
-
-
-
-                    statement.executeUpdate(select_sql);
-                } catch (SQLException e) {
-                    alreadyGotPlayTime(join);
-                } finally {
-                    try {
-                        statement.close();
-                        connection.close();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, 300L); // 300 is the delay in millis
-    }
-
-    public void alreadyGotPlayTime(PlayerJoinEvent join) {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-            statement = connection.createStatement();
-
-            String select_sql ="UPDATE playtime " +
-                    "SET playtime_start = '"+LocalDateTime.now().format(formatter)+
-                    "' WHERE playerUUID = '"+ join.getPlayer().getUniqueId() + "'";
-            statement.executeUpdate(select_sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                statement.close();
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        ArrayStorage.playTimeHashMap.put(join.getPlayer().getUniqueId(), LocalDateTime.now());
     }
 
     public void playTimeQuit(PlayerQuitEvent quit) {
         queryPlaytime(quit.getPlayer().getUniqueId());
         Connection connection = null;
         Statement statement = null;
-        ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
             statement = connection.createStatement();
 
 
             if (playTime != null) {
-                playTimeResult = getPlayTime() + Integer.parseInt(playTime);
+                playTimeResult = getPlayTime(quit.getPlayer().getUniqueId()) + Integer.parseInt(playTime);
             } else {
-                playTimeResult = getPlayTime();
+                playTimeResult = getPlayTime(quit.getPlayer().getUniqueId());
             }
 
-            String select_sql ="UPDATE playtime " +
+            String select_sql ="UPDATE players " +
                     "SET playTime = '"+playTimeResult+
-                    "', playtime_end = '"+LocalDateTime.now().format(formatter)+
                     "' WHERE playerUUID = '"+ quit.getPlayer().getUniqueId() + "'";
             statement.executeUpdate(select_sql);
+            ArrayStorage.playTimeHashMap.remove(quit.getPlayer().getUniqueId());
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -126,17 +62,14 @@ public class PlayTimeSQL {
         try {
             connection = dataSource.getConnection();
             statement = connection.createStatement();
-            String select_sql = "SELECT * FROM playtime WHERE playerUUID = '"+get_UUID+"'";
+            String select_sql = "SELECT * FROM players WHERE playerUUID = '"+get_UUID+"'";
             resultSet = statement.executeQuery(select_sql);
 
             if (!resultSet.next()) {
                 playTime = null;
-                playTimeStart = null;
             } else {
                 do {
                     playTime = resultSet.getString("playTime");
-                    playTimeStart = resultSet.getString("playtime_start");
-                    playTimeEnd = resultSet.getString("playtime_end");
                 } while (resultSet.next());
             }
         } catch (SQLException e) {
@@ -153,8 +86,8 @@ public class PlayTimeSQL {
     }
 
 
-    private int getPlayTime() {
-        LocalDateTime dateTime_start = LocalDateTime.parse(playTimeStart, formatter);
+    private int getPlayTime(UUID uuid) {
+        LocalDateTime dateTime_start = LocalDateTime.parse(ArrayStorage.playTimeHashMap.get(uuid).format(formatter), formatter);
         LocalDateTime dateTime_end = LocalDateTime.parse(LocalDateTime.now().format(formatter), formatter);
         return (int) ChronoUnit.SECONDS.between(dateTime_start, dateTime_end);
     }
@@ -162,27 +95,19 @@ public class PlayTimeSQL {
 
     private void playTimeCalculation(Player p) {
 
-        LocalDateTime dateTime_start = LocalDateTime.parse(playTimeStart, formatter);
-        LocalDateTime dateTime_end = LocalDateTime.parse(LocalDateTime.now().format(formatter), formatter);
-
-        LocalDateTime fromTemp = LocalDateTime.from(dateTime_start);
+        LocalDateTime startTime = ArrayStorage.playTimeHashMap.get(p.getUniqueId());
+        LocalDateTime endTime = LocalDateTime.now();
 
         if (playTime != null) {
-            fromTemp = LocalDateTime.from(ArrayStorage.playTimeHashMap.get(p.getUniqueId())).minusSeconds(Long.parseLong(playTime));
-
+            startTime = startTime.minusSeconds(Long.parseLong(playTime));
         }
 
-        long hours = fromTemp.until(dateTime_end, ChronoUnit.HOURS);
-        fromTemp = fromTemp.plusHours(hours);
+        long hours = startTime.until(endTime, ChronoUnit.HOURS);
+        long minutes = startTime.until(endTime, ChronoUnit.MINUTES) % 60;
+        long seconds = startTime.until(endTime, ChronoUnit.SECONDS) % 60;
 
-        long minutes = fromTemp.until(dateTime_end, MINUTES);
-        fromTemp = fromTemp.plusMinutes(minutes);
-
-        long seconds = fromTemp.until(dateTime_end, ChronoUnit.SECONDS);
-        fromTemp = fromTemp.plusSeconds(seconds);
-
-
-        p.sendMessage("§7[§9PlayTime§7]"+" §fHour§7(§9s§7): §7[§9"+hours+"§7] §f| "+"§fMinute§7(§9s§7): §7[§9"+minutes+"§7] §f| " +"§fSecond§7(§9s§7): §7[§9"+seconds+"§7]");
+        p.sendMessage(String.format("§7[§9PlayTime§7] §fHour§7(§9s§7): §7[§9%d§7] §f| §fMinute§7(§9s§7): §7[§9%d§7] §f| §fSecond§7(§9s§7): §7[§9%d§7]",
+                hours, minutes, seconds));
 
     }
 
