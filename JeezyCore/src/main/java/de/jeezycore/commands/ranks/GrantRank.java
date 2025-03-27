@@ -31,14 +31,18 @@ public class GrantRank implements CommandExecutor {
 
 
             if (p.hasPermission("jeezy.core.rank.grant")) {
-                if (cmd.getName().equalsIgnoreCase("grant") && args.length == 0) {
-                    p.sendMessage("Usage: /grant <player> | /grant <rank> <player>");
-                    return true;
-                }
                 if (cmd.getName().equalsIgnoreCase("grant") && args.length == 1) {
                     grantInventory.grant_menu(p, args[0]);
+                    return true;
                 } else {
-                 p.sendMessage("Usage: /grant <playerName>");
+                 p.sendMessage("Usage: /grant <playerName>(GUI) | /grant <rankName> <player> <time>");
+                }
+                if (cmd.getName().equalsIgnoreCase("grant") && args.length == 3) {
+                    uc.check(args[1]);
+                    mysql.grantPlayerConsole(sender, args[0], UUID.fromString(UUIDChecker.uuid));
+                    mysql.setRankDuration(sender, UUIDChecker.uuidName, args[2], UUID.fromString(UUIDChecker.uuid));
+                    mysql.colorPerms(args[0]);
+                    grant_discord.realtimeChatOnGranting(UUID.fromString(UUIDChecker.uuid), UUIDChecker.uuidName, p.getDisplayName(), args[0]);
                 }
             } else {
                 p.sendMessage("No permission");
