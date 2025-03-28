@@ -208,6 +208,7 @@ public class RanksSQL {
         Statement statement = null;
         ResultSet resultSet = null;
         try {
+            this.onUnGrantingPermsConsole(uuid);
             this.onGrantingPermsConsole(uuid, rankName);
             connection = dataSource.getConnection();
             statement = connection.createStatement();
