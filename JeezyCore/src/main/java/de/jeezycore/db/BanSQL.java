@@ -547,6 +547,43 @@ public class BanSQL {
         }
     }
 
+    public void unbanConsole(String username, CommandSender sender) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+
+            RealtimeBan discord = new RealtimeBan();
+            UUIDChecker check_UUID = new UUIDChecker();
+            check_UUID.check(username);
+            unbanData(UUID.fromString(UUIDChecker.uuid));
+
+            if (punishment_UUID == null || !ban_status) {
+                sender.sendMessage("§7The player §b"+username+" §7isn't §4banned§7.");
+                return;
+            } else {
+                sender.sendMessage("§7You §asuccessfully §7unbanned §b"+username+"§7.");
+            }
+
+            String sql = "UPDATE punishments " +
+                    "SET banned_forever = false, ban_start = NULL, ban_end = NULL, ban_status = false"+
+                    " WHERE UUID = '"+UUIDChecker.uuid+"'";
+            statement.executeUpdate(sql);
+            discord.realtimeChatOnUnban(UUID.fromString(UUIDChecker.uuid), username, "Console");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void banData(UUID get_UUID) {
         Connection connection = null;
         Statement statement = null;

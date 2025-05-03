@@ -7,11 +7,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+
 
 public class Reboot implements CommandExecutor {
 
-    private final File startFile = new File("./start.sh");
+    String FolderPath = new File(".").getAbsoluteFile().getParentFile().getAbsolutePath();
+    String restartScript = FolderPath+"/start.sh";
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -33,42 +37,41 @@ public class Reboot implements CommandExecutor {
     }
 
     public void rebootServer() {
-        shutDownServer();
-        startServer();
-    }
-
-    public void shutDownServer() {
         kickAllPlayers();
-        Bukkit.getServer().shutdown();
-
+        shutDownServer();
+        restartServer();
     }
 
-    public void kickAllPlayers() {
-        for (Player ps: Bukkit.getOnlinePlayers()) {
-            ps.kickPlayer("§fThe §9server §fis restarting!");
+    private void kickAllPlayers() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.kickPlayer("§fThe §9server §fis restarting!");
         }
     }
 
-    public void startServer() {
-        if (startFile.exists() && startFile.canExecute()) {
-            try {
-                ProcessBuilder processBuilder = new ProcessBuilder(startFile.getAbsolutePath());
-                processBuilder.directory(startFile.getParentFile());
+    public void shutDownServer() {
+        Bukkit.getServer().shutdown();
+    }
 
-                processBuilder.inheritIO();
+    private void restartServer() {
+        try {
+            List<String> scriptLines = Files.readAllLines(Paths.get(restartScript));
 
-                Map<String, String> environment = processBuilder.environment();
-                environment.put("TERM", "xterm-256color");
+            String command = String.join(" ", scriptLines);
+            command = command.replace("-S", "-dmS");
 
-                Process process = processBuilder.start();
-                int exitCode = process.waitFor();
+            System.out.println("Executing: " + command);
 
-                System.out.println("Script exited with code: " + exitCode);
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("File does not exist or is not executable: " + startFile.getAbsolutePath());
+            ProcessBuilder processBuilder = new ProcessBuilder("sh", "-c", command);
+
+            processBuilder.inheritIO();
+
+            Process process = processBuilder.start();
+            int exitCode = process.waitFor();
+
+            System.out.println("Script executed with exit code: " + exitCode);
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

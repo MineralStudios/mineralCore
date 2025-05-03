@@ -18,10 +18,8 @@ public class Helpop implements CommandExecutor {
 
         if (sender instanceof Player) {
             Player p = (Player) sender;
-
-        if (cmd.getName().equalsIgnoreCase("helpop") && args.length >= 1) {
-
             if (p.hasPermission("jeezy.core.staff.helpop")) {
+        if (cmd.getName().equalsIgnoreCase("helpop") && args.length >= 1) {
 
 
                 List<String> ls = new ArrayList<String>(Arrays.asList(args));
@@ -30,12 +28,13 @@ public class Helpop implements CommandExecutor {
                         .join(ls).trim();
 
                 staffChat.helpopChat(p, input);
-            } else {
-                p.sendMessage("You have no permission!");
-            }
+
         } else {
             p.sendMessage("Usage: /helpop <message>");
         }
+            } else {
+                p.sendMessage("You have no permission!");
+            }
         }
         return true;
     }

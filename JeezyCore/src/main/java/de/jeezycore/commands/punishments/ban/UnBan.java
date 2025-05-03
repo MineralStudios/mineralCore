@@ -24,6 +24,8 @@ public class UnBan implements CommandExecutor {
             } else {
                 p.sendMessage("No permission.");
             }
+        } else {
+            execute.unbanConsole(args[0], sender);
         }
         return true;
     }

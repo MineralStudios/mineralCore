@@ -12,18 +12,20 @@ public class PermissionRemove implements CommandExecutor {
         if (sender instanceof Player) {
             Player p = (Player) sender;
 
+            if (p.hasPermission("jeezy.core.permission.remove")) {
             if (cmd.getName().equalsIgnoreCase("permissionRemove") && args.length == 2) {
-                if (p.hasPermission("jeezy.core.permission.remove")) {
+
                     System.out.println(args.length);
                     RanksSQL perms = new RanksSQL();
 
                     perms.getAllPlayerInformation(p, args[1]);
                     perms.removePerms(args[0], args[1], p);
-                } else {
-                    p.sendMessage("No permission.");
-                }
+
             } else {
                 p.sendMessage("Usage /permissionRemove <perm> <rankName>");
+            }
+            } else {
+                p.sendMessage("No permission.");
             }
         }
         return true;

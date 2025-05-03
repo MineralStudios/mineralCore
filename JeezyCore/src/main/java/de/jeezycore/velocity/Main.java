@@ -20,8 +20,10 @@ import de.jeezycore.velocity.db.hikari.HikariCP;
 import de.jeezycore.velocity.events.CommandExecuteListener;
 import de.jeezycore.velocity.events.LoginEventListener;
 import de.jeezycore.velocity.events.PingEventListener;
-
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 @Plugin(
@@ -54,10 +56,17 @@ public class Main {
     public void onProxyInitialize(ProxyInitializeEvent event) {
         jeezyConfig.createData();
         hikariCP.start();
-        maintenanceSQL.getMaintenanceData();
-        whitelistedSQL.getWhitelistedData();
-        whitelistedSQL.getMaxPlayerCount();
-        xmasModeSQL.getXmasData();
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        Runnable task = () -> {
+            maintenanceSQL.getMaintenanceData();
+            whitelistedSQL.getWhitelistedData();
+            whitelistedSQL.getMaxPlayerCount();
+            xmasModeSQL.getXmasData();
+        };
+
+        scheduler.scheduleAtFixedRate(task, 0, 30, TimeUnit.SECONDS);
+
         this.registerEvents();
         this.registerCommands();
     }

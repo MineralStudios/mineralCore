@@ -14,16 +14,17 @@ public class StaffRankEnable implements CommandExecutor {
 
         if (sender instanceof Player) {
             Player p = (Player) sender;
-
+            if (p.hasPermission("jeezy.core.staff.enable")) {
             if (cmd.getName().equalsIgnoreCase("staffrank-enable") && args.length == 1) {
-                if (p.hasPermission("jeezy.core.staff.enable")) {
+
                     StaffSQL execute = new StaffSQL();
                     execute.addToStaff(args[0], p);
-                } else {
-                    p.sendMessage("No permission.");
-                }
+
             } else {
                 p.sendMessage("Usage: /staffrank-enable <rankName>");
+            }
+            } else {
+                p.sendMessage("No permission.");
             }
         }
         return true;

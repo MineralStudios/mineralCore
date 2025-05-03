@@ -16,17 +16,18 @@ public class UnGrantTag implements CommandExecutor {
         if (sender instanceof Player) {
 
             Player p = (Player) sender;
-
+            if (p.hasPermission("jeezy.core.tag.ungrant")) {
             if (cmd.getName().equalsIgnoreCase("ungrant-tag") && args.length == 2) {
-                if (p.hasPermission("jeezy.core.tag.ungrant")) {
+
 
                     tag.unGrantTag(args[0], args[1], p);
                     tag.resetTag(args[0], args[1], p);
-                } else {
-                    p.sendMessage("No permission");
-                }
+
             } else {
                 p.sendMessage("Usage: /ungrant-tag <tagName><player>");
+            }
+            } else {
+                p.sendMessage("No permission");
             }
         } else {
             if (cmd.getName().equalsIgnoreCase("ungrant-tag") && args.length == 2) {

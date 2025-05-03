@@ -124,8 +124,7 @@ public class PermissionHandler {
     }
 
     public void onGrantingConsole(UUID uuid) {
-        Player ps = Bukkit.getPlayer(uuid);
-        if (RanksSQL.grantingPermRanks == null || ps == null) return;
+        if (RanksSQL.grantingPermRanks == null) return;
         String[] uuidStrings = RanksSQL.grantingPermRanks.replace("[", "").replace("]", "").
                 replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
 
@@ -139,8 +138,7 @@ public class PermissionHandler {
     }
 
     public void onUnGrantingConsole(UUID uuid) {
-        Player ps = Bukkit.getPlayer(uuid);
-        if (RanksSQL.unGrantingPermRanks == null || ps == null) return;
+        if (RanksSQL.unGrantingPermRanks == null) return;
         String[] uuidStrings = RanksSQL.unGrantingPermRanks.replace("[", "").replace("]", "").
                 replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5").split(", ");
 

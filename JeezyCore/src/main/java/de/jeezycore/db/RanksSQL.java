@@ -208,6 +208,7 @@ public class RanksSQL {
         Statement statement = null;
         ResultSet resultSet = null;
         try {
+            this.onUnGrantingPermsConsole(uuid);
             this.onGrantingPermsConsole(uuid, rankName);
             connection = dataSource.getConnection();
             statement = connection.createStatement();
@@ -247,8 +248,10 @@ public class RanksSQL {
                 statement.executeUpdate(select_sql);
             }
             sender.sendMessage("You §b§lsuccessfully§f granted §l§7" + UUIDChecker.uuidName + "§f the §l" +rankColorPerms.replace("&", "§")+rankName + " §frank.");
-            scoreboard.getTeam(grantPlayerRank).addEntry(UUIDChecker.uuidName);
             playerRankNames.add(UUIDChecker.uuidName);
+            TabListSQL tabListSQL = new TabListSQL();
+            tabListSQL.getTabListData(UUID.fromString(UUIDChecker.uuid));
+            scoreboard.getTeam(TabListSQL.getTabListPriority+""+TabListSQL.getTabListRanks).addEntry(UUIDChecker.uuidName);
         } catch (SQLException e) {
             System.out.println(e);
         } finally {
@@ -883,8 +886,10 @@ public class RanksSQL {
                 statement.executeUpdate(sql);
                 statement.executeUpdate(sql_reset_rank_time);
                 sender.sendMessage("§aSuccessfully§7 removed the rank from player §9§l" + playerName);
-                //NametagEdit.getApi().setPrefix(UUIDChecker.uuidName, "§2");
                 playerRankNames.remove(UUIDChecker.uuidName);
+                TabListSQL tabListSQL = new TabListSQL();
+                tabListSQL.getTabListData(UUID.fromString(UUIDChecker.uuid));
+                scoreboard.getTeam("ZDefault").addEntry(UUIDChecker.uuidName);
             } else {
                 sender.sendMessage("§4§lThis player doesn't have a rank!");
             }
