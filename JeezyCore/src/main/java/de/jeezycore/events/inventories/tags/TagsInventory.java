@@ -1,7 +1,9 @@
 package de.jeezycore.events.inventories.tags;
 
+import de.jeezycore.db.LogsSQL;
 import de.jeezycore.db.RewardSQL;
 import de.jeezycore.db.TagsSQL;
+import de.jeezycore.db.services.TagsService;
 import de.jeezycore.utils.ArrayStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -9,6 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,9 +24,10 @@ import static de.jeezycore.utils.ArrayStorage.tags_inv_array;
 public class TagsInventory {
     Inventory tag_inv;
     //RewardSQL rewardSQL = new RewardSQL();
-    private int addUp = 10;
 
     private final TagsSQL display = new TagsSQL();
+
+    private final TagsService tagsService = new TagsService();
 
     public void run(org.bukkit.event.inventory.InventoryClickEvent e) {
         if (e.getInventory().getTitle().contains("§8§lTags")) {
@@ -59,22 +66,16 @@ public class TagsInventory {
         }
         }
     public void tags_menu(Player p) {
-        if (tags_inv_array.get(p.getPlayer().getUniqueId()) == 1) {
-            display.getData(0);
-        } else {
-            display.getData(tags_inv_array.get(p.getPlayer().getUniqueId()) * 21 - 21);
-        }
         tags_in_ownership_array.clear();
-        display.check(p);
-        display.getFullDataSize();
-        display.getOwnershipData(p);
+       // display.check(p);
+        //display.getOwnershipData(p);
         //rewardSQL.checkIfClaimed(p);
 
         if (TagsSQL.playerTag != null) {
             ArrayStorage.tagsCheckStatus.put(p.getPlayer().getUniqueId(), TagsSQL.playerTag);
         }
 
-        int pageEnd = (int) Math.ceil((double)display.tagDataFullSize.size() / 21);
+        int pageEnd = (int) Math.ceil((double)tagsService.getAllTags().length() / 21);
 
         tag_inv = Bukkit.createInventory(null, 45,"§8§lTags "+"§7(§f§l"+tags_inv_array.get(p.getPlayer().getUniqueId())+" §7§l/§9§l "+pageEnd+"§7)");
         for (int b = 0; b < tag_inv.getSize(); b++) {
@@ -120,21 +121,30 @@ public class TagsInventory {
         }
 
 
+        try {
+            JSONParser jsParser = new JSONParser();
+            JSONArray jsonA = (JSONArray) jsParser.parse(tagsService.getAllTags().toString());
+            UUID playerId = p.getPlayer().getUniqueId();
+            int currentPage = tags_inv_array.get(playerId);
+            int itemsPerPage = 21;
+            int startIndex = (currentPage - 1) * itemsPerPage;
+            int endIndex = Math.min(startIndex + itemsPerPage, jsonA.size());
+            int slot = 10;
 
-            for (int i = 0; i < display.arrayList.size(); i++) {
+            for (int i = startIndex; i < endIndex; i++) {
+                JSONObject jsonOB = (JSONObject) jsonA.get(i);
 
-                String test = display.arrayList.get(i).replace("[", "").replace(",", "").replace("]", "");
+            ItemStack tag = new ItemStack(Material.NAME_TAG, 1);
 
-                ItemStack tag = new ItemStack(Material.NAME_TAG, 1);
-                String tagName = test.split(" ")[0];
-                String tagCategory = test.split(" ")[1];
-                String tagFormat = test.split(" ")[2];
+                String tagName = (String) jsonOB.get("tagName");
+                String tagCategory = (String) jsonOB.get("tagCategories");
+                String tagDesign = (String) jsonOB.get("tagDesign");
                 ItemMeta tagMeta = tag.getItemMeta();
                 List<String> desc = new ArrayList<String>();
                 desc.add(0, "§8§m-----------------------------------");
                 desc.add(1, "§7§lCategory: §f§l" + tagCategory);
                 desc.add(2, "");
-                desc.add(3, "§7§lDisplay: §2" + p.getDisplayName() + " " + tagFormat.replaceAll("&", "§"));
+                desc.add(3, "§7§lDisplay: §2" + p.getDisplayName() + " " + tagDesign.replaceAll("&", "§"));
                 desc.add(4, "§8§m-----------------------------------");
                 if (p.hasPermission("jeezy.core.tags.all")) {
                     desc.add(5, "§a§lYou own this tag§7§l.");
@@ -142,9 +152,7 @@ public class TagsInventory {
                     desc.add(5, "§4§lYou don't own this tag yet§7§l.");
                 }
                 if (i == 7 || i == 14) {
-                    addUp += 2;
-                } else if (i >= 21) {
-                    break;
+                    slot += 2;
                 }
 
 
@@ -156,6 +164,7 @@ public class TagsInventory {
 
                  */
 
+            /*
                 if (tags_in_ownership_array.size() != 0) {
                     for (int x = 0; x < tags_in_ownership_array.size(); x++) {
                         if (display.tagNameList.get(i).equalsIgnoreCase(tags_in_ownership_array.get(x))) {
@@ -165,16 +174,21 @@ public class TagsInventory {
                         }
                     }
                 }
+
+             */
                 tagMeta.setDisplayName("§9§l"+tagName);
                 tagMeta.setLore(desc);
                 tag.setItemMeta(tagMeta);
-                tag_inv.setItem(addUp + i, tag);
-
+                tag_inv.setItem(slot, tag);
+                slot++;
 
 
             }
         p.openInventory(tag_inv);
         RewardSQL.rewardPrice = null;
+        } catch (Exception e) {
+
+        }
     }
 
     public void executeMYSQL(String tagName, Player player) {

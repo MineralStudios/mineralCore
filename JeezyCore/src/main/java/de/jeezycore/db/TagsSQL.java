@@ -1,11 +1,12 @@
 package de.jeezycore.db;
 
-import de.jeezycore.config.JeezyConfig;
+import de.jeezycore.db.cache.TagsCache;
 import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
+import org.json.JSONArray;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,7 +55,6 @@ public class TagsSQL {
 
     public LinkedHashMap<String, String> tagDataFullSize = new LinkedHashMap<String, String>();
 
-    
     public void pushData(String sql, Player p, String tagName, String tagCategory, String tagDesign, String tagPriority) {
         Connection connection = null;
         PreparedStatement pstmt = null;
@@ -84,34 +84,6 @@ public class TagsSQL {
         }
     }
 
-    public void getFullDataSize() {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-
-            statement = connection.createStatement();
-            String sql = "SELECT * FROM tags ORDER BY tagPriority DESC";
-            resultSet = statement.executeQuery(sql);
-            while (resultSet.next()) {
-                tagName = resultSet.getString(1);
-                tagDesign = resultSet.getString(3);
-
-                tagDataFullSize.put(tagName, tagDesign);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                resultSet.close();
-                statement.close();
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     public void getOwnershipData(Player p) {
         Connection connection = null;
@@ -247,35 +219,37 @@ public class TagsSQL {
         }
     }
 
-    public void getData(int startCount) {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-
-            statement = connection.createStatement();
-            String sql = "SELECT * FROM tags ORDER BY tagPriority DESC LIMIT "+startCount+","+1844674407;
-            resultSet = statement.executeQuery(sql);
-            while (resultSet.next()) {
-                tagName = resultSet.getString(1);
-                tagCategory = resultSet.getString(2);
-                tagDesign = resultSet.getString(3);
-
-                arrayList.add(Arrays.asList(tagName, tagCategory, tagDesign).toString());
-                tagNameList.add(tagName);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
+    public void getData() {
+            Connection connection = null;
+            Statement statement = null;
+            ResultSet resultSet = null;
             try {
-                resultSet.close();
-                statement.close();
-                connection.close();
+                connection = dataSource.getConnection();
+
+                statement = connection.createStatement();
+                String sql = "SELECT * FROM tags ORDER BY tagPriority DESC";
+                resultSet = statement.executeQuery(sql);
+                while (resultSet.next()) {
+                    tagName = resultSet.getString(1);
+                    tagCategory = resultSet.getString(2);
+                    tagDesign = resultSet.getString(3);
+
+                    arrayList.add(Arrays.asList(tagName, tagCategory, tagDesign).toString());
+                    tagNameList.add(tagName);
+                    TagsCache.getInstance().saveTag(tagName, tagCategory, tagDesign);
+                }
+                TagsCache.getInstance().saveAllTags();
             } catch (SQLException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    resultSet.close();
+                    statement.close();
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
-        }
     }
 
 

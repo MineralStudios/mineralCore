@@ -14,6 +14,7 @@ import de.jeezycore.commands.ranks.DeleteRank;
 import de.jeezycore.commands.ranks.UnGrantRank;
 import de.jeezycore.commands.staff.Logs;
 import de.jeezycore.db.TabListSQL;
+import de.jeezycore.db.cache.TagsCache;
 import de.jeezycore.db.hikari.HikariCP;
 import de.jeezycore.colors.Color;
 import de.jeezycore.commands.basic.*;
@@ -37,11 +38,13 @@ import de.jeezycore.commands.staff.StaffRankDisable;
 import de.jeezycore.commands.staff.StaffRankEnable;
 import de.jeezycore.commands.tags.*;
 import de.jeezycore.config.JeezyConfig;
+import de.jeezycore.db.services.TagsService;
 import de.jeezycore.discord.JeezyBot;
 import de.jeezycore.events.*;
 import de.jeezycore.events.chat.ChatEvent;
 import de.jeezycore.events.inventories.JeezyInventories;
 import de.jeezycore.utils.NameMC;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import static de.jeezycore.utils.ArrayStorage.*;
@@ -163,6 +166,10 @@ public class Main extends JavaPlugin {
       tabListSQL.getTabListRanks();
       tabListSQL.getTabListPerms();
       tabListSQL.getTabListUsers();
+
+      // Services
+        TagsService tagsService = new TagsService();
+        tagsService.load();
 
 
         for (String i : rankTabListSorting.keySet()) {
