@@ -1,10 +1,9 @@
 package de.jeezycore.events.inventories.tags;
 
-import de.jeezycore.db.LogsSQL;
 import de.jeezycore.db.RewardSQL;
 import de.jeezycore.db.TagsSQL;
+import de.jeezycore.db.cache.TagsCache;
 import de.jeezycore.db.services.TagsService;
-import de.jeezycore.utils.ArrayStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,12 +13,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import static de.jeezycore.utils.ArrayStorage.tags_in_ownership_array;
-import static de.jeezycore.utils.ArrayStorage.tags_inv_array;
+import java.util.concurrent.CompletableFuture;
+
+import static de.jeezycore.utils.ArrayStorage.*;
 
 public class TagsInventory {
     Inventory tag_inv;
@@ -29,17 +28,28 @@ public class TagsInventory {
 
     private final TagsService tagsService = new TagsService();
 
+
     public void run(org.bukkit.event.inventory.InventoryClickEvent e) {
         if (e.getInventory().getTitle().contains("§8§lTags")) {
             if (e.getCurrentItem().getData().toString().equalsIgnoreCase("NAME_TAG(0)") && e.getCurrentItem().getItemMeta().getLore().get(5).equalsIgnoreCase("§a§lYou own this tag§7§l.")) {
-                if (e.getCurrentItem().getItemMeta().getDisplayName().substring(4).equalsIgnoreCase(ArrayStorage.tagsCheckStatus.get(e.getWhoClicked().getUniqueId()))) {
-                    e.getWhoClicked().sendMessage("§7You have §c§lalready §7selected that tag.");
-                    e.getWhoClicked().closeInventory();
-                    return;
+                JSONObject tagData = tagsCheckStatus.get(e.getWhoClicked().getUniqueId());
+                if (tagData != null) {
+                    String clickedName = e.getCurrentItem().getItemMeta().getDisplayName().substring(4);
+                    String tagName = (String) tagData.get("tagName");
+                    if (clickedName.equalsIgnoreCase(tagName)) {
+                        if (e.getCurrentItem().getItemMeta().getDisplayName().substring(4).equalsIgnoreCase((String) tagsCheckStatus.get(e.getWhoClicked().getUniqueId()).get("tagName"))) {
+                            e.getWhoClicked().sendMessage("§7You have §c§lalready §7selected that tag.");
+                            e.getWhoClicked().closeInventory();
+                            return;
+                        }
+                    }
                 }
-                e.getWhoClicked().sendMessage("§7You §2§lsuccessfully §7gave yourself the §9§l"+e.getCurrentItem().getItemMeta().getDisplayName()+ " §7tag§7.");
-                e.getWhoClicked().closeInventory();
-                executeMYSQL(e.getCurrentItem().getItemMeta().getDisplayName().substring(4), (Player) e.getWhoClicked());
+                CompletableFuture.runAsync(() -> {
+                    e.getWhoClicked().sendMessage("§7You §2§lsuccessfully §7gave yourself the §9§l"+e.getCurrentItem().getItemMeta().getDisplayName()+ " §7tag§7.");
+                    e.getWhoClicked().closeInventory();
+                    executeMYSQL(e.getCurrentItem().getItemMeta().getDisplayName().substring(4), (Player) e.getWhoClicked());
+                    TagsCache.getInstance().reloadPlayerTagsNow();
+                });
             } else if (e.getCurrentItem().getData().toString().equalsIgnoreCase("NAME_TAG(0)") && e.getCurrentItem().getItemMeta().getLore().get(5).equalsIgnoreCase("§4§lYou don't own this tag yet§7§l.")) {
                 e.getWhoClicked().sendMessage("§4§lYou don't own this tag.");
             }
@@ -57,23 +67,48 @@ public class TagsInventory {
             }
 
             if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§cReset tag")) {
-                display.resetTag(e.getCurrentItem().getItemMeta().getLore().get(1).replace("§9§l", ""), e.getWhoClicked().getName(), (Player) e.getWhoClicked());
-                e.getWhoClicked().sendMessage("§7You §2successfully §creset §7your tag.");
-                e.getWhoClicked().closeInventory();
+                CompletableFuture.runAsync(() -> {
+                    e.getWhoClicked().sendMessage("§7You §2successfully §creset §7your tag.");
+                    e.getWhoClicked().closeInventory();
+                    display.resetTag(e.getCurrentItem().getItemMeta().getLore().get(1).replace("§9§l", ""), e.getWhoClicked().getName(), (Player) e.getWhoClicked());
+                    TagsCache.getInstance().reloadPlayerTagsNow();
+                });
+
             }
 
             e.setCancelled(true);
         }
         }
+
+    public void getPlayerTag(Player p) {
+        try {
+            JSONParser parser = new JSONParser();
+            JSONArray jsonArray = (JSONArray) parser.parse(tagsService.getAllPlayerTags().toString());
+
+            for (Object item : jsonArray) {
+                JSONObject entry = (JSONObject) item;
+
+                for (Object keyObj : entry.keySet()) {
+                    String key = (String) keyObj;
+
+                    if (key.equalsIgnoreCase(p.getUniqueId().toString())) {
+                        JSONObject value = (JSONObject) entry.get(key);
+                        tagsCheckStatus.put(p.getPlayer().getUniqueId(), value);
+                        return;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
     public void tags_menu(Player p) {
         tags_in_ownership_array.clear();
-       // display.check(p);
+        getPlayerTag(p);
+        // display.check(p);
         //display.getOwnershipData(p);
         //rewardSQL.checkIfClaimed(p);
-
-        if (TagsSQL.playerTag != null) {
-            ArrayStorage.tagsCheckStatus.put(p.getPlayer().getUniqueId(), TagsSQL.playerTag);
-        }
 
         int pageEnd = (int) Math.ceil((double)tagsService.getAllTags().length() / 21);
 
@@ -103,13 +138,17 @@ public class TagsInventory {
                 tag_inv.setItem(8, pages);
             }
 
-            if (TagsSQL.playerTag != null) {
+            if (tagsCheckStatus.containsKey(p.getUniqueId())) {
+                JSONObject storedValue = tagsCheckStatus.get(p.getPlayer().getUniqueId());
+                String tagName = (String) storedValue.get("tagName");
+                String tagDesign = (String) storedValue.get("tagDesign");
+
                 ItemStack removeTagViaGui = new ItemStack(Material.TORCH, 1);
                 ItemMeta removeTagViaGuiMeta = removeTagViaGui.getItemMeta();
                 ArrayList<String> reset_tag_desc = new ArrayList<>();
                 reset_tag_desc.add(0, "§8§m-----------------------------------");
-                reset_tag_desc.add(1, "§9§l"+TagsSQL.playerTag);
-                reset_tag_desc.add(2, "§7Current tag display: §2"+p.getDisplayName()+ " §9§l" + TagsSQL.tag_exist_format.replace("&", "§")+ "§7§l.");
+                reset_tag_desc.add(1, "§9§l"+tagName);
+                reset_tag_desc.add(2, "§7Current tag display: §2"+p.getDisplayName()+ " §9§l"+tagDesign+"§7§l.");
                 reset_tag_desc.add(3, "§8§m-----------------------------------");
                 reset_tag_desc.add(4, "§eClick to reset your tag§7.");
                 removeTagViaGuiMeta.setDisplayName("§cReset tag");
@@ -117,7 +156,6 @@ public class TagsInventory {
                 removeTagViaGui.setItemMeta(removeTagViaGuiMeta);
                 tag_inv.setItem(4, removeTagViaGui);
             }
-
         }
 
 
@@ -144,7 +182,7 @@ public class TagsInventory {
                 desc.add(0, "§8§m-----------------------------------");
                 desc.add(1, "§7§lCategory: §f§l" + tagCategory);
                 desc.add(2, "");
-                desc.add(3, "§7§lDisplay: §2" + p.getDisplayName() + " " + tagDesign.replaceAll("&", "§"));
+                desc.add(3, "§7§lDisplay: §2" + p.getDisplayName() + " " + tagDesign);
                 desc.add(4, "§8§m-----------------------------------");
                 if (p.hasPermission("jeezy.core.tags.all")) {
                     desc.add(5, "§a§lYou own this tag§7§l.");

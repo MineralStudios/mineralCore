@@ -5,7 +5,6 @@ import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.json.JSONArray;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,8 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.UUID;
 
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
-import static de.jeezycore.utils.ArrayStorage.set_current_tag_array;
-import static de.jeezycore.utils.ArrayStorage.tags_in_ownership_array;
+import static de.jeezycore.utils.ArrayStorage.*;
 
 public class TagsSQL {
 
@@ -43,7 +41,13 @@ public class TagsSQL {
     public static String tag_exist_format;
     public static String tag_exist_name;
 
+    public static String playerTagUUID;
+
     public static String playerTag;
+
+    public static String playerTagCategory;
+
+    public static String playerTagDesign;
 
     public static String [] grant_new_tag;
     
@@ -90,7 +94,7 @@ public class TagsSQL {
         Statement statement = null;
         ResultSet resultSet = null;
         try {
-            this.getPlayerTag(p);
+            this.getAllPlayerTags();
             connection = dataSource.getConnection();
 
             statement = connection.createStatement();
@@ -116,7 +120,7 @@ public class TagsSQL {
         }
     }
 
-    public void getPlayerTag(Player p) {
+    public void getAllPlayerTags() {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -124,14 +128,35 @@ public class TagsSQL {
             connection = dataSource.getConnection();
 
             statement = connection.createStatement();
-            String sql = "SELECT tag FROM players WHERE playerUUID = '"+p.getUniqueId()+"'";
+            String sql = "SELECT \n" +
+                    "    players.playerUUID,\n" +
+                    "    players.tag,\n" +
+                    "    tags.tagCategory,\n" +
+                    "    tags.tagDesign,\n" +
+                    "    tags.tagPriority\n" +
+                    "FROM \n" +
+                    "    players\n" +
+                    "JOIN \n" +
+                    "    tags ON players.tag = tags.tagName\n" +
+                    "WHERE \n" +
+                    "    players.tag IS NOT NULL;";
             resultSet = statement.executeQuery(sql);
             if (!resultSet.next()) {
-               playerTag = null;
+                playerTagUUID = null;
+                playerTag = null;
+                playerTagCategory = null;
+                playerTagDesign = null;
             } else {
                 do {
-                   playerTag = resultSet.getString(1);
+                    playerTagUUID = resultSet.getString(1);
+                    playerTag = resultSet.getString(2);
+                    playerTagCategory = resultSet.getString(3);
+                    playerTagDesign = resultSet.getString(4);
+
+                   TagsCache.getInstance().savePlayerTags(UUID.fromString(playerTagUUID), playerTag, playerTagCategory, playerTagDesign);
+
                 } while (resultSet.next());
+                    TagsCache.getInstance().saveAllPlayerTags();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -185,32 +210,18 @@ public class TagsSQL {
     public void setCurrentTag(String tagName, Player player) {
         Connection connection = null;
         Statement statement = null;
-        ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-
             statement = connection.createStatement();
-            String sql2 = "SELECT * FROM items WHERE playerUUID = '"+player.getUniqueId()+"'";
-            resultSet = statement.executeQuery(sql2);
-
-            if (!resultSet.next()) {
-                current_tag = null;
-            } else {
-                do {
-                    current_tag = resultSet.getString(6);
-                } while (resultSet.next());
-            }
 
             String sql_2 = "UPDATE players " +
                     "SET tag = '"+tagName +
                     "' WHERE playerUUID = '"+player.getUniqueId()+"'";
             statement.executeUpdate(sql_2);
-            set_current_tag_array.clear();
         } catch (SQLException e) {
             System.out.println(e);
         } finally {
             try {
-                resultSet.close();
                 statement.close();
                 connection.close();
             } catch (SQLException e) {
@@ -516,7 +527,7 @@ public class TagsSQL {
         Statement statement = null;
         ResultSet resultSet = null;
         try {
-            this.getPlayerTag(player);
+            this.getAllPlayerTags();
             connection = dataSource.getConnection();
 
             statement = connection.createStatement();
@@ -554,7 +565,7 @@ public class TagsSQL {
         Statement statement = null;
         ResultSet resultSet = null;
         try {
-            getPlayerTag(p);
+            getAllPlayerTags();
             connection = dataSource.getConnection();
 
             statement = connection.createStatement();

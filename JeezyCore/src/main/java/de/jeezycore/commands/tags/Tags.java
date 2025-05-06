@@ -22,6 +22,7 @@ public class Tags implements CommandExecutor {
             if (cmd.getName().equalsIgnoreCase("tags") && args.length == 0) {
                 CompletableFuture.runAsync(() -> {
                     TagsCache.getInstance().getAllTags();
+                    TagsCache.getInstance().getAllPlayerTags();
                 }).thenRun(() -> {
                     Bukkit.getScheduler().runTask(Main.getPlugin(Main.class), () -> {
                         ArrayStorage.tags_inv_array.put(p.getUniqueId(), 1);

@@ -1,17 +1,11 @@
 package de.jeezycore.commands.tags;
 
-import de.jeezycore.colors.ColorTranslator;
 import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.TagsSQL;
 import de.jeezycore.db.cache.TagsCache;
-import de.jeezycore.events.inventories.tags.TagsInventory;
-import de.jeezycore.main.Main;
-import de.jeezycore.utils.ArrayStorage;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -37,7 +31,7 @@ public class CreateTag implements CommandExecutor {
                                    "VALUES " +
                                    "(?, ?, ?, ?)";
                            mySQL.pushData(input, p, args[0], args[1], args[2].replace("&", "§"), args[3]);
-                           TagsCache.getInstance().reloadNow();
+                           TagsCache.getInstance().reloadAllTagsNow();
                        });
                    } else {
                        p.sendMessage("The Category you chose doesn't exist.");

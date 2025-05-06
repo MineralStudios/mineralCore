@@ -4,6 +4,7 @@ import de.jeezycore.db.TagsSQL;
 import de.jeezycore.db.cache.TagsCache;
 import org.json.JSONArray;
 
+
 public class TagsService {
 
     private final TagsCache tagsCache = TagsCache.getInstance();
@@ -11,9 +12,15 @@ public class TagsService {
 
     public void load() {
         tagsSQL.getData();
+        tagsSQL.getAllPlayerTags();
     }
 
     public JSONArray getAllTags() {
         return tagsCache.getAllTags();
     }
+
+    public JSONArray getAllPlayerTags() {
+        return tagsCache.getAllPlayerTags();
+    }
+
 }

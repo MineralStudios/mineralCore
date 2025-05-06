@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
-
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -40,10 +39,10 @@ public class ArrayStorage {
     public static HashMap<UUID, Inventory> punishments_menu_inv_array = new HashMap<>();
 
     // ban_logs array
-    public static ArrayList<JSONObject> ban_logs = new ArrayList<>();
+    public static ArrayList<org.json.simple.JSONObject> ban_logs = new ArrayList<org.json.simple.JSONObject>();
 
     // mute_logs array
-    public static ArrayList<JSONObject> mute_logs = new ArrayList<>();
+    public static ArrayList<org.json.simple.JSONObject> mute_logs = new ArrayList<org.json.simple.JSONObject>();
 
     // report array
     public static ArrayList<UUID> reportCoolDownArray = new ArrayList<>();
@@ -52,8 +51,6 @@ public class ArrayStorage {
     public static HashMap<UUID, Integer> tags_inv_array = new HashMap<>();
 
     public static ArrayList<String> tags_in_ownership_array = new ArrayList<>();
-
-    public static ArrayList<String> set_current_tag_array = new ArrayList<>();
 
     public static HashMap<UUID, String> tab_name_list_array = new HashMap<>();
 
@@ -67,11 +64,14 @@ public class ArrayStorage {
 
     public static HashMap<String, String> mineralsStorage = new HashMap<String, String>();
 
-    public static HashMap<UUID, String> tagsCheckStatus = new HashMap<>();
+    public static HashMap<UUID, JSONObject> tagsCheckStatus = new HashMap<>();
 
    public static HashMap<String, Language> languageMap = new HashMap<>();
 
-   //friends
+    public static HashMap<UUID, JSONObject> tagPlayersMap = new HashMap<>();
+
+
+    //friends
     public static ArrayList<UUID> friendsOnJoinMessageArray = new ArrayList<>();
 
     public static ArrayList<String> friendsList = new ArrayList<>();

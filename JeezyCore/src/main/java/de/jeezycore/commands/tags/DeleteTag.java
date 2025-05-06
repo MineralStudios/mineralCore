@@ -20,7 +20,7 @@ public class DeleteTag implements CommandExecutor {
                 CompletableFuture.runAsync(() -> {
                     TagsSQL tagsSQL = new TagsSQL();
                     tagsSQL.deleteTag(args[0], p);
-                    TagsCache.getInstance().reloadNow();
+                    TagsCache.getInstance().reloadAllTagsNow();
                 });
             } else {
                 p.sendMessage("Usage: /delete-tag <tagName>");
