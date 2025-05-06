@@ -5,13 +5,10 @@ import de.jeezycore.utils.ArrayStorage;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.UUID;
-
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
 import static de.jeezycore.utils.ArrayStorage.*;
 
@@ -30,16 +27,13 @@ public class TagsSQL {
     public static String ownerTagName;
     String tagDesign;
 
-
     String ownedTags;
 
     String ownedItemsPlayerUUID;
+
     String current_tag;
 
     public static String tag_in_chat;
-
-    public static String tag_exist_format;
-    public static String tag_exist_name;
 
     public static String playerTagUUID;
 
@@ -50,14 +44,8 @@ public class TagsSQL {
     public static String playerTagDesign;
 
     public static String [] grant_new_tag;
-    
-    public ArrayList<String> arrayList = new ArrayList<>();
-
-    public ArrayList<String> tagNameList = new ArrayList<>();
 
     public static ArrayList<String> tag_name_array = new ArrayList<String>();
-
-    public LinkedHashMap<String, String> tagDataFullSize = new LinkedHashMap<String, String>();
 
     public void pushData(String sql, Player p, String tagName, String tagCategory, String tagDesign, String tagPriority) {
         Connection connection = null;
@@ -245,8 +233,6 @@ public class TagsSQL {
                     tagCategory = resultSet.getString(2);
                     tagDesign = resultSet.getString(3);
 
-                    arrayList.add(Arrays.asList(tagName, tagCategory, tagDesign).toString());
-                    tagNameList.add(tagName);
                     TagsCache.getInstance().saveTag(tagName, tagCategory, tagDesign);
                 }
                 TagsCache.getInstance().saveAllTags();
@@ -528,6 +514,7 @@ public class TagsSQL {
         ResultSet resultSet = null;
         try {
             this.getAllPlayerTags();
+
             connection = dataSource.getConnection();
 
             statement = connection.createStatement();
@@ -546,34 +533,6 @@ public class TagsSQL {
                 tag_in_chat = "";
             } else {
                 tag_in_chat = " "+tag_in_chat;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                resultSet.close();
-                statement.close();
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void check(Player p) {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-            getAllPlayerTags();
-            connection = dataSource.getConnection();
-
-            statement = connection.createStatement();
-            String sql = "SELECT * FROM tags WHERE tagName = '"+playerTag+"'";
-            resultSet = statement.executeQuery(sql);
-            while (resultSet.next()) {
-                tag_exist_name = resultSet.getString(1);
-                tag_exist_format = resultSet.getString(3);
             }
         } catch (SQLException e) {
             e.printStackTrace();

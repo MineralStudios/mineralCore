@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class UnGrantRank implements CommandExecutor {
 
@@ -34,11 +35,13 @@ public class UnGrantRank implements CommandExecutor {
             }
         } else {
         if (cmd.getName().equalsIgnoreCase("ungrant") && args.length == 1) {
-            uc.check(args[0]);
-            grant.removeRankConsole(sender, UUIDChecker.uuidName, UUID.fromString(UUIDChecker.uuid));
-            tagsSQL.resetTagOnUnGrantingRank();
-            chatColorSQL.resetChatColorsOnUnGrantingRank();
-            discord.realtimeChatOnUnGranting(UUID.fromString(UUIDChecker.uuid), UUIDChecker.uuidName, "Console");
+            CompletableFuture.runAsync(() -> {
+                uc.check(args[0]);
+                grant.removeRankConsole(sender, UUIDChecker.uuidName, UUID.fromString(UUIDChecker.uuid));
+                tagsSQL.resetTagOnUnGrantingRank();
+                chatColorSQL.resetChatColorsOnUnGrantingRank();
+                discord.realtimeChatOnUnGranting(UUID.fromString(UUIDChecker.uuid), UUIDChecker.uuidName, "Console");
+            });
         } else {
          sender.sendMessage("ungrant <playerName>");
         }

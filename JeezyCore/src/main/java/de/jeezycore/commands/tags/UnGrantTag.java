@@ -6,6 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.concurrent.CompletableFuture;
+
 public class UnGrantTag implements CommandExecutor {
 
     TagsSQL tag = new TagsSQL();
@@ -18,11 +20,10 @@ public class UnGrantTag implements CommandExecutor {
             Player p = (Player) sender;
             if (p.hasPermission("jeezy.core.tag.ungrant")) {
             if (cmd.getName().equalsIgnoreCase("ungrant-tag") && args.length == 2) {
-
-
+                CompletableFuture.runAsync(() -> {
                     tag.unGrantTag(args[0], args[1], p);
                     tag.resetTag(args[0], args[1], p);
-
+                });
             } else {
                 p.sendMessage("Usage: /ungrant-tag <tagName><player>");
             }
@@ -31,8 +32,10 @@ public class UnGrantTag implements CommandExecutor {
             }
         } else {
             if (cmd.getName().equalsIgnoreCase("ungrant-tag") && args.length == 2) {
-                tag.unGrantTagConsole(args[0], args[1], sender);
-                tag.resetTagConsole(args[0], args[1], sender);
+                CompletableFuture.runAsync(() -> {
+                    tag.unGrantTagConsole(args[0], args[1], sender);
+                    tag.resetTagConsole(args[0], args[1], sender);
+                });
             } else {
                 sender.sendMessage("Usage: /ungrant-tag <tagName> <playerName>");
             }
