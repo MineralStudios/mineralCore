@@ -13,6 +13,7 @@ public class NameTag {
     TabListSQL tabListSQL = new TabListSQL();
 
     public static Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+    private final RanksSQL givePermsOnJoin = new RanksSQL();
 
     public void giveTagOnJoin(Player player) {
             tabListSQL.getTabListData(player.getPlayer().getUniqueId());
@@ -21,6 +22,7 @@ public class NameTag {
                 scoreboard.getTeam(TabListSQL.getTabListPriority+""+TabListSQL.getTabListRanks).addEntry(player.getDisplayName());
             } else if (gettingNameMcLikesResponse.body().contains(player.getUniqueId().toString())) {
                 scoreboard.getTeam("QNameMC").addEntry(player.getDisplayName());
+                givePermsOnJoin.onJoinPerms("Mineral", player.getPlayer().getUniqueId());
             } else {
                 scoreboard.getTeam("ZDefault").addEntry(player.getDisplayName());
             }

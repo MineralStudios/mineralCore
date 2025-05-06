@@ -50,7 +50,7 @@ public class ChatEvent implements Listener {
         banChat.onPlayerChatBan(e);
         ignoreChat.PlayerIgnoreChat(e);
         chatColorSQL.getPlayerChatName(e.getPlayer());
-        setNameMcTag = nameMC.checkIfAlreadyVoted(e.getPlayer()) ? "§l§9✔ " : "";
+        setNameMcTag = nameMC.checkIfAlreadyVoted(e.getPlayer()) ? "§7[§3Mineral§7]§f " : "";
 
         if (playerNickedList.containsKey(e.getPlayer().getUniqueId())) {
             chat_format_rep = cf.getString("chat_format").replace("[rank]", "").replace("[player]", e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", "");

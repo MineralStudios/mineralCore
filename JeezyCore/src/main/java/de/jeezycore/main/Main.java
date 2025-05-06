@@ -175,7 +175,7 @@ public class Main extends JavaPlugin {
         for (String i : rankTabListSorting.keySet()) {
             scoreboard.registerNewTeam(i).setPrefix(rankTabListSorting.get(i).replace("&", "§"));
         }
-        scoreboard.registerNewTeam("QNameMC").setPrefix("§l§9✔§2 ");
+        scoreboard.registerNewTeam("QNameMC").setPrefix("§3");
         scoreboard.registerNewTeam("ZDefault").setPrefix("§2");
 
 
