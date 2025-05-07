@@ -1,24 +1,17 @@
 package de.jeezycore.db;
 
-import de.jeezycore.config.JeezyConfig;
+import de.jeezycore.db.cache.ChatColorsCache;
 import de.jeezycore.utils.UUIDChecker;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
-
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
 
 
 public class ChatColorSQL {
-
-    String url;
-    String user;
-    String password;
 
     String chatColorName;
 
@@ -38,14 +31,10 @@ public class ChatColorSQL {
 
     public static String currentChatColor;
 
-    public ArrayList<String> chatColorArray = new ArrayList<>();
-
     public ArrayList<String> grantChatColorArray = new ArrayList<>();
 
-    UUIDChecker uc = new UUIDChecker();
+    private final UUIDChecker uc = new UUIDChecker();
 
-
-    
 
     private void setup() {
         Connection connection = null;
@@ -141,8 +130,40 @@ public class ChatColorSQL {
                 color = resultSet.getString(2);
                 colorRGB = resultSet.getString(3);
 
-                chatColorArray.add(Arrays.asList(colorName, color, colorRGB).toString());
+                ChatColorsCache.getInstance().saveChatColors(colorName, color, colorRGB);
             }
+            ChatColorsCache.getInstance().saveAllChatColors();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void getChatColorsPlayersData() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String sql_select = "SELECT players.playerUUID, color, players.chatColor, colorRGB FROM players JOIN chatColors ON players.chatColor = chatColors.colorName";
+            resultSet = statement.executeQuery(sql_select);
+
+            while (resultSet.next()) {
+                String playerUUID = resultSet.getString("playerUUID");
+                String playerChatColor = resultSet.getString("color");
+                String playerChatColorName = resultSet.getString("chatColor");
+
+                ChatColorsCache.getInstance().saveChatColorsPlayers(UUID.fromString(playerUUID), playerChatColor+playerChatColorName);
+            }
+            ChatColorsCache.getInstance().saveAllChatColorsPlayers();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -258,6 +279,7 @@ public class ChatColorSQL {
                         "SET chatColor = '"+e.getCurrentItem().getItemMeta().getDisplayName().substring(2)+"'" +
                         " WHERE playerUUID = '"+e.getWhoClicked().getUniqueId()+"'";
             statement.executeUpdate(updateChatColor);
+
         } catch (SQLException f) {
             f.printStackTrace();
         } finally {
@@ -565,6 +587,7 @@ public class ChatColorSQL {
                     "SET chatColor = NULL" +
                     " WHERE playerUUID = '"+uuid+"'";
             statement.executeUpdate(updateChatColor);
+
         } catch (SQLException f) {
             f.printStackTrace();
         } finally {

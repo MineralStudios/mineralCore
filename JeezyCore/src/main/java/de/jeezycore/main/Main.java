@@ -38,6 +38,7 @@ import de.jeezycore.commands.staff.StaffRankDisable;
 import de.jeezycore.commands.staff.StaffRankEnable;
 import de.jeezycore.commands.tags.*;
 import de.jeezycore.config.JeezyConfig;
+import de.jeezycore.db.services.ChatColorsService;
 import de.jeezycore.db.services.TagsService;
 import de.jeezycore.discord.JeezyBot;
 import de.jeezycore.events.*;
@@ -170,7 +171,8 @@ public class Main extends JavaPlugin {
       // Services
         TagsService tagsService = new TagsService();
         tagsService.load();
-
+        ChatColorsService chatColorsService = new ChatColorsService();
+        chatColorsService.load();
 
         for (String i : rankTabListSorting.keySet()) {
             scoreboard.registerNewTeam(i).setPrefix(rankTabListSorting.get(i).replace("&", "§"));

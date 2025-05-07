@@ -68,7 +68,12 @@ public class ArrayStorage {
 
    public static HashMap<String, Language> languageMap = new HashMap<>();
 
-    public static HashMap<UUID, JSONObject> tagPlayersMap = new HashMap<>();
+   public static HashMap<UUID, JSONObject> tagPlayersMap = new HashMap<>();
+
+
+   // ChatColors
+   public static HashMap<UUID, JSONObject> chatColorsPlayersMap = new HashMap<>();
+
 
 
     //friends
