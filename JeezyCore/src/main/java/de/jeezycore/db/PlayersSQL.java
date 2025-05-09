@@ -1,17 +1,91 @@
 package de.jeezycore.db;
 
+import de.jeezycore.db.cache.PlayersCache;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import java.sql.*;
-
+import java.util.UUID;
 import static de.jeezycore.db.hikari.HikariCP.dataSource;
 
 
 public class PlayersSQL {
 
-    public String url;
-    public String user;
-    public String password;
+    String playerUUID;
+    String rankColor;
+    String rank;
+    String tag;
+    String chatColor;
+    String playTime;
+    boolean online;
+
+    public void getAllPlayerData() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+
+            statement = connection.createStatement();
+            String sql = "SELECT \n" +
+                    "    players.playerName, \n" +
+                    "    players.playerUUID, \n" +
+                    "    players.minerals,\n" +
+                    "    ranks.rankColor,\n" +
+                    "    players.rank,\n" +
+                    "    players.tag,\n" +
+                    "    tags.tagDesign,\n" +
+                    "    chatColors.color,\n" +
+                    "    players.chatColor,\n" +
+                    "    players.playTime,\n" +
+                    "    players.firstJoined,\n" +
+                    "    players.lastSeen,\n" +
+                    "    players.online\n" +
+                    "FROM players\n" +
+                    "LEFT JOIN chatColors ON players.chatColor = chatColors.colorName\n" +
+                    "LEFT JOIN ranks ON players.rank = ranks.rankName\n" +
+                    "LEFT JOIN tags ON players.tag = tags.tagName\n" +
+                    "WHERE NOT (\n" +
+                    "    players.rank IS NULL AND\n" +
+                    "    players.tag IS NULL AND\n" +
+                    "    players.chatColor IS NULL AND\n" +
+                    "    players.playTime IS NULL\n" +
+                    ")";
+            resultSet = statement.executeQuery(sql);
+
+            if (!resultSet.next()) {
+                playerUUID = null;
+                rank = null;
+                tag = null;
+                chatColor = null;
+                playTime = null;
+                online = false;
+            } else {
+                do {
+                    playerUUID = resultSet.getString("playerUUID");
+                    rankColor = resultSet.getString("rankColor");
+                    rank = resultSet.getString("rank");
+                    tag = resultSet.getString("tagDesign");
+                    chatColor = resultSet.getString("color");
+                    playTime = resultSet.getString("playTime");
+                    online = resultSet.getBoolean("online");
+
+                    PlayersCache.getInstance().savePlayerData(UUID.fromString(playerUUID), rankColor, rank, tag, chatColor, playTime, online);
+                } while (resultSet.next());
+                PlayersCache.getInstance().saveAllPlayerData();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 
     public void alreadyJoined(PlayerJoinEvent join) {

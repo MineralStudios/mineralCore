@@ -4,12 +4,20 @@ import de.jeezycore.config.JeezyConfig;
 import de.jeezycore.db.ChatColorSQL;
 import de.jeezycore.db.RanksSQL;
 import de.jeezycore.db.TagsSQL;
+import de.jeezycore.db.services.PlayersService;
 import de.jeezycore.discord.messages.realtime.RealtimeChat;
 import de.jeezycore.utils.NameMC;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
 import static de.jeezycore.db.TagsSQL.tag_in_chat;
 import static de.jeezycore.utils.ArrayStorage.playerNickedList;
 
@@ -38,34 +46,51 @@ public class ChatEvent implements Listener {
 
     String setNameMcTag;
 
+    private final PlayersService playersService = new PlayersService();
+
+
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
+        /*
         globalChat.checkGlobalChat(e);
         antiSpam.AntiSpamChat(e);
         staffChat.chat(e);
-        display.getPlayerInformation(e.getPlayer().getUniqueId());
-        String sql = "SELECT * FROM ranks WHERE rankName = '"+ RanksSQL.rankNameInformation +"'";
-        display.displayChatRank(sql);
-        tagsSQL.tagChat(e.getPlayer());
         banChat.onPlayerChatBan(e);
         ignoreChat.PlayerIgnoreChat(e);
-        chatColorSQL.getPlayerChatName(e.getPlayer());
-        setNameMcTag = nameMC.checkIfAlreadyVoted(e.getPlayer()) ? "§7[§3Mineral§7]§f " : "";
+         */
+       // setNameMcTag = nameMC.checkIfAlreadyVoted(e.getPlayer()) ? "§7[§3Mineral§7]§f " : "";
 
-        if (playerNickedList.containsKey(e.getPlayer().getUniqueId())) {
-            chat_format_rep = cf.getString("chat_format").replace("[rank]", "").replace("[player]", e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", "");
-            e.setFormat(chat_format_rep.replace("%", "%%").trim());
-            rmc.realtimeMcChat( e.getPlayer().getDisplayName()+": "+e.getMessage());
-            return;
-        }
+                try {
+                    JSONParser jsParser = new JSONParser();
+                    JSONArray jsonA = (JSONArray) jsParser.parse(playersService.getAllPlayerData().toString());
 
-        if (RanksSQL.rankNameInformation == null || display.rank == null) {
-                 chat_format_rep = cf.getString("chat_format").replace("[rank]", display.rank).replace("[player]", setNameMcTag+ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat);
-                rmc.realtimeMcChat( e.getPlayer().getDisplayName()+": "+e.getMessage());
-            } else {
-                chat_format_rep = cf.getString("chat_format").replace("[rank]", "§7["+display.rankColor+""+display.rank+"§7]§f").replace("[player]", setNameMcTag+ChatColorSQL.currentChatColor+e.getPlayer().getDisplayName()).replace("[msg]", e.getMessage()).replace("[tag]", tag_in_chat);
-                rmc.realtimeMcChat("["+display.rank+"]"+" "+e.getPlayer().getDisplayName()+": "+e.getMessage());
-            }
-            e.setFormat(chat_format_rep.replace("%", "%%").trim());
+                    if (playerNickedList.containsKey(e.getPlayer().getUniqueId())) {
+                        chat_format_rep = cf.getString("chat_format")
+                                .replace("[rank]", "")
+                                .replace("[player]", e.getPlayer().getDisplayName())
+                                .replace("[msg]", e.getMessage())
+                                .replace("[tag]", "");
+                    } else {
+                        for (Object obj : jsonA) {
+                            JSONObject jsonOB = (JSONObject) obj;
+
+                            String chatColor = jsonOB.get("chatColor") != null ? jsonOB.get("chatColor").toString() : "";
+                            String tag = jsonOB.get("tag") != null ? " "+ jsonOB.get("tag").toString() : "";
+                            String rankColor = jsonOB.get("rankColor") != null ? (String) jsonOB.get("rankColor") : "";
+                            String rank = jsonOB.get("rank") != null ? "§7["+rankColor+jsonOB.get("rank") + "§7]§f" : "";
+
+                            if (jsonOB.get("playerUUID").toString().equalsIgnoreCase(e.getPlayer().getUniqueId().toString())) {
+                                chat_format_rep = cf.getString("chat_format")
+                                        .replace("[rank]", rank)
+                                        .replace("[player]", chatColor+e.getPlayer().getDisplayName())
+                                        .replace("[msg]", e.getMessage())
+                                        .replace("[tag]", tag);
+                            }
+                        }
+                         e.setFormat(chat_format_rep.replace("%", "%%").trim());
+                        rmc.realtimeMcChat( e.getPlayer().getDisplayName()+": "+e.getMessage());
+                    }
+                } catch (Exception ex) {
+                }
     }
 }
