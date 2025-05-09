@@ -13,7 +13,8 @@ public class PlayersSQL {
     String playerUUID;
     String rankColor;
     String rank;
-    String tag;
+    String tagName;
+    String tagDesign;
     String chatColor;
     String playTime;
     boolean online;
@@ -55,7 +56,7 @@ public class PlayersSQL {
             if (!resultSet.next()) {
                 playerUUID = null;
                 rank = null;
-                tag = null;
+                tagDesign = null;
                 chatColor = null;
                 playTime = null;
                 online = false;
@@ -64,12 +65,13 @@ public class PlayersSQL {
                     playerUUID = resultSet.getString("playerUUID");
                     rankColor = resultSet.getString("rankColor");
                     rank = resultSet.getString("rank");
-                    tag = resultSet.getString("tagDesign");
+                    tagName = resultSet.getString("tag");
+                    tagDesign = resultSet.getString("tagDesign");
                     chatColor = resultSet.getString("color");
                     playTime = resultSet.getString("playTime");
                     online = resultSet.getBoolean("online");
 
-                    PlayersCache.getInstance().savePlayerData(UUID.fromString(playerUUID), rankColor, rank, tag, chatColor, playTime, online);
+                    PlayersCache.getInstance().savePlayerData(UUID.fromString(playerUUID), rankColor, rank, tagName, tagDesign, chatColor, playTime, online);
                 } while (resultSet.next());
                 PlayersCache.getInstance().saveAllPlayerData();
             }

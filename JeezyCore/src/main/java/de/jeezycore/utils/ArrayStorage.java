@@ -4,7 +4,7 @@ import net.suuft.libretranslate.Language;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -65,6 +65,8 @@ public class ArrayStorage {
     public static HashMap<String, String> mineralsStorage = new HashMap<String, String>();
 
     public static HashMap<UUID, JSONObject> tagsCheckStatus = new HashMap<>();
+
+    public static ArrayList<UUID> hasTagList = new ArrayList<>();
 
    public static HashMap<String, Language> languageMap = new HashMap<>();
 

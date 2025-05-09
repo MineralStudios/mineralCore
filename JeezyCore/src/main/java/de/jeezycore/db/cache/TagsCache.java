@@ -4,7 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import de.jeezycore.db.TagsSQL;
 import org.json.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import java.util.UUID;
 import static de.jeezycore.utils.ArrayStorage.tagPlayersMap;
 import static de.jeezycore.utils.ArrayStorage.tagsCheckStatus;
@@ -36,15 +36,6 @@ public class TagsCache {
         tagsSQL.getData();
         cache.put("tags", new JSONArray(tagsArray.toString()));
     }
-
-    public void reloadPlayerTagsNow() {
-        tagsPlayerArray.clear();
-        tagPlayersMap.clear();
-        tagsCheckStatus.clear();
-        tagsSQL.getAllPlayerTags();
-        cache.put("playerTags", new JSONArray(tagsPlayerArray.toString()));
-    }
-
 
     public void saveTag(String tagName, String tagCategories, String tagDesign) {
         JSONObject tag = new JSONObject();

@@ -75,7 +75,7 @@ public class ChatEvent implements Listener {
                             JSONObject jsonOB = (JSONObject) obj;
 
                             String chatColor = jsonOB.get("chatColor") != null ? jsonOB.get("chatColor").toString() : "";
-                            String tag = jsonOB.get("tag") != null ? " "+ jsonOB.get("tag").toString() : "";
+                            String tag = jsonOB.get("tagDesign") != null ? " "+ jsonOB.get("tagDesign").toString() : "";
                             String rankColor = jsonOB.get("rankColor") != null ? (String) jsonOB.get("rankColor") : "";
                             String rank = jsonOB.get("rank") != null ? "§7["+rankColor+jsonOB.get("rank") + "§7]§f" : "";
 
