@@ -1,1 +1,4 @@
-The official core used on Mineral.gg
+# IMPORTANT: READ THE LICENSE
+
+# MineralCore
+The core used on mineral.gg
