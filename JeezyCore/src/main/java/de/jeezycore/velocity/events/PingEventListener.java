@@ -60,7 +60,7 @@ public class PingEventListener {
             }
         } else {
             if (WhitelistedSQL.whitelisted) {
-                builder.version(new ServerPing.Version(event.getConnection().getProtocolVersion().getProtocol() + 1, "Whitelisted"));
+                builder.version(new ServerPing.Version(event.getConnection().getProtocolVersion().getProtocol() + 1, "The End"));
                 builder.description(motDWhitelist);
             } else {
                 builder.maximumPlayers(0);
